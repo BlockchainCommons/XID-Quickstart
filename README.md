@@ -39,9 +39,9 @@ Then follow these tutorials for practical experience:
 
 1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Learn to create a basic pseudonymous identity
 2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Explore how XIDs are structured
-3. [Building Trust with Pseudonymous XIDs](tutorials/03-building-trust-with-pseudonymous-xids.md) - Learn to build trust without revealing identity
-4. [Key Management with XIDs](tutorials/04-key-management-with-xids.md) - Master secure key management for XIDs
-5. [Identity Evolution with XIDs](tutorials/05-identity-evolution-with-xids.md) - Explore how XIDs evolve over time
+3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Create structured self-claims with verifiable evidence
+4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Build a network of trust through independent verification
+5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Master secure key management for XIDs
 
 See the [Learning Path](LEARNING_PATH.md) for a recommended approach to these materials.
 
