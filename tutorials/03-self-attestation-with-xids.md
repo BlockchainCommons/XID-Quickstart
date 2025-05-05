@@ -40,12 +40,16 @@ This tutorial focuses on building these advanced attestation structures on top o
 Let's start by creating a comprehensive framework for organizing different types of self-attestations:
 
 👉
+First, let's create our output directories:
+
 ```sh
-# Ensure output directory exists
 mkdir -p output
 mkdir -p evidence
+```
 
-# Load BWHacker's XID from previous tutorial
+Next, we'll load BWHacker's XID from the previous tutorial:
+
+```sh
 if [ -f "output/enhanced-xid.envelope" ]; then
     XID_DOC=$(cat output/enhanced-xid.envelope)
 elif [ -f "output/amira-xid-with-tablet.envelope" ]; then
@@ -62,27 +66,47 @@ else
     echo "Could not find BWHacker's XID from previous tutorials"
     exit 1
 fi
+```
 
-# Create a comprehensive self-attestation framework
+Now let's create a comprehensive self-attestation framework:
+
+👉 
+```sh
 SELF_ATTESTATION_FRAMEWORK=$(envelope subject type string "Self-AttestationFramework")
 SELF_ATTESTATION_FRAMEWORK=$(envelope assertion add pred-obj string "purpose" string "Provide verifiable self-attestations with appropriate context" "$SELF_ATTESTATION_FRAMEWORK")
 SELF_ATTESTATION_FRAMEWORK=$(envelope assertion add pred-obj string "approach" string "Fair witness principles with evidence commitments" "$SELF_ATTESTATION_FRAMEWORK")
 SELF_ATTESTATION_FRAMEWORK=$(envelope assertion add pred-obj string "verificationLevels" string "Public claims, Evidence commitments, Full disclosure under NDA" "$SELF_ATTESTATION_FRAMEWORK")
+```
 
-# Add the framework categories for different attestation types
+Next, let's add the framework categories for different attestation types:
+
+👉 
+```sh
 SELF_ATTESTATION_FRAMEWORK=$(envelope assertion add pred-obj string "attestationCategories" string "Project work, Skills, Education, Open source, Publications" "$SELF_ATTESTATION_FRAMEWORK")
+```
 
-# Define the framework's evidence commitment model
+Now let's define the framework's evidence commitment model:
+
+👉 
+```sh
 EVIDENCE_MODEL=$(envelope subject type string "Evidence commitment model")
 EVIDENCE_MODEL=$(envelope assertion add pred-obj string "purpose" string "Cryptographically commit to evidence without revealing it" "$EVIDENCE_MODEL")
 EVIDENCE_MODEL=$(envelope assertion add pred-obj string "hashAlgorithm" string "SHA-256" "$EVIDENCE_MODEL")
 EVIDENCE_MODEL=$(envelope assertion add pred-obj string "timeValidityPolicy" string "Evidence must be dated and include temporal context" "$EVIDENCE_MODEL")
 EVIDENCE_MODEL=$(envelope assertion add pred-obj string "verificationMethods" string "Direct hash verification, API verification, GitHub reference" "$EVIDENCE_MODEL")
+```
 
-# Add the evidence model to the framework
+Now let's add the evidence model to the framework:
+
+👉 
+```sh
 SELF_ATTESTATION_FRAMEWORK=$(envelope assertion add pred-obj string "evidenceModel" envelope "$EVIDENCE_MODEL" "$SELF_ATTESTATION_FRAMEWORK")
+```
 
-# Add the self-attestation framework to BWHacker's XID
+Next, let's add the self-attestation framework to BWHacker's XID:
+
+👉 
+```sh
 XID_DOC=$(envelope assertion add pred-obj string "attestationFramework" envelope "$SELF_ATTESTATION_FRAMEWORK" "$XID_DOC")
 echo "$XID_DOC" > output/amira-xid-with-framework.envelope
 
@@ -114,56 +138,84 @@ This framework provides a structured approach to organizing different types of a
 Now let's create a sophisticated project attestation with nested structure and multiple evidence commitments:
 
 👉
+First, let's create some sample project evidence files:
+
 ```sh
-# Create sample project evidence
 echo "API security enhancements with privacy-preserving authentication system" > evidence/project_summary.txt
 echo "Reduced data exposure by 60% while improving authentication speed by 35%" > evidence/security_metrics.txt
 echo "Implementation uses zero-knowledge proofs, rate limiting, and robust input validation" > evidence/design_approach.txt
 echo "Deployed to production environments across 3 geographic regions" > evidence/deployment_scope.txt
 echo "Received security audit approval from external firm (Ref: SA-2023-0142)" > evidence/audit_results.txt
+```
 
-# Create cryptographic hashes of this evidence
+Now we'll create cryptographic hashes of this evidence:
+
+👉
+```sh
 SUMMARY_HASH=$(cat evidence/project_summary.txt | envelope digest sha256)
 METRICS_HASH=$(cat evidence/security_metrics.txt | envelope digest sha256)
 DESIGN_HASH=$(cat evidence/design_approach.txt | envelope digest sha256)
 DEPLOYMENT_HASH=$(cat evidence/deployment_scope.txt | envelope digest sha256)
 AUDIT_HASH=$(cat evidence/audit_results.txt | envelope digest sha256)
+```
 
-# Create the main project attestation
+Next, let's create the main project attestation:
+👉 
+```sh
 PROJECT=$(envelope subject type string "Financial API Security Overhaul")
 PROJECT=$(envelope assertion add pred-obj string "role" string "Lead Security Developer" "$PROJECT")
 PROJECT=$(envelope assertion add pred-obj string "timeframe" string "2022-03 through 2022-09" "$PROJECT")
 PROJECT=$(envelope assertion add pred-obj string "client" string "Financial services sector (details available after NDA)" "$PROJECT")
+```
 
-# Create a nested technical component for implementation details
+Now let's create a nested technical component for implementation details:
+👉 
+```sh
 TECH_COMPONENT=$(envelope subject type string "Implementation Details")
 TECH_COMPONENT=$(envelope assertion add pred-obj string "summaryHash" digest "$SUMMARY_HASH" "$TECH_COMPONENT")
 TECH_COMPONENT=$(envelope assertion add pred-obj string "designApproachHash" digest "$DESIGN_HASH" "$TECH_COMPONENT")
 TECH_COMPONENT=$(envelope assertion add pred-obj string "primaryLanguages" string "Rust, TypeScript, WebAssembly" "$TECH_COMPONENT")
 TECH_COMPONENT=$(envelope assertion add pred-obj string "architecturePattern" string "Microservices with edge computing components" "$TECH_COMPONENT")
+```
 
-# Create a nested results component for outcome evidence
+Next, let's create a nested results component for outcome evidence:
+👉 
+```sh
 RESULTS_COMPONENT=$(envelope subject type string "Project Outcomes")
 RESULTS_COMPONENT=$(envelope assertion add pred-obj string "metricsHash" digest "$METRICS_HASH" "$RESULTS_COMPONENT")
 RESULTS_COMPONENT=$(envelope assertion add pred-obj string "deploymentHash" digest "$DEPLOYMENT_HASH" "$RESULTS_COMPONENT") 
 RESULTS_COMPONENT=$(envelope assertion add pred-obj string "auditHash" digest "$AUDIT_HASH" "$RESULTS_COMPONENT")
 RESULTS_COMPONENT=$(envelope assertion add pred-obj string "successCriteria" string "Performance, security audit, and compliance requirements met" "$RESULTS_COMPONENT")
+```
 
-# Add nested components to the main project
+Finally, let's add the nested components to the main project:
+👉 
+```sh
 PROJECT=$(envelope assertion add pred-obj string "implementation" envelope "$TECH_COMPONENT" "$PROJECT")
 PROJECT=$(envelope assertion add pred-obj string "outcomes" envelope "$RESULTS_COMPONENT" "$PROJECT")
+```
 
-# Add verification methods and context (fair witnessing principles)
+Now let's add verification methods and context (following fair witnessing principles):
+
+👉 
+```sh
 PROJECT=$(envelope assertion add pred-obj string "verificationContact" string "projectverify@example.com (reference #API-2022)" "$PROJECT")
 PROJECT=$(envelope assertion add pred-obj string "methodology" string "Security metrics measured through automated testing, pre and post implementation" "$PROJECT")
 PROJECT=$(envelope assertion add pred-obj string "limitations" string "Metrics cover controlled test environment; may vary in production" "$PROJECT")
 PROJECT=$(envelope assertion add pred-obj string "independentVerification" string "Security audit conducted by external firm (certificate hash available on request)" "$PROJECT")
+```
 
-# Add to BWHacker's XID as a formal self-attestation
+Now let's add this to BWHacker's XID as a formal self-attestation:
+👉 
+```sh
 XID_DOC=$(envelope assertion add pred-obj string "projectAttestation" envelope "$PROJECT" "$XID_DOC")
 echo "$XID_DOC" > output/amira-xid-with-project.envelope
+```
 
-# View the hierarchical project attestation
+Let's view the hierarchical project attestation structure:
+
+👉 
+```sh
 echo "Hierarchical Project Attestation Structure:"
 envelope format --type tree "$PROJECT"
 ```

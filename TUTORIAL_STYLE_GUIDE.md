@@ -20,30 +20,41 @@ Every tutorial should follow this structure:
 
 ## Code Block Formatting
 
-1. **Command Indicator**: All command blocks start with the 👉 emoji
-2. **Output Indicator**: All output blocks start with the 🔍 emoji
+1. **Command Indicator**: All command blocks start with the 👉 emoji on the line immediately before the code block
+2. **Output Indicator**: All output blocks start with the 🔍 emoji on the line immediately before the code block
 3. **Syntax Highlighting**: Use `sh` for command blocks and `console` for output blocks
 4. **Variable References**: Always use proper `$VARIABLE` syntax with $ before variable names
-5. **Command Structure**:
+5. **Explanatory Text**: 
+   - All explanatory text must be outside code blocks as proper markdown text
+   - Use descriptive text before each code block to explain what the code does
+   - Never include explanatory comments inside code blocks (except for functional comments within conditionals)
+6. **Code Block Size**:
+   - Break large code blocks into smaller, logical segments with explanatory text between them
+   - Each code block should focus on a single logical operation or related set of commands
+7. **Command Structure**:
    - One command per line when possible
    - Use line continuations (\\) for long commands
-   - Include comments for complex commands
-6. **Output Examples**:
+8. **Output Examples**:
    - Show realistic but concise outputs
    - Use ellipses (...) for truncated output when appropriate
 
 Example:
 
 ```markdown
-👉 
+👉
+Let's create a minimal XID:
+
 ```sh
-# Create a minimal XID
 XID_DOC=$(envelope xid new --name "Example" "$PUBLIC_KEYS")
 echo "$XID_DOC" > output/example.envelope
 ```
 
 🔍 
 ```console
+"Example" [
+   "name": "Example"
+   "publicKeys": ur:crypto-pubkeys/lftaaosehdcxtbsfns...
+]
 ```
 
 ## Visual Formatting
@@ -77,6 +88,10 @@ echo "$XID_DOC" > output/example.envelope
 4. **Error Handling**: Include guidance for common errors
 5. **Security Emphasis**: Emphasize security best practices
 6. **Link Strategy**: Link to previous/next tutorials and relevant concepts
+7. **Copy-Paste Usability**: 
+   - Ensure code blocks can be copied and pasted directly into a terminal
+   - Keep explanatory text outside of code blocks to prevent execution errors
+   - Each code block should contain only executable commands
 
 ## Testing Requirements
 
@@ -94,6 +109,11 @@ Before finalizing a tutorial, ensure:
 - [ ] All code snippets follow variable naming and syntax conventions
 - [ ] Commands work when run sequentially
 - [ ] Outputs match what users will actually see
+- [ ] All explanatory text is outside code blocks as proper markdown
+- [ ] Code blocks contain only executable code (no explanatory comments)
+- [ ] The 👉 emoji is on the line immediately before command code blocks
+- [ ] The 🔍 emoji is on the line immediately before output code blocks
+- [ ] Large code blocks are broken into logical segments with explanatory text between them
 - [ ] Links to other documents are correct
 - [ ] Story consistency is maintained
 - [ ] Fair witness principles are applied

@@ -42,9 +42,10 @@ BWHacker's XID identifier: 7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b
 
 Now, let's look at several different formats of this XID to understand how it works at a technical level:
 
+Let's view the CBOR diagnostic format (human-readable CBOR):
+
 👉 
 ```sh
-# View CBOR diagnostic format (human-readable CBOR)
 echo "CBOR Diagnostic Format:"
 envelope format --type diagnostic "$XID_DOC"
 ```
@@ -67,9 +68,10 @@ CBOR Diagnostic Format:
 }
 ```
 
+Now let's view the hex encoding (lower-level representation):
+
 👉 
 ```sh
-# View the hex encoding (lower-level representation)
 echo "Hex Encoding (first 100 bytes):"
 envelope format --type hex "$XID_DOC" | head -c 100
 echo "..."
@@ -81,9 +83,10 @@ Hex Encoding (first 100 bytes):
 a1684257486163686572a8646e616d65684257486163686572697075626c69634b657973d825258854c2d39daafb1eee9c8bab32d41...
 ```
 
+Let's view the CBOR encoding in a more structured way:
+
 👉 
 ```sh
-# View the CBOR encoding in a more structured way
 echo "CBOR Tags and Structure:"
 envelope format --type cbor "$XID_DOC"
 ```
@@ -115,20 +118,19 @@ The CBOR format shows the hierarchical structure of tags, maps, text fields, and
 
 Gordian Envelopes, the technology underlying XIDs, use a subject-assertion-object model:
 
-👉 
-```sh
-echo "Basic structure breakdown:"
-echo "1. Subject: 'BWHacker' - The entity this envelope is about"
-echo "2. Assertions: Each key-value pair in the map"
-echo "   - Predicate: The key (like 'name', 'sshKey')"
-echo "   - Object: The value (could be text, binary data, or nested structures)"
-```
+### Basic Structure Breakdown:
+
+1. **Subject**: 'BWHacker' - The entity this envelope is about
+2. **Assertions**: Each key-value pair in the map
+   - **Predicate**: The key (like 'name', 'sshKey')
+   - **Object**: The value (could be text, binary data, or nested structures)
 
 Let's examine this structure in the XID:
 
+Let's list all predicates (the keys of the assertions) in the XID:
+
 👉 
 ```sh
-# List all predicates (the keys of the assertions)
 echo "Predicates in the XID:"
 envelope format --type diagnostic "$XID_DOC" | grep -o '"[^"]*":' | sort | uniq
 ```
@@ -152,25 +154,24 @@ Predicates in the XID:
 
 XIDs derive their stable identifiers through a cryptographic process involving the initial public key. Let's understand this process:
 
+Let's extract just the public key from the XID and the XID identifier:
+
 👉 
 ```sh
-# Extract just the public key from the XID
 PUBLIC_KEY=$(envelope format --type diagnostic "$XID_DOC" | grep -o '"publicKeys": [^,]*' | sed 's/"publicKeys": //')
 echo "Public key (in diagnostic format): $PUBLIC_KEY"
 
-# Extract the XID identifier again
 XID=$(envelope xid id "$XID_DOC")
 echo "XID identifier: $XID"
-
-echo "The XID identifier is a SHA-256 hash derived from specific parts of the initial public key"
 ```
 
 🔍 
 ```console
 Public key (in diagnostic format): 37([h'8854c2d39daafb1eee9c8bab32d41e97c775c286bfcabc4b7c3ff77f1eac268d', "ur:crypto-pubkeys/hdcxlkadjnghfejtmyyloeadmyfqzswdaeayfnmddpjygtmyaeaelytsqdisaeaeaeae"])
 XID identifier: 7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3
-The XID identifier is a SHA-256 hash derived from specific parts of the initial public key
 ```
+
+**Note:** The XID identifier is a SHA-256 hash derived from specific parts of the initial public key.
 
 This derivation process is what allows XIDs to maintain stability: the identifier is cryptographically derived from the initial key, creating a stable reference that persists even as the XID evolves.
 
@@ -178,19 +179,18 @@ This derivation process is what allows XIDs to maintain stability: the identifie
 
 Now that we understand how XID identifiers work, let's see how adding a key preserves the stable identity:
 
+Now let's generate a key for a second device (tablet), add it to BWHacker's XID, and compare the identifiers to see if they remain the same:
+
 👉 
 ```sh
-# Generate a key for a second device (tablet)
 TABLET_PRIVATE_KEYS=$(envelope generate prvkeys)
 echo "$TABLET_PRIVATE_KEYS" > output/tablet-key.private
 TABLET_PUBLIC_KEYS=$(envelope generate pubkeys "$TABLET_PRIVATE_KEYS")
 echo "$TABLET_PUBLIC_KEYS" > output/tablet-key.public
 
-# Add this tablet key to BWHacker's XID
 UPDATED_XID=$(envelope xid key add --name "Tablet Key" "$TABLET_PUBLIC_KEYS" "$XID_DOC")
 echo "$UPDATED_XID" > output/amira-xid-with-tablet.envelope
 
-# Compare the XID identifiers
 ORIGINAL_XID=$(envelope xid id "$XID_DOC")
 UPDATED_XID_ID=$(envelope xid id "$UPDATED_XID")
 echo "Original XID: $ORIGINAL_XID"
@@ -205,9 +205,10 @@ Updated XID:  7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3
 
 The identifier remains the same because it's derived from the initial public key, not subsequent keys. Let's look at how the new key is structured in the CBOR format:
 
+Let's examine the key structure in CBOR diagnostic format:
+
 👉 
 ```sh
-# View key structure in CBOR diagnostic format
 echo "Updated XID with tablet key (CBOR diagnostic format):"
 envelope format --type diagnostic "$UPDATED_XID" | grep -A 3 "key"
 ```
@@ -230,26 +231,34 @@ This shows the key assertion is an array with:
 
 Let's examine how the SSH key creates a verification chain between the XID and GitHub:
 
+### Verification Chain Elements:
+
+1. **The XID contains an SSH key fingerprint:**
+
 👉 
 ```sh
-echo "Verification chain elements:"
-echo "1. The XID contains an SSH key fingerprint:"
 envelope format --type diagnostic "$XID_DOC" | grep "sshKeyFingerprint"
-echo "2. This fingerprint can be verified against GitHub's API:"
+```
+
+2. **This fingerprint can be verified against GitHub's API:**
+
+👉 
+```sh
 envelope format --type diagnostic "$XID_DOC" | grep "sshKeyVerificationURL"
-echo "3. Git commits signed with this SSH key can be verified as coming from BWHacker"
-echo "4. The XID can sign assertions that reference this SSH key, completing the chain"
+```
+
+3. **Git commits signed with this SSH key can be verified as coming from BWHacker**
+
+4. **The XID can sign assertions that reference this SSH key, completing the chain**
+
+🔍 
+```console
+    "sshKeyFingerprint": "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE",
 ```
 
 🔍 
 ```console
-Verification chain elements:
-1. The XID contains an SSH key fingerprint:
-    "sshKeyFingerprint": "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE",
-2. This fingerprint can be verified against GitHub's API:
     "sshKeyVerificationURL": "https://api.github.com/users/BWHacker/ssh_signing_keys",
-3. Git commits signed with this SSH key can be verified as coming from BWHacker
-4. The XID can sign assertions that reference this SSH key, completing the chain
 ```
 
 This verification chain allows others to cryptographically verify that GitHub activity and XID attestations come from the same entity without revealing Amira's real identity.
@@ -258,20 +267,27 @@ This verification chain allows others to cryptographically verify that GitHub ac
 
 To understand how signatures work, let's create and examine a signed statement:
 
+First, let's create a simple statement about a technical capability:
+
 👉 
 ```sh
-# Create a simple statement
 STATEMENT=$(envelope subject type string "Technical Assertion")
 STATEMENT=$(envelope assertion add pred-obj string "capability" string "Zero-knowledge proof systems" "$STATEMENT")
+```
 
-# Sign the statement with the XID's private key
+Next, let's sign the statement with the XID's private key:
+
+👉 
+```sh
 PRIVATE_KEYS=$(cat output/amira-key.private)
 SIGNED_STATEMENT=$(envelope sign -s "$PRIVATE_KEYS" "$STATEMENT")
+```
 
-# Save the signed statement
+Now we'll save the signed statement and examine its structure:
+
+👉 
+```sh
 echo "$SIGNED_STATEMENT" > output/signed-tech-statement.envelope
-
-# Examine the signature in CBOR format
 echo "Signed statement structure (CBOR diagnostic):"
 envelope format --type diagnostic "$SIGNED_STATEMENT"
 ```
@@ -289,9 +305,10 @@ Signed statement structure (CBOR diagnostic):
 
 The signature is stored in the "verifiedBy" predicate as a binary value. Let's verify this signature:
 
+Now let's verify the signature using the public key:
+
 👉 
 ```sh
-# Verify the signature using the public key
 PUBLIC_KEYS=$(cat output/amira-key.public)
 if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_STATEMENT"; then
     echo "✅ Signature verified successfully"
@@ -313,18 +330,27 @@ This verification confirms:
 
 A powerful feature of XIDs is elision - removing information while maintaining cryptographic verifiability. Let's see how it works:
 
+First, let's add some more information to make elision more interesting:
+
 👉 
 ```sh
-# First, let's add some more information to make elision more interesting
 ENHANCED_XID=$(envelope assertion add pred-obj string "potentialBias" string "Particular focus on solutions for privacy-preserving systems" "$UPDATED_XID")
 ENHANCED_XID=$(envelope assertion add pred-obj string "methodologicalApproach" string "Security-first, user-focused development processes" "$ENHANCED_XID")
 echo "$ENHANCED_XID" > output/enhanced-xid.envelope
+```
 
-# Create an elided version by removing the potential bias
+Now we'll create an elided version by removing the potential bias information:
+
+👉 
+```sh
 ELIDED_XID=$(envelope elide assertion predicate string "potentialBias" "$ENHANCED_XID")
 echo "$ELIDED_XID" > output/elided-xid.envelope
+```
 
-# Compare sizes of original and elided versions
+Let's compare the sizes of the original and elided versions:
+
+👉 
+```sh
 ORIGINAL_SIZE=$(echo "$ENHANCED_XID" | wc -c)
 ELIDED_SIZE=$(echo "$ELIDED_XID" | wc -c)
 echo "Original XID size: $ORIGINAL_SIZE bytes"
@@ -339,9 +365,10 @@ Elided XID size: 1125 bytes
 
 Now let's examine how elision affects the cryptographic properties:
 
+Now let's check if the XID identifiers remain the same after elision:
+
 👉 
 ```sh
-# Check if XID identifiers remain the same
 ORIGINAL_ID=$(envelope xid id "$ENHANCED_XID")
 ELIDED_ID=$(envelope xid id "$ELIDED_XID")
 echo "Original XID identifier: $ORIGINAL_ID"
@@ -361,17 +388,17 @@ Now let's see what happened at the CBOR level:
 👉 
 ```sh
 # Look for evidence of elision in the CBOR diagnostic view
-echo "Examining elided XID for cryptographic proof of elision:"
 envelope format --type diagnostic "$ELIDED_XID" | grep -A 1 elided
 ```
 
 🔍 
 ```console
-Examining elided XID for cryptographic proof of elision:
     "elided": [
       h'8d7f117fa8511c9c8ef2092176596cca48a797c69e0a0e12a244faea715a8f82'
     ],
 ```
+
+### Examining Elided XID for Cryptographic Proof of Elision
 
 This "elided" field contains a cryptographic digest (hash) of what was removed. This hash serves as a placeholder that:
 1. Proves something was present and has been elided
@@ -380,25 +407,33 @@ This "elided" field contains a cryptographic digest (hash) of what was removed. 
 
 ## 8. Creating an Advanced Verification Chain
 
-Let's demonstrate an end-to-end verification chain that links GitHub commits to XID-signed attestations:
+Let's demonstrate an end-to-end verification chain that links GitHub commits to XID-signed attestations. 
+
+First, let's create a contribution attestation with GitHub references:
 
 👉 
 ```sh
-# Create a contribution attestation with GitHub references
 CONTRIBUTION=$(envelope subject type string "Code Contribution")
 CONTRIBUTION=$(envelope assertion add pred-obj string "repository" string "github.com/blockchain-commons/bc-envelope" "$CONTRIBUTION")
 CONTRIBUTION=$(envelope assertion add pred-obj string "commit" string "a1b2c3d4e5f6" "$CONTRIBUTION")
 CONTRIBUTION=$(envelope assertion add pred-obj string "description" string "Fixed performance issue in CBOR encoding" "$CONTRIBUTION")
+```
 
-# Add a reference to the SSH key fingerprint
+Next, let's add a reference to the SSH key fingerprint to establish the verification chain:
+
+👉 
+```sh
 CONTRIBUTION=$(envelope assertion add pred-obj string "sshKeyFingerprint" string "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE" "$CONTRIBUTION")
 CONTRIBUTION=$(envelope assertion add pred-obj string "verificationMethod" string "Compare SSH key fingerprint with the one in the XID document" "$CONTRIBUTION")
+```
 
-# Sign the contribution
+Finally, let's sign the contribution and examine the result:
+
+👉 
+```sh
 SIGNED_CONTRIBUTION=$(envelope sign -s "$PRIVATE_KEYS" "$CONTRIBUTION")
 echo "$SIGNED_CONTRIBUTION" > output/verified-contribution.envelope
 
-# Examine the signed contribution
 echo "Signed contribution with verification chain:"
 envelope format --type tree "$SIGNED_CONTRIBUTION"
 ```
