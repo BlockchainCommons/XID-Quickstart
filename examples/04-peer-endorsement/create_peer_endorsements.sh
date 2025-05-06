@@ -41,40 +41,40 @@ envelope format --type tree "$ENDORSEMENT_MODEL"
 echo -e "\n2. Finding or creating BWHacker's XID..."
 
 # Try to find an existing XID from previous tutorials
-if [ -f "../03-profile-xid/output/amira-xid-with-skills.envelope" ]; then
-    cp ../03-profile-xid/output/amira-xid-with-skills.envelope output/amira-xid.envelope
-    cp ../03-profile-xid/output/amira-key.private output/ 2>/dev/null || true
-    cp ../03-profile-xid/output/amira-key.public output/ 2>/dev/null || true
+if [ -f "../03-profile-xid/output/bwhacker-xid-with-skills.envelope" ]; then
+    cp ../03-profile-xid/output/bwhacker-xid-with-skills.envelope output/bwhacker-xid.envelope
+    cp ../03-profile-xid/output/bwhacker-key.private output/ 2>/dev/null || true
+    cp ../03-profile-xid/output/bwhacker-key.public output/ 2>/dev/null || true
     echo "Found and copied XID from tutorial #3"
 elif [ -f "../02-xid-structure/output/enhanced-xid.envelope" ]; then
-    cp ../02-xid-structure/output/enhanced-xid.envelope output/amira-xid.envelope
-    cp ../02-xid-structure/output/amira-key.private output/ 2>/dev/null || true
-    cp ../02-xid-structure/output/amira-key.public output/ 2>/dev/null || true
+    cp ../02-xid-structure/output/enhanced-xid.envelope output/bwhacker-xid.envelope
+    cp ../02-xid-structure/output/bwhacker-key.private output/ 2>/dev/null || true
+    cp ../02-xid-structure/output/bwhacker-key.public output/ 2>/dev/null || true
     echo "Found and copied XID from tutorial #2"
-elif [ -f "../01-basic-xid/output/amira-xid.envelope" ]; then
-    cp ../01-basic-xid/output/amira-xid.envelope output/
-    cp ../01-basic-xid/output/amira-key.private output/ 2>/dev/null || true
-    cp ../01-basic-xid/output/amira-key.public output/ 2>/dev/null || true
+elif [ -f "../01-basic-xid/output/bwhacker-xid.envelope" ]; then
+    cp ../01-basic-xid/output/bwhacker-xid.envelope output/
+    cp ../01-basic-xid/output/bwhacker-key.private output/ 2>/dev/null || true
+    cp ../01-basic-xid/output/bwhacker-key.public output/ 2>/dev/null || true
     echo "Found and copied XID from tutorial #1"
 else
     # Create basic XID if needed (simplified version)
     echo "Creating new XID (previous tutorial files not found)..."
     
-    envelope generate prvkeys > output/amira-key.private
-    PRIVATE_KEYS=$(cat output/amira-key.private)
+    envelope generate prvkeys > output/bwhacker-key.private
+    PRIVATE_KEYS=$(cat output/bwhacker-key.private)
     PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-    echo "$PUBLIC_KEYS" > output/amira-key.public
+    echo "$PUBLIC_KEYS" > output/bwhacker-key.public
     
     # Create basic XID
     XID_DOC=$(envelope xid new --name "BWHacker" "$PUBLIC_KEYS")
     XID_DOC=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$XID_DOC")
     XID_DOC=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional practice" "$XID_DOC")
     
-    echo "$XID_DOC" > output/amira-xid.envelope
+    echo "$XID_DOC" > output/bwhacker-xid.envelope
 fi
 
 # Load BWHacker's XID
-BWHACKER_XID_DOC=$(cat output/amira-xid.envelope)
+BWHACKER_XID_DOC=$(cat output/bwhacker-xid.envelope)
 BWHACKER_XID=$(envelope xid id "$BWHACKER_XID_DOC")
 echo "Using BWHacker's XID: $BWHACKER_XID"
 
@@ -92,10 +92,10 @@ CARLOS_XID=$(envelope xid new --name "Carlos_SecResearcher" "$CARLOS_PUBLIC")
 
 # Add basic information to Carlos's XID
 CARLOS_XID=$(envelope assertion add pred-obj string "gitHubUsername" string "ResearchCarlos" "$CARLOS_XID")
-CARLOS_XID=$(envelope assertion add pred-obj string "domain" string "Security Research & Vulnerability Analysis" "$CARLOS_XID")
-CARLOS_XID=$(envelope assertion add pred-obj string "experienceLevel" string "12 years professional practice" "$CARLOS_XID")
-CARLOS_XID=$(envelope assertion add pred-obj string "observableProjects" string "Published 7 CVEs, Security audit lead for 20+ open source projects" "$CARLOS_XID")
-CARLOS_XID=$(envelope assertion add pred-obj string "affiliationContext" string "Independent security researcher, previously CISO at midsize tech company" "$CARLOS_XID")
+CARLOS_XID=$(envelope assertion add pred-obj string "domain" string "Privacy Engineering & Mobile Security" "$CARLOS_XID")
+CARLOS_XID=$(envelope assertion add pred-obj string "experienceLevel" string "10 years professional practice" "$CARLOS_XID")
+CARLOS_XID=$(envelope assertion add pred-obj string "verifiableProjects" string "Consulted on 12+ privacy-focused mobile apps, security advisor for nonprofits" "$CARLOS_XID")
+CARLOS_XID=$(envelope assertion add pred-obj string "affiliationContext" string "Independent privacy consultant, former security lead at domestic violence prevention organization" "$CARLOS_XID")
 
 # Save Carlos's XID
 echo "$CARLOS_XID" > endorsers/carlos-xid.envelope
@@ -116,27 +116,27 @@ COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementT
 COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "targetAlias" string "BWHacker" "$COLLABORATION_ENDORSEMENT")
 
 # Core collaboration details
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "projectName" string "Open Source Security Audit Framework" "$COLLABORATION_ENDORSEMENT")
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "repositoryURL" string "https://github.com/example/security-audit-framework" "$COLLABORATION_ENDORSEMENT")
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "collaborationPeriod" string "2021-06 through 2021-12" "$COLLABORATION_ENDORSEMENT")
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "collaborationContext" string "Joint development of cryptographic attestation modules" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "projectName" string "Privacy-First Safety Alert System" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "repositoryURL" string "https://github.com/example/privacy-alert-system" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "collaborationPeriod" string "2021-03 through 2021-09" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "collaborationContext" string "Joint development of privacy-preserving location features for a women's safety app" "$COLLABORATION_ENDORSEMENT")
 
 # Endorsed skills with specific examples
 ENDORSED_SKILLS=$(envelope subject type string "Endorsed Skills")
-ENDORSED_SKILLS=$(envelope assertion add pred-obj string "cryptography" string "Implemented zero-knowledge proof system for privacy-preserving attestations" "$ENDORSED_SKILLS")
-ENDORSED_SKILLS=$(envelope assertion add pred-obj string "securityArchitecture" string "Designed attack-resistant validation framework with minimal attack surface" "$ENDORSED_SKILLS")
-ENDORSED_SKILLS$(envelope assertion add pred-obj string "codingPractices" string "Maintained excellent code quality with comprehensive test coverage" "$ENDORSED_SKILLS")
+ENDORSED_SKILLS=$(envelope assertion add pred-obj string "locationPrivacy" string "Implemented privacy-preserving location tracking that minimizes data exposure risk" "$ENDORSED_SKILLS")
+ENDORSED_SKILLS=$(envelope assertion add pred-obj string "mobileAppSecurity" string "Designed secure offline mode with emergency alert capabilities" "$ENDORSED_SKILLS")
+ENDORSED_SKILLS=$(envelope assertion add pred-obj string "userDataProtection" string "Created secure data storage with minimal personal information requirements" "$ENDORSED_SKILLS")
 COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsedSkills" envelope "$ENDORSED_SKILLS" "$COLLABORATION_ENDORSEMENT")
 
 # Proof basis (why this endorsement is credible)
 COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "proofBasis" string "directCollaboration" "$COLLABORATION_ENDORSEMENT")
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "contributionEvidence" string "47 co-authored commits, 15 joint pull request reviews" "$COLLABORATION_ENDORSEMENT")
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "verifiableMetrics" string "10,000+ lines of code, security module reached 98% test coverage" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "contributionEvidence" string "32 co-authored commits on privacy features, joint design of secure location services" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "verifiableMetrics" string "Reduced PII collection by 75%, emergency alert latency below 3 seconds" "$COLLABORATION_ENDORSEMENT")
 
 # Endorser context and limitations
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserRelationship" string "Project collaborator without prior or subsequent professional relationship" "$COLLABORATION_ENDORSEMENT")
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementLimitations" string "Collaboration limited to cryptographic modules, no visibility into other skills" "$COLLABORATION_ENDORSEMENT")
-COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserContext" string "Security researcher with cryptography specialization" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserRelationship" string "Technical advisor for nonprofit safety app project" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementLimitations" string "Collaboration limited to privacy and security features, no visibility into UI development skills" "$COLLABORATION_ENDORSEMENT")
+COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserContext" string "Privacy consultant with experience in women's safety applications" "$COLLABORATION_ENDORSEMENT")
 
 # Sign the endorsement with Carlos's private key
 SIGNED_COLLABORATION=$(envelope sign -s "$CARLOS_PRIVATE" "$COLLABORATION_ENDORSEMENT")
@@ -176,18 +176,18 @@ CODE_REVIEW=$(envelope assertion add pred-obj string "targetAlias" string "BWHac
 CODE_REVIEW=$(envelope assertion add pred-obj string "relationshipContext" string "Technical reviewer for contribution to open source project" "$CODE_REVIEW")
 
 # Add review details
-CODE_REVIEW=$(envelope assertion add pred-obj string "projectName" string "Distributed Consensus Framework" "$CODE_REVIEW")
-CODE_REVIEW=$(envelope assertion add pred-obj string "repositoryURL" string "https://github.com/example/distributed-consensus" "$CODE_REVIEW")
-CODE_REVIEW=$(envelope assertion add pred-obj string "pullRequestURL" string "https://github.com/example/distributed-consensus/pull/42" "$CODE_REVIEW")
+CODE_REVIEW=$(envelope assertion add pred-obj string "projectName" string "Privacy-Focused Location Services" "$CODE_REVIEW")
+CODE_REVIEW=$(envelope assertion add pred-obj string "repositoryURL" string "https://github.com/example/safety-location-privacy" "$CODE_REVIEW")
+CODE_REVIEW=$(envelope assertion add pred-obj string "pullRequestURL" string "https://github.com/example/safety-location-privacy/pull/27" "$CODE_REVIEW")
 CODE_REVIEW=$(envelope assertion add pred-obj string "reviewDate" string "2022-03-15" "$CODE_REVIEW")
-CODE_REVIEW=$(envelope assertion add pred-obj string "codebaseSize" string "Significant contribution: ~5,000 lines of complex code" "$CODE_REVIEW")
+CODE_REVIEW=$(envelope assertion add pred-obj string "codebaseSize" string "Significant contribution: ~3,500 lines of privacy-focused code" "$CODE_REVIEW")
 
 # Technical assessment
 TECHNICAL_ASSESSMENT=$(envelope subject type string "Technical Assessment")
-TECHNICAL_ASSESSMENT=$(envelope assertion add pred-obj string "algorithmicComplexity" string "Excellent: O(log n) solution where previous implementations were O(n)" "$TECHNICAL_ASSESSMENT")
+TECHNICAL_ASSESSMENT=$(envelope assertion add pred-obj string "algorithmicComplexity" string "Excellent: Optimized location privacy algorithm with minimal battery impact" "$TECHNICAL_ASSESSMENT")
 TECHNICAL_ASSESSMENT=$(envelope assertion add pred-obj string "codeQuality" string "Exceptional: Clear structure, well-documented, comprehensive tests" "$TECHNICAL_ASSESSMENT")
-TECHNICAL_ASSESSMENT=$(envelope assertion add pred-obj string "securityConsiderations" string "Strong: Proper input validation, error handling, and security boundaries" "$TECHNICAL_ASSESSMENT")
-TECHNICAL_ASSESSMENT=$(envelope assertion add pred-obj string "performanceImpact" string "Significant: 60% improvement in transaction throughput" "$TECHNICAL_ASSESSMENT")
+TECHNICAL_ASSESSMENT=$(envelope assertion add pred-obj string "securityConsiderations" string "Strong: Robust privacy protections, careful location data handling, secure caching" "$TECHNICAL_ASSESSMENT")
+TECHNICAL_ASSESSMENT=$(envelope assertion add pred-obj string "performanceImpact" string "Significant: 70% reduction in location data exposure while maintaining functionality" "$TECHNICAL_ASSESSMENT")
 CODE_REVIEW=$(envelope assertion add pred-obj string "assessment" envelope "$TECHNICAL_ASSESSMENT" "$CODE_REVIEW")
 
 # Endorsement context
@@ -219,9 +219,9 @@ echo "$PRIYA_PUBLIC" > endorsers/priya-key.public
 # Create Priya's XID
 PRIYA_XID=$(envelope xid new --name "PriyaCrypto" "$PRIYA_PUBLIC")
 PRIYA_XID=$(envelope assertion add pred-obj string "gitHubUsername" string "PriyaZK" "$PRIYA_XID")
-PRIYA_XID=$(envelope assertion add pred-obj string "domain" string "Cryptography & Zero-Knowledge Proofs" "$PRIYA_XID")
-PRIYA_XID=$(envelope assertion add pred-obj string "credentials" string "PhD in Cryptography, Author of two cryptography textbooks" "$PRIYA_XID")
-PRIYA_XID=$(envelope assertion add pred-obj string "affiliationContext" string "University researcher and consultant" "$PRIYA_XID")
+PRIYA_XID=$(envelope assertion add pred-obj string "domain" string "Privacy Engineering & Data Minimization" "$PRIYA_XID")
+PRIYA_XID=$(envelope assertion add pred-obj string "credentials" string "PhD in Computer Science, Focus on Privacy-Preserving Computation" "$PRIYA_XID")
+PRIYA_XID=$(envelope assertion add pred-obj string "affiliationContext" string "University researcher and privacy advocate for women's safety organizations" "$PRIYA_XID")
 echo "$PRIYA_XID" > endorsers/priya-xid.envelope
 PRIYA_XID_ID=$(envelope xid id "$PRIYA_XID")
 
@@ -231,26 +231,26 @@ SKILL_ASSESSMENT=$(envelope subject type string "Skill Assessment Endorsement")
 # Add target and assessment context
 SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "endorsementTarget" string "$BWHACKER_XID" "$SKILL_ASSESSMENT")
 SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "targetAlias" string "BWHacker" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "skillCategory" string "Zero-Knowledge Proof Implementation" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "assessmentContext" string "Detailed review of ZKP implementation in open source privacy library" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "skillCategory" string "Privacy-Preserving Location Tracking" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "assessmentContext" string "Detailed review of location privacy implementation in women's safety app" "$SKILL_ASSESSMENT")
 SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "assessmentDate" string "2023-01-10" "$SKILL_ASSESSMENT")
 
 # Technical skill assessment
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "technicalAccuracy" string "Excellent: Implementation correctly follows ZKP protocol specifications" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "securityConsiderations" string "Strong: Properly handles edge cases and potential attack vectors" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "innovationLevel" string "High: Novel optimization techniques not seen in other implementations" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "codeRobustness" string "Excellent: Comprehensive test suite with fuzz testing" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "technicalAccuracy" string "Excellent: Implementation correctly balances privacy with safety requirements" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "securityConsiderations" string "Strong: Prevents location tracking without compromising emergency features" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "innovationLevel" string "High: Novel approach to secure location sharing with minimal metadata leakage" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "codeRobustness" string "Excellent: Comprehensive test suite including adversarial scenarios" "$SKILL_ASSESSMENT")
 
 # Skill level assessment
 SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "proficiencyLevel" string "Expert" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "proficiencyJustification" string "Implementation shows deep understanding of ZKP theory and practice" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "comparativeAssessment" string "In the top 5% of ZKP implementers I've evaluated" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "proficiencyJustification" string "Implementation shows deep understanding of privacy engineering principles" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "comparativeAssessment" string "Among the most skilled privacy engineers I've worked with in safety applications" "$SKILL_ASSESSMENT")
 
 # Assessment context
 SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "proofBasis" string "outputEvaluation" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "assessmentMethod" string "Source code review, correctness validation, performance benchmarking" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "endorsementLimitations" string "Assessment limited to ZKP implementation skills, not general cryptography" "$SKILL_ASSESSMENT")
-SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "specificReference" string "https://github.com/example/privacy-toolkit/tree/main/zkp-module" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "assessmentMethod" string "Source code review, usability testing, and privacy analysis" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "endorsementLimitations" string "Assessment focused on location privacy features, not the entire application" "$SKILL_ASSESSMENT")
+SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "specificReference" string "https://github.com/example/safety-app/tree/main/location-privacy" "$SKILL_ASSESSMENT")
 
 # Sign with Priya's key
 SIGNED_SKILL_ASSESSMENT=$(envelope sign -s "$PRIYA_PRIVATE" "$SKILL_ASSESSMENT")
@@ -278,7 +278,7 @@ XID_DOC=$(envelope assertion add pred-obj string "peerEndorsement" envelope "$SI
 XID_DOC=$(envelope assertion add pred-obj string "peerEndorsement" envelope "$SIGNED_SKILL_ASSESSMENT" "$XID_DOC")
 
 # Save the updated XID
-echo "$XID_DOC" > output/amira-xid-with-endorsements.envelope
+echo "$XID_DOC" > output/bwhacker-xid-with-endorsements.envelope
 
 # Create web of trust diagram
 echo "Creating Web of Trust Diagram..."
@@ -328,12 +328,18 @@ fi
 # Step 9: Creating Selective Disclosure Views
 echo -e "\n9. Creating selective disclosure views for different contexts..."
 
-# Create a technical skills view
+# Save all endorsements to individual files for reference
+echo "$SIGNED_SKILL_ASSESSMENT" > output/skill-assessment-endorsement.envelope
+echo "$SIGNED_COLLABORATION" > output/collaboration-endorsement.envelope
+echo "$SIGNED_CODE_REVIEW" > output/code-review-endorsement.envelope
+
+# Create a technical skills view that only includes skill-related endorsements
+# This uses proper cryptographic elision to remove other endorsements
 TECHNICAL_VIEW=$(envelope elide assertion predicate string "peerEndorsement" "$XID_DOC" 2)
 TECHNICAL_VIEW=$(envelope assertion add pred-obj string "peerEndorsement" envelope "$SIGNED_SKILL_ASSESSMENT" "$TECHNICAL_VIEW")
-echo "$TECHNICAL_VIEW" > output/skills-assessment-view.envelope
+echo "$TECHNICAL_VIEW" > output/skills-endorsement-view.envelope
 
-# Create a project collaboration view
+# Create a collaboration project view
 COLLABORATION_VIEW=$(envelope elide assertion predicate string "peerEndorsement" "$XID_DOC" 3)
 COLLABORATION_VIEW=$(envelope assertion add pred-obj string "peerEndorsement" envelope "$SIGNED_COLLABORATION" "$COLLABORATION_VIEW")
 echo "$COLLABORATION_VIEW" > output/collaboration-endorsement-view.envelope
@@ -349,6 +355,12 @@ echo "Full XID with all endorsements: $(echo "$XID_DOC" | wc -c) bytes"
 echo "Technical skills view: $(echo "$TECHNICAL_VIEW" | wc -c) bytes"
 echo "Collaboration view: $(echo "$COLLABORATION_VIEW" | wc -c) bytes"
 echo "Code quality view: $(echo "$CODE_QUALITY_VIEW" | wc -c) bytes"
+
+# Display a summary of what we've created
+echo -e "\nCreated the following view files using cryptographic elision:"
+echo "- output/skills-endorsement-view.envelope (Skills assessment view)"
+echo "- output/collaboration-endorsement-view.envelope (Project collaboration view)"
+echo "- output/code-quality-endorsement-view.envelope (Code review view)"
 
 # Step 10: BWHacker Creating an Endorsement for Someone Else
 echo -e "\n10. BWHacker creating an endorsement for someone else..."
@@ -367,8 +379,8 @@ echo "$DEV_XID" > endorsers/dev-xid.envelope
 DEV_XID_ID=$(envelope xid id "$DEV_XID")
 
 # BWHacker creates an endorsement
-AMIRA_PRIVATE=$(cat output/amira-key.private 2>/dev/null)
-if [ -n "$AMIRA_PRIVATE" ]; then
+BWHACKER_PRIVATE=$(cat output/bwhacker-key.private 2>/dev/null)
+if [ -n "$BWHACKER_PRIVATE" ]; then
     # Create the endorsement
     BW_ENDORSEMENT=$(envelope subject type string "Endorsement: Collaborative Development Work")
     
@@ -389,7 +401,7 @@ if [ -n "$AMIRA_PRIVATE" ]; then
     BW_ENDORSEMENT=$(envelope assertion add pred-obj string "potentialBias" string "Shared research interest in privacy-preserving systems" "$BW_ENDORSEMENT")
     
     # Sign the endorsement
-    SIGNED_BW_ENDORSEMENT=$(envelope sign -s "$AMIRA_PRIVATE" "$BW_ENDORSEMENT")
+    SIGNED_BW_ENDORSEMENT=$(envelope sign -s "$BWHACKER_PRIVATE" "$BW_ENDORSEMENT")
     echo "$SIGNED_BW_ENDORSEMENT" > output/bwhacker-endorsement-of-dev.envelope
     
     # Add to PrivacyDev's XID

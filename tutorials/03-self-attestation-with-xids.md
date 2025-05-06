@@ -4,7 +4,7 @@ This tutorial demonstrates how Amira builds comprehensive trust frameworks using
 
 **Time to complete: 30-40 minutes**
 
-> **Related Concepts**: Before or after completing this tutorial, you may want to read about [Fair Witness Approach](../concepts/fair-witness-approach.md) and [Attestation and Endorsement Model](../concepts/attestation-endorsement-model.md) to understand the theoretical foundations behind proper attestations.
+> **Related Concepts**: Before or after completing this tutorial, you may want to read about [Fair Witness Approach](../concepts/fair-witness-approach.md), [Attestation and Endorsement Model](../concepts/attestation-endorsement-model.md), and [Public Participation Profiles](../concepts/public-participation-profiles.md) to understand the theoretical foundations behind building trust with attestations while maintaining pseudonymity.
 
 ## Prerequisites
 
@@ -25,13 +25,21 @@ This tutorial demonstrates how Amira builds comprehensive trust frameworks using
 
 ## Amira's Challenge: Building Comprehensive Trust Frameworks
 
-Having created her pseudonymous identity and understood its technical structure, Amira now needs to build a sophisticated trust framework that enables verifiable contributions across multiple contexts. She needs to:
+Amira has created her "BWHacker" identity, but now faces a critical challenge: how can she establish enough trust to work on meaningful projects while still maintaining her pseudonymity?
 
-1. Create different types of attestations for different domains
-2. Structure these attestations to support progressive trust building
-3. Provide various levels of evidence tailored to different trust relationships
-4. Enable selective disclosure while maintaining verifiability
-5. Design a unified framework that supports various verification methods
+Ben, the manager at the women's services non-profit, has seen her GitHub profile and is cautiously interested in having her develop their safety app. But he rightly hesitates - how can he trust a pseudonymous developer with such sensitive work? He needs more than just a name and public key.
+
+This tension reflects a fundamental challenge in pseudonymous participation: contributors need to share enough information to build trust while still protecting their privacy. The solution lies in creating a rich, verifiable trust framework using self-attestations.
+
+Through her pseudonymous identity, Amira needs to:
+
+1. Create different types of attestations that demonstrate her technical capabilities in API security, distributed systems, and privacy-preserving app development
+2. Structure these attestations to support progressive trust building as her relationship with Ben evolves
+3. Provide verifiable evidence of her skills (like code samples and problem solutions) without revealing her identity
+4. Enable selective disclosure of her experience while maintaining cryptographic verifiability
+5. Design a unified framework that helps Ben evaluate her suitability for the women's safety app project
+
+Without these trust-building attestations, Amira would remain just another anonymous developer - unable to contribute meaningfully to the projects she cares about most. With them, she can build the credibility needed for substantive participation while maintaining the separation between her pseudonymous and legal identities.
 
 This tutorial focuses on building these advanced attestation structures on top of the basic XID and verification chains established in the previous tutorials.
 
@@ -39,9 +47,9 @@ This tutorial focuses on building these advanced attestation structures on top o
 
 Let's start by creating a comprehensive framework for organizing different types of self-attestations:
 
-👉
 First, let's create our output directories:
 
+👉
 ```sh
 mkdir -p output
 mkdir -p evidence
@@ -141,11 +149,11 @@ Now let's create a sophisticated project attestation with nested structure and m
 First, let's create some sample project evidence files:
 
 ```sh
-echo "API security enhancements with privacy-preserving authentication system" > evidence/project_summary.txt
-echo "Reduced data exposure by 60% while improving authentication speed by 35%" > evidence/security_metrics.txt
-echo "Implementation uses zero-knowledge proofs, rate limiting, and robust input validation" > evidence/design_approach.txt
-echo "Deployed to production environments across 3 geographic regions" > evidence/deployment_scope.txt
-echo "Received security audit approval from external firm (Ref: SA-2023-0142)" > evidence/audit_results.txt
+echo "Privacy-preserving location services for secure user tracking without data exposure" > evidence/project_summary.txt
+echo "Reduced PII data exposure by 80% while maintaining location accuracy for safety features" > evidence/security_metrics.txt
+echo "Implementation uses zero-knowledge proofs, local data processing, and secure push notifications" > evidence/design_approach.txt
+echo "Deployed as privacy-focused mobile app with offline capabilities for emergencies" > evidence/deployment_scope.txt
+echo "Received security audit approval from independent researchers (Ref: SA-2022-0189)" > evidence/audit_results.txt
 ```
 
 Now we'll create cryptographic hashes of this evidence:
@@ -162,10 +170,10 @@ AUDIT_HASH=$(cat evidence/audit_results.txt | envelope digest sha256)
 Next, let's create the main project attestation:
 👉 
 ```sh
-PROJECT=$(envelope subject type string "Financial API Security Overhaul")
-PROJECT=$(envelope assertion add pred-obj string "role" string "Lead Security Developer" "$PROJECT")
-PROJECT=$(envelope assertion add pred-obj string "timeframe" string "2022-03 through 2022-09" "$PROJECT")
-PROJECT=$(envelope assertion add pred-obj string "client" string "Financial services sector (details available after NDA)" "$PROJECT")
+PROJECT=$(envelope subject type string "Privacy-Focused Safety App")
+PROJECT=$(envelope assertion add pred-obj string "role" string "Security & Privacy Engineer" "$PROJECT")
+PROJECT=$(envelope assertion add pred-obj string "timeframe" string "2022-01 through 2022-06" "$PROJECT")
+PROJECT=$(envelope assertion add pred-obj string "client" string "Nonprofit organization (details available after NDA)" "$PROJECT")
 ```
 
 Now let's create a nested technical component for implementation details:
@@ -428,26 +436,26 @@ SKILLS=$(envelope subject type string "Technical Skills Assessment")
 # Core technical skill domains with evidence levels
 SECURITY_SKILLS=$(envelope subject type string "Security Engineering Skills")
 SECURITY_SKILLS=$(envelope assertion add pred-obj string "expertiseLevel" string "Expert (8+ years)" "$SECURITY_SKILLS")
-SECURITY_SKILLS=$(envelope assertion add pred-obj string "domains" string "Authentication systems, API security, threat modeling" "$SECURITY_SKILLS")
-SECURITY_SKILLS=$(envelope assertion add pred-obj string "publicEvidence" string "GitHub contributions, published security advisories" "$SECURITY_SKILLS")
-SECURITY_SKILLS=$(envelope assertion add pred-obj string "privateEvidence" string "Client project outcomes, security audit results" "$SECURITY_SKILLS")
-SECURITY_SKILLS=$(envelope assertion add pred-obj string "verificationMethod" string "Review public contributions and request NDA for project details" "$SECURITY_SKILLS")
+SECURITY_SKILLS=$(envelope assertion add pred-obj string "domains" string "Privacy-preserving systems, secure messaging, location privacy" "$SECURITY_SKILLS")
+SECURITY_SKILLS=$(envelope assertion add pred-obj string "publicEvidence" string "GitHub contributions to privacy projects, security advisories for mobile apps" "$SECURITY_SKILLS")
+SECURITY_SKILLS=$(envelope assertion add pred-obj string "privateEvidence" string "Safety app architecture designs, privacy audit results" "$SECURITY_SKILLS")
+SECURITY_SKILLS=$(envelope assertion add pred-obj string "verificationMethod" string "Review public contributions and request NDA for sensitive project details" "$SECURITY_SKILLS")
 
 DEVELOPMENT_SKILLS=$(envelope subject type string "Software Development Skills")
 DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "expertiseLevel" string "Expert (10+ years)" "$DEVELOPMENT_SKILLS")
-DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "languages" string "Rust, Go, TypeScript, Python, C" "$DEVELOPMENT_SKILLS")
-DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "frameworks" string "React, Node.js, WebAssembly, Tauri" "$DEVELOPMENT_SKILLS")
-DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "strengthAreas" string "Backend systems, cryptographic implementations, performance optimization" "$DEVELOPMENT_SKILLS")
-DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "improvementAreas" string "Mobile UI design, graphic design, front-end animations" "$DEVELOPMENT_SKILLS")
-DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "publicEvidence" string "Open source code, GitHub contributions" "$DEVELOPMENT_SKILLS")
-DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "verificationMethod" string "Code review, technical discussion, pair programming" "$DEVELOPMENT_SKILLS")
+DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "languages" string "Rust, Swift, TypeScript, Kotlin, C" "$DEVELOPMENT_SKILLS")
+DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "frameworks" string "React Native, Flutter, SwiftUI, Jetpack Compose" "$DEVELOPMENT_SKILLS")
+DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "strengthAreas" string "Mobile app security, offline-first design, secure data storage" "$DEVELOPMENT_SKILLS")
+DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "improvementAreas" string "Accessibility features, UI animation, graphic design" "$DEVELOPMENT_SKILLS")
+DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "publicEvidence" string "Mobile security library contributions, GitHub mobile repos" "$DEVELOPMENT_SKILLS")
+DEVELOPMENT_SKILLS=$(envelope assertion add pred-obj string "verificationMethod" string "Code review, technical discussion, prototype evaluation" "$DEVELOPMENT_SKILLS")
 
-CRYPTO_SKILLS=$(envelope subject type string "Cryptography Skills")
+CRYPTO_SKILLS=$(envelope subject type string "Privacy Engineering Skills")
 CRYPTO_SKILLS=$(envelope assertion add pred-obj string "expertiseLevel" string "Advanced (6+ years)" "$CRYPTO_SKILLS")
-CRYPTO_SKILLS=$(envelope assertion add pred-obj string "domains" string "Zero-knowledge proofs, key management, secure multi-party computation" "$CRYPTO_SKILLS")
-CRYPTO_SKILLS=$(envelope assertion add pred-obj string "implementations" string "ZK authentication systems, secure enclaves, threshold signatures" "$CRYPTO_SKILLS")
-CRYPTO_SKILLS=$(envelope assertion add pred-obj string "publicEvidence" string "Cryptography library contributions, protocol designs" "$CRYPTO_SKILLS")
-CRYPTO_SKILLS=$(envelope assertion add pred-obj string "verificationMethod" string "Technical interview, code review, protocol analysis" "$CRYPTO_SKILLS")
+CRYPTO_SKILLS=$(envelope assertion add pred-obj string "domains" string "Location privacy, data minimization, secure storage, safe notifications" "$CRYPTO_SKILLS")
+CRYPTO_SKILLS=$(envelope assertion add pred-obj string "implementations" string "Privacy-preserving location tracking, secure local data storage, encrypted messaging" "$CRYPTO_SKILLS")
+CRYPTO_SKILLS=$(envelope assertion add pred-obj string "publicEvidence" string "Privacy architecture contributions, secure notification protocols" "$CRYPTO_SKILLS")
+CRYPTO_SKILLS=$(envelope assertion add pred-obj string "verificationMethod" string "Technical interview, architecture review, threat model evaluation" "$CRYPTO_SKILLS")
 
 # Add skill domains to the skills assessment
 SKILLS=$(envelope assertion add pred-obj string "skillDomain" envelope "$SECURITY_SKILLS" "$SKILLS")
@@ -506,7 +514,7 @@ This skills framework provides a nuanced assessment with different evidence type
 
 ## 6. Creating Custom Elided Views for Different Audiences
 
-Let's create specialized elided views of BWHacker's XID for different audiences:
+Let's create specialized elided views of BWHacker's XID for different audiences. For a deeper understanding of how elision works cryptographically, see the [Elision Cryptography](../concepts/elision-cryptography.md) concept document.
 
 👉
 ```sh
@@ -610,6 +618,108 @@ This verification process confirms:
 
 This verification demonstrates how others can validate evidence and attestations through cryptographic means without Amira revealing her identity.
 
+## Adding Public Interest Attestations
+
+Now that Amira has established her technical capabilities, she wants to communicate her values and ethical commitments that align with Ben's women's safety app project. Let's create a public interest attestation:
+
+👉
+```sh
+mkdir -p output
+
+PUBLIC_INTEREST=$(envelope subject type string "Public Interest Commitment")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "focus" string "Privacy as a Fundamental Right" "$PUBLIC_INTEREST")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "values" string "Data minimization, informed consent, user agency" "$PUBLIC_INTEREST")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "approach" string "Privacy by design, ethical data handling" "$PUBLIC_INTEREST")
+
+COMMITMENTS=$(envelope subject type string "Ethical Commitments")
+COMMITMENTS=$(envelope assertion add pred-obj string "userControl" string "Systems that give users control over their data and identity" "$COMMITMENTS")
+COMMITMENTS=$(envelope assertion add pred-obj string "dataMinimization" string "Collecting only what's necessary for the specific functionality" "$COMMITMENTS")
+COMMITMENTS=$(envelope assertion add pred-obj string "safetyFirst" string "Designing for safety of vulnerable users as a primary requirement" "$COMMITMENTS")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "ethicalCommitments" envelope "$COMMITMENTS" "$PUBLIC_INTEREST")
+
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "limitations" string "Commitments represent aspirational values; implementation varies by context" "$PUBLIC_INTEREST")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "verification" string "Demonstrated through consistent application in project work" "$PUBLIC_INTEREST")
+
+XID_DOC=$(envelope assertion add pred-obj string "publicInterestAttestation" envelope "$PUBLIC_INTEREST" "$XID_DOC")
+echo "$XID_DOC" > output/amira-xid-full.envelope
+
+echo "Public Interest Attestation:"
+envelope format --type tree "$PUBLIC_INTEREST"
+```
+
+🔍
+```console
+"Public Interest Commitment" [
+   "focus": "Privacy as a Fundamental Right"
+   "values": "Data minimization, informed consent, user agency"
+   "approach": "Privacy by design, ethical data handling"
+   "ethicalCommitments": "Ethical Commitments" [
+      "userControl": "Systems that give users control over their data and identity"
+      "dataMinimization": "Collecting only what's necessary for the specific functionality"
+      "safetyFirst": "Designing for safety of vulnerable users as a primary requirement"
+   ]
+   "limitations": "Commitments represent aspirational values; implementation varies by context"
+   "verification": "Demonstrated through consistent application in project work"
+]
+```
+
+This public interest attestation helps Ben understand Amira's values and ethical approach, which are particularly important for a sensitive project like a women's safety app.
+
+## Understanding Disclosure Risks
+
+When creating attestations, Amira carefully evaluates the privacy risks of each type of information she includes:
+
+👉
+```sh
+RISK_ASSESSMENT=$(envelope subject type string "Attestation Risk Assessment")
+
+TECHNICAL_RISK=$(envelope subject type string "Technical Skills Risk")
+TECHNICAL_RISK=$(envelope assertion add pred-obj string "riskLevel" string "Low" "$TECHNICAL_RISK")
+TECHNICAL_RISK=$(envelope assertion add pred-obj string "rationale" string "Technical skills are broadly shared by many developers" "$TECHNICAL_RISK")
+TECHNICAL_RISK=$(envelope assertion add pred-obj string "mitigation" string "Use general skill domains without unique specializations" "$TECHNICAL_RISK")
+RISK_ASSESSMENT=$(envelope assertion add pred-obj string "riskCategory" envelope "$TECHNICAL_RISK" "$RISK_ASSESSMENT")
+
+PROJECT_RISK=$(envelope subject type string "Project Details Risk")
+PROJECT_RISK=$(envelope assertion add pred-obj string "riskLevel" string "Medium" "$PROJECT_RISK")
+PROJECT_RISK=$(envelope assertion add pred-obj string "rationale" string "Project patterns can sometimes be traced to specific individuals" "$PROJECT_RISK")
+PROJECT_RISK=$(envelope assertion add pred-obj string "mitigation" string "Use evidence commitments and elide client names" "$PROJECT_RISK")
+RISK_ASSESSMENT=$(envelope assertion add pred-obj string "riskCategory" envelope "$PROJECT_RISK" "$RISK_ASSESSMENT")
+
+EDUCATION_RISK=$(envelope subject type string "Educational Background Risk")
+EDUCATION_RISK=$(envelope assertion add pred-obj string "riskLevel" string "High" "$EDUCATION_RISK")
+EDUCATION_RISK=$(envelope assertion add pred-obj string "rationale" string "Specific degrees, years, and institutions are highly identifying" "$EDUCATION_RISK")
+EDUCATION_RISK=$(envelope assertion add pred-obj string "mitigation" string "Omit institution names, use general timeframes, focus on skills not credentials" "$EDUCATION_RISK")
+RISK_ASSESSMENT=$(envelope assertion add pred-obj string "riskCategory" envelope "$EDUCATION_RISK" "$RISK_ASSESSMENT")
+
+echo "$RISK_ASSESSMENT" > output/attestation-risk-assessment.envelope
+
+echo "Attestation Risk Assessment:"
+envelope format --type tree "$RISK_ASSESSMENT"
+```
+
+🔍
+```console
+"Attestation Risk Assessment" [
+   "riskCategory": "Technical Skills Risk" [
+      "riskLevel": "Low"
+      "rationale": "Technical skills are broadly shared by many developers"
+      "mitigation": "Use general skill domains without unique specializations"
+   ]
+   "riskCategory": "Project Details Risk" [
+      "riskLevel": "Medium"
+      "rationale": "Project patterns can sometimes be traced to specific individuals"
+      "mitigation": "Use evidence commitments and elide client names"
+   ]
+   "riskCategory": "Educational Background Risk" [
+      "riskLevel": "High"
+      "rationale": "Specific degrees, years, and institutions are highly identifying"
+      "mitigation": "Omit institution names, use general timeframes, focus on skills not credentials"
+   ]
+]
+```
+
+By understanding these risk levels, Amira can make informed decisions about what to include in her attestations and how to structure them to protect her privacy.
+
 ## Understanding the Advanced Attestation Framework
 
 In this tutorial, we've seen how Amira creates a sophisticated self-attestation framework:
@@ -628,11 +738,51 @@ In this tutorial, we've seen how Amira creates a sophisticated self-attestation 
 
 7. **Fair Witness Principles at Scale**: Consistently applying proper context, limitations, and verification methods across all attestation types.
 
+8. **Value and Ethics Integration**: Including public interest attestations that demonstrate alignment with project values.
+
+9. **Risk-Aware Disclosure**: Carefully assessing the privacy risks of different attestation types and using appropriate mitigations.
+
 This approach enables Amira to build comprehensive trust frameworks without revealing her identity, using cryptographic verification and selective disclosure to control what information is shared with whom.
+
+### Theory to Practice: Attestation Frameworks and Fair Witnessing
+
+The self-attestation framework you've just implemented demonstrates several advanced identity concepts:
+
+1. **Fair Witnessing**: By documenting specific technical skills with verifiable evidence, you've implemented the **Fair Witness approach** to attestations. This includes separating observed facts from interpretations, documenting methodology, and acknowledging limitations - creating attestations that others can evaluate on their merits.
+   > **Historical Context**: The term "Fair Witness" comes from Robert Heinlein's "Stranger in a Strange Land," describing individuals trained to observe events objectively and report exactly what they see without interpretation or bias.
+
+2. **Evidence Commitments**: The links to project contributions and education implement **evidence commitments** - cryptographically verifiable references to external evidence that support claims without requiring disclosure of personal identity. These provide objective anchors that others can independently validate.
+   > **Why this matters**: Unlike simple claims ("I know security"), evidence commitments provide a verifiable basis for assertions, allowing others to independently validate claims without requiring disclosure of personal identity.
+
+3. **Multi-Dimensional Trust Framework**: The different types of attestations (education, skills, risk assessment) implement a **comprehensive trust framework**. Unlike flat credential systems, this approach provides multiple perspectives that collectively build a nuanced participation profile.
+   > **Real-World Analogy**: This is similar to how employers assess candidates through multiple dimensions: formal credentials, skills tests, previous work products, and reference checks. Each dimension provides a different perspective on capabilities.
+
+4. **Contextual Disclosure Through Elision**: The different elided views you created implement **proportional disclosure** - sharing only what's relevant for a specific audience or context. This supports the data minimization principle while still allowing verification of the information shared.
+   > **Cross-Tutorial Connection**: This builds on the elision concept from Tutorial #2, but applies it specifically to create audience-appropriate views of attestations. In Tutorial #4, you'll extend this to manage peer endorsements with similar contextual disclosure.
+
+5. **Progressive Trust Development**: The framework allows BWHacker to start with minimal disclosure (the public view) and progressively reveal more information as relationships develop. This implements **graduated information disclosure**, where trust and disclosure increase in tandem throughout a relationship.
+
+6. **Risk-Reward Assessment**: By creating different views for different audiences, BWHacker is implementing a **risk-reward calculus** - carefully weighing the benefits of additional disclosure against potential privacy risks for each specific context.
+
+These attestation concepts enable BWHacker to build credible, verifiable trust without compromising her pseudonymity, combining the benefits of traditional credentialing with the privacy advantages of self-sovereign identity.
 
 ## Next Steps
 
 In the next tutorial, we'll explore how Amira can further strengthen her professional identity through peer endorsements - attestations made by others that verify her claims and add additional trust signals to her pseudonymous identity.
+
+For a deeper understanding of how self-attestations fit into a broader pseudonymous participation strategy, explore the [Public Participation Profiles](../concepts/public-participation-profiles.md) concept, which explains the principles behind building trust while maintaining privacy. You can also see practical examples of different attestation types in [Public Participation Profile Examples](../concepts/public-participation-profile-examples.md).
+
+## Example Scripts
+
+This tutorial has two accompanying scripts in the `examples/03-profile-xid` directory:
+
+1. **`create_self_attestation_framework.sh`**: Implements the advanced self-attestation framework exactly as shown in this tutorial, including the elision-based approach to selective disclosure. This is the primary script that matches the tutorial content.
+
+2. **`create_alternative_profile.sh`**: Demonstrates an alternative approach to progressive disclosure without using elision. Instead of selectively eliding parts of a single envelope, it creates separate profiles with different information levels. This script also includes additional fair witness practices and portfolio structures.
+
+Both approaches have their advantages:
+- The elision approach maintains cryptographic verifiability across all views
+- The separate profile approach provides more complete control over exactly what is included in each context
 
 ## Exercises
 

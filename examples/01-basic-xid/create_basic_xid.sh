@@ -3,13 +3,13 @@
 
 set -e # Exit on error
 
-echo "=== Amira's Pseudonymous Identity Journey ==="
+echo "=== BWHacker's Pseudonymous Identity Journey ==="
 
 # Step 1: Creating SSH Keys and XID Foundation
 echo -e "\n1. Creating a secure foundation with SSH and XID keys..."
 
 # Generate an SSH key for Git authentication and signing
-SSH_KEY_FILE="./amira-ssh-key"
+SSH_KEY_FILE="./bwhacker-ssh-key"
 SSH_PUB_KEY_FILE="${SSH_KEY_FILE}.pub"
 
 if [ ! -f "$SSH_KEY_FILE" ]; then
@@ -25,27 +25,27 @@ SSH_KEY_FINGERPRINT=$(ssh-keygen -l -E sha256 -f "$SSH_PUB_KEY_FILE" | awk '{pri
 echo "SSH public key fingerprint: $SSH_KEY_FINGERPRINT"
 
 # Generate private key for the XID
-envelope generate prvkeys > amira-key.private
+envelope generate prvkeys > bwhacker-key.private
 echo "Private key generated - keep this secret and secure!"
 
 # Derive the corresponding public key
-PRIVATE_KEYS=$(cat amira-key.private)
+PRIVATE_KEYS=$(cat bwhacker-key.private)
 PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-echo "$PUBLIC_KEYS" > amira-key.public
+echo "$PUBLIC_KEYS" > bwhacker-key.public
 
 # View the public key
 echo "Public key created (safe to share):"
-cat amira-key.public | head -n 1
+cat bwhacker-key.public | head -n 1
 
 # Step 2: Creating a Minimal Pseudonymous XID
 echo -e "\n2. Creating a minimal pseudonymous XID..."
 
 # Create an XID with a pseudonym and public key
-envelope xid new --name "BWHacker" "$PUBLIC_KEYS" > amira-xid.envelope
+envelope xid new --name "BWHacker" "$PUBLIC_KEYS" > bwhacker-xid.envelope
 
 # View the XID document structure
 echo "Initial pseudonymous XID document:"
-XID_DOC=$(cat amira-xid.envelope)
+XID_DOC=$(cat bwhacker-xid.envelope)
 envelope format --type tree "$XID_DOC"
 
 # Step 3: Understanding the XID Identifier
@@ -67,14 +67,14 @@ XID_DOC=$(envelope assertion add pred-obj string "gitHubProfileURL" string "http
 # Add SSH key for Git commit verification
 XID_DOC=$(envelope assertion add pred-obj string "sshKey" string "$SSH_PUB_KEY" "$XID_DOC")
 XID_DOC=$(envelope assertion add pred-obj string "sshKeyFingerprint" string "$SSH_KEY_FINGERPRINT" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "sshKeyObservationURL" string "https://api.github.com/users/BWHacker/ssh_signing_keys" "$XID_DOC")
+XID_DOC=$(envelope assertion add pred-obj string "sshKeyVerificationURL" string "https://api.github.com/users/BWHacker/ssh_signing_keys" "$XID_DOC")
 
 # Add basic professional information
 XID_DOC=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$XID_DOC")
 XID_DOC=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional practice" "$XID_DOC")
 
 # Save updated XID
-echo "$XID_DOC" > amira-xid.envelope
+echo "$XID_DOC" > bwhacker-xid.envelope
 
 # View the enhanced XID
 echo "Enhanced XID with GitHub identity and SSH key observation:"
@@ -87,7 +87,7 @@ echo -e "\n5. Organizing XID information..."
 mkdir -p output
 
 # Copy the XID file to the organized location
-cp amira-xid.envelope output/amira-xid.envelope
+cp bwhacker-xid.envelope output/bwhacker-xid.envelope
 cp "$SSH_KEY_FILE" output/
 cp "$SSH_PUB_KEY_FILE" output/
 
@@ -105,13 +105,13 @@ ATTESTATION=$(envelope assertion add pred-obj string "experienceYears" string "3
 ATTESTATION=$(envelope assertion add pred-obj string "projectCount" string "5" "$ATTESTATION")
 
 # Save the attestation
-echo "$ATTESTATION" > output/skill-attestation.envelope
+echo "$ATTESTATION" > output/bwhacker-skill-attestation.envelope
 
 # Sign the attestation with private key
 SIGNED_ATTESTATION=$(envelope sign -s "$PRIVATE_KEYS" "$ATTESTATION")
 
 # Save the signed attestation
-echo "$SIGNED_ATTESTATION" > output/skill-attestation-signed.envelope
+echo "$SIGNED_ATTESTATION" > output/bwhacker-skill-attestation-signed.envelope
 
 # View the signed attestation
 echo "Signed skill attestation:"
@@ -133,7 +133,7 @@ echo "git config --local user.signingkey \"$SSH_KEY_FILE\""
 echo "git config --local gpg.format ssh"
 echo "git config --local commit.gpgsign true"
 
-echo -e "\n=== Pseudonymous Identity Journey Complete ==="
+echo -e "\n=== BWHacker's Pseudonymous Identity Journey Complete ==="
 echo "This example demonstrates how XIDs enable pseudonymous contributions"
 echo "with GitHub-verifiable identity through SSH key connections,"
 echo "without revealing personal identity."

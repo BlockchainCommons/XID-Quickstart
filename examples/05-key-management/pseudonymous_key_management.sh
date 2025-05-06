@@ -1,5 +1,5 @@
 #!/bin/bash
-# manage_keys.sh - Script for "Key Management with Pseudonymous XIDs" tutorial
+# pseudonymous_key_management.sh - Example script for "Key Management with Pseudonymous XIDs" tutorial
 
 # Continue even with some errors to show the complete process
 set +e
@@ -7,7 +7,7 @@ set +e
 echo "=== Key Management with Pseudonymous XIDs ==="
 
 # Create output directory
-mkdir -p output evidence
+mkdir -p output
 
 echo -e "\n1. Examining BWHacker's existing pseudonymous XID..."
 
@@ -36,15 +36,13 @@ echo "$TABLET_PRIVATE_KEYS" > output/tablet-key.private
 TABLET_PUBLIC_KEYS=$(envelope generate pubkeys "$TABLET_PRIVATE_KEYS")
 echo "$TABLET_PUBLIC_KEYS" > output/tablet-key.public
 XID_DOC=$(envelope xid key add --name "Tablet Key" --allow sign "$TABLET_PUBLIC_KEYS" "$XID_DOC")
-echo "$XID_DOC" > output/bwhacker-trust-profile.envelope
+echo "$XID_DOC" > output/amira-xid.envelope
 
 # Display the XID details
 XID_ID=$(envelope xid id "$XID_DOC")
-echo "BWHacker's XID identifier: $XID_ID"
-echo -e "\nBWHacker's current XID structure:"
-envelope format --type tree "$XID_DOC"
+echo "BWHacker's XID identifier:"
+echo "$XID_ID"
 
-# Now check BWHacker's current keys
 echo -e "\nCurrent keys in BWHacker's XID:"
 KEYS=$(envelope xid key all "$XID_DOC")
 echo "$KEYS"
@@ -59,27 +57,23 @@ KEY_POLICY=$(envelope assertion add pred-obj string "principle" string "Recovery
 KEY_POLICY=$(envelope assertion add pred-obj string "rotationPolicy" string "Regular rotation for active keys, immediate rotation for suspected compromise" "$KEY_POLICY")
 
 echo "$KEY_POLICY" > output/bwhacker-key-policy.envelope
-echo "Key policy created and saved to output/bwhacker-key-policy.envelope"
 
 echo -e "\n2. Creating a trust-based key hierarchy..."
 
 # First, rename the primary key for clarity
-echo "Renaming primary key for clarity..."
 PRIMARY_KEY=$(cat output/amira-key.public)
 UPDATED_XID=$(envelope xid key rename "$PRIMARY_KEY" "BWHacker Primary Identity" "$XID_DOC")
 echo "$UPDATED_XID" > output/bwhacker-updated.envelope
 
-echo "Creating project-specific key..."
 # Create a project-specific key
 PROJECT_KEY_PRIVATE=$(envelope generate prvkeys)
 echo "$PROJECT_KEY_PRIVATE" > output/project-key.private
 PROJECT_KEY_PUBLIC=$(envelope generate pubkeys "$PROJECT_KEY_PRIVATE")
 echo "$PROJECT_KEY_PUBLIC" > output/project-key.public
 
-UPDATED_XID=$(envelope xid key add --name "Urban Design Project" --allow sign --allow encrypt "$PROJECT_KEY_PUBLIC" "$UPDATED_XID")
+UPDATED_XID=$(envelope xid key add --name "API Security Project" --allow sign --allow encrypt "$PROJECT_KEY_PUBLIC" "$UPDATED_XID")
 echo "$UPDATED_XID" > output/bwhacker-updated.envelope
 
-echo "Creating evidence commitment key..."
 # Create an evidence commitment key
 EVIDENCE_KEY_PRIVATE=$(envelope generate prvkeys)
 echo "$EVIDENCE_KEY_PRIVATE" > output/evidence-key.private
@@ -89,7 +83,15 @@ echo "$EVIDENCE_KEY_PUBLIC" > output/evidence-key.public
 UPDATED_XID=$(envelope xid key add --name "Evidence Commitment Key" --allow sign "$EVIDENCE_KEY_PUBLIC" "$UPDATED_XID")
 echo "$UPDATED_XID" > output/bwhacker-updated.envelope
 
-echo "Creating recovery key..."
+# Create an endorsement signing key
+ENDORSE_KEY_PRIVATE=$(envelope generate prvkeys)
+echo "$ENDORSE_KEY_PRIVATE" > output/endorsement-key.private
+ENDORSE_KEY_PUBLIC=$(envelope generate pubkeys "$ENDORSE_KEY_PRIVATE")
+echo "$ENDORSE_KEY_PUBLIC" > output/endorsement-key.public
+
+UPDATED_XID=$(envelope xid key add --name "Endorsement Signing Key" --allow sign "$ENDORSE_KEY_PUBLIC" "$UPDATED_XID")
+echo "$UPDATED_XID" > output/bwhacker-updated.envelope
+
 # Create a recovery key with limited permissions
 RECOVERY_KEY_PRIVATE=$(envelope generate prvkeys)
 echo "$RECOVERY_KEY_PRIVATE" > output/recovery-key.private
@@ -122,23 +124,20 @@ ROTATION_RECORD=$(envelope assertion add pred-obj string "action" string "Preven
 ROTATION_RECORD=$(envelope assertion add pred-obj string "methodology" string "Complete replacement with new key material" "$ROTATION_RECORD")
 
 echo "$ROTATION_RECORD" > output/key-rotation-record.envelope
-echo "Created key rotation record in output/key-rotation-record.envelope"
 
 # Generate a new tablet key
-echo "Generating new tablet key..."
 NEW_TABLET_KEY_PRIVATE=$(envelope generate prvkeys)
 echo "$NEW_TABLET_KEY_PRIVATE" > output/new-tablet-key.private
 NEW_TABLET_KEY_PUBLIC=$(envelope generate pubkeys "$NEW_TABLET_KEY_PRIVATE")
 echo "$NEW_TABLET_KEY_PUBLIC" > output/new-tablet-key.public
 
 # Remove the old tablet key and add the new one
-echo "Performing key rotation..."
 TABLET_KEY=$(envelope xid key find "Tablet Key" "$UPDATED_XID")
 ROTATED_XID=$(envelope xid key remove "$TABLET_KEY" "$UPDATED_XID")
 ROTATED_XID=$(envelope xid key add --name "Tablet Key (Rotated)" --allow sign "$NEW_TABLET_KEY_PUBLIC" "$ROTATED_XID")
 echo "$ROTATED_XID" > output/bwhacker-rotated.envelope
 
-# Check if the XID remains stable 
+# Verify that BWHacker's identity remains stable despite this key change
 ORIGINAL_ID=$(envelope xid id "$XID_DOC")
 ROTATED_ID=$(envelope xid id "$ROTATED_XID")
 echo "Original XID: $ORIGINAL_ID"
@@ -150,8 +149,7 @@ else
     echo "❌ Identity changed during rotation (unexpected)"
 fi
 
-# Create a rotation notification for collaborators
-echo "Creating key rotation notification..."
+# Create a notification for collaborators about the key rotation
 NOTIFICATION=$(envelope subject type string "Key Rotation Notification")
 NOTIFICATION=$(envelope assertion add pred-obj string "date" string "$(date +%Y-%m-%d)" "$NOTIFICATION")
 NOTIFICATION=$(envelope assertion add pred-obj string "keyChanged" string "Tablet Key" "$NOTIFICATION")
@@ -162,12 +160,10 @@ NOTIFICATION=$(envelope assertion add pred-obj string "verificationInstructions"
 PRIMARY_KEY_PRIVATE=$(cat output/amira-key.private)
 SIGNED_NOTIFICATION=$(envelope sign -s "$PRIMARY_KEY_PRIVATE" "$NOTIFICATION")
 echo "$SIGNED_NOTIFICATION" > output/key-rotation-notification.envelope
-echo "Created signed notification in output/key-rotation-notification.envelope"
 
-echo -e "\n4. Setting up recovery without identity exposure..."
+echo -e "\n4. Recovery without identity exposure..."
 
-# Create a trusted peer for social recovery
-echo "Creating trusted peer for social recovery..."
+# Establish a social recovery approach by creating a trusted peer XID
 PEER_KEYS_PRIVATE=$(envelope generate prvkeys)
 echo "$PEER_KEYS_PRIVATE" > output/trusted-peer.private
 PEER_KEYS_PUBLIC=$(envelope generate pubkeys "$PEER_KEYS_PRIVATE")
@@ -176,8 +172,7 @@ echo "$PEER_KEYS_PUBLIC" > output/trusted-peer.public
 PEER_XID=$(envelope xid new --name "TrustedPeer" "$PEER_KEYS_PUBLIC")
 echo "$PEER_XID" > output/trusted-peer.envelope
 
-# Create a recovery attestation signed by the peer
-echo "Creating peer-signed recovery attestation..."
+# Create a recovery attestation signed by this peer
 RECOVERY_ATTESTATION=$(envelope subject type string "Recovery Authorization")
 RECOVERY_ATTESTATION=$(envelope assertion add pred-obj string "regarding" string "$ORIGINAL_ID" "$RECOVERY_ATTESTATION")
 RECOVERY_ATTESTATION=$(envelope assertion add pred-obj string "recoveryKey" digest "$RECOVERY_KEY_PUBLIC" "$RECOVERY_ATTESTATION")
@@ -192,13 +187,13 @@ echo "$SIGNED_RECOVERY_ATTESTATION" > output/recovery-attestation.envelope
 
 echo "Simulating primary key loss and recovery process..."
 
-# Generate a new primary key to replace the "lost" one
+# Generate a new primary key to replace the lost one
 NEW_PRIMARY_KEY_PRIVATE=$(envelope generate prvkeys)
 echo "$NEW_PRIMARY_KEY_PRIVATE" > output/new-primary-key.private
 NEW_PRIMARY_KEY_PUBLIC=$(envelope generate pubkeys "$NEW_PRIMARY_KEY_PRIVATE")
 echo "$NEW_PRIMARY_KEY_PUBLIC" > output/new-primary-key.public
 
-# Use the recovery key to prepare for recovery
+# Use the recovery key to add this new primary key
 RECOVERY_KEY_PRIVATE=$(cat output/recovery-key.private)
 PRIMARY_KEY=$(cat output/amira-key.public)
 
@@ -210,16 +205,16 @@ RECOVERY_RECORD=$(envelope assertion add pred-obj string "methodology" string "S
 RECOVERY_RECORD=$(envelope assertion add pred-obj string "verificationMethod" string "Cross-referenced with existing attestations in BWHacker's trust framework" "$RECOVERY_RECORD")
 RECOVERY_RECORD=$(envelope assertion add pred-obj string "peerAttestation" envelope "$SIGNED_RECOVERY_ATTESTATION" "$RECOVERY_RECORD")
 
-# Sign the recovery record with the recovery key
+# Sign the recovery record
 SIGNED_RECOVERY_RECORD=$(envelope sign -s "$RECOVERY_KEY_PRIVATE" "$RECOVERY_RECORD")
 echo "$SIGNED_RECOVERY_RECORD" > output/recovery-record.envelope
 
-# Perform the recovery by removing old primary key and adding new one
+# Now remove old primary key and add new one
 RECOVERED_XID=$(envelope xid key remove "$PRIMARY_KEY" "$ROTATED_XID")
 RECOVERED_XID=$(envelope xid key add --name "BWHacker Primary Identity (Recovered)" --allow all "$NEW_PRIMARY_KEY_PUBLIC" "$RECOVERED_XID")
 echo "$RECOVERED_XID" > output/bwhacker-recovered.envelope
 
-# Verify that the XID remained stable
+# Verify that the XID remained stable through this recovery process
 RECOVERED_ID=$(envelope xid id "$RECOVERED_XID")
 echo "Original XID: $ORIGINAL_ID"
 echo "After recovery: $RECOVERED_ID"
@@ -230,10 +225,9 @@ else
     echo "❌ Identity changed during recovery (unexpected)"
 fi
 
-echo -e "\n5. Implementing progressive permission models..."
+echo -e "\n5. Progressive permission models..."
 
 # Create an initial collaboration key with minimal permissions
-echo "Creating initial collaboration key with minimal permissions..."
 COLLAB_KEY_PRIVATE=$(envelope generate prvkeys)
 echo "$COLLAB_KEY_PRIVATE" > output/collab-key.private
 COLLAB_KEY_PUBLIC=$(envelope generate pubkeys "$COLLAB_KEY_PRIVATE")
@@ -243,7 +237,6 @@ UPDATED_XID=$(envelope xid key add --name "New Collaboration (Initial)" --allow 
 echo "$UPDATED_XID" > output/bwhacker-updated2.envelope
 
 # Document the progressive permission plan
-echo "Creating progressive permission plan..."
 PERMISSION_PLAN=$(envelope subject type string "Progressive Permission Plan")
 PERMISSION_PLAN=$(envelope assertion add pred-obj string "keyName" string "New Collaboration (Initial)" "$PERMISSION_PLAN")
 PERMISSION_PLAN=$(envelope assertion add pred-obj string "initialPermissions" string "encrypt" "$PERMISSION_PLAN")
@@ -257,12 +250,12 @@ echo "$PERMISSION_PLAN" > output/permission-plan.envelope
 
 echo "Simulating permission upgrade after successful deliverable..."
 
-# Create a record of a successful deliverable
+# Create a record of the successful deliverable
 DELIVERABLE=$(envelope subject type string "Collaborative Deliverable")
-DELIVERABLE=$(envelope assertion add pred-obj string "project" string "Urban Park Sustainability Analysis" "$DELIVERABLE")
+DELIVERABLE=$(envelope assertion add pred-obj string "project" string "API Security Assessment" "$DELIVERABLE")
 DELIVERABLE=$(envelope assertion add pred-obj string "date" string "$(date +%Y-%m-%d)" "$DELIVERABLE")
-DELIVERABLE=$(envelope assertion add pred-obj string "outcome" string "Successfully completed initial sustainability analysis" "$DELIVERABLE")
-DELIVERABLE=$(envelope assertion add pred-obj string "contribution" string "BWHacker: methodology design, data analysis; Collaborator: data collection, visualization" "$DELIVERABLE")
+DELIVERABLE=$(envelope assertion add pred-obj string "outcome" string "Successfully completed initial security analysis" "$DELIVERABLE")
+DELIVERABLE=$(envelope assertion add pred-obj string "contribution" string "BWHacker: security system design, vulnerability analysis; Collaborator: testing, documentation" "$DELIVERABLE")
 DELIVERABLE=$(envelope assertion add pred-obj string "evaluationMethod" string "Peer review by project stakeholders" "$DELIVERABLE")
 DELIVERABLE=$(envelope assertion add pred-obj string "evaluationResult" string "Exceeds expectations - methodology highly praised" "$DELIVERABLE")
 
@@ -283,15 +276,17 @@ UPGRADE_RECORD=$(envelope assertion add pred-obj string "limitations" string "Si
 SIGNED_UPGRADE_RECORD=$(envelope sign -s "$NEW_PRIMARY_KEY_PRIVATE" "$UPGRADE_RECORD")
 echo "$SIGNED_UPGRADE_RECORD" > output/permission-upgrade-record.envelope
 
-# Find and remove the original collaboration key
+# Find the collaboration key
 COLLAB_KEY=$(envelope xid key find "New Collaboration (Initial)" "$UPDATED_XID")
+
+# Remove the original key
 PROGRESSIVE_XID=$(envelope xid key remove "$COLLAB_KEY" "$UPDATED_XID")
 
 # Add back with upgraded permissions and new name
 PROGRESSIVE_XID=$(envelope xid key add --name "New Collaboration (Stage 1)" --allow encrypt --allow sign "$COLLAB_KEY_PUBLIC" "$PROGRESSIVE_XID")
 echo "$PROGRESSIVE_XID" > output/bwhacker-progressive.envelope
 
-# Check the updated permission structure
+# Verify the new permission structure
 echo -e "\nUpdated permission structure:"
 for KEY in $(envelope xid key all "$PROGRESSIVE_XID"); do
     NAME=$(envelope xid key name "$KEY" "$PROGRESSIVE_XID" 2>/dev/null || echo "Unnamed key")
@@ -299,7 +294,7 @@ for KEY in $(envelope xid key all "$PROGRESSIVE_XID"); do
     echo "- $NAME: $PERMS"
 done
 
-echo -e "\n6. Creating BWHacker's comprehensive key management plan..."
+echo -e "\n6. BWHacker's complete key management plan..."
 
 # Create a comprehensive key management plan
 KM_PLAN=$(envelope subject type string "BWHacker's Comprehensive Key Management Plan")
@@ -310,9 +305,10 @@ KM_PLAN=$(envelope assertion add pred-obj string "principle" string "Apply least
 KM_PLAN=$(envelope assertion add pred-obj string "principle" string "Document all key changes with fair witnessing principles" "$KM_PLAN")
 KM_PLAN=$(envelope assertion add pred-obj string "principle" string "Enable progressive trust through granular permissions" "$KM_PLAN")
 KM_PLAN=$(envelope assertion add pred-obj string "principle" string "Maintain stable identity through all key changes" "$KM_PLAN")
+KM_PLAN=$(envelope assertion add pred-obj string "principle" string "Preserve endorsement validity through key rotations" "$KM_PLAN")
 
 # Add key inventory structure
-KM_PLAN=$(envelope assertion add pred-obj string "keyCategories" string "Identity, Project-specific, Function-specific, Recovery, Collaboration" "$KM_PLAN")
+KM_PLAN=$(envelope assertion add pred-obj string "keyCategories" string "Identity, Project-specific, Function-specific, Recovery, Collaboration, Endorsement" "$KM_PLAN")
 KM_PLAN=$(envelope assertion add pred-obj string "storagePractices" string "Primary keys: offline secure storage; Project keys: project-specific hardware; Recovery keys: distributed with trusted peers" "$KM_PLAN")
 
 # Add rotation and recovery policies
@@ -322,11 +318,12 @@ KM_PLAN=$(envelope assertion add pred-obj string "recoveryProtocol" string "Soci
 # Add documentation requirements
 KM_PLAN=$(envelope assertion add pred-obj string "documentationRequirements" string "All key operations must include: date, justification, methodology, limitations, and verification method" "$KM_PLAN")
 KM_PLAN=$(envelope assertion add pred-obj string "notificationProtocol" string "All collaborators must receive signed notifications of key changes that affect them" "$KM_PLAN")
+KM_PLAN=$(envelope assertion add pred-obj string "endorsementPolicy" string "All endorsements must be preserved through key changes with signed validity updates" "$KM_PLAN")
 
 # Sign the key management plan
 SIGNED_KM_PLAN=$(envelope sign -s "$NEW_PRIMARY_KEY_PRIVATE" "$KM_PLAN")
 echo "$SIGNED_KM_PLAN" > output/bwhacker-key-management-plan.envelope
 
-echo -e "\n=== BWHacker's Key Management Strategy Complete ==="
+echo -e "\n=== Key Management with Pseudonymous XIDs Complete ==="
 echo "This demonstration shows how to manage keys for a pseudonymous identity"
 echo "while maintaining privacy and supporting progressive trust development."

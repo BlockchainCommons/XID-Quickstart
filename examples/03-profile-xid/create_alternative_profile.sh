@@ -1,10 +1,15 @@
 #!/bin/bash
-# create_profile.sh - Example script for "Building Trust with Pseudonymous XIDs" tutorial
+# create_alternative_profile.sh - Alternative approach to XID profile creation
+#
+# This script demonstrates an alternative approach to creating XIDs with progressive disclosure
+# without using elision. While the tutorial and create_self_attestation_framework.sh show elision-based
+# selective disclosure, this script shows how to create separate profiles with different
+# information levels. It also includes additional fair witness practices and portfolio structures.
 
 # This will continue even with some errors
 set +e
 
-echo "=== Building BWHacker's Professional Profile XID ==="
+echo "=== Building BWHacker's Alternative Profile XID ==="
 
 # Create output directory
 mkdir -p output
@@ -14,13 +19,13 @@ echo -e "\n1. Starting with BWHacker's basic XID..."
 
 # Create a new XID for this tutorial
 PRIVATE_KEYS=$(envelope generate prvkeys)
-echo "$PRIVATE_KEYS" > output/amira-key.private
+echo "$PRIVATE_KEYS" > output/bwhacker-key.private
 PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-echo "$PUBLIC_KEYS" > output/amira-key.public
+echo "$PUBLIC_KEYS" > output/bwhacker-key.public
 
 # Create a basic XID with pseudonym and key
 XID_DOC=$(envelope xid new --name "BWHacker" "$PUBLIC_KEYS")
-echo "$XID_DOC" > output/amira-xid.envelope
+echo "$XID_DOC" > output/bwhacker-xid.envelope
 
 # View the starting point
 XID_ID=$(envelope xid id "$XID_DOC")
@@ -49,7 +54,7 @@ PROJECT_EVIDENCE=$(envelope assertion add pred-obj string "projectRole" string "
 PROJECT_EVIDENCE=$(envelope assertion add pred-obj string "contributionDate" string "2022-08-10" "$PROJECT_EVIDENCE")
 PROJECT_EVIDENCE=$(envelope assertion add pred-obj string "innovationMetric" string "60% reduction in data exposure with 35% authentication speed improvement" "$PROJECT_EVIDENCE")
 PROJECT_EVIDENCE=$(envelope assertion add pred-obj string "methodology" string "Zero-knowledge proofs with distributed rate limiting implementation" "$PROJECT_EVIDENCE")
-PROJECT_EVIDENCE$(envelope assertion add pred-obj string "assessmentMethod" string "System logs and security metrics available with permission" "$PROJECT_EVIDENCE")
+PROJECT_EVIDENCE=$(envelope assertion add pred-obj string "assessmentMethod" string "System logs and security metrics available with permission" "$PROJECT_EVIDENCE")
 
 # Add evidence to XID
 XID_DOC=$(envelope assertion add pred-obj string "evidence" envelope "$PROJECT_EVIDENCE" "$XID_DOC")
@@ -147,8 +152,8 @@ envelope format --type tree "$KNOWLEDGE"
 echo -e "\n7. Creating profiles for different trust contexts..."
 
 # Save the complete profile
-echo "$XID_DOC" > output/amira-professional-profile.envelope
-echo "Saved complete profile to output/amira-professional-profile.envelope"
+echo "$XID_DOC" > output/bwhacker-professional-profile.envelope
+echo "Saved complete profile to output/bwhacker-professional-profile.envelope"
 
 # We'll demonstrate different levels of data minimization through creating
 # separate profiles from the same base XID rather than using elision
@@ -175,5 +180,6 @@ echo "1. Complete profile: All information for trusted relationships"
 echo "2. Collaboration profile: Technical details for potential collaborators"
 echo "3. Public profile: Minimal information for public consumption"
 
-echo -e "\n=== BWHacker's Pseudonymous Professional Profile XID Creation Complete ==="
+echo -e "\n=== BWHacker's Alternative Profile Creation Complete ==="
 echo "This profile demonstrates building trust through evidence and attestations while maintaining pseudonymity."
+echo "It shows an alternative approach to progressive disclosure without using elision."

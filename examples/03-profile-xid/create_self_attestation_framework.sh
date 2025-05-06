@@ -1,5 +1,7 @@
 #!/bin/bash
-# create_advanced_attestations.sh - Script for "Advanced Self-Attestation Frameworks with XIDs" tutorial
+# create_self_attestation_framework.sh - Script for "Advanced Self-Attestation Frameworks with XIDs" tutorial
+# This script implements the functionality demonstrated in the tutorial, creating a
+# comprehensive self-attestation framework with evidence commitments and elision
 
 # This will continue on error but print what failed
 set +e
@@ -8,44 +10,44 @@ set +e
 mkdir -p output
 mkdir -p evidence
 
-echo "=== Building BWHacker's Advanced Attestation Framework ==="
+echo "=== Building BWHacker's Self-Attestation Framework ==="
 
 # Step 1: Loading or Creating BWHacker's XID
 echo -e "\n1. Loading or creating BWHacker's XID..."
 
 # Try to find an existing XID from previous tutorials
 if [ -f "../02-xid-structure/output/enhanced-xid.envelope" ]; then
-    cp ../02-xid-structure/output/enhanced-xid.envelope output/amira-xid.envelope
-    cp ../02-xid-structure/output/amira-key.private output/ 2>/dev/null || true
-    cp ../02-xid-structure/output/amira-key.public output/ 2>/dev/null || true
+    cp ../02-xid-structure/output/enhanced-xid.envelope output/bwhacker-xid.envelope
+    cp ../02-xid-structure/output/amira-key.private output/bwhacker-key.private 2>/dev/null || true
+    cp ../02-xid-structure/output/amira-key.public output/bwhacker-key.public 2>/dev/null || true
     echo "Found and copied XID from tutorial #2"
 elif [ -f "../02-xid-structure/output/amira-xid-with-tablet.envelope" ]; then
-    cp ../02-xid-structure/output/amira-xid-with-tablet.envelope output/amira-xid.envelope
-    cp ../02-xid-structure/output/amira-key.private output/ 2>/dev/null || true
-    cp ../02-xid-structure/output/amira-key.public output/ 2>/dev/null || true
+    cp ../02-xid-structure/output/amira-xid-with-tablet.envelope output/bwhacker-xid.envelope
+    cp ../02-xid-structure/output/amira-key.private output/bwhacker-key.private 2>/dev/null || true
+    cp ../02-xid-structure/output/amira-key.public output/bwhacker-key.public 2>/dev/null || true
     echo "Found and copied XID from tutorial #2"
 elif [ -f "../01-basic-xid/output/amira-xid.envelope" ]; then
-    cp ../01-basic-xid/output/amira-xid.envelope output/
-    cp ../01-basic-xid/output/amira-key.private output/ 2>/dev/null || true
-    cp ../01-basic-xid/output/amira-key.public output/ 2>/dev/null || true
-    cp ../01-basic-xid/output/amira-ssh-key* output/ 2>/dev/null || true
+    cp ../01-basic-xid/output/amira-xid.envelope output/bwhacker-xid.envelope
+    cp ../01-basic-xid/output/amira-key.private output/bwhacker-key.private 2>/dev/null || true
+    cp ../01-basic-xid/output/amira-key.public output/bwhacker-key.public 2>/dev/null || true
+    cp ../01-basic-xid/output/amira-ssh-key* output/bwhacker-ssh-key* 2>/dev/null || true
     echo "Found and copied XID from tutorial #1"
 else
     # Create new keys and XID if needed
     echo "Creating new XID (previous tutorial files not found)..."
     
     # Create SSH keys
-    SSH_KEY_FILE="./output/amira-ssh-key"
+    SSH_KEY_FILE="./output/bwhacker-ssh-key"
     SSH_PUB_KEY_FILE="${SSH_KEY_FILE}.pub"
     ssh-keygen -t ed25519 -f "$SSH_KEY_FILE" -N "" -C "BWHacker <bwhacker@example.com>"
     SSH_PUB_KEY=$(cat "$SSH_PUB_KEY_FILE")
     SSH_KEY_FINGERPRINT=$(ssh-keygen -l -E sha256 -f "$SSH_PUB_KEY_FILE" | awk '{print $2}')
     
     # Create XID keys
-    envelope generate prvkeys > output/amira-key.private
-    PRIVATE_KEYS=$(cat output/amira-key.private)
+    envelope generate prvkeys > output/bwhacker-key.private
+    PRIVATE_KEYS=$(cat output/bwhacker-key.private)
     PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-    echo "$PUBLIC_KEYS" > output/amira-key.public
+    echo "$PUBLIC_KEYS" > output/bwhacker-key.public
     
     # Create basic XID
     XID_DOC=$(envelope xid new --name "BWHacker" "$PUBLIC_KEYS")
@@ -57,11 +59,11 @@ else
     XID_DOC=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$XID_DOC")
     XID_DOC=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional practice" "$XID_DOC")
     
-    echo "$XID_DOC" > output/amira-xid.envelope
+    echo "$XID_DOC" > output/bwhacker-xid.envelope
 fi
 
 # Load the XID document
-XID_DOC=$(cat output/amira-xid.envelope)
+XID_DOC=$(cat output/bwhacker-xid.envelope)
 XID=$(envelope xid id "$XID_DOC")
 echo "Using BWHacker's XID: $XID"
 
@@ -87,7 +89,7 @@ SELF_ATTESTATION_FRAMEWORK=$(envelope assertion add pred-obj string "evidenceMod
 
 # Add framework to XID
 XID_DOC=$(envelope assertion add pred-obj string "attestationFramework" envelope "$SELF_ATTESTATION_FRAMEWORK" "$XID_DOC")
-echo "$XID_DOC" > output/amira-xid-with-framework.envelope
+echo "$XID_DOC" > output/bwhacker-xid-with-framework.envelope
 
 # View the framework
 echo "Framework structure:"
@@ -97,11 +99,11 @@ envelope format --type tree "$SELF_ATTESTATION_FRAMEWORK"
 echo -e "\n3. Creating a hierarchical project attestation with evidence commitments..."
 
 # Create sample project evidence
-echo "API security enhancements with privacy-preserving authentication system" > evidence/project_summary.txt
-echo "Reduced data exposure by 60% while improving authentication speed by 35%" > evidence/security_metrics.txt
-echo "Implementation uses zero-knowledge proofs, rate limiting, and robust input validation" > evidence/design_approach.txt
-echo "Deployed to production environments across 3 geographic regions" > evidence/deployment_scope.txt
-echo "Received security audit approval from external firm (Ref: SA-2023-0142)" > evidence/audit_results.txt
+echo "Privacy-preserving location services for secure user tracking without data exposure" > evidence/project_summary.txt
+echo "Reduced PII data exposure by 80% while maintaining location accuracy for safety features" > evidence/security_metrics.txt
+echo "Implementation uses zero-knowledge proofs, local data processing, and secure push notifications" > evidence/design_approach.txt
+echo "Deployed as privacy-focused mobile app with offline capabilities for emergencies" > evidence/deployment_scope.txt
+echo "Received security audit approval from independent researchers (Ref: SA-2022-0189)" > evidence/audit_results.txt
 
 # Create cryptographic hashes of the evidence
 SUMMARY_HASH=$(cat evidence/project_summary.txt | envelope digest sha256)
@@ -142,7 +144,7 @@ PROJECT=$(envelope assertion add pred-obj string "independentVerification" strin
 
 # Add to XID
 XID_DOC=$(envelope assertion add pred-obj string "projectAttestation" envelope "$PROJECT" "$XID_DOC")
-echo "$XID_DOC" > output/amira-xid-with-project.envelope
+echo "$XID_DOC" > output/bwhacker-xid-with-project-attestation.envelope
 
 # View project attestation
 echo "Project attestation structure:"
@@ -185,7 +187,7 @@ EDUCATION=$(envelope assertion add pred-obj string "certification" envelope "$CE
 
 # Add to XID
 XID_DOC=$(envelope assertion add pred-obj string "educationalAttestation" envelope "$EDUCATION" "$XID_DOC")
-echo "$XID_DOC" > output/amira-xid-with-education.envelope
+echo "$XID_DOC" > output/bwhacker-xid-with-education.envelope
 
 # View education attestation
 echo "Educational credentials structure:"
@@ -236,7 +238,7 @@ PORTFOLIO=$(envelope assertion add pred-obj string "limitations" string "Some co
 
 # Add to XID
 XID_DOC=$(envelope assertion add pred-obj string "openSourcePortfolio" envelope "$PORTFOLIO" "$XID_DOC")
-echo "$XID_DOC" > output/amira-xid-with-os-portfolio.envelope
+echo "$XID_DOC" > output/bwhacker-xid-with-os-portfolio.envelope
 
 # View open source portfolio
 echo "Open source portfolio structure:"
@@ -287,29 +289,134 @@ SKILLS=$(envelope assertion add pred-obj string "lastUpdated" string "$(date +%Y
 
 # Add to XID
 XID_DOC=$(envelope assertion add pred-obj string "skillsAttestation" envelope "$SKILLS" "$XID_DOC")
-echo "$XID_DOC" > output/amira-xid-with-skills.envelope
+echo "$XID_DOC" > output/bwhacker-xid-with-skills-assessment.envelope
 
 # View skills assessment
 echo "Skills assessment structure:"
 envelope format --type tree "$SKILLS"
 
-# Step 7: Creating Custom Elided Views for Different Audiences
-echo -e "\n7. Creating custom elided views for different audiences..."
+# Step 7: Adding Public Interest Attestations
+echo -e "\n7. Adding public interest attestations..."
 
-# Create public view
+# Create public interest attestation
+PUBLIC_INTEREST=$(envelope subject type string "Public Interest Commitment")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "focus" string "Privacy as a Fundamental Right" "$PUBLIC_INTEREST")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "values" string "Data minimization, informed consent, user agency" "$PUBLIC_INTEREST")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "approach" string "Privacy by design, ethical data handling" "$PUBLIC_INTEREST")
+
+# Create ethical commitments
+COMMITMENTS=$(envelope subject type string "Ethical Commitments")
+COMMITMENTS=$(envelope assertion add pred-obj string "userControl" string "Systems that give users control over their data and identity" "$COMMITMENTS")
+COMMITMENTS=$(envelope assertion add pred-obj string "dataMinimization" string "Collecting only what's necessary for the specific functionality" "$COMMITMENTS")
+COMMITMENTS=$(envelope assertion add pred-obj string "safetyFirst" string "Designing for safety of vulnerable users as a primary requirement" "$COMMITMENTS")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "ethicalCommitments" envelope "$COMMITMENTS" "$PUBLIC_INTEREST")
+
+# Add context and limitations
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "limitations" string "Commitments represent aspirational values; implementation varies by context" "$PUBLIC_INTEREST")
+PUBLIC_INTEREST=$(envelope assertion add pred-obj string "verification" string "Demonstrated through consistent application in project work" "$PUBLIC_INTEREST")
+
+# Add to XID
+XID_DOC=$(envelope assertion add pred-obj string "publicInterestAttestation" envelope "$PUBLIC_INTEREST" "$XID_DOC")
+echo "$XID_DOC" > output/bwhacker-xid-with-public-interest.envelope
+
+# View the public interest attestation
+echo "Public Interest Attestation:"
+envelope format --type tree "$PUBLIC_INTEREST"
+
+# Step 8: Understanding Disclosure Risks
+echo -e "\n8. Creating risk assessment for attestations..."
+
+RISK_ASSESSMENT=$(envelope subject type string "Attestation Risk Assessment")
+
+# Technical skills risk assessment
+TECHNICAL_RISK=$(envelope subject type string "Technical Skills Risk")
+TECHNICAL_RISK=$(envelope assertion add pred-obj string "riskLevel" string "Low" "$TECHNICAL_RISK")
+TECHNICAL_RISK=$(envelope assertion add pred-obj string "rationale" string "Technical skills are broadly shared by many developers" "$TECHNICAL_RISK")
+TECHNICAL_RISK=$(envelope assertion add pred-obj string "mitigation" string "Use general skill domains without unique specializations" "$TECHNICAL_RISK")
+RISK_ASSESSMENT=$(envelope assertion add pred-obj string "riskCategory" envelope "$TECHNICAL_RISK" "$RISK_ASSESSMENT")
+
+# Project details risk assessment
+PROJECT_RISK=$(envelope subject type string "Project Details Risk")
+PROJECT_RISK=$(envelope assertion add pred-obj string "riskLevel" string "Medium" "$PROJECT_RISK")
+PROJECT_RISK=$(envelope assertion add pred-obj string "rationale" string "Project patterns can sometimes be traced to specific individuals" "$PROJECT_RISK")
+PROJECT_RISK=$(envelope assertion add pred-obj string "mitigation" string "Use evidence commitments and elide client names" "$PROJECT_RISK")
+RISK_ASSESSMENT=$(envelope assertion add pred-obj string "riskCategory" envelope "$PROJECT_RISK" "$RISK_ASSESSMENT")
+
+# Educational background risk assessment
+EDUCATION_RISK=$(envelope subject type string "Educational Background Risk")
+EDUCATION_RISK=$(envelope assertion add pred-obj string "riskLevel" string "High" "$EDUCATION_RISK")
+EDUCATION_RISK=$(envelope assertion add pred-obj string "rationale" string "Specific degrees, years, and institutions are highly identifying" "$EDUCATION_RISK")
+EDUCATION_RISK=$(envelope assertion add pred-obj string "mitigation" string "Omit institution names, use general timeframes, focus on skills not credentials" "$EDUCATION_RISK")
+RISK_ASSESSMENT=$(envelope assertion add pred-obj string "riskCategory" envelope "$EDUCATION_RISK" "$RISK_ASSESSMENT")
+
+# Add to XID document
+XID_DOC=$(envelope assertion add pred-obj string "riskAssessment" envelope "$RISK_ASSESSMENT" "$XID_DOC")
+echo "$XID_DOC" > output/bwhacker-xid-with-risk.envelope
+
+# Save risk assessment separately for reference
+echo "$RISK_ASSESSMENT" > output/attestation-risk-assessment.envelope
+
+# View the risk assessment
+echo "Attestation Risk Assessment:"
+envelope format --type tree "$RISK_ASSESSMENT"
+
+# Step 9: Creating Custom Elided Views for Different Audiences
+echo -e "\n9. Creating custom elided views for different audiences..."
+
+# Save the full XID with all views
+echo "$XID_DOC" > output/bwhacker-full-view.envelope
+
+# Create a public view for general professional networking
+# This elides project and educational attestations but keeps skills and open source portfolio
+echo "Creating public view (eliding project and educational attestations)..."
 PUBLIC_XID=$(envelope elide assertion predicate string "projectAttestation" "$XID_DOC")
-PUBLIC_XID=$(envelope elide assertion predicate string "educationalAttestation" "$PUBLIC_XID")
-echo "$PUBLIC_XID" > output/bwhacker-public-view.envelope
+if [ $? -eq 0 ]; then
+    PUBLIC_XID=$(envelope elide assertion predicate string "educationalAttestation" "$PUBLIC_XID")
+    if [ $? -eq 0 ]; then
+        echo "$PUBLIC_XID" > output/bwhacker-public-view.envelope
+        echo "✅ Successfully created public view"
+    else
+        echo "⚠️ Error eliding educational attestation, using partial elision"
+        echo "$PUBLIC_XID" > output/bwhacker-public-view.envelope
+    fi
+else
+    echo "⚠️ Error eliding project attestation, using full XID for public view"
+    echo "$XID_DOC" > output/bwhacker-public-view.envelope
+fi
 
-# Create technical view
+# Create a technical view for potential collaborators (keeps skills and open source)
+echo "Creating technical view (eliding project and educational attestations)..."
 TECHNICAL_XID=$(envelope elide assertion predicate string "projectAttestation" "$XID_DOC")
-TECHNICAL_XID=$(envelope elide assertion predicate string "educationalAttestation" "$TECHNICAL_XID")
-echo "$TECHNICAL_XID" > output/bwhacker-technical-view.envelope
+if [ $? -eq 0 ]; then
+    TECHNICAL_XID=$(envelope elide assertion predicate string "educationalAttestation" "$TECHNICAL_XID")
+    if [ $? -eq 0 ]; then
+        echo "$TECHNICAL_XID" > output/bwhacker-technical-view.envelope
+        echo "✅ Successfully created technical view"
+    else
+        echo "⚠️ Error eliding educational attestation, using partial elision"
+        echo "$TECHNICAL_XID" > output/bwhacker-technical-view.envelope
+    fi
+else
+    echo "⚠️ Error eliding project attestation, using full XID for technical view"
+    echo "$XID_DOC" > output/bwhacker-technical-view.envelope
+fi
 
-# Create project view
+# Create a project view for potential clients (keeps projects and skills)
+echo "Creating project view (eliding educational attestation and open source portfolio)..."
 PROJECT_XID=$(envelope elide assertion predicate string "educationalAttestation" "$XID_DOC")
-PROJECT_XID=$(envelope elide assertion predicate string "openSourcePortfolio" "$PROJECT_XID")
-echo "$PROJECT_XID" > output/bwhacker-project-view.envelope
+if [ $? -eq 0 ]; then
+    PROJECT_XID=$(envelope elide assertion predicate string "openSourcePortfolio" "$PROJECT_XID")
+    if [ $? -eq 0 ]; then
+        echo "$PROJECT_XID" > output/bwhacker-project-view.envelope
+        echo "✅ Successfully created project view"
+    else
+        echo "⚠️ Error eliding open source portfolio, using partial elision"
+        echo "$PROJECT_XID" > output/bwhacker-project-view.envelope
+    fi
+else
+    echo "⚠️ Error eliding educational attestation, using full XID for project view"
+    echo "$XID_DOC" > output/bwhacker-project-view.envelope
+fi
 
 # Compare sizes
 echo "Size comparison of different XID views:"
@@ -318,13 +425,16 @@ echo "Public view: $(echo "$PUBLIC_XID" | wc -c) bytes"
 echo "Technical view: $(echo "$TECHNICAL_XID" | wc -c) bytes"
 echo "Project view: $(echo "$PROJECT_XID" | wc -c) bytes"
 
-# Step 8: Signing and Verifying Attestations
-echo -e "\n8. Demonstrating attestation verification..."
+# Remove any old text files that might have been created in previous runs
+rm -f output/bwhacker-public-view.txt output/bwhacker-technical-view.txt output/bwhacker-project-view.txt
+
+# Step 10: Signing and Verifying Attestations
+echo -e "\n10. Demonstrating attestation verification..."
 
 # Check if private key exists
-if [ -f "output/amira-key.private" ]; then
-    PRIVATE_KEYS=$(cat output/amira-key.private)
-    PUBLIC_KEYS=$(cat output/amira-key.public)
+if [ -f "output/bwhacker-key.private" ]; then
+    PRIVATE_KEYS=$(cat output/bwhacker-key.private)
+    PUBLIC_KEYS=$(cat output/bwhacker-key.public)
     
     # Sign skills attestation
     SIGNED_SKILLS=$(envelope sign -s "$PRIVATE_KEYS" "$SKILLS")

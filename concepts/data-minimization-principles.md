@@ -2,127 +2,79 @@
 
 ## Expected Learning Outcomes
 By the end of this document, you will:
-- Understand the concept of data minimization and its importance
-- Know how elision works in Gordian Envelopes
-- Understand how to create different views of the same data for different audiences
-- See how verification works with elided data
-- Learn principles for progressive disclosure based on trust
+- Understand the concept of data minimization and its importance to privacy
+- Recognize the privacy and human rights risks of excessive data sharing
+- Learn strategies for contextual and progressive information disclosure
+- Understand how data minimization supports building trust
+- Identify best practices for minimizing data in different situations
 
-## What is Data Minimization?
+## Why Data Minimization Matters
 
 Data minimization is the practice of limiting the data you share to only what's necessary for a specific purpose. It follows the principle: **"Share what you must, protect what you can."**
 
-In the context of XIDs and Gordian Envelopes, data minimization means:
-- Selectively revealing only relevant information
-- Creating different views for different contexts
-- Maintaining privacy while enabling verification
-- Sharing information progressively as trust develops
+### Privacy Risks of Excessive Data Sharing
 
-## Elision: The Technical Foundation
+Every piece of information shared increases potential risks:
 
-Elision is the process of removing specific parts of a Gordian Envelope while maintaining its cryptographic integrity. 
+1. **Correlation**: When data from different sources is combined, it can reveal far more than intended. Even seemingly harmless details can complete a revealing puzzle about a person.
 
-For example, if you have an envelope:
-```
-"BWHacker" [
-   "name": "BWHacker"
-   "publicKeys": ur:crypto-pubkeys/hdcx...
-   "domain": "Distributed Systems & Security"
-   "experienceLevel": "8 years professional practice"
-   "potentialBias": "Particular focus on privacy-preserving systems"
-]
-```
+2. **Secondary Use**: Once data is shared, it may be repurposed beyond its original intent, potentially in ways that harm the subject's interests.
 
-You can elide the "potentialBias" assertion:
-```sh
-👉 PROFESSIONAL_XID=$(envelope elide assertion predicate string "potentialBias" "$XID_DOC")
-```
+3. **Disclosure Risks**: Sharing excessive data creates prejudice or disadvantage, particularly for marginalized individuals or communities.
 
-Resulting in:
-```
-"BWHacker" [
-   "name": "BWHacker"
-   "publicKeys": ur:crypto-pubkeys/hdcx...
-   "domain": "Distributed Systems & Security"
-   "experienceLevel": "8 years professional practice"
-   ELIDED
-]
-```
+4. **Digital Permanence**: Unlike conversations that fade from memory, digital data can persist indefinitely and be copied without limit.
 
-The magic of elision is that:
-1. The cryptographic integrity remains intact
-2. Signatures still verify
-3. The envelope's structure is preserved
-4. The removal of information is explicit (marked as ELIDED)
+### Human Rights Implications
 
-## Creating Different Views for Different Audiences
+Data minimization directly supports several important human rights:
 
-Data minimization through elision allows you to create different views of the same information for different contexts:
+1. **Privacy**: The right to control what personal information is shared and with whom
+2. **Autonomy**: The ability to make choices without undue influence based on profiled data
+3. **Non-discrimination**: Protection from judgments made on irrelevant personal data
+4. **Security**: Reduced attack surface for identity theft and other harms
 
-**Public View** (minimal information):
-```
-"BWHacker" [
-   "name": "BWHacker"
-   "publicKeys": ur:crypto-pubkeys/hdcx...
-   ELIDED
-   ELIDED
-   ELIDED
-]
-```
+## Beyond Anonymity and Pseudonymity
 
-**Collaborator View** (more details):
-```
-"BWHacker" [
-   "name": "BWHacker"
-   "publicKeys": ur:crypto-pubkeys/hdcx...
-   "domain": "Distributed Systems & Security"
-   "experienceLevel": "8 years professional practice"
-   ELIDED
-]
-```
+While anonymity (removing identifying data) and pseudonymity (using alternative identifiers) are important privacy tools, they are insufficient on their own:
 
-**Partner View** (full information):
-```
-"BWHacker" [
-   "name": "BWHacker"
-   "publicKeys": ur:crypto-pubkeys/hdcx...
-   "domain": "Distributed Systems & Security"
-   "experienceLevel": "8 years professional practice"
-   "potentialBias": "Particular focus on privacy-preserving systems"
-]
-```
+1. **Anonymized data can be de-anonymized** through correlation with other datasets
+2. **Pseudonyms accumulate histories** that can eventually be linked to real identities
+3. **Contextual information** often reveals as much as direct identifiers
 
-Each view contains a different level of detail while maintaining the same cryptographic verification.
+Data minimization addresses these limitations by reducing all data shared to the minimum needed for each specific interaction.
 
-## Verification with Elided Data
+## Elision as a Data Minimization Tool
 
-A critical feature of elision is that **signatures remain valid even when parts of the envelope are elided**.
+Gordian Envelopes enable a powerful form of data minimization through elision - the selective removal of specific pieces of information while maintaining the cryptographic integrity of the whole.
 
-For example, if you have a signed document:
-```
-"API Security Enhancement" [
-   "methodology": "Static analysis with open source tools"
-   "limitations": "No penetration testing performed"
-   "dataSources": "Public API documentation"
-   SIGNATURE
-]
-```
+For an in-depth explanation of how elision works cryptographically, see [Elision Cryptography](elision-cryptography.md).
 
-You can elide the "limitations" field:
-```
-"API Security Enhancement" [
-   "methodology": "Static analysis with open source tools"
-   ELIDED
-   "dataSources": "Public API documentation"
-   SIGNATURE
-]
-```
+## Contextual Information Sharing
 
-The signature still verifies because elision preserves the cryptographic structure, even though some content is hidden.
+Data minimization allows creating different views of the same identity for different contexts:
 
-## Progressive Disclosure Based on Trust
+1. **Public Context** - Share minimal, non-sensitive information
+   - Basic identifiers and public credentials
+   - General domain expertise
+   - No personal details or private information
 
-Data minimization enables progressive disclosure - revealing more information as trust develops:
+2. **Professional Context** - Share relevant professional information
+   - Domain-specific credentials
+   - Relevant experience and skills
+   - Professional history without personal details
+
+3. **Trusted Context** - Share more comprehensive information
+   - Detailed professional background
+   - Specific methodologies and approaches
+   - Limited personal context relevant to the relationship
+
+This contextual approach mirrors how we naturally share different levels of information in different social contexts in the physical world.
+
+## Progressive Trust Development
+
+Data minimization enables progressive trust - revealing more information as relationships develop:
+
+### Trust Stages with Concrete Examples
 
 1. **Initial Contact**: Share only basic information
    ```
@@ -132,7 +84,7 @@ Data minimization enables progressive disclosure - revealing more information as
    ]
    ```
 
-2. **Growing Trust**: Reveal professional information
+2. **Building Relationship**: Reveal professional information
    ```
    "BWHacker" [
       "name": "BWHacker"
@@ -142,39 +94,102 @@ Data minimization enables progressive disclosure - revealing more information as
    ]
    ```
 
-3. **Established Trust**: Share detailed perspectives and methods
+3. **Growing Trust**: Share more specific professional details
    ```
    "BWHacker" [
       "name": "BWHacker"
       "publicKeys": ur:crypto-pubkeys/hdcx...
       "domain": "Distributed Systems & Security"
       "experienceLevel": "8 years professional practice"
+      "skillAreas": "API security, Zero-knowledge systems, Protocol design"
+   ]
+   ```
+
+4. **Established Trust**: Reveal detailed perspectives and methods
+   ```
+   "BWHacker" [
+      "name": "BWHacker"
+      "publicKeys": ur:crypto-pubkeys/hdcx...
+      "domain": "Distributed Systems & Security"
+      "experienceLevel": "8 years professional practice"
+      "skillAreas": "API security, Zero-knowledge systems, Protocol design"
       "potentialBias": "Particular focus on privacy-preserving systems"
       "methodologicalApproach": "Security-first, user-focused development"
    ]
    ```
 
-This matches how human trust works in the real world - we don't share everything immediately but reveal more as relationships develop.
+This staged approach allows relationships to develop naturally, with information sharing matching the level of established trust - just as we share different levels of personal information at different stages of relationships in the physical world.
 
 ## Data Minimization Best Practices
 
-1. **Context Sensitivity**: Tailor information for specific audiences and purposes
-2. **Purpose Limitation**: Only share data necessary for the current interaction
-3. **Explicit Elision**: Make it clear when information has been removed
-4. **Staged Disclosure**: Create a planned progression of information sharing
-5. **Audience Appropriate**: Match information detail to the trust level
+1. **Purpose Analysis**: Clearly identify why information is being shared and what the minimum required is
+2. **Contextual Assessment**: Consider the specific audience and their legitimate need to know
+3. **Differential Disclosure**: Create multiple views of the same information for different contexts
+4. **Regular Review**: Periodically assess whether previously shared information should be updated or withdrawn
+5. **Transparency about Minimization**: Make it clear when information has been minimized to set expectations
+
+## Real-World Applications
+
+Data minimization principles apply to many scenarios:
+
+1. **Age Verification**: Proving someone is over 21 without revealing exact birthdate
+2. **Professional Credentials**: Demonstrating qualifications without exposing personal history
+3. **Financial Verification**: Proving financial capacity without revealing account details
+4. **Identity Authentication**: Verifying identity without exposing the full identity document
+5. **Collaboration**: Sharing relevant expertise without unnecessary personal disclosure
+
+## From Principles to Practice
+
+Understanding data minimization principles is one thing; implementing them effectively is another. Here's how these principles translate into practical action with Gordian Envelopes:
+
+### Practical Implementation of Data Minimization
+
+1. **Create a Complete Source Document**
+   - Begin with a comprehensive envelope containing all possible information
+   - Use careful organization of assertions for later selective sharing
+   - Include both essential and contextual information
+
+2. **Identify Context-Based Sharing Requirements**
+   - Define specific audiences and what each needs to know
+   - Create profiles for different sharing contexts (public, professional, trusted)
+   - Determine what information is appropriate for each trust level
+
+3. **Implement Through Elision**
+   - Use elision to create different views of the same document
+   - Technical implementation uses the `envelope elide` operation
+   - Sign documents before elision to maintain verifiability
+
+4. **Visual Indicators of Minimization**
+
+For instance, a professional profile shared in a public context would visually indicate elided content:
+
+```
+"BWHacker" [
+   "name": "BWHacker"
+   "publicKeys": ur:crypto-pubkeys/hdcx...
+   "domain": "Distributed Systems & Security"
+   ELIDED
+   ELIDED
+   ELIDED
+]
+```
+
+The `ELIDED` markers make it clear to recipients that information has been intentionally minimized rather than simply omitted. This transparency builds trust by acknowledging the data minimization process.
+
+For the technical details of how elision works cryptographically, see the [Elision Cryptography](elision-cryptography.md) document.
 
 ## Check Your Understanding
 
-1. What is elision and how does it support data minimization?
-2. How can the same XID be presented differently to different audiences?
-3. Why do signatures remain valid even after elision?
-4. How does progressive disclosure mirror real-world trust building?
-5. What types of information would you typically elide in different contexts?
+1. Why is data minimization important for privacy beyond simple anonymity?
+2. What privacy risks does data minimization help address?
+3. How does progressive trust support relationship development?
+4. What would a context-sensitive approach to data sharing look like in your field?
+5. How might you apply data minimization principles to your own personal or professional data?
 
 ## Next Steps
 
 After understanding data minimization principles, you can:
+- Learn about the technical implementation in [Elision Cryptography](elision-cryptography.md)
+- Explore how these principles apply in [Pseudonymous Trust Building](pseudonymous-trust-building.md)
+- See related ethical considerations in [Fair Witness Approach](fair-witness-approach.md)
 - Apply these concepts in [Tutorial 2: Understanding XID Structure](../tutorials/02-understanding-xid-structure.md)
-- Learn about the [Fair Witness Approach](fair-witness-approach.md)
-- Explore [Pseudonymous Trust Building](pseudonymous-trust-building.md)

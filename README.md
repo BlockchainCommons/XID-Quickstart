@@ -29,9 +29,11 @@ Start by exploring the theoretical foundations:
 1. [XID Fundamentals](concepts/xid-fundamentals.md) - Understanding the basics of eXtensible IDentifiers
 2. [Gordian Envelope Basics](concepts/gordian-envelope-basics.md) - The data structure that powers XIDs
 3. [Data Minimization Principles](concepts/data-minimization-principles.md) - How to control information disclosure
-4. [Fair Witness Approach](concepts/fair-witness-approach.md) - Making trustworthy assertions
-5. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
-6. [Key Management Essentials](concepts/key-management-essentials.md) - Securing and managing cryptographic keys
+4. [Elision Cryptography](concepts/elision-cryptography.md) - Techniques for selective disclosure
+5. [Fair Witness Approach](concepts/fair-witness-approach.md) - Making trustworthy assertions
+6. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
+7. [Public Participation Profiles](concepts/public-participation-profiles.md) - Using XIDs in community contexts
+8. [Key Management Essentials](concepts/key-management-essentials.md) - Securing and managing cryptographic keys
 
 ### Hands-on Tutorials
 

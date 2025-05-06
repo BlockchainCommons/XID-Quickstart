@@ -583,6 +583,31 @@ echo "$SIGNED_KM_PLAN" > output/bwhacker-key-management-plan.envelope
 - **Fair Witnessing in Key Management**: Applying transparency principles to key operations
 - **Endorsement Preservation**: Maintaining the validity of peer endorsements through key changes
 
+### Theory to Practice: Identity Continuity Through Cryptographic Evolution
+
+The key management strategies you've implemented demonstrate advanced concepts in cryptographic identity systems:
+
+1. **Identity/Key Separation**: When you rotated the tablet key while maintaining BWHacker's stable identifier, you demonstrated the crucial separation between cryptographic keys and identity. Unlike traditional systems where changing keys means changing identity, XIDs maintain continuity of identity across cryptographic changes.
+   > **Historical Context**: Early cryptographic identity systems like PGP linked identity directly to public keys, making key rotation a complex, identity-changing event. XIDs solve this problem by deriving identity from an inception event rather than from the current key material.
+
+2. **Least Privilege Architecture**: The different permission levels assigned to various keys (e.g., sign-only for tablet, full permissions for primary) implement the **least privilege principle**. This minimizes risk by ensuring that compromise of any single key limits the potential damage to specific operations.
+   > **Why this matters**: If BWHacker's tablet is compromised, the attacker can only sign statements - they cannot add or remove keys. This significantly limits the potential damage compared to a compromise of a key with full permissions.
+
+3. **Trust-Based Key Hierarchy**: By creating different keys for different purposes (primary identity, project-specific, evidence commitment, recovery), you've implemented a **context-specific key hierarchy** that aligns cryptographic capabilities with specific trust relationships and usage contexts.
+   > **Real-World Analogy**: This is similar to how you might have different physical keys for different purposes - a master key for your home, a separate key for a storage unit, another for a vehicle - each with different levels of access and consequences if lost.
+
+4. **Social Recovery Mechanisms**: The peer-based recovery process demonstrates **trust-based resilience**. Unlike centralized recovery systems that rely on a single authority, this distributed approach maintains the self-sovereign nature of the identity even during critical operations like recovery.
+   > **ANTI-PATTERN**: Many systems rely on centralized recovery through customer service or "forgot password" flows, creating single points of failure and social engineering vulnerabilities. Social recovery distributes this trust across multiple peers.
+
+5. **Progressive Permission Models**: The collaboration key that gained increased permissions after successful deliverables implements **graduated permission elevation**. This aligns cryptographic capabilities with demonstrated trustworthiness, rather than granting excessive permissions upfront.
+
+6. **Fair Witnessing in Key Operations**: The detailed documentation of key changes with observable facts, methodology, and limitations implements **transparent key governance**. This maintains the integrity of the identity system by making cryptographic operations transparent and verifiable.
+   > **Cross-Tutorial Connection**: This builds on the Fair Witness principles introduced in Tutorial #3, applying them specifically to key management operations for transparent yet privacy-preserving documentation.
+
+7. **Permission Types Specialization**: The tutorial demonstrates the full range of permission types (sign, encrypt, update, elect) and their appropriate application for different keys, implementing **functional permission separation**.
+
+These key management concepts enable XIDs to maintain long-term viability while adapting to changing security requirements and trust relationships - a critical aspect of persistent digital identity that's often overlooked in simpler identity systems.
+
 ## Permission Types
 
 When adding keys, you can specify different permission levels:
@@ -591,7 +616,7 @@ When adding keys, you can specify different permission levels:
 - **auth**: Authenticate as the subject
 - **sign**: Sign communications as the subject
 - **encrypt**: Encrypt messages from the subject
-- **elide**: Perform data minimization through elision on the subject's data
+- **elide**: Perform data minimization through elision on the subject's data (see [Elision Cryptography](../concepts/elision-cryptography.md))
 - **update**: Update service endpoints
 - **elect**: Add or remove other keys
 
@@ -609,6 +634,14 @@ When adding keys, you can specify different permission levels:
 ## Next Steps
 
 In the next tutorial, we'll see how BWHacker leverages her key management strategy while evolving her identity over time, maintaining trust relationships even as her cryptographic foundations change.
+
+## Example Scripts
+
+This tutorial has a corresponding example script that implements all the concepts covered:
+
+- [pseudonymous_key_management.sh](../examples/05-key-management/pseudonymous_key_management.sh) - Implements BWHacker's complete key management strategy including key hierarchy creation, key rotation, recovery mechanisms, and progressive permissions.
+
+You can run this script to see the entire key management workflow in action, or reference specific sections as you work through the tutorial.
 
 ## Exercises
 

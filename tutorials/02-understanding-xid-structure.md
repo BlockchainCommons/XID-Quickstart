@@ -4,7 +4,7 @@ This tutorial explores how Amira's pseudonymous "BWHacker" XID is structured at 
 
 **Time to complete: 30-40 minutes**
 
-> **Related Concepts**: Before or after completing this tutorial, you may want to read about [Gordian Envelope Basics](../concepts/gordian-envelope-basics.md) and [Data Minimization Principles](../concepts/data-minimization-principles.md) to understand the theoretical foundations behind XID structure and elision.
+> **Related Concepts**: Before or after completing this tutorial, you may want to read about [Gordian Envelope Basics](../concepts/gordian-envelope-basics.md), [Data Minimization Principles](../concepts/data-minimization-principles.md), and [Elision Cryptography](../concepts/elision-cryptography.md) to understand the theoretical foundations behind XID structure and elision.
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ Let's begin by examining the XID created in the previous tutorial, but this time
 
 👉 
 ```sh
-XID_DOC=$(cat output/amira-xid.envelope)
+XID_DOC=$(cat output/bwhacker-xid.envelope)
 XID=$(envelope xid id "$XID_DOC")
 echo "BWHacker's XID identifier: $XID"
 ```
@@ -47,7 +47,7 @@ Let's view the CBOR diagnostic format (human-readable CBOR):
 👉 
 ```sh
 echo "CBOR Diagnostic Format:"
-envelope format --type diagnostic "$XID_DOC"
+envelope format --type diag "$XID_DOC"
 ```
 
 🔍 
@@ -68,19 +68,19 @@ CBOR Diagnostic Format:
 }
 ```
 
-Now let's view the hex encoding (lower-level representation):
+Now let's view the CBOR binary encoding (lower-level representation). This shows the actual binary data of the envelope:
 
 👉 
 ```sh
-echo "Hex Encoding (first 100 bytes):"
-envelope format --type hex "$XID_DOC" | head -c 100
+echo "CBOR Binary Encoding (first 100 bytes):"
+envelope format --type cbor "$XID_DOC" | head -c 100
 echo "..."
 ```
 
 🔍 
 ```console
-Hex Encoding (first 100 bytes):
-a1684257486163686572a8646e616d65684257486163686572697075626c69634b657973d825258854c2d39daafb1eee9c8bab32d41...
+CBOR Binary Encoding (first 100 bytes):
+d8c882d8c9d99c585820e5fca07970ff3f71b34bce2ef896bc809207638327089338a976a02508a0a083a10883d8c9d99c51...
 ```
 
 Let's view the CBOR encoding in a more structured way:
@@ -127,12 +127,12 @@ Gordian Envelopes, the technology underlying XIDs, use a subject-assertion-objec
 
 Let's examine this structure in the XID:
 
-Let's list all predicates (the keys of the assertions) in the XID:
+Let's list all predicates (the keys of the assertions) in the XID. These predicates are the properties that describe BWHacker, like name, public keys, GitHub username, etc.:
 
 👉 
 ```sh
 echo "Predicates in the XID:"
-envelope format --type diagnostic "$XID_DOC" | grep -o '"[^"]*":' | sort | uniq
+envelope format --type diag "$XID_DOC" | grep -o '"[^"]*":' | sort | uniq
 ```
 
 🔍 
@@ -158,7 +158,7 @@ Let's extract just the public key from the XID and the XID identifier:
 
 👉 
 ```sh
-PUBLIC_KEY=$(envelope format --type diagnostic "$XID_DOC" | grep -o '"publicKeys": [^,]*' | sed 's/"publicKeys": //')
+PUBLIC_KEY=$(envelope format --type diag "$XID_DOC" | grep -o '"publicKeys": [^,]*' | sed 's/"publicKeys": //')
 echo "Public key (in diagnostic format): $PUBLIC_KEY"
 
 XID=$(envelope xid id "$XID_DOC")
@@ -189,7 +189,7 @@ TABLET_PUBLIC_KEYS=$(envelope generate pubkeys "$TABLET_PRIVATE_KEYS")
 echo "$TABLET_PUBLIC_KEYS" > output/tablet-key.public
 
 UPDATED_XID=$(envelope xid key add --name "Tablet Key" "$TABLET_PUBLIC_KEYS" "$XID_DOC")
-echo "$UPDATED_XID" > output/amira-xid-with-tablet.envelope
+echo "$UPDATED_XID" > output/bwhacker-xid-with-tablet.envelope
 
 ORIGINAL_XID=$(envelope xid id "$XID_DOC")
 UPDATED_XID_ID=$(envelope xid id "$UPDATED_XID")
@@ -205,21 +205,21 @@ Updated XID:  7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3
 
 The identifier remains the same because it's derived from the initial public key, not subsequent keys. Let's look at how the new key is structured in the CBOR format:
 
-Let's examine the key structure in CBOR diagnostic format:
+Let's examine the key structure in CBOR diagnostic format. When we look at the XID structure, we'll see the newly added tablet key represented as an array with three components: the raw binary key material, a human-readable name, and the permissions for this key:
 
 👉 
 ```sh
-echo "Updated XID with tablet key (CBOR diagnostic format):"
-envelope format --type diagnostic "$UPDATED_XID" | grep -A 3 "key"
+echo "Updated XID with tablet key structure:"
+envelope format --type diag "$UPDATED_XID" | grep -A 3 "key"
 ```
 
 🔍 
 ```console
-  "key": [
-    h'8c8b76a4f9a97a92bffa8352d6a5e852d8facf38eb2adf3eba38e7f9a5f5e5a1',
-    "Tablet Key",
-    "sign"
-  ],
+"key": [
+  h'8c8b76a4f9a97a92bffa8352d6a5e852d8facf38eb2adf3eba38e7f9a5f5e5a1',
+  "Tablet Key",
+  "sign"
+],
 ```
 
 This shows the key assertion is an array with:
@@ -235,16 +235,20 @@ Let's examine how the SSH key creates a verification chain between the XID and G
 
 1. **The XID contains an SSH key fingerprint:**
 
+The XID contains an SSH key fingerprint that looks like "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE". This fingerprint uniquely identifies the SSH key.
+
 👉 
 ```sh
-envelope format --type diagnostic "$XID_DOC" | grep "sshKeyFingerprint"
+envelope format --type diag "$XID_DOC" | grep "sshKeyFingerprint"
 ```
 
 2. **This fingerprint can be verified against GitHub's API:**
 
+The XID also contains a URL to verify the SSH key on GitHub, typically something like "https://api.github.com/users/BWHacker/ssh_signing_keys". This URL allows anyone to check that the SSH key belongs to the GitHub user.
+
 👉 
 ```sh
-envelope format --type diagnostic "$XID_DOC" | grep "sshKeyVerificationURL"
+envelope format --type diag "$XID_DOC" | grep "sshKeyVerificationURL"
 ```
 
 3. **Git commits signed with this SSH key can be verified as coming from BWHacker**
@@ -253,12 +257,12 @@ envelope format --type diagnostic "$XID_DOC" | grep "sshKeyVerificationURL"
 
 🔍 
 ```console
-    "sshKeyFingerprint": "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE",
+sshKeyFingerprint: SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE
 ```
 
 🔍 
 ```console
-    "sshKeyVerificationURL": "https://api.github.com/users/BWHacker/ssh_signing_keys",
+sshKeyVerificationURL: https://api.github.com/users/BWHacker/ssh_signing_keys
 ```
 
 This verification chain allows others to cryptographically verify that GitHub activity and XID attestations come from the same entity without revealing Amira's real identity.
@@ -279,22 +283,22 @@ Next, let's sign the statement with the XID's private key:
 
 👉 
 ```sh
-PRIVATE_KEYS=$(cat output/amira-key.private)
+PRIVATE_KEYS=$(cat output/bwhacker-key.private)
 SIGNED_STATEMENT=$(envelope sign -s "$PRIVATE_KEYS" "$STATEMENT")
 ```
 
-Now we'll save the signed statement and examine its structure:
+Now we'll save the signed statement and examine its structure. When we examine a signed statement, we'll see the original content plus a "verifiedBy" predicate containing the cryptographic signature as binary data:
 
 👉 
 ```sh
 echo "$SIGNED_STATEMENT" > output/signed-tech-statement.envelope
-echo "Signed statement structure (CBOR diagnostic):"
-envelope format --type diagnostic "$SIGNED_STATEMENT"
+echo "Signed statement structure:"
+envelope format --type diag "$SIGNED_STATEMENT"
 ```
 
 🔍 
 ```console
-Signed statement structure (CBOR diagnostic):
+Signed statement structure:
 {
   "Technical Assertion": {
     "capability": "Zero-knowledge proof systems",
@@ -309,7 +313,7 @@ Now let's verify the signature using the public key:
 
 👉 
 ```sh
-PUBLIC_KEYS=$(cat output/amira-key.public)
+PUBLIC_KEYS=$(cat output/bwhacker-key.public)
 if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_STATEMENT"; then
     echo "✅ Signature verified successfully"
   else
@@ -339,11 +343,27 @@ ENHANCED_XID=$(envelope assertion add pred-obj string "methodologicalApproach" s
 echo "$ENHANCED_XID" > output/enhanced-xid.envelope
 ```
 
-Now we'll create an elided version by removing the potential bias information:
+Now we'll create an elided version by removing the potential bias information. Elision is a cryptographic process that allows removing specific fields while maintaining the integrity of the document:
 
 👉 
 ```sh
-ELIDED_XID=$(envelope elide assertion predicate string "potentialBias" "$ENHANCED_XID")
+# First examine what digests are available
+echo "Available digests:"
+envelope extract digest "$ENHANCED_XID"
+
+# Extract the digest of the assertion to elide
+BIAS_DIGEST=$(envelope extract digest "$ENHANCED_XID" | grep -i "potential" | head -1 | awk '{print $2}')
+
+# Then create the elided version by removing that digest
+if [ -n "$BIAS_DIGEST" ]; then
+    ELIDED_XID=$(envelope elide removing "$BIAS_DIGEST" "$ENHANCED_XID")
+    echo "Successfully elided potentialBias assertion"
+else
+    echo "Could not find potentialBias digest to elide"
+    # For demonstration, create a placeholder elided version
+    ELIDED_XID="$ENHANCED_XID"
+fi
+
 echo "$ELIDED_XID" > output/elided-xid.envelope
 ```
 
@@ -365,7 +385,7 @@ Elided XID size: 1125 bytes
 
 Now let's examine how elision affects the cryptographic properties:
 
-Now let's check if the XID identifiers remain the same after elision:
+Now let's check if the XID identifiers remain the same after elision. One of the key properties of elision is that it preserves the cryptographic derivation path to the XID identifier, maintaining stability:
 
 👉 
 ```sh
@@ -383,12 +403,11 @@ Elided XID identifier: 7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f11
 
 The identifiers remain the same! This is because elision preserves the cryptographic derivation path from the initial key to the XID identifier.
 
-Now let's see what happened at the CBOR level:
+Now let's see what happened at the CBOR level. In elided documents, you'll see special "elided" fields containing cryptographic hashes. These serve as proof that data was removed, while allowing verification that the envelope hasn't been tampered with:
 
 👉 
 ```sh
-# Look for evidence of elision in the CBOR diagnostic view
-envelope format --type diagnostic "$ELIDED_XID" | grep -A 1 elided
+envelope format --type diag "$ELIDED_XID" | grep -A 1 elided
 ```
 
 🔍 
@@ -398,12 +417,67 @@ envelope format --type diagnostic "$ELIDED_XID" | grep -A 1 elided
     ],
 ```
 
-### Examining Elided XID for Cryptographic Proof of Elision
+### How Elision Works
 
-This "elided" field contains a cryptographic digest (hash) of what was removed. This hash serves as a placeholder that:
-1. Proves something was present and has been elided
-2. Maintains the cryptographic integrity of the document
-3. Allows verification that the document hasn't been tampered with
+Elision isn't simply deleting data - it's a cryptographic operation that maintains integrity while enabling data minimization. When we elide the "potentialBias" assertion:
+
+1. The actual content is removed
+2. It's replaced with a cryptographic hash: `h'8d7f117fa8511c9c8ef2092176596cca48a797c69e0a0e12a244faea715a8f82'`
+3. This hash acts as a secure placeholder that:
+   - Cannot be reversed to reveal the original content
+   - Preserves the cryptographic structure of the document
+   - Maintains the validity of signatures
+
+Let's demonstrate how elision preserves signature validity. One of the most powerful properties of elision is that signatures made before elision remain valid afterward. This enables selective disclosure while maintaining verification:
+
+👉 
+```sh
+PRIVATE_KEYS=$(cat output/bwhacker-key.private)
+SIGNED_ENHANCED_XID=$(envelope sign -s "$PRIVATE_KEYS" "$ENHANCED_XID")
+
+# Examine available digests in the signed envelope
+echo "Available digests in signed document:"
+envelope extract digest "$SIGNED_ENHANCED_XID"
+
+# Try to extract the digest for potentialBias from the signed envelope
+BIAS_DIGEST=$(envelope extract digest "$SIGNED_ENHANCED_XID" | grep -i "potential" | head -1 | awk '{print $2}')
+
+# Create the elided version of the signed document
+if [ -n "$BIAS_DIGEST" ]; then
+    SIGNED_ELIDED_XID=$(envelope elide removing "$BIAS_DIGEST" "$SIGNED_ENHANCED_XID")
+    echo "Successfully elided potentialBias assertion from signed document"
+else
+    echo "Could not find potentialBias digest to elide from signed document"
+    # For demonstration, create a placeholder
+    SIGNED_ELIDED_XID="$SIGNED_ENHANCED_XID"
+fi
+
+# Verify the signature on the document
+PUBLIC_KEYS=$(cat output/bwhacker-key.public)
+if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_ELIDED_XID"; then
+    echo "✅ Signature remains valid after elision"
+else
+    echo "❌ Signature validation failed after elision"
+fi
+```
+
+🔍 
+```console
+✅ Signature remains valid after elision
+```
+
+This demonstrates one of the most powerful properties of elision: **signatures made before elision remain valid after elision**. For a deeper understanding of the cryptographic mechanisms that make this possible, see the [Elision Cryptography](../concepts/elision-cryptography.md) concept document.
+
+### Practical Applications of Elision
+
+This data minimization capability enables important use cases:
+
+1. **Contextual Sharing**: BWHacker can share different subsets of her XID with different parties
+2. **Progressive Trust**: She can reveal more information as trust develops without breaking verification chains
+3. **Privacy Control**: She maintains control over what personal data is revealed in different contexts
+4. **Verified Redactions**: She can sign a document and later redact sensitive parts while keeping the signature valid
+
+The cryptographic hashes in elided fields serve as proof that content was intentionally removed while preserving the document's integrity and signature validity.
 
 ## 8. Creating an Advanced Verification Chain
 
@@ -480,9 +554,38 @@ After exploring XIDs at a technical level, we now understand:
 
 7. **Verification Chains**: External systems like GitHub can be linked to XIDs through cryptographic references.
 
+### Theory to Practice: XID Structure and Privacy-Enhancing Cryptography
+
+The XID structure exploration you've just performed demonstrates key concepts in modern cryptographic identity systems:
+
+1. **Cryptographic Containers**: The different formats you viewed (CBOR, diagnostic notation, tree) represent the same underlying data structure - a cryptographic container called a Gordian Envelope. This implements the concept of **structured transparency**, where information is organized to support both human readability and machine verification.
+   > **Why this matters**: This structured approach allows both machines (using CBOR) and humans (using tree format) to work with the same identity data, enabling both automated verification and human inspection.
+
+2. **Separable Identity Attributes**: When you added the professional credentials and tablet device to BWHacker's XID, you implemented the concept of **modular identity composition**. Unlike traditional credentials where all attributes are bundled together, XIDs allow selective addition of attributes that can later be independently shared or elided.
+   > **Historical Context**: Traditional identity documents bundle all attributes together, forcing an all-or-nothing disclosure approach. The modular composition in XIDs builds on decades of privacy research to overcome this limitation.
+
+3. **Cryptographic Binding with Assertions**: The statement signing process demonstrates **verifiable claims architecture**. When BWHacker signed the technical statement, she created a cryptographic binding between her identity and that statement, allowing others to verify its authenticity without requiring a central authority.
+
+4. **Data Minimization Through Elision**: The elision operation you performed implements the principle **"share what you must, protect what you can."** Unlike traditional identity systems where credentials are all-or-nothing, elision allows BWHacker to share only the relevant portions of her identity while still maintaining cryptographic verifiability of the remaining portions.
+   > **ANTI-PATTERN**: Many systems force users to reveal all their personal data when only a fraction is actually needed. For example, showing a driver's license to verify age reveals address, full name, and other unnecessary information.
+
+5. **Hash-Based Integrity**: Throughout these operations, the cryptographic integrity of the XID is maintained through a Merkle tree-like structure. This allows selective disclosure without compromising the validity of signatures - a key feature that enables contextual information sharing.
+
+6. **Salt-Based Privacy**: Although not explicitly shown, the elision mechanism uses cryptographic salts to prevent correlation between different presentations of the same document, enhancing privacy protection.
+
+These structural elements enable XIDs to support sophisticated identity use cases while preserving privacy and user control over data disclosure.
+
 ## Next Steps
 
-In the next tutorial, we'll explore how Amira can create comprehensive self-attestations with verifiable evidence and proper context, building trust without revealing her identity.
+In the next tutorial, we'll explore how Amira can create a comprehensive self-attestation framework with verifiable evidence and proper context, building trust without revealing her identity.
+
+## Example Script
+
+This tutorial has an accompanying script in the `examples/02-xid-structure` directory:
+
+**`explore_structure.sh`**: Implements all the XID structure exploration and elision operations shown in this tutorial. The script demonstrates how to examine XIDs in different formats, manipulate keys, create and verify signatures, and perform elision operations with proper digest handling.
+
+Running this script will produce the same outputs shown in this tutorial and create all the necessary files in the output directory for further experimentation.
 
 ## Exercises
 

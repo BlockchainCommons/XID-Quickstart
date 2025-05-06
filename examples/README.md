@@ -32,6 +32,7 @@ Each example directory typically contains:
 - **Shell scripts** that implement the tutorial functionality
 - An **output** subdirectory where generated files are stored
 - Any **key files** needed for the examples
+- For tutorial #5, a consolidated script (`pseudonymous_key_management.sh`) that demonstrates key management principles
 
 ## Example Use Cases
 
