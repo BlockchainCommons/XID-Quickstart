@@ -29,9 +29,11 @@ Start by exploring the theoretical foundations:
 1. [XID Fundamentals](concepts/xid-fundamentals.md) - Understanding the basics of eXtensible IDentifiers
 2. [Gordian Envelope Basics](concepts/gordian-envelope-basics.md) - The data structure that powers XIDs
 3. [Data Minimization Principles](concepts/data-minimization-principles.md) - How to control information disclosure
-4. [Fair Witness Approach](concepts/fair-witness-approach.md) - Making trustworthy assertions
-5. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
-6. [Key Management Essentials](concepts/key-management-essentials.md) - Securing and managing cryptographic keys
+4. [Elision Cryptography](concepts/elision-cryptography.md) - Techniques for selective disclosure
+5. [Fair Witness Approach](concepts/fair-witness-approach.md) - Making trustworthy assertions
+6. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
+7. [Public Participation Profiles](concepts/public-participation-profiles.md) - Using XIDs in community contexts
+8. [Key Management Essentials](concepts/key-management-essentials.md) - Securing and managing cryptographic keys
 
 ### Hands-on Tutorials
 
@@ -39,9 +41,9 @@ Then follow these tutorials for practical experience:
 
 1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Learn to create a basic pseudonymous identity
 2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Explore how XIDs are structured
-3. [Building Trust with Pseudonymous XIDs](tutorials/03-building-trust-with-pseudonymous-xids.md) - Learn to build trust without revealing identity
-4. [Key Management with XIDs](tutorials/04-key-management-with-xids.md) - Master secure key management for XIDs
-5. [Identity Evolution with XIDs](tutorials/05-identity-evolution-with-xids.md) - Explore how XIDs evolve over time
+3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Create structured self-claims with verifiable evidence
+4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Build a network of trust through independent verification
+5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Master secure key management for XIDs
 
 See the [Learning Path](LEARNING_PATH.md) for a recommended approach to these materials.
 
