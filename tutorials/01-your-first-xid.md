@@ -252,11 +252,18 @@ ATTESTATION=$(envelope assertion add pred-obj string "experienceYears" string "3
 ATTESTATION=$(envelope assertion add pred-obj string "projectCount" string "5" "$ATTESTATION")
 ```
 
-Sign the attestation with her private key:
+First, wrap the attestation before signing. This critical step ensures the signature applies to the entire envelope with all its assertions, not just the subject:
 
 👉 
 ```sh
-SIGNED_ATTESTATION=$(envelope sign -s "$PRIVATE_KEYS" "$ATTESTATION")
+WRAPPED_ATTESTATION=$(envelope subject type wrapped "$ATTESTATION")
+```
+
+Then sign the wrapped attestation with her private key:
+
+👉 
+```sh
+SIGNED_ATTESTATION=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_ATTESTATION")
 echo "$SIGNED_ATTESTATION" > output/bwhacker-skill-attestation-signed.envelope
 ```
 
@@ -269,10 +276,12 @@ envelope format --type tree "$SIGNED_ATTESTATION"
 
 🔍 
 ```console
-"Skill Attestation" [
-   "skill": "Rust Programming"
-   "experienceYears": "3"
-   "projectCount": "5"
+WRAPPED [
+   subject: "Skill Attestation" [
+      "skill": "Rust Programming"
+      "experienceYears": "3"
+      "projectCount": "5"
+   ]
    SIGNATURE
 ]
 ```

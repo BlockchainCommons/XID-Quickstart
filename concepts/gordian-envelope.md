@@ -131,7 +131,36 @@ As a result, the following is usually not what's intended:
 That `SIGNATURE` only applies to `BWHacker`, not to the assertions
 about their experience.
 
-[[TODO: FINISH THIS UP WITH HOW TO DO IT RIGHT.]]
+The solution is to "wrap" the envelope before signing it, creating a new envelope with the original envelope as its subject. This way, the signature applies to the entire original envelope, including all its assertions.
+
+```sh
+# First create your envelope with all assertions
+ENVELOPE=$(envelope subject type string "BWHacker")
+ENVELOPE=$(envelope assertion add pred-obj string "name" string "BWHacker" "$ENVELOPE")
+ENVELOPE=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$ENVELOPE")
+ENVELOPE=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional practice" "$ENVELOPE")
+
+# Wrap the envelope before signing
+WRAPPED_ENVELOPE=$(envelope subject type wrapped "$ENVELOPE")
+
+# Sign the wrapped envelope
+SIGNED_ENVELOPE=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_ENVELOPE")
+```
+
+This creates a structure where the signature applies to the entire original envelope:
+
+```
+WRAPPED [
+   subject: "BWHacker" [
+      "name": "BWHacker"
+      "domain": "Distributed Systems & Security"
+      "experienceLevel": "8 years professional practice"
+   ]
+   SIGNATURE
+]
+```
+
+This approach ensures the signature verifies the integrity of all assertions in the original envelope, not just its subject.
 
 ## Enabling Both Verification and Privacy
 
@@ -139,27 +168,33 @@ One of the most powerful features of Gordian Envelopes is the ability
 to maintain cryptographic verification even when parts of the data are
 hidden through elision.
 
-For example, if an envelope contains:
+For example, if you have a properly wrapped and signed envelope:
+
 ```
-"BWHacker" [
-   "name": "BWHacker"
-   "domain": "Distributed Systems & Security"
-   "experienceLevel": "8 years professional practice"
+WRAPPED [
+   subject: "BWHacker" [
+      "name": "BWHacker"
+      "domain": "Distributed Systems & Security"
+      "experienceLevel": "8 years professional practice"
+   ]
    SIGNATURE
 ]
 ```
 
 You can elide (remove) the "experienceLevel" assertion while maintaining the signature's validity:
+
 ```
-"BWHacker" [
-   "name": "BWHacker"
-   "domain": "Distributed Systems & Security"
-   ELIDED
+WRAPPED [
+   subject: "BWHacker" [
+      "name": "BWHacker"
+      "domain": "Distributed Systems & Security"
+      ELIDED
+   ]
    SIGNATURE
 ]
 ```
 
-[[TODO: REDO THESE SO THAT SIGNATURE IS ON WRAPPED ENVELOPE]]
+The signature remains valid because the cryptographic structure of the envelope preserves the integrity of the relationship between the remaining assertions and the signature, while replacing the elided assertion with a cryptographic placeholder.
 
 This allows for:
 - Revealing different information to different audiences
