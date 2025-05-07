@@ -15,12 +15,12 @@ echo -e "\n1. Examining the XID's technical structure..."
 # Check if we need to create a new XID or use the one from previous tutorial
 if [ ! -f "output/bwhacker-xid.envelope" ]; then
     # If no XID exists, try to copy it from the 01-basic-xid example
-    if [ -f "../01-basic-xid/output/amira-xid.envelope" ]; then
-        cp ../01-basic-xid/output/amira-xid.envelope output/bwhacker-xid.envelope
-        cp ../01-basic-xid/output/amira-key.private output/bwhacker-key.private
-        cp ../01-basic-xid/output/amira-key.public output/bwhacker-key.public
-        cp ../01-basic-xid/output/amira-ssh-key output/bwhacker-ssh-key
-        cp ../01-basic-xid/output/amira-ssh-key.pub output/bwhacker-ssh-key.pub
+    if [ -f "../01-basic-xid/output/bwhacker-xid.envelope" ]; then
+        cp ../01-basic-xid/output/bwhacker-xid.envelope output/bwhacker-xid.envelope
+        cp ../01-basic-xid/bwhacker-key.private output/bwhacker-key.private 2>/dev/null || cp ../01-basic-xid/output/bwhacker-key.private output/bwhacker-key.private 2>/dev/null || echo "Warning: Could not find bwhacker-key.private"
+        cp ../01-basic-xid/bwhacker-key.public output/bwhacker-key.public 2>/dev/null || cp ../01-basic-xid/output/bwhacker-key.public output/bwhacker-key.public 2>/dev/null || echo "Warning: Could not find bwhacker-key.public"
+        cp ../01-basic-xid/output/bwhacker-ssh-key output/bwhacker-ssh-key 2>/dev/null || echo "Warning: Could not find bwhacker-ssh-key"
+        cp ../01-basic-xid/output/bwhacker-ssh-key.pub output/bwhacker-ssh-key.pub 2>/dev/null || echo "Warning: Could not find bwhacker-ssh-key.pub"
         echo "Copied XID from 01-basic-xid example"
     else
         # If that doesn't exist, create a new XID from scratch with SSH key
@@ -50,7 +50,30 @@ if [ ! -f "output/bwhacker-xid.envelope" ]; then
 fi
 
 # Read the XID document
-XID_DOC=$(cat output/bwhacker-xid.envelope)
+if [ -f "output/bwhacker-xid.envelope" ]; then
+    XID_DOC=$(cat output/bwhacker-xid.envelope)
+    if [ -z "$XID_DOC" ]; then
+        echo "XID document is empty, creating a new one..."
+        # Create basic XID
+        PRIVATE_KEYS=$(cat output/bwhacker-key.private 2>/dev/null || envelope generate prvkeys)
+        echo "$PRIVATE_KEYS" > output/bwhacker-key.private
+        PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
+        echo "$PUBLIC_KEYS" > output/bwhacker-key.public
+        
+        XID_DOC=$(envelope xid new --name "BWHacker" "$PUBLIC_KEYS")
+        echo "$XID_DOC" > output/bwhacker-xid.envelope
+    fi
+else
+    echo "XID document not found, creating a new one..."
+    # Create basic XID
+    PRIVATE_KEYS=$(cat output/bwhacker-key.private 2>/dev/null || envelope generate prvkeys)
+    echo "$PRIVATE_KEYS" > output/bwhacker-key.private
+    PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
+    echo "$PUBLIC_KEYS" > output/bwhacker-key.public
+    
+    XID_DOC=$(envelope xid new --name "BWHacker" "$PUBLIC_KEYS")
+    echo "$XID_DOC" > output/bwhacker-xid.envelope
+fi
 
 # Get the XID identifier
 XID=$(envelope xid id "$XID_DOC")
@@ -144,7 +167,11 @@ STATEMENT=$(envelope assertion add pred-obj string "capability" string "Zero-kno
 # Sign the statement if we have the private key
 if [ -f "output/bwhacker-key.private" ]; then
     PRIVATE_KEYS=$(cat output/bwhacker-key.private)
-    SIGNED_STATEMENT=$(envelope sign -s "$PRIVATE_KEYS" "$STATEMENT")
+    # Wrap the statement before signing
+    WRAPPED_STATEMENT=$(envelope subject type wrapped "$STATEMENT")
+    
+    # Sign the wrapped statement
+    SIGNED_STATEMENT=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_STATEMENT")
     echo "$SIGNED_STATEMENT" > output/signed-tech-statement.envelope
     
     echo "Signed statement structure (CBOR diagnostic):"
@@ -166,7 +193,15 @@ fi
 echo -e "\n7. Demonstrating how elision works cryptographically..."
 
 # Add more information to make elision more interesting
-ENHANCED_XID=$(envelope assertion add pred-obj string "potentialBias" string "Particular focus on solutions for privacy-preserving systems" "$UPDATED_XID")
+# First ensure we have a valid updated XID
+if [ -z "$UPDATED_XID" ] || [ "$UPDATED_XID" = "ur:envelope/" ]; then
+    echo "Creating a new enhanced XID from the original document..."
+    ENHANCED_XID="$XID_DOC"
+else
+    ENHANCED_XID="$UPDATED_XID"
+fi
+
+ENHANCED_XID=$(envelope assertion add pred-obj string "potentialBias" string "Particular focus on solutions for privacy-preserving systems" "$ENHANCED_XID")
 ENHANCED_XID=$(envelope assertion add pred-obj string "methodologicalApproach" string "Security-first, user-focused development processes" "$ENHANCED_XID")
 echo "$ENHANCED_XID" > output/enhanced-xid.envelope
 
@@ -216,7 +251,9 @@ if [ -f "output/bwhacker-key.private" ]; then
     PUBLIC_KEYS=$(cat output/bwhacker-key.public)
     
     # Sign the enhanced XID
-    SIGNED_ENHANCED_XID=$(envelope sign -s "$PRIVATE_KEYS" "$ENHANCED_XID")
+    # Wrap before signing
+    WRAPPED_ENHANCED_XID=$(envelope subject type wrapped "$ENHANCED_XID")
+    SIGNED_ENHANCED_XID=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_ENHANCED_XID")
     
     # Demonstrating signature preservation during elision
     # Examine available digests in the signed envelope
@@ -265,7 +302,9 @@ fi
 # Sign the contribution if we have the private key
 if [ -f "output/bwhacker-key.private" ]; then
     PRIVATE_KEYS=$(cat output/bwhacker-key.private)
-    SIGNED_CONTRIBUTION=$(envelope sign -s "$PRIVATE_KEYS" "$CONTRIBUTION")
+    # Wrap before signing
+    WRAPPED_CONTRIBUTION=$(envelope subject type wrapped "$CONTRIBUTION")
+    SIGNED_CONTRIBUTION=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_CONTRIBUTION")
     echo "$SIGNED_CONTRIBUTION" > output/verified-contribution.envelope
     
     echo "Signed contribution with verification chain:"
@@ -276,7 +315,7 @@ if [ -f "output/bwhacker-key.private" ]; then
     echo "2. The signature can be verified with the XID's public key"
     echo "3. The contribution references the SSH key fingerprint in the XID"
     echo "4. GitHub commits signed with this SSH key can be verified via GitHub's API"
-    echo "5. The entire chain can be verified without revealing Amira's identity"
+    echo "5. The entire chain can be verified without revealing BWHacker's identity"
 else
     echo "Could not find private key to sign contribution"
 fi

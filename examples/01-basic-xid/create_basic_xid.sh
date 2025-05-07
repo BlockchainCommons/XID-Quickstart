@@ -107,8 +107,11 @@ ATTESTATION=$(envelope assertion add pred-obj string "projectCount" string "5" "
 # Save the attestation
 echo "$ATTESTATION" > output/bwhacker-skill-attestation.envelope
 
-# Sign the attestation with private key
-SIGNED_ATTESTATION=$(envelope sign -s "$PRIVATE_KEYS" "$ATTESTATION")
+# Wrap the attestation before signing
+WRAPPED_ATTESTATION=$(envelope subject type wrapped "$ATTESTATION")
+
+# Sign the wrapped attestation with private key
+SIGNED_ATTESTATION=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_ATTESTATION")
 
 # Save the signed attestation
 echo "$SIGNED_ATTESTATION" > output/bwhacker-skill-attestation-signed.envelope

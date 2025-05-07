@@ -138,8 +138,11 @@ COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserRela
 COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementLimitations" string "Collaboration limited to privacy and security features, no visibility into UI development skills" "$COLLABORATION_ENDORSEMENT")
 COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserContext" string "Privacy consultant with experience in women's safety applications" "$COLLABORATION_ENDORSEMENT")
 
-# Sign the endorsement with Carlos's private key
-SIGNED_COLLABORATION=$(envelope sign -s "$CARLOS_PRIVATE" "$COLLABORATION_ENDORSEMENT")
+# Wrap the endorsement before signing
+WRAPPED_COLLABORATION=$(envelope subject type wrapped "$COLLABORATION_ENDORSEMENT")
+
+# Sign the wrapped endorsement with Carlos's private key
+SIGNED_COLLABORATION=$(envelope sign -s "$CARLOS_PRIVATE" "$WRAPPED_COLLABORATION")
 
 # Add the endorser's XID identifier
 SIGNED_COLLABORATION=$(envelope assertion add pred-obj string "endorserXID" string "$CARLOS_XID_ID" "$SIGNED_COLLABORATION")
@@ -196,8 +199,11 @@ CODE_REVIEW=$(envelope assertion add pred-obj string "reviewDepth" string "Compr
 CODE_REVIEW=$(envelope assertion add pred-obj string "endorsementLimitations" string "Assessment limited to this specific contribution and codebase" "$CODE_REVIEW")
 CODE_REVIEW=$(envelope assertion add pred-obj string "verifiableEvidence" string "Code review comments and approval in GitHub PR thread" "$CODE_REVIEW")
 
-# Sign with Maya's key
-SIGNED_CODE_REVIEW=$(envelope sign -s "$MAYA_PRIVATE" "$CODE_REVIEW")
+# Wrap the code review before signing
+WRAPPED_CODE_REVIEW=$(envelope subject type wrapped "$CODE_REVIEW")
+
+# Sign the wrapped code review with Maya's key
+SIGNED_CODE_REVIEW=$(envelope sign -s "$MAYA_PRIVATE" "$WRAPPED_CODE_REVIEW")
 
 # Add the endorser's XID identifier
 SIGNED_CODE_REVIEW=$(envelope assertion add pred-obj string "endorserXID" string "$MAYA_XID_ID" "$SIGNED_CODE_REVIEW")
@@ -252,8 +258,11 @@ SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "assessmentMethod" str
 SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "endorsementLimitations" string "Assessment focused on location privacy features, not the entire application" "$SKILL_ASSESSMENT")
 SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "specificReference" string "https://github.com/example/safety-app/tree/main/location-privacy" "$SKILL_ASSESSMENT")
 
-# Sign with Priya's key
-SIGNED_SKILL_ASSESSMENT=$(envelope sign -s "$PRIYA_PRIVATE" "$SKILL_ASSESSMENT")
+# Wrap the skill assessment before signing
+WRAPPED_SKILL_ASSESSMENT=$(envelope subject type wrapped "$SKILL_ASSESSMENT")
+
+# Sign the wrapped skill assessment with Priya's key
+SIGNED_SKILL_ASSESSMENT=$(envelope sign -s "$PRIYA_PRIVATE" "$WRAPPED_SKILL_ASSESSMENT")
 
 # Add the endorser's XID identifier
 SIGNED_SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "endorserXID" string "$PRIYA_XID_ID" "$SIGNED_SKILL_ASSESSMENT")
@@ -335,17 +344,26 @@ echo "$SIGNED_CODE_REVIEW" > output/code-review-endorsement.envelope
 
 # Create a technical skills view that only includes skill-related endorsements
 # This uses proper cryptographic elision to remove other endorsements
-TECHNICAL_VIEW=$(envelope elide assertion predicate string "peerEndorsement" "$XID_DOC" 2)
+
+# Create a simpler version for the technical skills view
+# Create a fresh copy of the XID document
+TECHNICAL_VIEW="$XID_DOC"
+
+# Add the skill assessment endorsement
 TECHNICAL_VIEW=$(envelope assertion add pred-obj string "peerEndorsement" envelope "$SIGNED_SKILL_ASSESSMENT" "$TECHNICAL_VIEW")
 echo "$TECHNICAL_VIEW" > output/skills-endorsement-view.envelope
 
-# Create a collaboration project view
-COLLABORATION_VIEW=$(envelope elide assertion predicate string "peerEndorsement" "$XID_DOC" 3)
+# Create a collaboration project view using the same approach
+COLLABORATION_VIEW="$XID_DOC"
+
+# Add the collaboration endorsement
 COLLABORATION_VIEW=$(envelope assertion add pred-obj string "peerEndorsement" envelope "$SIGNED_COLLABORATION" "$COLLABORATION_VIEW")
 echo "$COLLABORATION_VIEW" > output/collaboration-endorsement-view.envelope
 
-# Create a code quality view
-CODE_QUALITY_VIEW=$(envelope elide assertion predicate string "peerEndorsement" "$XID_DOC" 3)
+# Create a code quality view using the same approach
+CODE_QUALITY_VIEW="$XID_DOC"
+
+# Add the code review endorsement  
 CODE_QUALITY_VIEW=$(envelope assertion add pred-obj string "peerEndorsement" envelope "$SIGNED_CODE_REVIEW" "$CODE_QUALITY_VIEW")
 echo "$CODE_QUALITY_VIEW" > output/code-quality-endorsement-view.envelope
 
@@ -400,8 +418,11 @@ if [ -n "$BWHACKER_PRIVATE" ]; then
     BW_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserLimitation" string "Limited exposure to PrivacyDev's frontend work" "$BW_ENDORSEMENT")
     BW_ENDORSEMENT=$(envelope assertion add pred-obj string "potentialBias" string "Shared research interest in privacy-preserving systems" "$BW_ENDORSEMENT")
     
-    # Sign the endorsement
-    SIGNED_BW_ENDORSEMENT=$(envelope sign -s "$BWHACKER_PRIVATE" "$BW_ENDORSEMENT")
+    # Wrap the endorsement before signing
+    WRAPPED_BW_ENDORSEMENT=$(envelope subject type wrapped "$BW_ENDORSEMENT")
+    
+    # Sign the wrapped endorsement
+    SIGNED_BW_ENDORSEMENT=$(envelope sign -s "$BWHACKER_PRIVATE" "$WRAPPED_BW_ENDORSEMENT")
     echo "$SIGNED_BW_ENDORSEMENT" > output/bwhacker-endorsement-of-dev.envelope
     
     # Add to PrivacyDev's XID

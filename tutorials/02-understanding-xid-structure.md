@@ -271,7 +271,9 @@ This verification chain allows others to cryptographically verify that GitHub ac
 
 To understand how signatures work, let's create and examine a signed statement:
 
-First, let's create a simple statement about a technical capability:
+First, it's important to understand a key property of Gordian Envelope signatures: **a signature only applies to the subject of an envelope, not to its assertions**. This is because the signature is itself an assertion about the subject. To sign an entire envelope with all its assertions, we need to wrap it first, making the original envelope the subject of a new envelope.
+
+Let's create a simple statement about a technical capability:
 
 👉 
 ```sh
@@ -279,15 +281,18 @@ STATEMENT=$(envelope subject type string "Technical Assertion")
 STATEMENT=$(envelope assertion add pred-obj string "capability" string "Zero-knowledge proof systems" "$STATEMENT")
 ```
 
-Next, let's sign the statement with the XID's private key:
+Next, let's wrap and sign the statement with the XID's private key:
 
 👉 
 ```sh
 PRIVATE_KEYS=$(cat output/bwhacker-key.private)
-SIGNED_STATEMENT=$(envelope sign -s "$PRIVATE_KEYS" "$STATEMENT")
+
+WRAPPED_STATEMENT=$(envelope subject type wrapped "$STATEMENT")
+
+SIGNED_STATEMENT=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_STATEMENT")
 ```
 
-Now we'll save the signed statement and examine its structure. When we examine a signed statement, we'll see the original content plus a "verifiedBy" predicate containing the cryptographic signature as binary data:
+Now we'll save the signed statement and examine its structure. The wrapping step creates a new envelope with the original statement as its subject, and the signature applies to this wrapped structure:
 
 👉 
 ```sh
@@ -300,8 +305,12 @@ envelope format --type diag "$SIGNED_STATEMENT"
 ```console
 Signed statement structure:
 {
-  "Technical Assertion": {
-    "capability": "Zero-knowledge proof systems",
+  "WRAPPED": {
+    "subject": {
+      "Technical Assertion": {
+        "capability": "Zero-knowledge proof systems"
+      }
+    },
     "verifiedBy": h'ac6167d7732c11485856ef80597687be6a5fc9e06a3f77dfa3c8e2eb87ca148f6c2c70a4ef111c55db09c3cf81bf23b16b9b0edc2bf7ec28e6903c0f74d5b80d'
   }
 }
@@ -347,20 +356,16 @@ Now we'll create an elided version by removing the potential bias information. E
 
 👉 
 ```sh
-# First examine what digests are available
 echo "Available digests:"
 envelope extract digest "$ENHANCED_XID"
 
-# Extract the digest of the assertion to elide
 BIAS_DIGEST=$(envelope extract digest "$ENHANCED_XID" | grep -i "potential" | head -1 | awk '{print $2}')
 
-# Then create the elided version by removing that digest
 if [ -n "$BIAS_DIGEST" ]; then
     ELIDED_XID=$(envelope elide removing "$BIAS_DIGEST" "$ENHANCED_XID")
     echo "Successfully elided potentialBias assertion"
 else
     echo "Could not find potentialBias digest to elide"
-    # For demonstration, create a placeholder elided version
     ELIDED_XID="$ENHANCED_XID"
 fi
 
@@ -433,26 +438,24 @@ Let's demonstrate how elision preserves signature validity. One of the most powe
 👉 
 ```sh
 PRIVATE_KEYS=$(cat output/bwhacker-key.private)
-SIGNED_ENHANCED_XID=$(envelope sign -s "$PRIVATE_KEYS" "$ENHANCED_XID")
 
-# Examine available digests in the signed envelope
+WRAPPED_ENHANCED_XID=$(envelope subject type wrapped "$ENHANCED_XID")
+
+SIGNED_ENHANCED_XID=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_ENHANCED_XID")
+
 echo "Available digests in signed document:"
 envelope extract digest "$SIGNED_ENHANCED_XID"
 
-# Try to extract the digest for potentialBias from the signed envelope
 BIAS_DIGEST=$(envelope extract digest "$SIGNED_ENHANCED_XID" | grep -i "potential" | head -1 | awk '{print $2}')
 
-# Create the elided version of the signed document
 if [ -n "$BIAS_DIGEST" ]; then
     SIGNED_ELIDED_XID=$(envelope elide removing "$BIAS_DIGEST" "$SIGNED_ENHANCED_XID")
     echo "Successfully elided potentialBias assertion from signed document"
 else
     echo "Could not find potentialBias digest to elide from signed document"
-    # For demonstration, create a placeholder
     SIGNED_ELIDED_XID="$SIGNED_ENHANCED_XID"
 fi
 
-# Verify the signature on the document
 PUBLIC_KEYS=$(cat output/bwhacker-key.public)
 if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_ELIDED_XID"; then
     echo "✅ Signature remains valid after elision"
@@ -501,11 +504,13 @@ CONTRIBUTION=$(envelope assertion add pred-obj string "sshKeyFingerprint" string
 CONTRIBUTION=$(envelope assertion add pred-obj string "verificationMethod" string "Compare SSH key fingerprint with the one in the XID document" "$CONTRIBUTION")
 ```
 
-Finally, let's sign the contribution and examine the result:
+Finally, let's wrap and sign the contribution and examine the result:
 
 👉 
 ```sh
-SIGNED_CONTRIBUTION=$(envelope sign -s "$PRIVATE_KEYS" "$CONTRIBUTION")
+WRAPPED_CONTRIBUTION=$(envelope subject type wrapped "$CONTRIBUTION")
+
+SIGNED_CONTRIBUTION=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_CONTRIBUTION")
 echo "$SIGNED_CONTRIBUTION" > output/verified-contribution.envelope
 
 echo "Signed contribution with verification chain:"
@@ -515,12 +520,14 @@ envelope format --type tree "$SIGNED_CONTRIBUTION"
 🔍 
 ```console
 Signed contribution with verification chain:
-"Code Contribution" [
-   "repository": "github.com/blockchain-commons/bc-envelope"
-   "commit": "a1b2c3d4e5f6"
-   "description": "Fixed performance issue in CBOR encoding"
-   "sshKeyFingerprint": "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE"
-   "verificationMethod": "Compare SSH key fingerprint with the one in the XID document"
+WRAPPED [
+   subject: "Code Contribution" [
+      "repository": "github.com/blockchain-commons/bc-envelope"
+      "commit": "a1b2c3d4e5f6"
+      "description": "Fixed performance issue in CBOR encoding"
+      "sshKeyFingerprint": "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE"
+      "verificationMethod": "Compare SSH key fingerprint with the one in the XID document"
+   ]
    SIGNATURE
 ]
 ```

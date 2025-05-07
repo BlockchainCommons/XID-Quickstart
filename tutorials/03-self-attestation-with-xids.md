@@ -118,7 +118,6 @@ Next, let's add the self-attestation framework to BWHacker's XID:
 XID_DOC=$(envelope assertion add pred-obj string "attestationFramework" envelope "$SELF_ATTESTATION_FRAMEWORK" "$XID_DOC")
 echo "$XID_DOC" > output/amira-xid-with-framework.envelope
 
-# View the framework structure
 echo "BWHacker's Self-Attestation Framework:"
 envelope format --type tree "$SELF_ATTESTATION_FRAMEWORK"
 ```
@@ -261,10 +260,8 @@ Let's create an educational attestation with a multi-credential structure that r
 
 👉
 ```sh
-# Create an educational background attestation with multiple credentials
 EDUCATION=$(envelope subject type string "Educational Background")
 
-# Primary Degree (Computer Science)
 CS_DEGREE=$(envelope subject type string "Computer Science Degree")
 CS_DEGREE=$(envelope assertion add pred-obj string "degreeLevel" string "Masters" "$CS_DEGREE")
 CS_DEGREE=$(envelope assertion add pred-obj string "completionYear" string "2015" "$CS_DEGREE")
@@ -273,11 +270,9 @@ CS_DEGREE=$(envelope assertion add pred-obj string "credentialType" string "Accr
 CS_DEGREE=$(envelope assertion add pred-obj string "relevantCoursework" string "Cryptography, Secure Systems Design, Privacy Engineering" "$CS_DEGREE")
 CS_DEGREE=$(envelope assertion add pred-obj string "projectTitle" string "Zero-Knowledge Authentication Framework" "$CS_DEGREE")
 
-# Add context and limitations for fair witnessing
 CS_DEGREE=$(envelope assertion add pred-obj string "limitations" string "Cannot provide specific institution without compromising pseudonymity" "$CS_DEGREE")
 CS_DEGREE=$(envelope assertion add pred-obj string "verificationOption" string "Partial transcript available under strict NDA" "$CS_DEGREE")
 
-# Professional Certifications
 CERT1=$(envelope subject type string "Security Certification")
 CERT1=$(envelope assertion add pred-obj string "certName" string "Certified Information Systems Security Professional (CISSP)" "$CERT1")
 CERT1=$(envelope assertion add pred-obj string "issueYear" string "2017" "$CERT1")
@@ -290,16 +285,13 @@ CERT2=$(envelope assertion add pred-obj string "issueYear" string "2019" "$CERT2
 CERT2=$(envelope assertion add pred-obj string "status" string "Active" "$CERT2")
 CERT2=$(envelope assertion add pred-obj string "verificationMethod" string "Certificate ID hash available for private verification" "$CERT2")
 
-# Add all credentials to the educational background
 EDUCATION=$(envelope assertion add pred-obj string "primaryDegree" envelope "$CS_DEGREE" "$EDUCATION")
 EDUCATION=$(envelope assertion add pred-obj string "certification" envelope "$CERT1" "$EDUCATION")
 EDUCATION=$(envelope assertion add pred-obj string "certification" envelope "$CERT2" "$EDUCATION")
 
-# Add to BWHacker's XID
 XID_DOC=$(envelope assertion add pred-obj string "educationalAttestation" envelope "$EDUCATION" "$XID_DOC")
 echo "$XID_DOC" > output/amira-xid-with-education.envelope
 
-# View the educational attestation
 echo "Multi-Credential Educational Attestation:"
 envelope format --type tree "$EDUCATION"
 ```
@@ -340,13 +332,10 @@ Now let's create an open source contribution portfolio with direct links to veri
 
 👉
 ```sh
-# Create a GitHub-verifiable open source portfolio
 PORTFOLIO=$(envelope subject type string "Open Source Portfolio")
 
-# Extract SSH key fingerprint from XID for verification chain
 SSH_KEY_FINGERPRINT=$(envelope format --type tree "$XID_DOC" | grep "sshKeyFingerprint" | cut -d'"' -f2)
 
-# Create sample contribution records
 CONTRIBUTION1=$(envelope subject type string "Privacy Library Contribution")
 CONTRIBUTION1=$(envelope assertion add pred-obj string "repository" string "github.com/example/privacy-toolkit" "$CONTRIBUTION1")
 CONTRIBUTION1=$(envelope assertion add pred-obj string "role" string "Core Contributor & Security Reviewer" "$CONTRIBUTION1")
@@ -368,11 +357,9 @@ CONTRIBUTION2=$(envelope assertion add pred-obj string "commitSignatureMethod" s
 CONTRIBUTION2=$(envelope assertion add pred-obj string "sshKeyFingerprint" string "$SSH_KEY_FINGERPRINT" "$CONTRIBUTION2")
 CONTRIBUTION2=$(envelope assertion add pred-obj string "verificationInstructions" string "Filter commits by author 'BWHacker', verify SSH signatures match fingerprint" "$CONTRIBUTION2")
 
-# Add project contributions to the portfolio
 PORTFOLIO=$(envelope assertion add pred-obj string "majorContribution" envelope "$CONTRIBUTION1" "$PORTFOLIO")
 PORTFOLIO=$(envelope assertion add pred-obj string "majorContribution" envelope "$CONTRIBUTION2" "$PORTFOLIO")
 
-# Add portfolio metadata
 PORTFOLIO=$(envelope assertion add pred-obj string "totalRepositories" string "12" "$PORTFOLIO")
 PORTFOLIO=$(envelope assertion add pred-obj string "totalCommits" string "215" "$PORTFOLIO")
 PORTFOLIO=$(envelope assertion add pred-obj string "primaryExpertiseAreas" string "Security, cryptography, distributed systems" "$PORTFOLIO")
@@ -380,11 +367,9 @@ PORTFOLIO=$(envelope assertion add pred-obj string "githubProfile" string "https
 PORTFOLIO=$(envelope assertion add pred-obj string "verificationMethod" string "All commits signed with SSH key matching fingerprint in XID" "$PORTFOLIO")
 PORTFOLIO=$(envelope assertion add pred-obj string "limitations" string "Some contributions to private repositories not included" "$PORTFOLIO")
 
-# Add to BWHacker's XID
 XID_DOC=$(envelope assertion add pred-obj string "openSourcePortfolio" envelope "$PORTFOLIO" "$XID_DOC")
 echo "$XID_DOC" > output/amira-xid-with-os-portfolio.envelope
 
-# View the open source portfolio
 echo "GitHub-Verifiable Open Source Portfolio:"
 envelope format --type tree "$PORTFOLIO"
 ```
@@ -430,10 +415,8 @@ Let's create a detailed skills assessment with evidence levels for different ver
 
 👉
 ```sh
-# Create a comprehensive skills assessment
 SKILLS=$(envelope subject type string "Technical Skills Assessment")
 
-# Core technical skill domains with evidence levels
 SECURITY_SKILLS=$(envelope subject type string "Security Engineering Skills")
 SECURITY_SKILLS=$(envelope assertion add pred-obj string "expertiseLevel" string "Expert (8+ years)" "$SECURITY_SKILLS")
 SECURITY_SKILLS=$(envelope assertion add pred-obj string "domains" string "Privacy-preserving systems, secure messaging, location privacy" "$SECURITY_SKILLS")
@@ -558,16 +541,15 @@ Let's demonstrate the affirmation process for the evidence commitments and attes
 
 👉
 ```sh
-# Use the private key if available to sign the most comprehensive attestation (skills)
 if [ -f "output/amira-key.private" ]; then
     PRIVATE_KEYS=$(cat output/amira-key.private)
     PUBLIC_KEYS=$(cat output/amira-key.public)
     
-    # Sign the skills attestation
-    SIGNED_SKILLS=$(envelope sign -s "$PRIVATE_KEYS" "$SKILLS")
+    WRAPPED_SKILLS=$(envelope subject type wrapped "$SKILLS")
+    
+    SIGNED_SKILLS=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_SKILLS")
     echo "$SIGNED_SKILLS" > output/signed-skills-attestation.envelope
     
-    # Verify the signature
     echo "Verifying signature on skills attestation:"
     if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_SKILLS"; then
         echo "✅ Signature verification successful"
@@ -578,7 +560,6 @@ if [ -f "output/amira-key.private" ]; then
     echo -e "\nThis verification confirms the attestation was signed by the XID holder"
 fi
 
-# Demonstrate evidence commitment verification
 echo -e "\nDemonstrating verification of evidence commitments:"
 COMPUTED_HASH=$(cat evidence/security_metrics.txt | envelope digest sha256)
 echo "Evidence content: $(cat evidence/security_metrics.txt)"

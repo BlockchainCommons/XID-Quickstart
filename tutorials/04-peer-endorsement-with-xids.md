@@ -222,12 +222,15 @@ COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementL
 COLLABORATION_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserContext" string "Privacy consultant with experience in women's safety applications" "$COLLABORATION_ENDORSEMENT")
 ```
 
-Finally, let's sign the endorsement with Carlos's private key and add the endorser's XID identifier:
+Finally, let's wrap and sign the endorsement with Carlos's private key, then add the endorser's XID identifier:
 
 👉
 ```sh
 CARLOS_PRIVATE=$(cat endorsers/carlos-key.private)
-SIGNED_COLLABORATION=$(envelope sign -s "$CARLOS_PRIVATE" "$COLLABORATION_ENDORSEMENT")
+
+WRAPPED_COLLABORATION=$(envelope subject type wrapped "$COLLABORATION_ENDORSEMENT")
+
+SIGNED_COLLABORATION=$(envelope sign -s "$CARLOS_PRIVATE" "$WRAPPED_COLLABORATION")
 
 CARLOS_XID_ID=$(envelope xid id "$CARLOS_XID")
 SIGNED_COLLABORATION=$(envelope assertion add pred-obj string "endorserXID" string "$CARLOS_XID_ID" "$SIGNED_COLLABORATION")
@@ -338,11 +341,13 @@ CODE_REVIEW=$(envelope assertion add pred-obj string "endorsementLimitations" st
 CODE_REVIEW=$(envelope assertion add pred-obj string "verifiableEvidence" string "Code review comments and approval in GitHub PR thread" "$CODE_REVIEW")
 ```
 
-Finally, let's sign with Maya's key and add the endorser's XID identifier:
+Finally, let's wrap and sign with Maya's key and add the endorser's XID identifier:
 
 👉
 ```sh
-SIGNED_CODE_REVIEW=$(envelope sign -s "$MAYA_PRIVATE" "$CODE_REVIEW")
+WRAPPED_CODE_REVIEW=$(envelope subject type wrapped "$CODE_REVIEW")
+
+SIGNED_CODE_REVIEW=$(envelope sign -s "$MAYA_PRIVATE" "$WRAPPED_CODE_REVIEW")
 
 MAYA_XID_ID=$(envelope xid id "$MAYA_XID")
 SIGNED_CODE_REVIEW=$(envelope assertion add pred-obj string "endorserXID" string "$MAYA_XID_ID" "$SIGNED_CODE_REVIEW")
@@ -354,26 +359,28 @@ envelope format --type tree "$SIGNED_CODE_REVIEW"
 
 🔍
 ```console
-"Code Review Endorsement" [
-   "endorsementTarget": "7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3"
-   "targetAlias": "BWHacker"
-   "relationshipContext": "Technical reviewer for contribution to open source project"
-   "projectName": "Privacy-Focused Location Services"
-   "repositoryURL": "https://github.com/example/safety-location-privacy"
-   "pullRequestURL": "https://github.com/example/safety-location-privacy/pull/27"
-   "reviewDate": "2022-03-15"
-   "codebaseSize": "Significant contribution: ~3,500 lines of privacy-focused code"
-   "assessment": "Technical Assessment" [
-      "algorithmicComplexity": "Excellent: Optimized location privacy algorithm with minimal battery impact"
-      "codeQuality": "Exceptional: Clear structure, well-documented, comprehensive tests"
-      "securityConsiderations": "Strong: Robust privacy protections, careful location data handling, secure caching"
-      "performanceImpact": "Significant: 70% reduction in location data exposure while maintaining functionality"
+WRAPPED [
+   subject: "Code Review Endorsement" [
+      "endorsementTarget": "7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3"
+      "targetAlias": "BWHacker"
+      "relationshipContext": "Technical reviewer for contribution to open source project"
+      "projectName": "Privacy-Focused Location Services"
+      "repositoryURL": "https://github.com/example/safety-location-privacy"
+      "pullRequestURL": "https://github.com/example/safety-location-privacy/pull/27"
+      "reviewDate": "2022-03-15"
+      "codebaseSize": "Significant contribution: ~3,500 lines of privacy-focused code"
+      "assessment": "Technical Assessment" [
+         "algorithmicComplexity": "Excellent: Optimized location privacy algorithm with minimal battery impact"
+         "codeQuality": "Exceptional: Clear structure, well-documented, comprehensive tests"
+         "securityConsiderations": "Strong: Robust privacy protections, careful location data handling, secure caching"
+         "performanceImpact": "Significant: 70% reduction in location data exposure while maintaining functionality"
+      ]
+      "proofBasis": "codeReview"
+      "reviewDepth": "Comprehensive line-by-line review with performance profiling"
+      "endorsementLimitations": "Assessment limited to this specific contribution and codebase"
+      "verifiableEvidence": "Code review comments and approval in GitHub PR thread"
+      "endorserXID": "c8f05e72bf9f6a2d8dde84ac9f679d3fc2e4fa56f4edc7fda2f43d18d17821a6"
    ]
-   "proofBasis": "codeReview"
-   "reviewDepth": "Comprehensive line-by-line review with performance profiling"
-   "endorsementLimitations": "Assessment limited to this specific contribution and codebase"
-   "verifiableEvidence": "Code review comments and approval in GitHub PR thread"
-   "endorserXID": "c8f05e72bf9f6a2d8dde84ac9f679d3fc2e4fa56f4edc7fda2f43d18d17821a6"
    SIGNATURE
 ]
 ```
@@ -457,11 +464,13 @@ SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "specificReference" st
 
 ```
 
-Finally, let's sign with Priya's key and add the endorser's XID identifier:
+Finally, let's wrap and sign with Priya's key and add the endorser's XID identifier:
 
 👉
 ```sh
-SIGNED_SKILL_ASSESSMENT=$(envelope sign -s "$PRIYA_PRIVATE" "$SKILL_ASSESSMENT")
+WRAPPED_SKILL_ASSESSMENT=$(envelope subject type wrapped "$SKILL_ASSESSMENT")
+
+SIGNED_SKILL_ASSESSMENT=$(envelope sign -s "$PRIYA_PRIVATE" "$WRAPPED_SKILL_ASSESSMENT")
 
 PRIYA_XID_ID=$(envelope xid id "$PRIYA_XID")
 SIGNED_SKILL_ASSESSMENT=$(envelope assertion add pred-obj string "endorserXID" string "$PRIYA_XID_ID" "$SIGNED_SKILL_ASSESSMENT")
@@ -473,24 +482,26 @@ envelope format --type tree "$SIGNED_SKILL_ASSESSMENT"
 
 🔍
 ```console
-"Skill Assessment Endorsement" [
-   "endorsementTarget": "7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3"
-   "targetAlias": "BWHacker"
-   "skillCategory": "Privacy-Preserving Location Tracking"
-   "assessmentContext": "Detailed review of location privacy implementation in women's safety app"
-   "assessmentDate": "2023-01-10"
-   "technicalAccuracy": "Excellent: Implementation correctly balances privacy with safety requirements"
-   "securityConsiderations": "Strong: Prevents location tracking without compromising emergency features"
-   "innovationLevel": "High: Novel approach to secure location sharing with minimal metadata leakage"
-   "codeRobustness": "Excellent: Comprehensive test suite including adversarial scenarios"
-   "proficiencyLevel": "Expert"
-   "proficiencyJustification": "Implementation shows deep understanding of privacy engineering principles"
-   "comparativeAssessment": "Among the most skilled privacy engineers I've worked with in safety applications"
-   "proofBasis": "outputEvaluation"
-   "assessmentMethod": "Source code review, usability testing, and privacy analysis"
-   "endorsementLimitations": "Assessment focused on location privacy features, not the entire application"
-   "specificReference": "https://github.com/example/safety-app/tree/main/location-privacy"
-   "endorserXID": "d7e32f409b7a96c53a87e8e18b12b3fa6c8f5fd2a3d7e8c9b4a2f1e3d5c7b9a8"
+WRAPPED [
+   subject: "Skill Assessment Endorsement" [
+      "endorsementTarget": "7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3"
+      "targetAlias": "BWHacker"
+      "skillCategory": "Privacy-Preserving Location Tracking"
+      "assessmentContext": "Detailed review of location privacy implementation in women's safety app"
+      "assessmentDate": "2023-01-10"
+      "technicalAccuracy": "Excellent: Implementation correctly balances privacy with safety requirements"
+      "securityConsiderations": "Strong: Prevents location tracking without compromising emergency features"
+      "innovationLevel": "High: Novel approach to secure location sharing with minimal metadata leakage"
+      "codeRobustness": "Excellent: Comprehensive test suite including adversarial scenarios"
+      "proficiencyLevel": "Expert"
+      "proficiencyJustification": "Implementation shows deep understanding of privacy engineering principles"
+      "comparativeAssessment": "Among the most skilled privacy engineers I've worked with in safety applications"
+      "proofBasis": "outputEvaluation"
+      "assessmentMethod": "Source code review, usability testing, and privacy analysis"
+      "endorsementLimitations": "Assessment focused on location privacy features, not the entire application"
+      "specificReference": "https://github.com/example/safety-app/tree/main/location-privacy"
+      "endorserXID": "d7e32f409b7a96c53a87e8e18b12b3fa6c8f5fd2a3d7e8c9b4a2f1e3d5c7b9a8"
+   ]
    SIGNATURE
 ]
 ```
@@ -508,7 +519,6 @@ First, let's load the most complete version of BWHacker's XID:
 if [ -f "../03-profile-xid/output/bwhacker-xid-with-skills.envelope" ]; then
     XID_DOC=$(cat ../03-profile-xid/output/bwhacker-xid-with-skills.envelope)
 else
-    # If not found, create a clone of the original XID with basic info
     XID_DOC=$(cat output/bwhacker-xid-full.envelope 2>/dev/null || echo "ERROR: BWHacker's XID not found")
 fi
 ```
@@ -569,7 +579,6 @@ Now, let's cryptographically verify the endorsement signatures:
 ```sh
 echo -e "\nCryptographically verifying peer endorsement signatures..."
 
-# Verify Carlos's endorsement signature
 CARLOS_PUBLIC=$(cat endorsers/carlos-key.public)
 if envelope verify -v "$CARLOS_PUBLIC" "$COLLABORATION"; then
     echo "✅ Carlos's project collaboration endorsement verified"
@@ -577,7 +586,6 @@ else
     echo "❌ Carlos's endorsement verification failed"
 fi
 
-# Verify Maya's endorsement signature
 MAYA_PUBLIC=$(cat endorsers/maya-key.public)
 if envelope verify -v "$MAYA_PUBLIC" "$CODE_REVIEW"; then
     echo "✅ Maya's code review endorsement verified"
@@ -585,7 +593,6 @@ else
     echo "❌ Maya's endorsement verification failed"
 fi
 
-# Verify Priya's endorsement signature
 PRIYA_PUBLIC=$(cat endorsers/priya-key.public)
 if envelope verify -v "$PRIYA_PUBLIC" "$SKILL_ASSESSMENT"; then
     echo "✅ Priya's skill assessment endorsement signature verified"
@@ -725,11 +732,13 @@ BW_ENDORSEMENT=$(envelope assertion add pred-obj string "endorserLimitation" str
 BW_ENDORSEMENT=$(envelope assertion add pred-obj string "potentialBias" string "Shared research interest in privacy-preserving systems" "$BW_ENDORSEMENT")
 ```
 
-Finally, let's sign the endorsement:
+Finally, let's wrap and sign the endorsement:
 
 👉
 ```sh
-SIGNED_BW_ENDORSEMENT=$(envelope sign -s "$AMIRA_PRIVATE" "$BW_ENDORSEMENT")
+WRAPPED_BW_ENDORSEMENT=$(envelope subject type wrapped "$BW_ENDORSEMENT")
+
+SIGNED_BW_ENDORSEMENT=$(envelope sign -s "$AMIRA_PRIVATE" "$WRAPPED_BW_ENDORSEMENT")
 echo "$SIGNED_BW_ENDORSEMENT" > output/bwhacker-endorsement-of-dev.envelope
 ```
 

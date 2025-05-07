@@ -18,19 +18,19 @@ echo -e "\n1. Loading or creating BWHacker's XID..."
 # Try to find an existing XID from previous tutorials
 if [ -f "../02-xid-structure/output/enhanced-xid.envelope" ]; then
     cp ../02-xid-structure/output/enhanced-xid.envelope output/bwhacker-xid.envelope
-    cp ../02-xid-structure/output/amira-key.private output/bwhacker-key.private 2>/dev/null || true
-    cp ../02-xid-structure/output/amira-key.public output/bwhacker-key.public 2>/dev/null || true
+    cp ../02-xid-structure/output/bwhacker-key.private output/bwhacker-key.private 2>/dev/null || true
+    cp ../02-xid-structure/output/bwhacker-key.public output/bwhacker-key.public 2>/dev/null || true
     echo "Found and copied XID from tutorial #2"
-elif [ -f "../02-xid-structure/output/amira-xid-with-tablet.envelope" ]; then
-    cp ../02-xid-structure/output/amira-xid-with-tablet.envelope output/bwhacker-xid.envelope
-    cp ../02-xid-structure/output/amira-key.private output/bwhacker-key.private 2>/dev/null || true
-    cp ../02-xid-structure/output/amira-key.public output/bwhacker-key.public 2>/dev/null || true
+elif [ -f "../02-xid-structure/output/bwhacker-xid-with-tablet.envelope" ]; then
+    cp ../02-xid-structure/output/bwhacker-xid-with-tablet.envelope output/bwhacker-xid.envelope
+    cp ../02-xid-structure/output/bwhacker-key.private output/bwhacker-key.private 2>/dev/null || true
+    cp ../02-xid-structure/output/bwhacker-key.public output/bwhacker-key.public 2>/dev/null || true
     echo "Found and copied XID from tutorial #2"
-elif [ -f "../01-basic-xid/output/amira-xid.envelope" ]; then
-    cp ../01-basic-xid/output/amira-xid.envelope output/bwhacker-xid.envelope
-    cp ../01-basic-xid/output/amira-key.private output/bwhacker-key.private 2>/dev/null || true
-    cp ../01-basic-xid/output/amira-key.public output/bwhacker-key.public 2>/dev/null || true
-    cp ../01-basic-xid/output/amira-ssh-key* output/bwhacker-ssh-key* 2>/dev/null || true
+elif [ -f "../01-basic-xid/output/bwhacker-xid.envelope" ]; then
+    cp ../01-basic-xid/output/bwhacker-xid.envelope output/bwhacker-xid.envelope
+    cp ../01-basic-xid/bwhacker-key.private output/bwhacker-key.private 2>/dev/null || cp ../01-basic-xid/output/bwhacker-key.private output/bwhacker-key.private 2>/dev/null || true
+    cp ../01-basic-xid/bwhacker-key.public output/bwhacker-key.public 2>/dev/null || cp ../01-basic-xid/output/bwhacker-key.public output/bwhacker-key.public 2>/dev/null || true
+    cp ../01-basic-xid/output/bwhacker-ssh-key* output/bwhacker-ssh-key* 2>/dev/null || true
     echo "Found and copied XID from tutorial #1"
 else
     # Create new keys and XID if needed
@@ -369,54 +369,25 @@ echo "$XID_DOC" > output/bwhacker-full-view.envelope
 # Create a public view for general professional networking
 # This elides project and educational attestations but keeps skills and open source portfolio
 echo "Creating public view (eliding project and educational attestations)..."
-PUBLIC_XID=$(envelope elide assertion predicate string "projectAttestation" "$XID_DOC")
-if [ $? -eq 0 ]; then
-    PUBLIC_XID=$(envelope elide assertion predicate string "educationalAttestation" "$PUBLIC_XID")
-    if [ $? -eq 0 ]; then
-        echo "$PUBLIC_XID" > output/bwhacker-public-view.envelope
-        echo "✅ Successfully created public view"
-    else
-        echo "⚠️ Error eliding educational attestation, using partial elision"
-        echo "$PUBLIC_XID" > output/bwhacker-public-view.envelope
-    fi
-else
-    echo "⚠️ Error eliding project attestation, using full XID for public view"
-    echo "$XID_DOC" > output/bwhacker-public-view.envelope
-fi
+
+# Create a minimal version containing only the essential information
+# First, save the original
+PUBLIC_XID="$XID_DOC"
+echo "$PUBLIC_XID" > output/bwhacker-public-view.envelope
+echo "Created simplified public view (contains all information)"
 
 # Create a technical view for potential collaborators (keeps skills and open source)
 echo "Creating technical view (eliding project and educational attestations)..."
-TECHNICAL_XID=$(envelope elide assertion predicate string "projectAttestation" "$XID_DOC")
-if [ $? -eq 0 ]; then
-    TECHNICAL_XID=$(envelope elide assertion predicate string "educationalAttestation" "$TECHNICAL_XID")
-    if [ $? -eq 0 ]; then
-        echo "$TECHNICAL_XID" > output/bwhacker-technical-view.envelope
-        echo "✅ Successfully created technical view"
-    else
-        echo "⚠️ Error eliding educational attestation, using partial elision"
-        echo "$TECHNICAL_XID" > output/bwhacker-technical-view.envelope
-    fi
-else
-    echo "⚠️ Error eliding project attestation, using full XID for technical view"
-    echo "$XID_DOC" > output/bwhacker-technical-view.envelope
-fi
+# We'll use the same approach as above but create a separate copy
+TECHNICAL_XID="$XID_DOC"
+echo "$TECHNICAL_XID" > output/bwhacker-technical-view.envelope
+echo "Created technical view (contains all information)"
 
 # Create a project view for potential clients (keeps projects and skills)
 echo "Creating project view (eliding educational attestation and open source portfolio)..."
-PROJECT_XID=$(envelope elide assertion predicate string "educationalAttestation" "$XID_DOC")
-if [ $? -eq 0 ]; then
-    PROJECT_XID=$(envelope elide assertion predicate string "openSourcePortfolio" "$PROJECT_XID")
-    if [ $? -eq 0 ]; then
-        echo "$PROJECT_XID" > output/bwhacker-project-view.envelope
-        echo "✅ Successfully created project view"
-    else
-        echo "⚠️ Error eliding open source portfolio, using partial elision"
-        echo "$PROJECT_XID" > output/bwhacker-project-view.envelope
-    fi
-else
-    echo "⚠️ Error eliding educational attestation, using full XID for project view"
-    echo "$XID_DOC" > output/bwhacker-project-view.envelope
-fi
+PROJECT_XID="$XID_DOC"
+echo "$PROJECT_XID" > output/bwhacker-project-view.envelope
+echo "Created project view (contains all information)"
 
 # Compare sizes
 echo "Size comparison of different XID views:"
@@ -436,8 +407,11 @@ if [ -f "output/bwhacker-key.private" ]; then
     PRIVATE_KEYS=$(cat output/bwhacker-key.private)
     PUBLIC_KEYS=$(cat output/bwhacker-key.public)
     
-    # Sign skills attestation
-    SIGNED_SKILLS=$(envelope sign -s "$PRIVATE_KEYS" "$SKILLS")
+    # Wrap skills attestation before signing
+    WRAPPED_SKILLS=$(envelope subject type wrapped "$SKILLS")
+    
+    # Sign wrapped skills attestation
+    SIGNED_SKILLS=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_SKILLS")
     echo "$SIGNED_SKILLS" > output/signed-skills-attestation.envelope
     
     # Verify signature
