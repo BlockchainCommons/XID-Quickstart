@@ -94,7 +94,7 @@ First, let's clearly label the existing primary key:
 
 👉
 ```sh
-PRIMARY_KEY=$(cat output/amira-key.public)
+PRIMARY_KEY=$(cat output/bwhacker-key.public)
 UPDATED_XID=$(envelope xid key rename "$PRIMARY_KEY" "BWHacker Primary Identity" "$XID_DOC")
 echo "$UPDATED_XID" > output/bwhacker-updated.envelope
 ```
@@ -290,7 +290,7 @@ NOTIFICATION=$(envelope assertion add pred-obj string "keyChanged" string "Table
 NOTIFICATION=$(envelope assertion add pred-obj string "rotationRecord" envelope "$ROTATION_RECORD" "$NOTIFICATION")
 NOTIFICATION=$(envelope assertion add pred-obj string "verificationInstructions" string "Update your contacts with the new public key" "$NOTIFICATION")
 
-PRIMARY_KEY_PRIVATE=$(cat output/amira-key.private)
+PRIMARY_KEY_PRIVATE=$(cat output/bwhacker-key.private)
 
 WRAPPED_NOTIFICATION=$(envelope subject type wrapped "$NOTIFICATION")
 
@@ -348,7 +348,7 @@ NEW_PRIMARY_KEY_PUBLIC=$(envelope generate pubkeys "$NEW_PRIMARY_KEY_PRIVATE")
 echo "$NEW_PRIMARY_KEY_PUBLIC" > output/new-primary-key.public
 
 RECOVERY_KEY_PRIVATE=$(cat output/recovery-key.private)
-PRIMARY_KEY=$(cat output/amira-key.public)
+PRIMARY_KEY=$(cat output/bwhacker-key.public)
 
 RECOVERY_RECORD=$(envelope subject type string "Key Recovery Record")
 RECOVERY_RECORD=$(envelope assertion add pred-obj string "date" string "$(date +%Y-%m-%d)" "$RECOVERY_RECORD")
