@@ -1,20 +1,25 @@
 # Gordian Envelope Basics
 
 ## Expected Learning Outcomes
+
 By the end of this document, you will:
+
 - Understand the structure and purpose of Gordian Envelopes
 - Know how the subject-assertion-object model works
-- Understand how signing and verification function with envelopes
-- See how envelopes enable both verification and privacy
+- Understand how signing and verification function with Envelopes
+- See how Envelopes enable both verification and privacy
 
 ## What is a Gordian Envelope?
 
 A Gordian Envelope is a data structure that combines:
+
 - Structured semantic information (like who did what)
 - Cryptographic verification (like digital signatures)
 - Selective disclosure capabilities (through elision)
 
-Think of an envelope as a container that can hold information in a structured way, be securely sealed to verify its source, and have parts selectively revealed while keeping other parts private.
+Think of an envelope as a container that can hold information in a
+structured way, be securely sealed to verify its source, and have
+parts selectively revealed while keeping other parts private.
 
 ## The Subject-Assertion-Object Model
 
@@ -42,9 +47,10 @@ In this structure:
 - **Predicate**: A property or relationship ("domain", "experienceLevel")
 - **Object**: The value of that property ("Distributed Systems & Security")
 
-This structure creates clear, semantic relationships that are both human-readable and machine-processable.
+This structure creates clear, semantic relationships that are both
+human-readable and machine-processable.
 
-## Types of Assertions You Can Make
+### Types of Assertions You Can Make
 
 You can make various types of assertions within an envelope:
 
@@ -74,36 +80,64 @@ You can make various types of assertions within an envelope:
 ## Signing and Verification
 
 Envelopes can be cryptographically signed to verify:
-- Who created or endorsed the envelope
+
+- Who created or endorsed an Envelope
 - That the content hasn't been altered since signing
 
-The signing process:
+The signing process consists of two steps:
+
 1. A private key is used to generate a digital signature of the envelope
 2. The signature is attached to the envelope
 
-For example:
+In the [envelope-cli
+tool](https://github.com/BlockchainCommons/bc-envelope-cli-rust), the
+process looks like this:
 
-👉 
 ```sh
+PRIVATE_KEYS=$(envelope generate prvkeys)
+PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
 SIGNED_PROPOSAL=$(envelope sign -s "$PRIVATE_KEYS" "$PROPOSAL")
 ```
 
-The verification process:
-1. The public key is used to verify the signature
-2. Verification confirms the envelope was signed by the corresponding private key
+In the verification process, the public of the keypair is then used to
+verify the signature. This confirms the envelope was signed by
+the corresponding private key.
 
-For example:
-
-👉 
 ```sh
 envelope verify -v "$PUBLIC_KEYS" "$SIGNED_PROPOSAL"
 ```
 
-This creates non-repudiation - the signer cannot deny creating the signature if it verifies with their public key.
+This creates non-repudiation: the signer cannot deny creating the
+signature if it verifies with their public key.
+
+### Wrapping & Signing
+
+Any assertion in Envelope always applys to its subject: the subject
+predicates the object. This applies to signatures too: a signature
+signs the subject. It does _not_ sign the other assertions on that
+subject.
+
+As a result, the following is usually not what's intended:
+
+```
+"BWHacker" [
+   "name": "BWHacker"
+   "domain": "Distributed Systems & Security"
+   "experienceLevel": "8 years professional practice"
+   SIGNATURE
+]
+```
+
+That `SIGNATURE` only applies to `BWHacker`, not to the assertions
+about their experience.
+
+[[TODO: FINISH THIS UP WITH HOW TO DO IT RIGHT.]]
 
 ## Enabling Both Verification and Privacy
 
-One of the most powerful features of Gordian Envelopes is the ability to maintain cryptographic verification even when parts of the data are hidden through elision.
+One of the most powerful features of Gordian Envelopes is the ability
+to maintain cryptographic verification even when parts of the data are
+hidden through elision.
 
 For example, if an envelope contains:
 ```
@@ -124,6 +158,8 @@ You can elide (remove) the "experienceLevel" assertion while maintaining the sig
    SIGNATURE
 ]
 ```
+
+[[TODO: REDO THESE SO THAT SIGNATURE IS ON WRAPPED ENVELOPE]]
 
 This allows for:
 - Revealing different information to different audiences

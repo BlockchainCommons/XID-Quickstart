@@ -4,14 +4,16 @@ This directory contains conceptual documentation to help you understand the theo
 
 ## Start Here
 
-If you're new to XIDs and Gordian Envelopes, we recommend reading these concepts in the following order:
+If you're new to XIDs and Gordian Envelopes, we recommend reading
+these concepts in the following order:
 
-1. [XID Fundamentals](xid-fundamentals.md) - Understanding the basics of eXtensible IDentifiers
-2. [Gordian Envelope Basics](gordian-envelope-basics.md) - The data structure that powers XIDs
-3. [Data Minimization Principles](data-minimization-principles.md) - How to control information disclosure
-4. [Fair Witness Approach](fair-witness-approach.md) - Making trustworthy assertions
-5. [Pseudonymous Trust Building](pseudonymous-trust-building.md) - Building trust without revealing identity
-6. [Key Management Essentials](key-management-essentials.md) - Securing and managing cryptographic keys
+1. [XID](xid.md) - Understanding the basics of eXtensible IDentifiers
+2. [Gordian Envelope](gordian-envelope.md) - The data structure that powers XIDs
+3. [Data Minimization](data-minimization.md) - How to control information disclosure
+4. [Elision Cryptography](elision-cryptography.md) - The cryptography of elision
+5. [Fair Witnessing](fair-witness.md) - Making trustworthy assertions
+6. [Pseudonymous Trust Building](pseudonymous-trust-building.md) - Building trust without revealing identity
+7. [Key Management Essentials](key-management.md) - Securing and managing cryptographic keys
 
 ## Concept Map
 
@@ -53,19 +55,19 @@ The following diagram shows how these concepts relate to each other:
 Each concept document supports the practical tutorials:
 
 - **Tutorial 1**: Creating Your First XID
-  - Supported by: XID Fundamentals, Gordian Envelope Basics
+  - Supported by: XID, Gordian Envelope
   
 - **Tutorial 2**: Understanding XID Structure
-  - Supported by: Gordian Envelope Basics, Data Minimization Principles
+  - Supported by: Gordian Envelope, Data Minimization
   
 - **Tutorial 3**: Self-Attestation with XIDs
-  - Supported by: Fair Witness Approach, Pseudonymous Trust Building
+  - Supported by: Fair Witnessing, Pseudonymous Trust Building
   
 - **Tutorial 4**: Peer Endorsement with XIDs
-  - Supported by: Fair Witness Approach, Pseudonymous Trust Building
+  - Supported by: Fair Witnessing, Pseudonymous Trust Building
   
 - **Tutorial 5**: Key Management with XIDs
-  - Supported by: Key Management Essentials
+  - Supported by: Key Management
 
 ## Reading Approach
 
