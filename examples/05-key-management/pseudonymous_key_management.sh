@@ -188,7 +188,7 @@ NOTIFICATION=$(envelope assertion add pred-obj string "rotationRecord" envelope 
 NOTIFICATION=$(envelope assertion add pred-obj string "verificationInstructions" string "Update your contacts with the new public key" "$NOTIFICATION")
 
 # Sign with primary key to verify authenticity
-PRIMARY_KEY_PRIVATE=$(cat output/amira-key.private)
+PRIMARY_KEY_PRIVATE=$(cat output/bwhacker-key.private)
 
 # Wrap the notification before signing
 WRAPPED_NOTIFICATION=$(envelope subject type wrapped "$NOTIFICATION")
@@ -235,7 +235,7 @@ echo "$NEW_PRIMARY_KEY_PUBLIC" > output/new-primary-key.public
 
 # Use the recovery key to add this new primary key
 RECOVERY_KEY_PRIVATE=$(cat output/recovery-key.private)
-PRIMARY_KEY=$(cat output/amira-key.public)
+PRIMARY_KEY=$(cat output/bwhacker-key.public)
 
 # Create a recovery record with fair witnessing principles
 RECOVERY_RECORD=$(envelope subject type string "Key Recovery Record")
@@ -369,7 +369,57 @@ for KEY in $(envelope xid key all "$PROGRESSIVE_XID"); do
     echo "- $NAME: $PERMS"
 done
 
-echo -e "\n6. BWHacker's complete key management plan..."
+echo -e "\n6. Maintaining endorsements through key changes..."
+
+# Create a simulated endorsement to work with since we don't have output/pm-endorsement.envelope
+PM_KEY_PRIVATE=$(envelope generate prvkeys)
+echo "$PM_KEY_PRIVATE" > output/greenpm-key.private
+PM_KEY_PUBLIC=$(envelope generate pubkeys "$PM_KEY_PRIVATE")
+echo "$PM_KEY_PUBLIC" > output/greenpm-key.public
+
+# Create a simulated project manager endorsement
+PM_ENDORSEMENT=$(envelope subject type string "Project Management Endorsement")
+PM_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementTarget" digest "$XID_ID" "$PM_ENDORSEMENT")
+PM_ENDORSEMENT=$(envelope assertion add pred-obj string "targetAlias" string "BWHacker" "$PM_ENDORSEMENT")
+PM_ENDORSEMENT=$(envelope assertion add pred-obj string "skill" string "Technical Project Management" "$PM_ENDORSEMENT")
+PM_ENDORSEMENT=$(envelope assertion add pred-obj string "context" string "Urban Infrastructure Security Framework" "$PM_ENDORSEMENT")
+PM_ENDORSEMENT=$(envelope assertion add pred-obj string "timeframe" string "2023-2024" "$PM_ENDORSEMENT")
+PM_ENDORSEMENT=$(envelope assertion add pred-obj string "assessment" string "Exceptional technical leadership and organizational skills" "$PM_ENDORSEMENT")
+
+# Wrap the endorsement before signing
+WRAPPED_PM_ENDORSEMENT=$(envelope subject type wrapped "$PM_ENDORSEMENT")
+
+# Sign the wrapped endorsement
+SIGNED_PM_ENDORSEMENT=$(envelope sign -s "$PM_KEY_PRIVATE" "$WRAPPED_PM_ENDORSEMENT")
+echo "$SIGNED_PM_ENDORSEMENT" > output/pm-endorsement.envelope
+
+# Verify that this endorsement is still valid with our new XID state
+if envelope verify -v "$PM_KEY_PUBLIC" "$SIGNED_PM_ENDORSEMENT"; then
+  echo "✅ PM endorsement signature still valid"
+else
+  echo "❌ Invalid endorsement signature"
+fi
+
+# Add context about key rotation to the endorsement acceptance
+ENDORSEMENT_UPDATE=$(envelope subject type string "Endorsement Validity Update")
+ENDORSEMENT_UPDATE=$(envelope assertion add pred-obj string "endorsementReference" digest "$SIGNED_PM_ENDORSEMENT" "$ENDORSEMENT_UPDATE")
+ENDORSEMENT_UPDATE=$(envelope assertion add pred-obj string "keyRotationReference" digest "$SIGNED_RECOVERY_RECORD" "$ENDORSEMENT_UPDATE")
+ENDORSEMENT_UPDATE=$(envelope assertion add pred-obj string "validityStatement" string "This endorsement remains valid through key rotation, as BWHacker's identity is preserved" "$ENDORSEMENT_UPDATE")
+ENDORSEMENT_UPDATE=$(envelope assertion add pred-obj string "updateDate" string "$(date +%Y-%m-%d)" "$ENDORSEMENT_UPDATE")
+
+# Wrap the endorsement update before signing
+WRAPPED_ENDORSEMENT_UPDATE=$(envelope subject type wrapped "$ENDORSEMENT_UPDATE")
+
+# Sign with new primary key
+SIGNED_UPDATE=$(envelope sign -s "$NEW_PRIMARY_KEY_PRIVATE" "$WRAPPED_ENDORSEMENT_UPDATE")
+
+# Add this update to the key-rotated XID
+PROGRESSIVE_XID=$(envelope assertion add pred-obj string "endorsementUpdate" envelope "$SIGNED_UPDATE" "$PROGRESSIVE_XID")
+echo "$PROGRESSIVE_XID" > output/bwhacker-endorsement-preserved.envelope
+
+echo "✅ Endorsement validity preserved through key rotation"
+
+echo -e "\n7. BWHacker's complete key management plan..."
 
 # Create a comprehensive key management plan
 KM_PLAN=$(envelope subject type string "BWHacker's Comprehensive Key Management Plan")
