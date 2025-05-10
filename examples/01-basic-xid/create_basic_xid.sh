@@ -1,142 +1,124 @@
 #!/bin/bash
-# create_basic_xid.sh - Example script for "Creating Your First XID" tutorial
+# 01-your-first-xid.sh
+#
+# Creates three versions of an XID for pseudonymous identity:
+# 1. Private XID with all keys
+# 2. Basic public XID (just elided private key)
+# 3. Enhanced public XID with persona details and signature
 
-set -e # Exit on error
+set -e  # Exit on any error
 
-echo "=== BWHacker's Pseudonymous Identity Journey ==="
+# Define XID name
+XID_NAME="BRadvoc8"
 
-# Step 1: Creating SSH Keys and XID Foundation
-echo -e "\n1. Creating a secure foundation with SSH and XID keys..."
+# Create output directory
+OUTPUT_DIR="xid-$(date +%Y%m%d%H%M%S)"
+mkdir -p "$OUTPUT_DIR"
 
-# Generate an SSH key for Git authentication and signing
-SSH_KEY_FILE="./bwhacker-ssh-key"
-SSH_PUB_KEY_FILE="${SSH_KEY_FILE}.pub"
+echo "## Step 1: Creating Private XID"
 
-if [ ! -f "$SSH_KEY_FILE" ]; then
-    ssh-keygen -t ed25519 -f "$SSH_KEY_FILE" -N "" -C "BWHacker <bwhacker@example.com>"
-    echo "SSH key created for Git operations and commit signing"
+# Generate a private key base for XID
+XID_PRVKEY_BASE=$(envelope generate prvkeys)
+echo "Generated private key base for XID"
+
+# Create a new XID with the private key
+XID=$(envelope xid new "$XID_PRVKEY_BASE")
+echo "Created new private XID"
+
+# Display the private XID structure
+echo -e "\nPrivate XID structure:"
+envelope format "$XID"
+
+# Save the private key base and XID
+echo "$XID_PRVKEY_BASE" > "$OUTPUT_DIR/${XID_NAME}-xid-private.crypto-prvkey-base"
+echo "$XID" > "$OUTPUT_DIR/${XID_NAME}-xid-private.xid"
+envelope format "$XID" > "$OUTPUT_DIR/${XID_NAME}-xid-private.format"
+
+# Extract key assertion and find private key
+KEY_ASSERTION=$(envelope xid key at 0 "$XID")
+PRIVATE_KEY_ASSERTION=$(envelope assertion find predicate known privateKey "$KEY_ASSERTION")
+PRIVATE_KEY_ASSERTION_DIGEST=$(envelope digest "$PRIVATE_KEY_ASSERTION")
+
+echo -e "\n## Step 2: Creating Basic Public XID"
+
+# Elide private key from XID to create basic public version
+BASIC_PUBLIC_XID=$(envelope elide removing "$PRIVATE_KEY_ASSERTION_DIGEST" "$XID")
+echo "Created basic public XID"
+
+# Display the basic public XID
+echo -e "\nBasic Public XID:"
+envelope format "$BASIC_PUBLIC_XID"
+
+# Save the basic public XID
+echo "$BASIC_PUBLIC_XID" > "$OUTPUT_DIR/${XID_NAME}-xid-basic-public.xid"
+envelope format "$BASIC_PUBLIC_XID" > "$OUTPUT_DIR/${XID_NAME}-xid-basic-public.format"
+
+echo -e "\n## Step 3: Creating Enhanced Public XID with Persona Details"
+
+# Start with the basic public XID
+ENHANCED_XID="$BASIC_PUBLIC_XID"
+
+# Add isA assertion (using known value, not string)
+ENHANCED_XID=$(envelope assertion add pred-obj known isA string "Persona" "$ENHANCED_XID")
+echo "Added 'isA: Persona' assertion as a known predicate"
+
+# Add nickname assertion
+ENHANCED_XID=$(envelope assertion add pred-obj string "nickname" string "$XID_NAME" "$ENHANCED_XID")
+echo "Added nickname assertion: $XID_NAME"
+
+# Create GitHub account information with proper date types
+GITHUB_ACCOUNT=$(envelope subject type string "$XID_NAME")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "created_at" date "2025-05-10T00:55:11Z" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "updated_at" date "2025-05-10T00:55:28Z" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "evidence" uri "https://api.github.com/users/$XID_NAME" "$GITHUB_ACCOUNT")
+
+# Create a service envelope that contains the account information
+GITHUB_SERVICE=$(envelope subject type string "GitHub")
+# Add the type of service (using known isA predicate)
+GITHUB_SERVICE=$(envelope assertion add pred-obj known isA string "SourceCodeRepository" "$GITHUB_SERVICE")
+GITHUB_SERVICE=$(envelope assertion add pred-obj string "account" envelope "$GITHUB_ACCOUNT" "$GITHUB_SERVICE")
+
+# Add the service information to the XID
+ENHANCED_XID=$(envelope assertion add pred-obj string "service" envelope "$GITHUB_SERVICE" "$ENHANCED_XID")
+echo "Added GitHub service information with account details"
+
+# Create resolveVia URIs with proper URI type
+GITHUB_REPO_URI=$(envelope subject type uri "https://github.com/$XID_NAME/$XID_NAME/$XID_NAME-public.envelope")
+DID_URI=$(envelope subject type uri "did:repo:1ab31db40e48145c14f19bc735add0d279cdc62d/blob/main/$XID_NAME-public.envelope")
+
+# Add individual resolveVia assertions directly to the XID
+ENHANCED_XID=$(envelope assertion add pred-obj string "resolveVia" envelope "$GITHUB_REPO_URI" "$ENHANCED_XID")
+ENHANCED_XID=$(envelope assertion add pred-obj string "resolveVia" envelope "$DID_URI" "$ENHANCED_XID")
+echo "Added resolveVia URLs for resolution"
+
+# Wrap the entire XID before signing - using wrapped type is critical for proper signatures
+WRAPPED_XID=$(envelope subject type wrapped "$ENHANCED_XID")
+echo "Wrapped the XID for signing (using wrapped type)"
+
+# Sign the wrapped XID
+SIGNED_ENHANCED_XID=$(envelope sign -s "$XID_PRVKEY_BASE" "$WRAPPED_XID")
+echo "Created and signed enhanced public XID"
+
+# Display the enhanced public XID
+echo -e "\nEnhanced Public XID (with signature):"
+envelope format "$SIGNED_ENHANCED_XID"
+
+# Save the enhanced public XID
+echo "$SIGNED_ENHANCED_XID" > "$OUTPUT_DIR/${XID_NAME}-xid-enhanced-public.envelope"
+envelope format "$SIGNED_ENHANCED_XID" > "$OUTPUT_DIR/${XID_NAME}-xid-enhanced-public.format"
+
+# Generate public keys for verification
+PUBLIC_KEYS=$(envelope generate pubkeys "$XID_PRVKEY_BASE")
+echo "$PUBLIC_KEYS" > "$OUTPUT_DIR/${XID_NAME}-xid-public.crypto-pubkeys"
+
+# Verify the signature
+echo -e "\nVerifying XID signature..."
+if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_ENHANCED_XID"; then
+    echo "✅ XID signature verified! The enhanced XID is authentic."
 else
-    echo "Using existing SSH key: $SSH_KEY_FILE"
+    echo "❌ XID signature verification failed."
 fi
 
-# Read the SSH public key content
-SSH_PUB_KEY=$(cat "$SSH_PUB_KEY_FILE")
-SSH_KEY_FINGERPRINT=$(ssh-keygen -l -E sha256 -f "$SSH_PUB_KEY_FILE" | awk '{print $2}')
-echo "SSH public key fingerprint: $SSH_KEY_FINGERPRINT"
-
-# Generate private key for the XID
-envelope generate prvkeys > bwhacker-key.private
-echo "Private key generated - keep this secret and secure!"
-
-# Derive the corresponding public key
-PRIVATE_KEYS=$(cat bwhacker-key.private)
-PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-echo "$PUBLIC_KEYS" > bwhacker-key.public
-
-# View the public key
-echo "Public key created (safe to share):"
-cat bwhacker-key.public | head -n 1
-
-# Step 2: Creating a Minimal Pseudonymous XID
-echo -e "\n2. Creating a minimal pseudonymous XID..."
-
-# Create an XID with a pseudonym and public key
-envelope xid new --name "BWHacker" "$PUBLIC_KEYS" > bwhacker-xid.envelope
-
-# View the XID document structure
-echo "Initial pseudonymous XID document:"
-XID_DOC=$(cat bwhacker-xid.envelope)
-envelope format --type tree "$XID_DOC"
-
-# Step 3: Understanding the XID Identifier
-echo -e "\n3. Understanding the stable XID identifier..."
-
-# Extract the unique XID identifier
-XID_ID=$(envelope xid id "$XID_DOC")
-echo "XID identifier: $XID_ID"
-echo "This identifier will remain stable even when keys change."
-echo "It can be referenced without revealing personal identity."
-
-# Step 4: Adding GitHub Identity with SSH Key Verification
-echo -e "\n4. Adding GitHub identity with SSH key verification..."
-
-# Add GitHub identity
-XID_DOC=$(envelope assertion add pred-obj string "gitHubUsername" string "BWHacker" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "gitHubProfileURL" string "https://github.com/BWHacker" "$XID_DOC")
-
-# Add SSH key for Git commit verification
-XID_DOC=$(envelope assertion add pred-obj string "sshKey" string "$SSH_PUB_KEY" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "sshKeyFingerprint" string "$SSH_KEY_FINGERPRINT" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "sshKeyVerificationURL" string "https://api.github.com/users/BWHacker/ssh_signing_keys" "$XID_DOC")
-
-# Add basic professional information
-XID_DOC=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional practice" "$XID_DOC")
-
-# Save updated XID
-echo "$XID_DOC" > bwhacker-xid.envelope
-
-# View the enhanced XID
-echo "Enhanced XID with GitHub identity and SSH key observation:"
-envelope format --type tree "$XID_DOC"
-
-# Step 5: Organizing XID Files
-echo -e "\n5. Organizing XID information..."
-
-# Create an output directory to store XID information
-mkdir -p output
-
-# Copy the XID file to the organized location
-cp bwhacker-xid.envelope output/bwhacker-xid.envelope
-cp "$SSH_KEY_FILE" output/
-cp "$SSH_PUB_KEY_FILE" output/
-
-# Verify the files were successfully copied
-echo "XID and SSH key documents organized in project directory:"
-ls -la output/
-
-# Step 6: Creating and Signing a Basic Attestation
-echo -e "\n6. Creating and signing a basic attestation..."
-
-# Create a simple skill attestation
-ATTESTATION=$(envelope subject type string "Skill Attestation")
-ATTESTATION=$(envelope assertion add pred-obj string "skill" string "Rust Programming" "$ATTESTATION")
-ATTESTATION=$(envelope assertion add pred-obj string "experienceYears" string "3" "$ATTESTATION")
-ATTESTATION=$(envelope assertion add pred-obj string "projectCount" string "5" "$ATTESTATION")
-
-# Save the attestation
-echo "$ATTESTATION" > output/bwhacker-skill-attestation.envelope
-
-# Wrap the attestation before signing
-WRAPPED_ATTESTATION=$(envelope subject type wrapped "$ATTESTATION")
-
-# Sign the wrapped attestation with private key
-SIGNED_ATTESTATION=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_ATTESTATION")
-
-# Save the signed attestation
-echo "$SIGNED_ATTESTATION" > output/bwhacker-skill-attestation-signed.envelope
-
-# View the signed attestation
-echo "Signed skill attestation:"
-envelope format --type tree "$SIGNED_ATTESTATION"
-
-# Verify the signature is valid
-if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_ATTESTATION"; then
-    echo "✅ Signature verified. The attestation is authentically from the XID holder."
-else
-    echo "❌ Signature verification failed."
-fi
-
-# Step 7: Configuring Git for SSH Key Signing
-echo -e "\n7. Git configuration for SSH key signing..."
-echo "To configure Git to use the SSH key for signing commits:"
-echo "git config --local user.name \"BWHacker\""
-echo "git config --local user.email \"bwhacker@example.com\""
-echo "git config --local user.signingkey \"$SSH_KEY_FILE\""
-echo "git config --local gpg.format ssh"
-echo "git config --local commit.gpgsign true"
-
-echo -e "\n=== BWHacker's Pseudonymous Identity Journey Complete ==="
-echo "This example demonstrates how XIDs enable pseudonymous contributions"
-echo "with GitHub-verifiable identity through SSH key connections,"
-echo "without revealing personal identity."
+echo -e "\nAll files have been created in the $OUTPUT_DIR directory."
+ls -la "$OUTPUT_DIR"
+echo "XID creation completed successfully!"
