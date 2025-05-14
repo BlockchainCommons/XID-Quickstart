@@ -60,6 +60,56 @@ Get started with XIDs by:
 3. Navigate to the tutorials directory: `cd XID-Quickstart/tutorials`
 4. Start with the first tutorial: [Creating Your First XID](tutorials/01-your-first-xid.md)
 
+## What This Is
+
+Fundamentally, Blockchain Commons' current work with XIDs is
+**experimental**. This is more a **sandbox** for play with XIDs than a
+proper tutorial, we're just sharing what our play looks like in case
+you want to play with XIDs yourself.
+
+But please be aware, XIDs are in an early development stage, and our
+experiments may not be the best way to do things. It's especially
+important to note that the methodologies that we're working with here
+have not been security tested. What does it really mean to have an
+ellision-first philosophy? What are the raimifications of including,
+then eliding private keys? Is the current XID structure the best one
+from a security point of view?
+
+These are the type of questions we're asking here, and indeed we've
+refined and revisited some of our answers as we iterated these
+documents.
+
+We welcome your experiments and your feedback (as issues, PRs, or in
+direct converstation), but we do not yet suggest using this work in
+any type of deployed system.
+
+## Why To Use It
+
+The XID is a decentralized self-sovereign identifier that's built on
+the concept of [data
+minimization](https://www.blockchaincommons.com/musings/musings-data-minimization/). It
+allows you to share only the minimum necessary information about an
+identity, and then to slowly disclose additional information through
+the process of [progressive
+trust](https://www.blockchaincommons.com/musings/musings-progressive-trust/).
+
+A XID can be a foundation for attestation frameworks and fair witness
+models, but it's a transformational technology. It puts privacy and
+moreso user agency first in a way that the rest of the identity and
+credentials community generally doesn't, in part due to [their failure
+to adhere to early self-sovereign
+principles](https://www.blockchaincommons.com/musings/musings-ssi-bankruptcy/).
+
+Working with XIDs can give you hands-on experience with how you can
+cryptographically elide data while maintaining verifiability through
+signatures. More than that, it can demonstrate how to maintain a
+stable identifier even through key rotation, device additions, and
+recovery scenarios.
+ 
+If self-sovereign identity and the desire to protect and empower users
+are improtant to you, then we hope you'll find XIDs an important next
+step in making ethical, autonomous, self-soveriegn identity a reality.
+
 ## Project Status - Experimental
 
 These tutorials are currently in an experimental state. While usable for learning purposes, the underlying technologies and APIs may change significantly as development continues.
