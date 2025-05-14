@@ -113,7 +113,7 @@ flowchart TD
     G --> H["Pseudonymous Trust Building<br>Trust Without Legal Identity"]
     H --> I["Public Participation Profiles<br>Structured Identity Framework"]
     
-    click A "xid.md" "XIDs: eXtensible IDentifiers"
+    click A "/blob/main/concepts/xid.md" "XIDs: eXtensible IDentifiers"
     click B "gordian-envelope.md" "Gordian Envelope: The data structure for XIDs"
     click C "data-minimization.md" "Data Minimization: Controlling information disclosure"
     click D "fair-witness.md" "Fair Witness: Making trustworthy assertions"
