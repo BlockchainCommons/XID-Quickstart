@@ -114,15 +114,15 @@ flowchart TD
     H --> I["Public Participation Profiles<br>Structured Identity Framework"]
     
     click A "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/xid.md" "XIDs: eXtensible IDentifiers"
-    click B "gordian-envelope.md" "Gordian Envelope: The data structure for XIDs"
-    click C "data-minimization.md" "Data Minimization: Controlling information disclosure"
-    click D "fair-witness.md" "Fair Witness: Making trustworthy assertions"
-    click E "elision-cryptography.md" "Elision Cryptography: The cryptography of selective disclosure"
-    click F "attestation-endorsement-model.md" "Attestation & Endorsement Model: Framework for claims"
-    click G "progressive-trust.md" "Progressive Trust: Building trust incrementally over time"
-    click H "pseudonymous-trust-building.md" "Pseudonymous Trust Building: Trust without revealing identity"
-    click I "public-participation-profiles.md" "Public Participation Profiles: Managing public identity and reputation"
-    click K "key-management.md" "Key Management Essentials: Securing and managing cryptographic keys"
+    click B "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/gordian-envelope.md" "Gordian Envelope: The data structure for XIDs"
+    click C "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/data-minimization.md" "Data Minimization: Controlling information disclosure"
+    click D "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/fair-witness.md" "Fair Witness: Making trustworthy assertions"
+    click E "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/elision-cryptography.md" "Elision Cryptography: The cryptography of selective disclosure"
+    click F "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/attestation-endorsement-model.md" "Attestation & Endorsement Model: Framework for claims"
+    click G "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/progressive-trust.md" "Progressive Trust: Building trust incrementally over time"
+    click H "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/pseudonymous-trust-building.md" "Pseudonymous Trust Building: Trust without revealing identity"
+    click I "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/public-participation-profiles.md" "Public Participation Profiles: Managing public identity and reputation"
+    click K "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/key-management.md" "Key Management Essentials: Securing and managing cryptographic keys"
 ```
 
 ## Relating Concepts to Tutorials
