@@ -1,6 +1,7 @@
 # XID Fundamentals
 
 ## Expected Learning Outcomes
+
 By the end of this document, you will:
 
 - Understand what XIDs are and why they're valuable
@@ -24,7 +25,7 @@ For convenience, XIDs are often shown in shortened form using just the
 first few bytes:
 
 ```
-7e1e25d7...
+🅧 7e1e25d7
 ```
 
 ### Stability Through Change
@@ -71,7 +72,8 @@ document, a [Gordian Envelope](gordian-envelope-basics.md) containing
 structured data about the XID:
 
 ```
-"MyIdentifier" [
+
+XID(7e1e25d7) [
    "name": "MyIdentifier"
    "publicKeys": ur:crypto-pubkeys/hdcxlkadjngh...
    "domain": "Software Development"
@@ -93,27 +95,27 @@ The XID document contains:
 
 ## When to Use XIDs for Pseudonymous Identity
 
-XIDs are important for situations where pseudonymity is required. This
-pseudo-anonymous situation has several crucial criteria:
+XIDs are important for situations where pseudonymity is required. 
+This includes the following use cases:
 
 1. **Privacy is required**: You need to participate without revealing
-your real identity
+your real identity.
 2. **Identity persistence matters**: You need a stable identifier even
-as your keys or devices change
+as your keys or devices change.
 3. **Trust must be verifiable**: Others need to verify that your
-contributions come from the same identity
+contributions come from the same identity.
 4. **Cryptographic verification is important**: You need to prove
-control without revealing identity
+control without revealing identity.
 
 In addition, XIDs can support [progressive
 trust](progressive-trust-lifecycle,md):
 
 5. **Progressive disclosure is needed**: You want to reveal
-information gradually as trust develops
+information gradually as trust develops.
 
-Opens source software development offers a convincing use case, as
-developers might wish to maintain their privacy, but users will need
-to trust the continuity of the software design. The
+Opens source software development offers another convincing use case,
+as developers might wish to maintain their privacy, but users will
+need to trust the continuity of the software design. The
 [tutorials](../tutorials/) explore this use case through the story of
 Amira.
 
@@ -128,8 +130,8 @@ XIDs work together with:
 ## Check Your Understanding
 
 1. How is an XID derived from a cryptographic key?
-2. What is the difference between an XID and an XID document?
-3. What types of information can be included in an XID document?
+2. What is the difference between a XID and a XID document?
+3. What types of information can be included in a XID document?
 4. When would you want to use a pseudonymous XID rather than your real identity?
 
 ## Next Steps
