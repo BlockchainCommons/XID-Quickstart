@@ -9,15 +9,15 @@ This tutorial introduces Amira, a software developer with a politically sensitiv
 ## Prerequisites
 
 - Basic terminal/command line familiarity
-- The envelope CLI tool installed
-- SSH key utilities (ssh-keygen) for creating Git signing keys
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 13.1 or later).
 
 ## What You'll Learn
 
 - How to create a minimal XID for pseudonymous contributions
-- How to link your XID to GitHub with SSH keys
-- How to sign a basic attestation with your XID
-- How to maintain pseudonymity while contributing to projects
+- How to add and sign verifiable assertions to your XID
+- How to create public versions of your XID redacting private data using elision
+- How to maintain strong cryptographic integrity while sharing only what you choose
+- How to organize and store XID files using secure naming conventions
 
 ## Amira's Story: Why Pseudonymous Identity Matters
 
@@ -25,13 +25,15 @@ Amira is a successful software developer working at a prestigious multinational 
 
 Given her background from a politically tense region, contributing openly to certain social impact projects could risk her visa status, professional position, or even the safety of family members back home. Yet she's deeply motivated to use her skills to help oppressed people globally. This tension between professional security and meaningful contribution creates a specific need.
 
+However, Amira faces a dilemma: she can't contribute anonymously because anonymous contributions lack credibility. Project maintainers need confidence in the quality and provenance of code, especially for socially important applications. She needs a solution that protects her identity while allowing her to build a verifiable reputation for her skills.
+
 Amira needs a technological solution that allows her to:
 
 1. Share her valuable security expertise without revealing her real identity
 2. Build verifiable trust through the quality of her work, not her existing credentials
-3. Establish a consistent "BWHacker" digital presence that can evolve and build reputation over time
+3. Establish a consistent "BRadvoc8" (aka Basic Rights Advocate) digital presence that can evolve and build reputation over time
 4. Connect with project leaders like Ben from the women's services non-profit
-5. Protect herself from adversaries like Elias who might target her for her contributions
+5. Protect herself from adversaries who might target her for her contributions
 
 This is where XIDs come in - they enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity.
 
@@ -40,325 +42,498 @@ This is where XIDs come in - they enable pseudonymous identity with progressive 
 XIDs provide significant advantages that go well beyond standard cryptographic keys:
 
 1. **Stable identity** - XIDs maintain the same identifier even when you rotate keys
-2. **Progressive disclosure** - XIDs let you selectively share different information with different parties
+2. **Progressive trust** - XIDs let you selectively share different information with different parties
 3. **Rich metadata** - XIDs can contain structured attestations, endorsements, and claims
 4. **Peer validation** - XIDs enable others to make cryptographically verifiable claims about your identity
 5. **Multi-key support** - XIDs can link multiple keys for different devices while maintaining a single identity
-6. **Recovery mechanisms** - XIDs support social recovery without losing your reputation history
+6. **Recovery mechanisms** - XIDs support recovery without losing your reputation history
+7. **Cryptographic integrity** - XIDs preserve verifiability even when portions are not included when sharing
 
-This first tutorial is deliberately simple to get you started with the basics. While we're using SSH keys in this tutorial (which offer excellent synergy with Git for pseudonymous software development), Gordian XIDs support many cryptographic key types, including advanced formats for threshold signatures and post-quantum cryptography. As we progress through subsequent tutorials, we'll explore these more advanced capabilities in depth.
+This first tutorial is deliberately simple to get you started with the basics. While we're using basic cryptographic primitives in this tutorial, Gordian XIDs support many cryptographic key types, including advanced formats for threshold signatures and post-quantum cryptography. As we progress through subsequent tutorials, we'll explore these more advanced capabilities in depth.
 
-## 1. Creating a Secure Foundation with Keys
+## Step 1: Creating a Private XID
 
-First, Amira needs to generate cryptographic keys as the foundation for her pseudonymous identity. She'll create both SSH keys for Git operations and XID keys for her digital identity.
+Now that we understand why XIDs are valuable, let's help Amira create her "BRadvoc8" identity.
 
-Generate an SSH key for Git authentication and commit signing:
+An XID is fundamentally a digital container built using cryptographic key material. To create one, Amira will need to generate a private key base specifically for her XID. This command creates the cryptographic foundation for all her future operations.
 
-👉 
+👉
 ```sh
-SSH_KEY_FILE="./bwhacker-ssh-key"
-SSH_PUB_KEY_FILE="${SSH_KEY_FILE}.pub"
-ssh-keygen -t ed25519 -f "$SSH_KEY_FILE" -N "" -C "BWHacker <bwhacker@example.com>"
+XID_PRVKEY_BASE=$(envelope generate prvkeys)
+echo "Generated private key base for XID"
 ```
 
-This creates an SSH key pair that Amira can use for signing Git commits and authenticating to GitHub, all while using her pseudonym.
+Now you can create a new XID using this private key base. This command generates an XID container that incorporates the public key derived from the private key base, while also securely storing the private key information within the structure:
 
-Extract the SSH public key and fingerprint:
-
-👉 
+👉
 ```sh
-SSH_PUB_KEY=$(cat "$SSH_PUB_KEY_FILE")
-SSH_KEY_FINGERPRINT=$(ssh-keygen -l -E sha256 -f "$SSH_PUB_KEY_FILE" | awk '{print $2}')
-echo "SSH public key fingerprint: $SSH_KEY_FINGERPRINT"
+XID=$(envelope xid new "$XID_PRVKEY_BASE")
+echo "Created new XID"
 ```
 
-🔍 
-```console
-SSH public key fingerprint: SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE
-```
+At this point, your XID contains the private key information. Let's view it in a human-readable format to examine its structure:
 
-Now, generate a separate private key for her XID:
-
-👉 
+👉
 ```sh
-envelope generate prvkeys > bwhacker-key.private
-echo "Private key generated - keep this secret and secure!"
+envelope format "$XID"
 ```
 
-🔍 
-```console
-Private key generated - keep this secret and secure!
+You should see output similar to:
+
+🔎
 ```
-
-This XID private key must be kept secure - it's what Amira will use to prove ownership of her identity document without revealing who she is.
-
-Derive the corresponding public key from the private key:
-
-👉 
-```sh
-PRIVATE_KEYS=$(cat bwhacker-key.private)
-PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-echo "$PUBLIC_KEYS" > bwhacker-key.public
-```
-
-View the public key (which is safe to share):
-
-👉 
-```sh
-cat bwhacker-key.public | head -n 1
-```
-
-🔍 
-```console
-ur:crypto-pubkeys/hdcxlkadjnghfejtmyyloeadmyfqzswdaeayfnmddpjygtmyaeaelytsqdisaeaeaeae
-```
-
-## 2. Creating a Minimal Pseudonymous XID
-
-Next, Amira creates an XID with her pseudonym "BWHacker" (Better World Hacker), which she'll use for contributing to projects that align with her values.
-
-Create the pseudonymous XID:
-
-👉 
-```sh
-envelope xid new --name "BWHacker" "$PUBLIC_KEYS" > bwhacker-xid.envelope
-```
-
-View the minimal XID structure:
-
-👉 
-```sh
-XID_DOC=$(cat bwhacker-xid.envelope)
-envelope format --type tree "$XID_DOC"
-```
-
-🔍 
-```console
-"BWHacker" [
-   "name": "BWHacker"
-   "publicKeys": ur:crypto-pubkeys/hdcxlkadjnghfejtmyyloeadmyfqzswdaeayfnmddpjygtmyaeaelytsqdisaeaeaeae
+XID(d5aad53e) [
+    'key': PublicKeys(6d165468) [
+        {
+            'privateKey': PrivateKeys(a7ba7576)
+        } [
+            'salt': Salt
+        ]
+        'allow': 'All'
+    ]
 ]
 ```
 
-This minimal structure only reveals her chosen pseudonym, nothing about her real identity or background.
+The XID starts with a minimal structure - just a unique identifier and cryptographic key material in the form of a public and private key pair. Note that the privateKey section contains sensitive information derived from your previously generated private key base, thus this data should be protected with the same diligence you would apply to SSH or other cryptographic keys.
 
-## 3. Understanding the XID Identifier
+## Toward an Enhanced XID
 
-Extract the unique XID identifier that will represent her consistently:
+The basic XID provides a cryptographic foundation, but its true power comes from adding assertions and structure. In the next part of this tutorial, we'll transform a simple XID into a rich digital identity.
 
-👉 
+## Step 2: Creating a Basic Public XID
+
+To make her XID safely shareable, Amira needs to create a public version of her XID by removing the private key components. This process is called elision, which selectively removes private information while preserving the cryptographic integrity of the envelope.
+
+This process involves:
+1. Finding the private key component within the XID
+2. Eliding (removing) it while maintaining the cryptographic integrity
+3. Saving the resulting public XID for sharing
+
+We'll implement these steps as follows:
+
+To find the private key component that needs to be elided, Amira first extracts the key assertion and locates the private key:
+
+👉
 ```sh
-XID_ID=$(envelope xid id "$XID_DOC")
-echo "XID identifier: $XID_ID"
+KEY_ASSERTION=$(envelope xid key at 0 "$XID")
+PRIVATE_KEY_ASSERTION=$(envelope assertion find predicate known privateKey "$KEY_ASSERTION")
+PRIVATE_KEY_ASSERTION_DIGEST=$(envelope digest "$PRIVATE_KEY_ASSERTION")
 ```
 
-🔍 
-```console
-XID identifier: 7e1e25d7c4b9e4c92753f4476158e972be2fbbd9dffdd13b0561b5f1177826d3
-```
+Now that she has identified the private key assertion, she can elide it from the XID to create a basic public version that's safe to share:
 
-This identifier is derived cryptographically but remains stable even if Amira later updates her keys. Others can consistently reference this identifier without knowing Amira's real identity.
-
-## 4. Adding GitHub Identity with SSH Key Verification
-
-Amira now wants to create a verifiable link between her XID and her GitHub activity, without revealing her real identity.
-
-Add her GitHub identity:
-
-👉 
+👉
 ```sh
-XID_DOC=$(envelope assertion add pred-obj string "gitHubUsername" string "BWHacker" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "gitHubProfileURL" string "https://github.com/BWHacker" "$XID_DOC")
+BASIC_PUBLIC_XID=$(envelope elide removing "$PRIVATE_KEY_ASSERTION_DIGEST" "$XID")
+echo "Created basic public XID"
 ```
 
-Link her SSH key to enable verification of her Git commits:
+Let's view the resulting basic public XID:
 
-👉 
+👉
 ```sh
-XID_DOC=$(envelope assertion add pred-obj string "sshKey" string "$SSH_PUB_KEY" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "sshKeyFingerprint" string "$SSH_KEY_FINGERPRINT" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "sshKeyVerificationURL" string "https://api.github.com/users/BWHacker/ssh_signing_keys" "$XID_DOC")
+envelope format "$BASIC_PUBLIC_XID"
 ```
 
-Add basic professional information:
-
-👉 
-```sh
-XID_DOC=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$XID_DOC")
-XID_DOC=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional practice" "$XID_DOC")
+🔎
 ```
-
-Save the updated XID:
-
-👉 
-```sh
-echo "$XID_DOC" > bwhacker-xid.envelope
-```
-
-View the enhanced XID:
-
-👉 
-```sh
-envelope format --type tree "$XID_DOC"
-```
-
-🔍 
-```console
-"BWHacker" [
-   "name": "BWHacker"
-   "publicKeys": ur:crypto-pubkeys/hdcxlkadjnghfejtmyyloeadmyfqzswdaeayfnmddpjygtmyaeaelytsqdisaeaeaeae
-   "gitHubUsername": "BWHacker"
-   "gitHubProfileURL": "https://github.com/BWHacker"
-   "sshKey": "ssh-ed25519 AAAAC3NzaC... BWHacker <bwhacker@example.com>"
-   "sshKeyFingerprint": "SHA256:dFbxBGrqMQNJKpZccInX7l/QE1xH/jNzDvUo/jICSHE"
-   "sshKeyVerificationURL": "https://api.github.com/users/BWHacker/ssh_signing_keys"
-   "domain": "Distributed Systems & Security"
-   "experienceLevel": "8 years professional practice"
+XID(edc4cc16) [
+    'key': PublicKeys(0ad35b77) [
+        'allow': 'All'
+        ELIDED
+    ]
 ]
 ```
 
-## 5. Organizing Your XID Files
+Notice the `ELIDED` marker in the output, which indicates where the private key information has been removed. This basic public XID retains its cryptographic integrity but no longer contains the sensitive private key material.
 
-Organize the XID and SSH key information in a project directory:
+## XID Version Types
 
-👉 
+An important feature of XIDs is the ability to create different versions for different purposes. Throughout this tutorial, Amira creates three versions of her XID:
+
+1. A **private XID** (Step 1) that contains her private key material, kept secure
+2. A **basic public XID** (Step 2) with the private key elided, that can be safely shared
+3. An **enhanced public XID** (Step 3) with additional persona details and signature, also safe to share
+
+The public versions are created through a process called elision, which selectively removes private information while preserving the cryptographic integrity of the envelope.
+
+## Proper File Organization
+
+For real-world usage, Amira will want to organize her files in a dedicated directory with names that clearly indicate their security level. She uses clear naming conventions:
+
+- Files with `-private` contain sensitive private keys that must be kept secret
+- Files with `-basic-public` contain a minimal public XID with private keys elided
+- Files with `-enhanced-public` contain a feature-rich public XID with additional assertions
+- Files with `.format` are human-readable versions of the corresponding envelope files
+- Files with `.xid` or `.envelope` contain the binary serialized versions
+
+All files are stored in a timestamp-based directory (e.g., `xid-20250510123456`) to keep versions organized.
+
+These naming conventions help prevent accidentally sharing private key material.
+
+Now that we understand the basic principles of XIDs and their organization, let's put everything together to create a fully functional, feature-rich XID that Amira can use for her pseudonymous contributions.
+
+## Step 3: Creating an Enhanced XID with Persona Details
+
+Having created a basic public XID, Amira now wants to create an enhanced version that provides more information about her persona and how to resolve it, while still keeping her private key information secure.
+
+> **Quick Reference**: An "enhanced XID" goes beyond basic identification by adding structure, context, and verifiable assertions. The process below transforms a simple public XID (with just a key) into a rich digital identity that includes persona information, service details, and resolution methods - all while maintaining cryptographic integrity.
+
+First, she'll start with the basic public XID that was created earlier. This is a basic XID with the private key components already elided (removed while preserving cryptographic integrity) for safe sharing. She assigns this to a new variable to begin her enhancements:
+
+👉
 ```sh
-mkdir -p output
-cp bwhacker-xid.envelope output/bwhacker-xid.envelope
-cp "$SSH_KEY_FILE" output/
-cp "$SSH_PUB_KEY_FILE" output/
-ls -la output/
+ENHANCED_XID="$BASIC_PUBLIC_XID"
 ```
 
-🔍 
-```console
-total 32
-drwxr-xr-x  5 user  staff  160 Apr 29 14:32 .
-drwxr-xr-x  7 user  staff  224 Apr 29 14:32 ..
--rw-r--r--  1 user  staff  524 Apr 29 14:32 bwhacker-xid.envelope
--rw-------  1 user  staff  419 Apr 29 14:32 bwhacker-ssh-key
--rw-r--r--  1 user  staff  110 Apr 29 14:32 bwhacker-ssh-key.pub
+🔎
 ```
-
-## 6. Creating and Signing a Basic Attestation
-
-Now Amira will create a simple attestation about her skills and sign it with her XID key:
-
-👉 
-```sh
-ATTESTATION=$(envelope subject type string "Skill Attestation")
-ATTESTATION=$(envelope assertion add pred-obj string "skill" string "Rust Programming" "$ATTESTATION")
-ATTESTATION=$(envelope assertion add pred-obj string "experienceYears" string "3" "$ATTESTATION")
-ATTESTATION=$(envelope assertion add pred-obj string "projectCount" string "5" "$ATTESTATION")
-```
-
-First, wrap the attestation before signing. This critical step ensures the signature applies to the entire envelope with all its assertions, not just the subject:
-
-👉 
-```sh
-WRAPPED_ATTESTATION=$(envelope subject type wrapped "$ATTESTATION")
-```
-
-Then sign the wrapped attestation with her private key:
-
-👉 
-```sh
-SIGNED_ATTESTATION=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_ATTESTATION")
-echo "$SIGNED_ATTESTATION" > output/bwhacker-skill-attestation-signed.envelope
-```
-
-View the signed attestation:
-
-👉 
-```sh
-envelope format --type tree "$SIGNED_ATTESTATION"
-```
-
-🔍 
-```console
-WRAPPED [
-   subject: "Skill Attestation" [
-      "skill": "Rust Programming"
-      "experienceYears": "3"
-      "projectCount": "5"
-   ]
-   SIGNATURE
+XID(edc4cc16) [
+    'key': PublicKeys(0ad35b77) [
+        'allow': 'All'
+        ELIDED
+    ]
 ]
 ```
 
-Verify the signature to confirm it came from the XID holder:
+Notice how the initial XID contains only a public key with elided (removed) private components. Now Amira will transform this into a rich, structured identifier.
 
-👉 
+Let's compare where we're starting from and where we're heading:
+
+| **Basic Public XID (Starting Point)** | **Enhanced XID (Our Goal)** |
+|----------------------------------|------------------------------|
+| A minimal XID with just public keys | A rich XID with structure and assertions |
+| No type declaration | Clear "Persona" type |
+| No nickname | Human-readable "BRadvoc8" nickname |
+| No service info | Contains GitHub account details |
+| No resolution methods | Multiple resolution URIs |
+| Not signed | Cryptographically signed |
+| Flat structure | Hierarchical organization |
+| ```                           | ```
+| XID(edc4cc16) [               | XID(edc4cc16) [
+|     'key': PublicKeys(...) [  |     'isA': "Persona"
+|         'allow': 'All'        |     "nickname": "BRadvoc8"
+|         ELIDED                |     "service": "GitHub" [...]
+|     ]                         |     "resolveVia": URI(...)
+| ]                             |     'key': PublicKeys(...)
+|                               | ] [
+|                               |     'signed': Signature
+|                               | ]
+| ```                           | ```
+
+She begins by adding a type declaration to clearly identify this as a persona XID. This helps systems understand what kind of entity this XID represents. Note that `isA` is used as a known predicate rather than a string - this makes the XID more semantically meaningful to systems that understand these known values:
+
+> **Technical Note**: Known predicates (like `isA`, `dereferenceVia`, etc.) are special values in the Gordian Envelope system that have standard, well-defined meanings. Using known predicates instead of strings enables better interoperability, validation, and semantic understanding across different systems.
+
+👉
 ```sh
-if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_ATTESTATION"; then
-    echo "✅ Signature verified. The attestation is authentically from the XID holder."
-  else
+ENHANCED_XID=$(envelope assertion add pred-obj known isA string "Persona" "$ENHANCED_XID")
+```
+
+Then she adds a nickname to provide a human-readable identifier, using the XID_NAME variable:
+
+👉
+```sh
+ENHANCED_XID=$(envelope assertion add pred-obj string "nickname" string "$XID_NAME" "$ENHANCED_XID")
+```
+
+Let's see how the XID looks after adding these basic identity assertions:
+
+👉
+```sh
+envelope format "$ENHANCED_XID"
+```
+
+🔎
+```
+XID(edc4cc16) [
+    'isA': "Persona"
+    "nickname": "BRadvoc8"
+    'key': PublicKeys(0ad35b77) [
+        'allow': 'All'
+        ELIDED
+    ]
+]
+```
+
+Notice how `isA` appears with single quotes to indicate it's a known predicate, while "nickname" is in double quotes because it's a string predicate. Known predicates are distinguished with single quotes, while string predicates use double quotes in the formatted output.
+
+Next, she wants to add detailed information about her GitHub account. She'll create this as a nested structure to demonstrate the hierarchical capabilities of Gordian Envelopes.
+
+> **Technical Note**: Using proper data types (instead of just strings) makes XIDs more powerful because:
+> - **Date types** enable chronological operations and validation
+> - **URI types** allow systems to recognize and validate web resources
+> - **Structured data** enables machine readability and complex queries
+
+First, she creates an account information envelope with timestamps using the proper date type and evidence using the URI type. Note how she uses the XID_NAME variable consistently:
+
+👉
+```sh
+GITHUB_ACCOUNT=$(envelope subject type string "$XID_NAME")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "created_at" date "2025-05-10T00:55:11Z" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "updated_at" date "2025-05-10T00:55:28Z" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "evidence" uri "https://api.github.com/users/$XID_NAME" "$GITHUB_ACCOUNT")
+```
+
+🔎
+```
+"BRadvoc8" [
+    "created_at": 2025-05-10T00:55:11Z
+    "evidence": URI(https://api.github.com/users/BRadvoc8)
+    "updated_at": 2025-05-10T00:55:28Z
+]
+```
+
+Note: Throughout this tutorial, the actual output will reflect the value of $XID_NAME from the script.
+
+Notice how the dates appear without quotes, showing they're not simple strings, and the evidence URL has the URI() wrapper, indicating its special type.
+
+Now she creates a service envelope that contains this account information. She also adds a type classification for the service using the `isA` known predicate. This nesting (service → account) and typing creates a logical hierarchy that helps organize related information:
+
+👉
+```sh
+GITHUB_SERVICE=$(envelope subject type string "GitHub")
+# Add the type of service (using known isA predicate)
+GITHUB_SERVICE=$(envelope assertion add pred-obj known isA string "SourceCodeRepository" "$GITHUB_SERVICE")
+GITHUB_SERVICE=$(envelope assertion add pred-obj string "account" envelope "$GITHUB_ACCOUNT" "$GITHUB_SERVICE")
+```
+
+🔎
+```
+"GitHub" [
+    'isA': "SourceCodeRepository"
+    "account": "BRadvoc8" [
+        "created_at": 2025-05-10T00:55:11Z
+        "evidence": URI(https://api.github.com/users/BRadvoc8)
+        "updated_at": 2025-05-10T00:55:28Z
+    ]
+]
+```
+
+Note: The actual output will reflect the value of $XID_NAME in the account name and evidence URI.
+
+Finally, she adds this service information to her XID and views the updated structure. This demonstrates how XIDs can contain complex, nested data structures while maintaining cryptographic integrity:
+
+👉
+```sh
+ENHANCED_XID=$(envelope assertion add pred-obj string "service" envelope "$GITHUB_SERVICE" "$ENHANCED_XID")
+envelope format "$ENHANCED_XID"
+```
+
+🔎
+```
+XID(edc4cc16) [
+    'isA': "Persona"
+    "nickname": "BRadvoc8"
+    "service": "GitHub" [
+        'isA': "SourceCodeRepository"
+        "account": "BRadvoc8" [
+            "created_at": 2025-05-10T00:55:11Z
+            "evidence": URI(https://api.github.com/users/BRadvoc8)
+            "updated_at": 2025-05-10T00:55:28Z
+        ]
+    ]
+    'key': PublicKeys(0ad35b77) [
+        'allow': 'All'
+        ELIDED
+    ]
+]
+```
+
+To finish her XID, Amira will add resolution information to provide ways for others to find this XID. This is crucial for discoverability in decentralized systems where no central registry exists.
+
+She creates URI objects for both a GitHub repository and a DID (Decentralized Identifier) reference. The following commands create properly typed URI objects using the XID_NAME variable, which is important for systems that need to properly interpret and validate these URLs:
+
+👉
+```sh
+GITHUB_REPO_URI=$(envelope subject type uri "https://github.com/$XID_NAME/$XID_NAME/$XID_NAME-public.envelope")
+DID_URI=$(envelope subject type uri "did:repo:1ab31db40e48145c14f19bc735add0d279cdc62d/blob/main/$XID_NAME-public.envelope")
+```
+
+🔎
+```
+URI(https://github.com/BRadvoc8/BRadvoc8/BRadvoc8-public.envelope)
+URI(did:repo:1ab31db40e48145c14f19bc735add0d279cdc62d/blob/main/BRadvoc8-public.envelope)
+```
+
+Note: The actual output will show URIs with the value of $XID_NAME instead of the hardcoded "BRadvoc8" shown here.
+
+She adds these URIs to her XID as "resolveVia" assertions. By providing multiple resolution methods, Amira ensures her XID can be found through different channels, increasing resilience:
+
+👉
+```sh
+ENHANCED_XID=$(envelope assertion add pred-obj string "resolveVia" envelope "$GITHUB_REPO_URI" "$ENHANCED_XID")
+ENHANCED_XID=$(envelope assertion add pred-obj string "resolveVia" envelope "$DID_URI" "$ENHANCED_XID")
+```
+
+> **Important Step**: Before signing, the XID must be properly wrapped. Without this step, the signature would not cover the entire structure correctly.
+
+Before signing, she wraps the XID using the specific "wrapped" type. This critical step ensures the signature applies to the entire envelope with all its assertions, not just the subject. Without proper wrapping, the signature might not cryptographically protect all parts of the XID structure:
+
+👉
+```sh
+WRAPPED_XID=$(envelope subject type wrapped "$ENHANCED_XID")
+```
+
+Finally, she signs the wrapped XID with her private key and displays the result. This signature creates a cryptographic guarantee that this XID and all its assertions were created by the holder of the private key:
+
+👉
+```sh
+SIGNED_ENHANCED_XID=$(envelope sign -s "$XID_PRVKEY_BASE" "$WRAPPED_XID")
+envelope format "$SIGNED_ENHANCED_XID"
+```
+
+Let's examine the enhanced and signed XID to see its complete structure. The key difference is the presence of both curly braces `{}` surrounding the XID (indicating it's wrapped) and the 'signed' assertion at the end (containing the cryptographic signature):
+
+👉
+```sh
+envelope format "$SIGNED_ENHANCED_XID"
+```
+
+You should see something like:
+
+🔎
+```
+{
+    XID(edc4cc16) [
+        'isA': "Persona"
+        "nickname": "BRadvoc8"
+        "resolveVia": URI(did:repo:1ab31db40e48145c14f19bc735add0d279cdc62d/blob/main/BRadvoc8-public.envelope)
+        "resolveVia": URI(https://github.com/BRadvoc8/BRadvoc8/BRadvoc8-public.envelope)
+        "service": "GitHub" [
+            'isA': "SourceCodeRepository"
+            "account": "BRadvoc8" [
+                "created_at": 2025-05-10T00:55:11Z
+                "evidence": URI(https://api.github.com/users/BRadvoc8)
+                "updated_at": 2025-05-10T00:55:28Z
+            ]
+        ]
+        'key': PublicKeys(0ad35b77) [
+            'allow': 'All'
+            ELIDED
+        ]
+    ]
+} [
+    'signed': Signature
+]
+```
+
+Note: The actual output will show the value of $XID_NAME throughout instead of the hardcoded "BRadvoc8" shown in this example.
+
+This enhanced, signed XID provides several important elements:
+
+1. **Type Declaration** - The `isA: "Persona"` assertion clearly identifies this as a persona XID
+2. **Nickname** - The `nickname: "BRadvoc8"` provides a human-readable identifier
+3. **Multiple Resolution Methods** - Multiple `resolveVia` assertions provide different ways to find the XID
+4. **Service Information** - The `service` section contains detailed, structured information about the GitHub account
+5. **Nested Structure** - The hierarchical structure allows for organizing related information (service → account → details)
+6. **Proper Data Types** - Dates use the `date` type and URLs use the `uri` type for better semantic meaning
+7. **Proper Wrapping and Signing** - The XID is properly wrapped using the `wrapped` type before signing, creating a signature that covers the entire XID structure with all its assertions
+
+Here's a visual representation of the XID's hierarchical structure:
+
+```mermaid
+graph TD
+    A["{Signed Wrapper}"] --> B["XID(edc4cc16)"]
+    B --> C["'isA': Persona (known predicate)"]
+    B --> D["\"nickname\": BRadvoc8 (string predicate)"]
+    B --> E["\"service\": GitHub"]
+    B --> F["\"resolveVia\": GitHub URI"]
+    B --> G["\"resolveVia\": DID URI"]
+    B --> H["'key': PublicKeys"]
+    E --> I["'isA': SourceCodeRepository (known)"]
+    E --> J["\"account\": BRadvoc8"]
+    J --> K["\"created_at\": 2025-05-10"]
+    J --> L["\"updated_at\": 2025-05-10"]
+    J --> M["\"evidence\": URI(https://api.github.com/users/BRadvoc8)"]
+    H --> N["'allow': All"]
+    H --> O["ELIDED"]
+    A --> P["'signed': Signature"]
+```
+
+The diagram highlights how `isA` is a known predicate with single quotes, while other predicates are string values with double quotes.
+
+This diagram illustrates how the XID contains multiple assertions at different levels, creating a rich representation of Amira's digital identity while maintaining the cryptographic properties of the envelope.
+
+The structured, hierarchical format allows for:
+1. Clear organization of related data
+2. Machine-readable parsing for automated systems
+3. Progressive disclosure as trust develops
+
+The cryptographic signature ensures that:
+1. This XID was signed by the holder of Amira's private key
+2. No one else could have produced this signature
+3. The XID hasn't been tampered with or altered since signing
+
+To verify the authenticity of the signed XID, others would need to verify its signature. First, we derive the public keys from the private key base:
+
+👉
+```sh
+PUBLIC_KEYS=$(envelope generate pubkeys "$XID_PRVKEY_BASE")
+```
+
+These public keys can be shared with others who need to verify attestations signed by this XID:
+
+🔎
+```
+ur:crypto-pubkeys/hdcxtipscnhsondlbthsrfwzkefxttwttdgmkbvdtnlffsmsnsadwssyalrhlsrliaddlbehfcaflkfwelftbztk
+```
+
+Note: The public keys output is in Uniform Resources (UR) format, which provides a compact and reliable way to encode binary data using text. These keys are used for verifying signatures and can be safely shared.
+
+Now we can verify the signature on the signed XID using these public keys. This verification process confirms that the XID was indeed signed by the holder of the corresponding private key and hasn't been altered since signing:
+
+👉
+```sh
+if envelope verify -v "$PUBLIC_KEYS" "$SIGNED_ENHANCED_XID"; then
+    echo "✅ Signature verified! The enhanced XID is authentically from the XID holder."
+else
     echo "❌ Signature verification failed."
-  fi
+fi
 ```
 
-🔍 
-```console
-✅ Signature verified. The attestation is authentically from the XID holder.
+The verification confirms that the signature is valid:
+
+🔎
+```
+ur:envelope/lftpsplttpsotanshdhdcxwesssfcmmwzmhlmesguyeorhdyeepkstlgeeetaoheeysbmsjpurbdaeaohfgheooytpsoim...
+✅ Signature verified! The enhanced XID is authentically from the XID holder.
 ```
 
-## 7. Configuring Git for SSH Key Signing
+This signed, enhanced XID provides a complete digital representation of Amira's persona that can be shared and verified by others, while still protecting her private key material through elision.
 
-Finally, Amira sets up Git to use her SSH key for signing commits, creating a link between her XID and her Git contributions:
-
-👉 
-```sh
-echo "Git configuration commands for SSH signing:"
-echo "git config --local user.name \"BWHacker\""
-echo "git config --local user.email \"bwhacker@example.com\""
-echo "git config --local user.signingkey \"$SSH_KEY_FILE\""
-echo "git config --local gpg.format ssh"
-echo "git config --local commit.gpgsign true"
-```
-
-🔍 
-```console
-Git configuration commands for SSH signing:
-git config --local user.name "BWHacker"
-git config --local user.email "bwhacker@example.com"
-git config --local user.signingkey "./amira-ssh-key"
-git config --local gpg.format ssh
-git config --local commit.gpgsign true
-```
-
-With this configuration, all of Amira's Git commits will be signed with the same SSH key referenced in her XID.
+> **XID Evolution Summary**:
+>
+> | **Step 1: Private XID** | **Step 2: Basic Public XID** | **Step 3: Enhanced XID** |
+> |-------------------------|------------------------------|--------------------------|
+> | Contains private keys   | Private keys elided          | Private keys elided      |
+> | Not safe to share       | Safe to share                | Safe to share            |
+> | Just cryptographic info | Just cryptographic info      | Rich structured identity |
+> | No specific type        | No specific type             | Typed as "Persona"       |
+> | No human-readable ID    | No human-readable ID         | BRadvoc8 nickname        |
+> | No service information  | No service information       | GitHub account details   |
+> | No resolution methods   | No resolution methods        | Multiple resolution URIs |
+> | Not signed              | Not signed                   | Cryptographically signed |
+> | Flat structure          | Flat structure               | Hierarchical organization|
+> | For key operations only | For basic identification     | Full machine-readable ID |
 
 ## Understanding What Happened
 
 1. **Privacy-Preserving Identity**: Amira created a pseudonymous XID that allows her to contribute without revealing her real identity.
 
-2. **SSH Key Integration**: She generated an SSH key for her pseudonymous identity and included it in her XID to enable Git commit signing.
+2. **Selective Disclosure**: She learned how to control exactly what information she shares through elision, keeping sensitive information private while sharing what's needed.
 
-3. **Minimal Yet Verifiable**: She created a simple identity with just enough information to be useful, while maintaining her privacy.
+3. **Cryptographic Integrity**: She verified that even when certain parts of the XID are removed, its cryptographic integrity remains intact, providing non-repudiation and verifiability.
 
-4. **Signature Verification**: She demonstrated how signatures can verify that content came from her pseudonymous identity.
+4. **Verifiable Attestations**: She created and signed an attestation that cryptographically links her XID to her GitHub account, allowing her to build a verifiable online presence.
 
-5. **GitHub Connection**: The SSH key creates a verifiable link between her XID and her GitHub activity.
+5. **Secure File Organization**: She established clear naming conventions for different security levels of her XID files, ensuring proper protection of sensitive material.
 
-### Theory to Practice: XID Creation and Core Identity Principles
+6. **Self-Sovereign Identity**: BRadvoc8's identity is fully under Amira's control. No central authority issued this identifier, and she maintains complete ownership of both the keys and the resulting XID document.
+   > **Why this matters**: Unlike traditional identities (email accounts, social profiles) that can be suspended or controlled by providers, BRadvoc8's XID remains under Amira's control regardless of any third party.
 
-The XID you just created demonstrates several foundational identity concepts:
-
-1. **Self-Sovereign Identity**: BWHacker's identity is fully under Amira's control. No central authority issued this identifier, and Amira maintains complete ownership of both the keys and the resulting XID document.
-   > **Why this matters**: Unlike traditional identities (email accounts, social profiles) that can be suspended or controlled by providers, BWHacker's XID remains under Amira's control regardless of any third party.
-
-2. **Stable Identifier**: The 32-byte hexadecimal identifier (7e1e25d7c4b9...) produced by `envelope xid id` is derived cryptographically from the inception key but remains stable even if Amira later updates her keys.
-   > **Cross-Tutorial Connection**: In Tutorial #5, you'll see this principle in action when BWHacker rotates keys and recovers from key loss while maintaining this same stable identifier.
-
-3. **Pseudonymity vs. Anonymity**: This XID implements **pseudonymity** rather than anonymity. The identity "BWHacker" can build reputation and trust over time through verifiable contributions, while still protecting Amira's real-world identity.
+7. **Pseudonymity vs. Anonymity**: This XID implements **pseudonymity** rather than anonymity. The identity "BRadvoc8" can build reputation and trust over time through verifiable contributions, while still protecting Amira's real-world identity.
    > **Real-World Analogy**: This is similar to how authors might use pen names (like Mark Twain for Samuel Clemens) - they can build reputation under their pseudonym while keeping their personal identity separate.
-
-4. **Cryptographic Binding**: The cryptographic foundation for this identity provides non-repudiation - where control of the identity is proven through possession of private keys rather than knowledge-based authentication (like passwords), providing significantly stronger security.
-   > **ANTI-PATTERN**: Using password-based authentication for identity systems provides weaker security than cryptographic keys. Passwords can be guessed, stolen, or shared, while private keys remain securely in the owner's possession.
-
-5. **Subject-Assertion Model**: The XID document follows Gordian Envelope's subject-assertion-object model, where the subject (BWHacker's identity) is connected to assertions (name, keys) in a cryptographically verifiable structure.
-
-These principles form the foundation of the XID trust model, where identifiers are self-created, cryptographically verifiable, and maintain separation between digital and physical identities.
 
 ## Next Steps
 
@@ -366,20 +541,62 @@ In the next tutorial, we'll explore the structure of Amira's XID in detail and u
 
 ## Example Script
 
-This tutorial has an accompanying script in the `examples/01-basic-xid` directory:
+This tutorial has an accompanying script:
 
-**`create_basic_xid.sh`**: Implements all the steps shown in this tutorial to create a pseudonymous XID with SSH key integration. The script automates the creation of keys, XID generation, and signing of a basic attestation.
+**`01-your-first-xid.sh`**: Implements all the steps shown in this tutorial to create a pseudonymous XID. The script automates the creation of private and public XIDs, including:
 
-Running this script will produce the same outputs shown in this tutorial and create all the necessary files in the output directory for further experimentation.
+1. Creating the private XID with full key material
+2. Creating a basic public XID with private keys elided
+3. Creating an enhanced public XID with persona details and cryptographic signature
+
+Running this script will produce the same outputs shown in this tutorial and create all the necessary files in a timestamped output directory (e.g., `xid-20250510123456`) for further experimentation.
+
+When you run the script, you'll see files created with the following structure:
+
+```
+xid-20250510123456/
+├── BRadvoc8-xid-basic-public.format    # Human-readable basic public XID
+├── BRadvoc8-xid-basic-public.xid       # Serialized basic public XID
+├── BRadvoc8-xid-enhanced-public.envelope  # Serialized enhanced XID
+├── BRadvoc8-xid-enhanced-public.format # Human-readable enhanced XID
+├── BRadvoc8-xid-private.crypto-prvkey-base  # Private key material (SECRET!)
+├── BRadvoc8-xid-private.format         # Human-readable private XID
+├── BRadvoc8-xid-private.xid            # Serialized private XID
+└── BRadvoc8-xid-public.crypto-pubkeys  # Public keys for verification
+```
+
+## Key Terminology
+
+> **XID Terminology Reference**:
+>
+> - **XID** - eXtensible IDentifier; a digital container that includes cryptographic key material and can be extended with assertions.
+>
+> - **Assertion** - A claim made within an XID, consisting of a predicate (attribute name) and an object (attribute value).
+>
+> - **Known Predicate** - A predicate with a standardized meaning in the Gordian Envelope system (e.g., `isA`, `dereferenceVia`). These appear with single quotes ('isA') in formatted output, distinguishing them from string predicates.
+>
+> - **String Predicate** - A custom predicate represented as a string (e.g., "nickname", "service"). These appear with double quotes in formatted output.
+>
+> - **Elision** - The process of selectively removing private information from an XID while preserving its cryptographic integrity.
+>
+> - **Wrapping** - Enclosing an entire XID structure in an envelope before signing, ensuring the signature covers all assertions.
+>
+> - **Wrapped Type** - A specific envelope type (`wrapped`) that correctly prepares an XID for signing.
+>
+> - **Signature** - A cryptographic proof that an XID was created by the holder of a specific private key.
+>
+> - **Persona** - A pseudonymous identity represented by an XID, which can build reputation while protecting real-world identity.
+>
+> - **Resolution** - The process of finding and retrieving an XID through various methods, as specified in resolveVia assertions.
 
 ## Exercises
 
-1. Create your own XID with a pseudonym and SSH key.
+1. Create your own XID with a pseudonym and additional assertions of your choice.
 
-2. Add different assertions to your XID that express your skills without revealing your identity.
+2. Create and sign different types of attestations with your XID private key.
 
-3. Create and sign a simple attestation with your XID private key.
+3. Experiment with eliding different parts of your XID for different audiences.
 
-4. Configure a local Git repository to use your SSH key for signing commits.
+4. Try creating a more complex XID with nested assertions and verify that elision still preserves integrity.
 
-5. Try creating a minimal XID with just a name and public key, then gradually add more information.
+5. Create a minimal XID with just a name and public key, then gradually add more information as you would in a real trust-building scenario.
