@@ -1,41 +1,52 @@
 # Elision Cryptography
 
 ## Expected Learning Outcomes
+
 By the end of this document, you will:
-- Understand the cryptographic mechanisms that enable secure elision
-- Learn how the internal structure of Gordian Envelopes preserves integrity during elision
-- See how cryptographic signatures remain valid after content is removed
-- Understand how salting prevents correlation attacks on elided content
+
+- Learn how cryptography & the structure of Gordian Envelope enable secure elision
 - Know the different types of elision and their specific cryptographic effects
+- See how cryptographic signatures remain valid after content is removed
 - Learn how to verify and validate elided content
+- Understand how salting prevents correlation attacks on elided content
 
 > **Related Concepts**: This document focuses on the technical aspects of elision. For the ethical principles and applications of data minimization, see [Data Minimization Principles](data-minimization-principles.md).
 
 ## The Cryptographic Structure of Gordian Envelopes
 
-Elision works because of the specific cryptographic design of Gordian Envelopes. These use a hierarchical hash-based structure that enables selective removal while maintaining overall integrity.
+Elision works because of the specific cryptographic design of Gordian
+Envelopes. They use a hierarchical hash-based structure that enables
+selective removal while maintaining overall integrity.
 
 ### Structural Elements
 
-Every Gordian Envelope consists of:
-
-1. **Subject**: The entity the envelope is about
-2. **Assertions**: Claims about the subject, each with:
-   - **Predicate**: The property or attribute being described
-   - **Object**: The value of that property
+As discussed in [Gordian Envelope Basics](gordian-envelope.md), each
+Envelope contains a Subject, and an Assertion made up of a Predicate
+and an Object: the Subject Predicates the Object.
 
 ### Hash-Based Integrity
 
 Each component of the envelope is cryptographically bound through hashes:
 
-1. **Component Hashing**: Every element (subject, predicate, object) is individually hashed
-2. **Hierarchical Structure**: These hashes form a Merkle tree-like structure
-3. **Structural Integrity**: Parent nodes contain hashes of their children
-4. **Root Validation**: The envelope's root hash represents the entire structure
+1. **Component Hashing**: Every element (subject, predicate, object) is individually hashed.
+2. **Hierarchical Structure**: These hashes form a Merkle tree-like structure.
+3. **Structural Integrity**: Parent nodes sum up hashes of their children.
+4. **Root Validation**: The envelope's root hash sups up the entire structure.
+
+### Advanced Technical Considerations
+
+For implementers and cryptography specialists:
+
+1. **Hash Algorithm**: Elision typically uses SHA-256 for structural hashing
+2. **Elision Marking**: The CBOR encoding includes special tags to mark elided content
+3. **Signature Algorithm Compatibility**: Works with standard digital signature algorithms
+4. **Nested Elision**: Supports hierarchical elision of nested structures
+
 
 ## The Elision Process
 
-When content is elided, it undergoes a cryptographically secure transformation:
+When content is elided, it undergoes a cryptographically secure
+one-way transformation:
 
 ```
 Original Content:  "name": "BWHacker"
@@ -46,12 +57,13 @@ Result:            ELIDED: h'8d7f117fa8511c9c...'
 ```
 
 The elided content is replaced by its cryptographic digest, which:
+
 - Is a fixed-length representation of the original data
 - Cannot be reversed to reveal the original content (one-way function)
 - Uniquely identifies exactly what was elided
-- Preserves the cryptographic relationships in the document structure
+- Preserves the existing relationships in the document's tree structure
 
-## Merkle Tree Architecture and Elision
+## Merkle-Like Tree Architecture and Elision
 
 Gordian Envelopes implement a structure similar to a Merkle tree, which enables selective removal:
 
@@ -64,67 +76,28 @@ Gordian Envelopes implement a structure similar to a Merkle tree, which enables 
     (elided)         (elided)
 ```
 
-When elision occurs:
-1. The content is replaced with its hash
-2. Parent hashes remain valid because they incorporate child hashes
-3. The root hash calculation remains unchanged
-4. The overall cryptographic structure maintains its integrity
-
-This hash-based architecture is what allows selective disclosure while ensuring the overall structure remains cryptographically sound.
+When elision occurs, the content is replaced with its hash, but all
+parent hashes remain valid because they incorporate those child
+hashes. This hash-based architecture is what allows for selective
+disclosure while still ensuring that the overall structure remains
+cryptographically sound.
 
 ## Signature Preservation During Elision
 
 One of the most powerful features of elision is signature preservation. Here's why signatures remain valid:
 
 1. **Digital Signature Process**:
-   - A signature in a Gordian Envelope covers the entire structure
-   - It signs the root hash, which represents the complete document
-
+   - A signature in a Gordian Envelope covers the whole Envelope or a sub-Envelope.
+   - It signs that Envelope or sub-Envelope's root hash, which represents the complete document.
 2. **Hash Substitution During Elision**:
-   - When content is elided, it's replaced with its hash
-   - This preserves the exact mathematical relationship in the structure
-   - The root hash calculation remains unchanged
-
+   - As discussed above, hashes remain intact even when the data underlying them is elided.
 3. **Verification After Elision**:
    - When verifying a signature on an elided document:
-     - The verification algorithm recalculates the root hash including all elision placeholders
-     - This calculated hash matches what was originally signed
-     - The signature validates against this hash
+     - The signature validates against thie Envelope or sub-Envelope's hash, not the original content.
 
-This mechanism allows removing sensitive content while ensuring that signatures attesting to the document's authenticity remain valid.
-
-## Salting for Privacy Protection
-
-Salting is a critical privacy enhancement in Gordian Envelope elision:
-
-### The Problem Without Salting
-
-Without salting, elision would have a serious privacy weakness:
-- Identical content would produce identical hashes
-- This would allow correlation between different elided documents
-- An observer could determine if the same information was elided across documents
-- Common values could be guessed through dictionary attacks
-
-### How Salting Works
-
-Salting solves this by adding random data to the content before hashing:
-
-```
-Without salt:  hash("name": "John Smith") → always the same hash
-With salt:     hash("name": "John Smith" + random_salt) → different hash each time
-```
-
-### Salting Implementation
-
-```sh
-# Default behavior uses random salt
-ELIDED_XID=$(envelope elide assertion predicate string "email" "$ENVELOPE")
-
-# Explicitly no salt (NOT recommended for privacy)
-ELIDED_XID=$(envelope elide --no-salt assertion predicate string "email" "$ENVELOPE")
-```
-
-Salting ensures that even when the same information is elided from multiple documents, the resulting hashes are different, preventing correlation attacks.
+This mechanism allows for the removal of sensitive content while
+ensuring that signatures attesting to the contents' authenticity
+remain valid.
 
 ## Types of Elision and Their Effects
 
@@ -190,7 +163,7 @@ envelope verify -v "$PUBLIC_KEY" "$ELIDED_ENVELOPE"
 
 This confirms:
 - The envelope was signed by the claimed entity
-- No part of the non-elided content has been tampered with
+- No part of the content has been tampered with
 - All elisions were performed correctly
 
 ### 2. Structural Integrity Verification
@@ -206,20 +179,21 @@ This confirms:
 
 ### 3. Known-Content Verification
 
-For cases where you need to verify what was elided (with shared salt):
-
 ```sh
 ELIDED_HASH=$(envelope extract elided-digest "$ELIDED_ENVELOPE")
 EXPECTED_HASH=$(envelope digest string "expected-content" --salt "$SHARED_SALT")
 if [ "$ELIDED_HASH" = "$EXPECTED_HASH" ]; then echo "Verified content was elided"; fi
 ```
 
+This confirms:
+- What was elided (with shared salt)
+
 ## Cryptographic Security Guarantees
 
 Elision in Gordian Envelopes provides these specific security guarantees:
 
 1. **Structural Integrity**: The cryptographic structure remains intact and verifiable
-2. **Tamper Evidence**: Any modification to non-elided parts invalidates signatures
+2. **Tamper Evidence**: Any modification to elements in the Envelope invalidates signatures
 3. **Non-Reversibility**: Elided content cannot be recovered from its hash
 4. **Salt-Based Privacy**: With salting, identical content produces different hashes
 5. **Mathematical Soundness**: Based on cryptographically secure hash functions
@@ -293,27 +267,73 @@ Resulting client-appropriate document:
 ]
 ```
 
-These examples demonstrate how elision preserves both the signature validity and structural integrity of documents while allowing appropriate content sharing for different contexts.
+These examples demonstrate how elision preserves both the signature
+validity and structural integrity of documents while allowing
+appropriate content sharing for different contexts.
 
-## Advanced Technical Considerations
+## Salting for Privacy Protection
+
+Salting is a critical privacy enhancement for Gordian Envelopes that
+keeps elided data remains private. It ensures that even when the same
+information is elided from multiple documents, the resulting hashes
+are different, preventing correlation attacks.
+
+### The Problem Without Salting
+
+Without salting, elision would have a serious privacy weakness:
+
+- Identical content would produce identical hashes.
+- This would allow correlation between different elided documents.
+- An observer could determine if the same information was elided across documents.
+- Common values could be guessed through dictionary attacks.
+
+### How Salting Works
+
+Salting solves this by adding random data to an Envelope leaf or node before hashing:
+
+```
+Without salt:  hash("name": "John Smith") → always the same hash
+With salt:     hash("name": "John Smith" + random_salt) → different hash each time
+```
+
+### Salting Implementation
+
+The
+[envelope-cli](https://github.com/BlockchainCommons/bc-envelope-cli-rust)
+can explicitly add salt or not to any Envelope element:
+
+```sh
+# Default behavior uses random salt
+ELIDED_XID=$(envelope elide assertion predicate string "email" "$ENVELOPE")
+
+# Explicitly no salt (NOT recommended for privacy)
+ELIDED_XID=$(envelope elide --no-salt assertion predicate string "email" "$ENVELOPE")
+```
+
+### Advanced Technical Considerations
 
 For implementers and cryptography specialists:
 
-1. **Hash Algorithm**: Elision typically uses SHA-256 for structural hashing
-2. **Salt Entropy**: Salts should be cryptographically random and of sufficient length
-3. **Elision Marking**: The CBOR encoding includes special tags to mark elided content
-4. **Signature Algorithm Compatibility**: Works with standard digital signature algorithms
-5. **Nested Elision**: Supports hierarchical elision of nested structures
+1. **Salt Entropy**: Salts should be cryptographically random and of sufficient length
 
 ## Check Your Understanding
 
 1. How does the hash-based structure of Gordian Envelopes enable elision?
 2. Why do digital signatures remain valid after parts of a document are elided?
-3. What specific cryptographic problem does salting solve in elision?
-4. What are the differences between predicate, object, and assertion elision?
-5. How can you verify the content of something that has been elided?
+3. What are the differences between predicate, object, and assertion elision?
+4. How can you verify the content of something that has been elided?
+5. What specific cryptographic problem does salting solve in elision?
 
-## Implementation Guide
+## Next Steps
+
+After understanding the cryptographic mechanics of elision, you can:
+- Learn about the ethical principles in [Data Minimization Principles](data-minimization-principles.md)
+- Apply this knowledge in [Tutorial 2: Understanding XID Structure](../tutorials/02-understanding-xid-structure.md)
+- See how elision is used in real-world applications in later tutorials
+- Alternatively explore [fair witness trust](fair-witness.md) or [key-management essentials](key-management.md).
+- Move on to [progressive trust](progressive-trust.md)
+
+## Appendix: Implementation Guide
 
 This section provides practical guidance for implementing elision in your own applications.
 
@@ -349,7 +369,7 @@ This section provides practical guidance for implementing elision in your own ap
 
 1. **Eliding After Signing**
    - ✅ **Do**: Always sign the complete document before elision
-   - ❌ **Don't**: Sign an already elided document, as it won't verify against the original
+   - ❌ **Don't**: Sign an already elided document, as you don't know what you're signing
 
 2. **Salt Management**
    - ✅ **Do**: Use the default salt for most use cases
@@ -366,13 +386,7 @@ This section provides practical guidance for implementing elision in your own ap
 
 ### Performance Considerations
 
-1. **Document Size**: Elision replaces content with hashes but doesn't dramatically reduce document size
+1. **Document Size**: Elision replaces content with 32-byte hashes, which usually doesn't dramatically reduce document size
 2. **Computation Cost**: Elision operations are computationally inexpensive
 3. **Verification Overhead**: Verification of elided documents takes approximately the same time as non-elided ones
 
-## Next Steps
-
-After understanding the cryptographic mechanics of elision, you can:
-- Learn about the ethical principles in [Data Minimization Principles](data-minimization-principles.md)
-- Apply this knowledge in [Tutorial 2: Understanding XID Structure](../tutorials/02-understanding-xid-structure.md)
-- See how elision is used in real-world applications in later tutorials
