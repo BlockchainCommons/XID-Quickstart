@@ -99,7 +99,7 @@ process looks like this:
 ```sh
 PRIVATE_KEYS=$(envelope generate prvkeys)
 PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-SIGNED_PROPOSAL=$(envelope sign -s "$PRIVATE_KEYS" "$PROPOSAL")
+SIGNED_PROPOSAL=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_PROPOSAL")
 ```
 
 The public key of the keypair can then be used to verify the
@@ -115,7 +115,7 @@ signature if it verifies with their public key.
 
 ### Wrapping & Signing
 
-Any assertion in an Envelope always applys to its subject: the subject
+Any assertion in an Envelope always applies to its subject: the subject
 predicates the object. This applies to signatures too: a signature
 signs the subject. It does _not_ sign the other assertions on that
 subject.
@@ -137,7 +137,7 @@ assertions about their experience.
 The solution is to "wrap" the envelope before signing it, creating a
 new Envelope with the original Envelope as its subject. This way, the
 signature applies to the entire original Envelope, including all its
-assertions.
+assertions. (That's why a `$WRAPPED_PROPOSAL` was used in the example above.)
 
 ```sh
 # First create your envelope with all assertions
