@@ -101,55 +101,19 @@ remain valid.
 
 ## Types of Elision and Their Effects
 
-Gordian Envelopes support different types of elision for different disclosure needs:
+Gordian Envelopes support different types of elision for different
+disclosure needs. Each one substitutes one part of an envelope with a has.
 
-### 1. Predicate Elision (Hide the Attribute Name)
+1. Subject Elision: hides the identity (e.g., "Alice")
+2. Predicate Elision: hides the attribute name (e.g., "read")
+3. Object Elision: hides the attribute value (e.g., "Pride & Prejudice")
+4. Assertion Elision: Hides all of the attribute (e.g., "read Pride & Prejudice")
+5. Envelope Elision: hides the entire envelope or subenvelope (e.g., "Alice read Pride & Prejudice")
 
-```sh
-envelope elide assertion predicate string "phoneNumber" "$ENVELOPE"
-```
-
-Cryptographic effect:
-- Replaces the field name with its hash
-- Keeps the value visible
-- Hides what type of information is being shared
-- Use when: The value is safe to share but the category is sensitive
-
-### 2. Object Elision (Hide the Value)
-
-```sh
-envelope elide assertion object "$ENVELOPE"
-```
-
-Cryptographic effect:
-- Keeps the field name visible
-- Replaces the value with its hash
-- Shows that a specific type of information exists without revealing it
-- Use when: Acknowledging the existence of information without disclosing it
-
-### 3. Assertion Elision (Hide Both Name and Value)
-
-```sh
-envelope elide assertion "$ENVELOPE"
-```
-
-Cryptographic effect:
-- Replaces the entire name-value pair with its hash
-- Hides both the type and content of information
-- Preserves only the fact that some information existed
-- Use when: The entire attribute is sensitive
-
-### 4. Subject Elision (Hide the Identity)
-
-```sh
-envelope elide subject "$ENVELOPE"
-```
-
-Cryptographic effect:
-- Replaces the subject identifier with its hash
-- Preserves all assertions about the subject
-- Hides who or what the information is about
-- Use when: The subject's identity should remain private while sharing claims about them
+Obviously, different types of elision will have different uses
+depending on the sensitivity of the various parts (is identity
+sensitive? is category of information sensitive? is value of
+information sensitive?) and some are more powerful than others
 
 ## Verification Techniques with Elided Content
 
