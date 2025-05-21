@@ -8,23 +8,62 @@ _**A Tutorial Series for eXtensible IDentifiers (XIDs)**_
 [![Project Status: WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
 
-**XID-Quickstart** is a tutorial series for learning about eXtensible IDentifiers (XIDs) using Gordian Envelope technology. This repository contains conceptual documentation and hands-on examples to guide you through creating, understanding, and working with XIDs.
+**XID-Quickstart** is a tutorial series for learning about eXtensible
+IDentifiers (XIDs) using Gordian Envelope technology. This repository
+contains conceptual documentation and hands-on examples to guide you
+through creating, understanding, and working with XIDs to support
+secure, privacy-preserving identity management.
 
-Whether you're a developer, security researcher, or digital identity enthusiast, these tutorials provide the tools to understand XIDs and their applications in secure, privacy-preserving identity management.
+## Why To Use XIDs
 
-## Prerequisites
+A XID is a decentralized self-sovereign identifier that's built on the
+concept of [data
+minimization](https://www.blockchaincommons.com/musings/musings-data-minimization/). It
+allows you to share only the minimum necessary information about an
+identity, and then to slowly disclose additional information through
+the process of [progressive
+trust](https://www.blockchaincommons.com/musings/musings-progressive-trust/).
+
+A XID can be a foundation for attestation frameworks and fair witness
+models.  But it's a transformational technology that goes beyond
+current designs: it puts privacy and moreso user agency first in a way
+that the rest of the identity and credentials community generally
+don't, in part due to [their failure to adhere to early self-sovereign
+principles](https://www.blockchaincommons.com/musings/musings-ssi-bankruptcy/).
+
+If self-sovereign identity and the desire to protect and empower users
+are important to you, then we hope you'll find XIDs a crucial next
+step in making ethical, autonomous, self-soveriegn identity a reality.
+
+### Why To Use This Tutorial
+
+Working with XIDs in this tutorial will give you hands-on experience
+with how you can cryptographically elide data while maintaining
+verifiability through signatures. More than that, it will demonstrate
+how to maintain a stable identifier even through key rotation, device
+additions, and recovery scenarios.
+ 
+## Learning Materials
+
+This repository contains conceptual documentation, hands-on tutorials, and examples used by those tutorials.
+
+### Prerequisites
 
 - The `envelope` CLI tool, which can be installed from the [bc-envelope-cli-rust](https://github.com/BlockchainCommons/bc-envelope-cli-rust) repository
 - Basic familiarity with command-line tools
 - No prior knowledge of XIDs or Gordian Envelope is required
 
-## Learning Materials
+### Quick-Start
 
-This repository contains both conceptual documentation and hands-on tutorials.
+1. Install the `envelope` CLI tool: `cargo install envelope-cli`
+2. Clone this repository: `git clone https://github.com/BlockchainCommons/XID-Quickstart.git`
+3. Optionally, review the core concepts from `concepts/README.md` until you're ready to get hands-on
+4. Navigate to the tutorials directory: `cd XID-Quickstart/tutorials`
+5. Start with the first tutorial: [Creating Your First XID](tutorials/01-your-first-xid.md)
 
 ### Core Concepts
 
-Start by exploring the theoretical foundations:
+Optionally, start by exploring the theoretical foundations:
 
 1. [XID Fundamentals](concepts/xid.md) - Understanding the basics of eXtensible IDentifiers
 2. [Gordian Envelope Basics](concepts/gordian-envelope.md) - The data structure that powers XIDs
@@ -49,18 +88,12 @@ See the [Learning Path](LEARNING_PATH.md) for a recommended approach to these ma
 
 ### Examples
 
-The `examples` directory contains complete scripts implementing the functionality covered in each tutorial. These scripts can be used to see the full implementation or as a reference when working through the tutorials.
+The `examples` directory contains complete scripts implementing the
+functionality covered in each tutorial. These scripts can be used to
+see the full implementation or as a reference when working through the
+tutorials.
 
-## Quick Start
-
-Get started with XIDs by:
-
-1. Install the `envelope` CLI tool: `cargo install envelope-cli`
-2. Clone this repository: `git clone https://github.com/BlockchainCommons/XID-Quickstart.git`
-3. Navigate to the tutorials directory: `cd XID-Quickstart/tutorials`
-4. Start with the first tutorial: [Creating Your First XID](tutorials/01-your-first-xid.md)
-
-## What This Is
+## ⚠️  Warning: Experimental Material Ahead! ⚠️
 
 Fundamentally, Blockchain Commons' current work with XIDs is
 **experimental**. This is more a **sandbox** for play with XIDs than a
@@ -71,7 +104,7 @@ But please be aware, XIDs are in an early development stage, and our
 experiments may not be the best way to do things. It's especially
 important to note that the methodologies that we're working with here
 have not been security tested. What does it really mean to have an
-ellision-first philosophy? What are the raimifications of including,
+ellision-first philosophy? What are the ramifications of including,
 then eliding private keys? Is the current XID structure the best one
 from a security point of view?
 
@@ -80,39 +113,14 @@ refined and revisited some of our answers as we iterated these
 documents.
 
 We welcome your experiments and your feedback (as issues, PRs, or in
-direct converstation), but we do not yet suggest using this work in
-any type of deployed system.
-
-## Why To Use It
-
-The XID is a decentralized self-sovereign identifier that's built on
-the concept of [data
-minimization](https://www.blockchaincommons.com/musings/musings-data-minimization/). It
-allows you to share only the minimum necessary information about an
-identity, and then to slowly disclose additional information through
-the process of [progressive
-trust](https://www.blockchaincommons.com/musings/musings-progressive-trust/).
-
-A XID can be a foundation for attestation frameworks and fair witness
-models, but it's a transformational technology. It puts privacy and
-moreso user agency first in a way that the rest of the identity and
-credentials community generally doesn't, in part due to [their failure
-to adhere to early self-sovereign
-principles](https://www.blockchaincommons.com/musings/musings-ssi-bankruptcy/).
-
-Working with XIDs can give you hands-on experience with how you can
-cryptographically elide data while maintaining verifiability through
-signatures. More than that, it can demonstrate how to maintain a
-stable identifier even through key rotation, device additions, and
-recovery scenarios.
- 
-If self-sovereign identity and the desire to protect and empower users
-are improtant to you, then we hope you'll find XIDs an important next
-step in making ethical, autonomous, self-soveriegn identity a reality.
+direct conversation), but we do not yet suggest using this work in any
+type of deployed system.
 
 ## Project Status - Experimental
 
-These tutorials are currently in an experimental state. While usable for learning purposes, the underlying technologies and APIs may change significantly as development continues.
+These tutorials are currently in an experimental state. While usable
+for learning purposes, the underlying technologies and APIs may change
+significantly as development continues.
 
 ## Contributing
 
