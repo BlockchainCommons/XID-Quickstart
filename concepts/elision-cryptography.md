@@ -49,9 +49,9 @@ When content is elided, it undergoes a cryptographically secure
 one-way transformation:
 
 ```
-Original Content:  "name": "BWHacker"
+Original Content:  "name": "BRadvoc8"
 ↓
-Elision Process:   hash("name": "BWHacker" + salt)
+Elision Process:   hash("name": "BRadvoc8" + salt)
 ↓  
 Result:            ELIDED: h'8d7f117fa8511c9c...'
 ```

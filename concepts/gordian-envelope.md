@@ -35,15 +35,15 @@ Gordian Envelopes use a structure similar to sentences in natural language:
 
 For example:
 ```
-"BWHacker" [
-   "name": "BWHacker"
+"BRadvoc8" [
+   "name": "BRadvoc8"
    "domain": "Distributed Systems & Security"
    "experienceLevel": "8 years professional practice"
 ]
 ```
 
 In this structure:
-- **Subject**: The main entity the envelope is about ("BWHacker")
+- **Subject**: The main entity the envelope is about ("BRadvoc8")
 - **Predicate**: A property or relationship ("domain", "experienceLevel")
 - **Object**: The value of that property ("Distributed Systems & Security", "8 years professional practice")
 
@@ -56,7 +56,7 @@ You can make various types of assertions within an Envelope:
 
 1. **String assertions**: Simple text values
    ```
-   "name": "BWHacker"
+   "name": "BRadvoc8"
    ```
 
 2. **Structured data assertions**: Complex data types
@@ -123,15 +123,15 @@ subject.
 As a result, the following is usually not what's intended:
 
 ```
-"BWHacker" [
-   "name": "BWHacker"
+"BRadvoc8" [
+   "name": "BRadvoc8"
    "domain": "Distributed Systems & Security"
    "experienceLevel": "8 years professional practice"
    SIGNATURE
 ]
 ```
 
-This `SIGNATURE` only applies to the subject, `BWHacker`, not to the
+This `SIGNATURE` only applies to the subject, `BRadvoc8`, not to the
 assertions about their experience.
 
 The solution is to "wrap" the envelope before signing it, creating a
@@ -141,8 +141,8 @@ assertions.
 
 ```sh
 # First create your envelope with all assertions
-ENVELOPE=$(envelope subject type string "BWHacker")
-ENVELOPE=$(envelope assertion add pred-obj string "name" string "BWHacker" "$ENVELOPE")
+ENVELOPE=$(envelope subject type string "BRadvoc8")
+ENVELOPE=$(envelope assertion add pred-obj string "name" string "BRadvoc8" "$ENVELOPE")
 ENVELOPE=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$ENVELOPE")
 ENVELOPE=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional practice" "$ENVELOPE")
 
@@ -157,8 +157,8 @@ This creates a structure where the signature applies to the entire original Enve
 
 ```
 WRAPPED {
-   "BWHacker" [
-      "name": "BWHacker"
+   "BRadvoc8" [
+      "name": "BRadvoc8"
       "domain": "Distributed Systems & Security"
       "experienceLevel": "8 years professional practice"
    ]
@@ -180,8 +180,8 @@ For example, if you have a properly wrapped and signed envelope:
 
 ```
 WRAPPED {
-   "BWHacker" [
-      "name": "BWHacker"
+   "BRadvoc8" [
+      "name": "BRadvoc8"
       "domain": "Distributed Systems & Security"
       "experienceLevel": "8 years professional practice"
    ]
@@ -194,8 +194,8 @@ You can elide (remove) the `experienceLevel` assertion while maintaining the sig
 
 ```
 WRAPPED {
-   "BWHacker" [
-      "name": "BWHacker"
+   "BRadvoc8" [
+      "name": "BRadvoc8"
       "domain": "Distributed Systems & Security"
       ELIDED
    ]

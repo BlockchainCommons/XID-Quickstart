@@ -100,16 +100,16 @@ relationships develop:
 
 1. **Initial Contact**: Share only basic information.
    ```
-   "BWHacker" [
-      "name": "BWHacker"
+   "BRadvoc8" [
+      "name": "BRadvoc8"
       "publicKeys": ur:crypto-pubkeys/hdcx...
    ]
    ```
 
 2. **Building Relationship**: Reveal professional information.
    ```
-   "BWHacker" [
-      "name": "BWHacker"
+   "BRadvoc8" [
+      "name": "BRadvoc8"
       "publicKeys": ur:crypto-pubkeys/hdcx...
       "domain": "Distributed Systems & Security"
       "experienceLevel": "8 years professional practice"
@@ -118,8 +118,8 @@ relationships develop:
 
 3. **Growing Trust**: Share more specific professional details.
    ```
-   "BWHacker" [
-      "name": "BWHacker"
+   "BRadvoc8" [
+      "name": "BRadvoc8"
       "publicKeys": ur:crypto-pubkeys/hdcx...
       "domain": "Distributed Systems & Security"
       "experienceLevel": "8 years professional practice"
@@ -129,8 +129,8 @@ relationships develop:
 
 4. **Established Trust**: Reveal detailed perspectives and methods.
    ```
-   "BWHacker" [
-      "name": "BWHacker"
+   "BRadvoc8" [
+      "name": "BRadvoc8"
       "publicKeys": ur:crypto-pubkeys/hdcx...
       "domain": "Distributed Systems & Security"
       "experienceLevel": "8 years professional practice"
@@ -188,8 +188,8 @@ into practical action with Gordian Envelopes:
 For instance, a professional profile shared in a public context would visually indicate elided content:
 
 ```
-"BWHacker" [
-   "name": "BWHacker"
+"BRadvoc8" [
+   "name": "BRadvoc8"
    "publicKeys": ur:crypto-pubkeys/hdcx...
    "domain": "Distributed Systems & Security"
    ELIDED
