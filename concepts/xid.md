@@ -61,9 +61,11 @@ process looks like this:
 ```sh
 PRIVATE_KEYS=$(envelope generate prvkeys)
 PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-XID_DOC=$(envelope xid new --name "MyIdentifier" "$PUBLIC_KEYS")
+XID_DOC=$(envelope xid new --nickname "MyIdentifier" "$PUBLIC_KEYS")
 XID=$(envelope xid id "$XID_DOC")
 ```
+
+Note that $XID_DOC will contain the full document, while $XID will only contain the XID, each in `ur:xid` form.
 
 ## XID Document Structure
 
