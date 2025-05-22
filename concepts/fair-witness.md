@@ -1,7 +1,9 @@
 # The Fair Witness Approach
 
 ## Expected Learning Outcomes
+
 By the end of this document, you will:
+
 - Understand the concept of Fair Witness and its origin
 - Know the principles for making trustworthy assertions
 - Understand how to document observations with context and transparency
@@ -10,18 +12,18 @@ By the end of this document, you will:
 
 ## The Fair Witness Concept
 
-The term "Fair Witness" comes from Robert A. Heinlein's novel "Stranger in a Strange Land," where Fair Witnesses were professionals trained to observe events with perfect objectivity and recall. When asked to describe what they see, a Fair Witness would report only what they directly observed, without interpretation or assumption.
+The term "Fair Witness" comes from Robert A. Heinlein's novel
+_Stranger in a Strange Land,_ where Fair Witnesses were professionals
+trained to observe events with perfect objectivity and recall. When
+asked to describe what they see, a Fair Witness would report only what
+they directly observed, without interpretation or assumption.
 
-For example, if asked about the color of a house visible in the distance, a Fair Witness might say, "It appears to be painted white on this side," rather than simply "It's white" - acknowledging they cannot see all sides of the house.
+For example, if asked about the color of a house visible in the
+distance, a Fair Witness might say, "It appears to be painted white on
+this side," rather than simply "It's white" &mdash; acknowledging they
+cannot see all sides of the house.
 
-In digital identity and trust systems, the Fair Witness approach means:
-1. Making claims with appropriate context and limitations
-2. Being transparent about how observations were made
-3. Acknowledging potential biases and assumptions
-4. Providing verifiable evidence where possible
-5. Separating observed facts from interpretations
-
-## Principles for Trustworthy Assertions
+### Principles for Trustworthy Assertions
 
 When making claims as a Fair Witness, follow these core principles:
 
@@ -70,7 +72,9 @@ A well-formed Fair Witness assertion includes:
 
 ## The Power of Fair Witnessing in Digital Identity
 
-In digital environments where traditional trust signals (like real-world identities) are absent, the Fair Witness approach provides an alternative foundation for trust:
+In digital environments where traditional trust signals (like
+real-world identities) are absent, the Fair Witness approach provides
+an alternative foundation for trust:
 
 1. **Verifiability Over Authority**: Trust based on verification rather than credentials
 2. **Context Over Claims**: Rich context that allows others to evaluate reliability
@@ -112,18 +116,18 @@ When creating assertions with your XID, include:
 
 The Fair Witness approach becomes even more powerful when combined with proper peer endorsements:
 
-1. **Multiple Perspectives**: Different observers can endorse the same work from their unique viewpoint
-2. **Independent Verification**: Third parties can confirm claims through formal endorsements
-3. **Network of Trust**: Endorsements build a web of verifiable relationships
-4. **Transparent Relationships**: Biases and connections are explicitly disclosed
-5. **Acceptance Model**: Endorsements are reviewed and formally accepted by the recipient
+1. **Independent Verification**: Third parties can confirm claims through formal endorsements.
+2. **Multiple Perspectives**: Different observers can endorse the same work from their unique viewpoint.
+3. **Network of Trust**: Endorsements build a web of verifiable relationships.
+4. **Transparent Relationships**: Biases and connections are explicitly disclosed.
+5. **Acceptance Model**: Endorsements are reviewed and formally accepted by the recipient.
 
 Example of a peer endorsement:
 ```sh
 ENDORSEMENT=$(envelope subject type string "Endorsement: Financial API Project")
 ENDORSEMENT=$(envelope assertion add pred-obj string "endorser" string "TechPM - Project Manager with 12 years experience" "$ENDORSEMENT")
 ENDORSEMENT=$(envelope assertion add pred-obj string "relationship" string "Direct project oversight as Project Manager" "$ENDORSEMENT")
-ENDORSEMENT=$(envelope assertion add pred-obj string "observation" string "BWHacker designed innovative authentication system that exceeded security requirements" "$ENDORSEMENT")
+ENDORSEMENT=$(envelope assertion add pred-obj string "observation" string "BRadvoc8 designed innovative authentication system that exceeded security requirements" "$ENDORSEMENT")
 ENDORSEMENT=$(envelope assertion add pred-obj string "basis" string "Direct oversight throughout the project" "$ENDORSEMENT")
 ENDORSEMENT=$(envelope assertion add pred-obj string "potentialBias" string "Had management responsibility for project success" "$ENDORSEMENT")
 ENDORSEMENT=$(envelope assertion add pred-obj string "endorserLimitation" string "Limited technical background in cryptography" "$ENDORSEMENT")
