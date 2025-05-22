@@ -121,36 +121,80 @@ Several verification methods are available for elided content:
 
 ### 1. Signature Verification
 
+Verify an envelope's signature.
+
 ```sh
 envelope verify -v "$PUBLIC_KEY" "$ELIDED_ENVELOPE"
 ```
+This will either return `Error: could not verify a signature` (for
+failure) or the envelope (for success).
 
 This confirms:
 - The envelope was signed by the claimed entity
 - No part of the content has been tampered with
-- All elisions were performed correctly
 
 ### 2. Structural Integrity Verification
 
+Verify an envelope's structure.
 ```sh
-envelope extract digest "$ELIDED_ENVELOPE"
+envelope digest "$ELIDED_ENVELOPE"
 ```
+
+This should return a `ur:digest`.
 
 This confirms:
 - The overall structure remains intact
-- All hashing relationships are preserved
-- The envelope maintains its cryptographic consistency
 
-### 3. Known-Content Verification
+### 3. Elided Content Verifications
 
+Verify an envelope hasn't been changed.
 ```sh
-ELIDED_HASH=$(envelope extract elided-digest "$ELIDED_ENVELOPE")
-EXPECTED_HASH=$(envelope digest string "expected-content" --salt "$SHARED_SALT")
-if [ "$ELIDED_HASH" = "$EXPECTED_HASH" ]; then echo "Verified content was elided"; fi
+ORIG_DIGEST=$(envelope digest $ENVELOPE)
+ELIDED_DIGEST=$(envelope digest $ELIDED_ENVELOPE)
+if [ "$ORIG_DIGEST" = "$ELIDED_DIGEST" ]; then echo "Verified content was elided"; fi
 ```
+This should return "Verified content was elided".
 
 This confirms:
-- What was elided (with shared salt)
+- The elided envelope matches the original envelope before elisions
+
+### 4. Known-Content Verification
+
+Verify the contents of an elided envelope (for example "knows bob").
+
+```
+ELIDED_DIGEST=$(envelope assertion at 0 $AKB_E | envelope digest) 
+EXPECTED_DIGEST=$(envelope assertion create string knows string bob | envelope digest)
+if [ "$ELIDED_DIGEST" = "$EXPECTED_DIGEST" ]; then echo "Elided content is 'knows bob'"; fi
+```
+Note that this just checks the 0th assertion in the elided envelope. A
+more robust program would check against all of them.
+
+This should return "Elided content is 'knows bob'.
+
+This confirms:
+- The elided content matches the expected content.
+
+### 5. Known-Content Verification with Salt
+
+Verify the contents of an elided and salted envelope (for example "knows bob" with $SALT on the assertion)..
+
+If a "knows" envelope assertion is salted with `--salted` (see below),
+an envelope of the salt can be retrieved as follows:
+```
+SALT=$(envelope assertion find predicate string knows $AKB_S | envelope assertion find predicate known salt | envelope extract object)
+```
+The same process is then followed, but testing against an assertion salted with the shared `$SALT` secret.
+```
+ELIDED_DIGEST=$(envelope assertion at 0 $AKB_S_E | envelope digest)
+EXPECTED_DIGEST=$(envelope assertion create string knows string bob | envelope assertion add pred-obj known salt envelope $SALT | envelope digest)
+if [ "$ELIDED_DIGEST" = "$EXPECTED_DIGEST" ]; then echo "Elided content is 'knows bob' with the salt"; fi
+```
+
+This should return "Elided content is 'knows bob'.
+
+This confirms:
+- The elided content matches the expected content (with shared salt)
 
 ## Cryptographic Security Guarantees
 
@@ -168,32 +212,43 @@ Elision in Gordian Envelopes provides these specific security guarantees:
 
 Original envelope:
 ```
-"API Security Enhancement" [
-   "methodology": "Static analysis with open source tools"
-   "limitations": "No penetration testing performed"
-   "dataSources": "Public API documentation"
-   SIGNATURE
+SIGNED_DOC=$(envelope subject type string "API Security Enhancement" | envelope assertion add pred-obj string methodology string "Static analysis with open source tools" | envelope assertion add pred-obj string limitations string "No penetration testing performed" | envelope assertion add pred-obj string dataSources string "Public API documentation" | envelope subject type wrapped | envelope sign -s $PRIVATE_KEYS)
+```
+
+```
+{
+    "API Security Enhancement" [
+        "dataSources": "Public API documentation"
+        "limitations": "No penetration testing performed"
+        "methodology": "Static analysis with open source tools"
+    ]
+} [
+    'signed': Signature
 ]
 ```
 
 Command to elide the "limitations" field:
 ```sh
-ELIDED_DOC=$(envelope elide assertion predicate string "limitations" "$ORIGINAL_DOC")
+LIMITATIONS_DIGEST=$(envelope extract wrapped $SIGNED_DOC | envelope assertion find predicate string "limitations")
+ELIDED_DOC=$(envelope elide removing $LIMITATIONS_DIGEST $SIGNED_DOC)
 ```
 
 Resulting envelope:
 ```
-"API Security Enhancement" [
-   "methodology": "Static analysis with open source tools"
-   ELIDED: h'8d7f117fa8511c9c8ef2092176596cca48a797c69e0a0e12a244faea715a8f82'
-   "dataSources": "Public API documentation"
-   SIGNATURE
+{
+    "API Security Enhancement" [
+        "dataSources": "Public API documentation"
+        "methodology": "Static analysis with open source tools"
+        ELIDED
+    ]
+} [
+    'signed': Signature
 ]
 ```
 
 The signature verification still works because the hash maintains the cryptographic structure:
 ```sh
-envelope verify -v "$PUBLIC_KEY" "$ELIDED_DOC"
+envelope verify -v $PUBLIC_KEYS $ELIDED_DOC
 # Result: ✅ Signature verified successfully
 ```
 
@@ -303,6 +358,13 @@ This section provides practical guidance for implementing elision in your own ap
 
 ### Implementation Workflow
 
+0. **Create Keys for Use**
+
+   ```sh
+   PRIVATE_KEY=$(envelope generate prvkeys)
+   PUBLIC_KEY=$(envelope generate pubkeys $PRIVATE_KEY)
+   ```
+   
 1. **Create and Sign the Complete Document First**
    ```sh
    # Create the complete document with all possible information
@@ -311,22 +373,25 @@ This section provides practical guidance for implementing elision in your own ap
    COMPLETE_DOC=$(envelope assertion add pred-obj string "sensitiveAttribute" string "sensitiveValue" "$COMPLETE_DOC")
    
    # Sign the complete document before any elision
-   SIGNED_DOC=$(envelope sign -s "$PRIVATE_KEY" "$COMPLETE_DOC")
+   WRAPPED_DOC=$(envelope subject type wrapped $COMPLETE_DOC)
+   SIGNED_DOC=$(envelope sign -s $PRIVATE_KEY $WRAPPED_DOC)
    ```
 
 2. **Elide Based on Context and Audience**
    ```sh
    # Create different views by eliding different parts
-   PUBLIC_VIEW=$(envelope elide assertion predicate string "sensitiveAttribute" "$SIGNED_DOC")
+   SENSITIVE_VALUE_DIGEST=$(envelope extract wrapped $SIGNED_DOC | envelope assertion find predicate string "sensitiveAttribute")
+   PUBLIC_VIEW=$(envelope elide removing $SENSITIVE_VALUE_DIGEST $SIGNED_DOC)
    
    # Multiple elisions can be applied sequentially
-   MINIMAL_VIEW=$(envelope elide assertion predicate string "attribute1" "$PUBLIC_VIEW")
+   ATTRIBUTE1_DIGEST=$(envelope extract wrapped $SIGNED_DOC | envelope assertion find predicate string "attribute1")
+   MINIMAL_VIEW=$(envelope elide removing $ATTRIBUTE1_DIGEST $PUBLIC_VIEW)
    ```
 
 3. **Verify Elided Documents**
    ```sh
    # Always verify that signatures remain valid after elision
-   envelope verify -v "$PUBLIC_KEY" "$PUBLIC_VIEW"
+   envelope verify -v $PUBLIC_KEY $MINIMAL_VIEW
    ```
 
 ### Common Pitfalls and Solutions
