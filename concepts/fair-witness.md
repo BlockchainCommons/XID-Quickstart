@@ -94,7 +94,7 @@ The Fair Witness approach becomes even more powerful when combined with proper p
 4. **Transparent Relationships**: Connections are explicitly disclosed.
 5. **Acceptance Model**: Endorsements are reviewed and formally accepted by the recipient.
 
-## Practical Implement: Fair Witness Assertion
+## Practical Implementation: Fair Witness Assertion
 
 Following the Fair Witnessing methodology, a person can use
 [Gordian-Enveloope
