@@ -127,7 +127,7 @@ When creating assertions with their XID, they should include:
    ```
 
 5. **Cryptographic Signatures** for verification:
-   ```
+   ```sh
   WRAPPED_PROJECT=$(envelope subject type wrapped $PROJECT)
   SIGNED_PROJECT=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_PROJECT")
    ```
