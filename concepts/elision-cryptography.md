@@ -24,7 +24,7 @@ selective removal while maintaining overall integrity.
 ### Structural Elements
 
 As discussed in [Gordian Envelope Basics](gordian-envelope.md), each
-envelope contains a subject, and an assertion made up of a predicate
+envelope contains a subject and an assertion made up of a predicate
 and an object: the subject predicates the object.
 
 ### Hash-Based Integrity
@@ -118,91 +118,6 @@ depending on the sensitivity of the various parts (is identity
 sensitive? is category of information sensitive? is value of
 information sensitive?) and some are more powerful than others
 
-## Verification Techniques with Elided Content
-
-Several verification methods are available for elided content:
-
-### 1. Structural Integrity Verification
-
-Verify an envelope's structure.
-```sh
-envelope digest "$ELIDED_ENVELOPE"
-```
-
-This should return a `ur:digest`.
-
-This confirms:
-- The overall structure remains intact.
-
-### 2. Signature Verification
-
-Verify an envelope's signature.
-
-```sh
-envelope verify -v "$PUBLIC_KEY" "$ELIDED_ENVELOPE"
-```
-This will either return `Error: could not verify a signature` (for
-failure) or the envelope (for success).
-
-This confirms:
-- The envelope was signed by the claimed entity.
-- No part of the content has been changed since signature.
-
-### 3. Elided Content Verifications
-
-Verify an envelope hasn't been changed.
-```sh
-ORIG_DIGEST=$(envelope digest $ENVELOPE)
-ELIDED_DIGEST=$(envelope digest $ELIDED_ENVELOPE)
-if [ "$ORIG_DIGEST" = "$ELIDED_DIGEST" ]; then echo "Verified content was elided"; fi
-```
-This should return "Verified content was elided".
-
-This confirms:
-- The elided envelope matches the original envelope before elision.
-
-### 4. Known-Content Verification
-
-Verify the contents of an elided envelope (for example "knows bob").
-
-```
-ELIDED_DIGEST=$(envelope assertion at 0 $AKB_E | envelope digest) 
-EXPECTED_DIGEST=$(envelope assertion create string knows string bob | envelope digest)
-if [ "$ELIDED_DIGEST" = "$EXPECTED_DIGEST" ]; then echo "Elided content is 'knows bob'"; fi
-```
-Note that this just checks the 0th assertion in the elided envelope. A
-more robust program would check against all of them.
-
-This should return "Elided content is 'knows bob'.
-
-This confirms:
-- The elided content matches the expected content.
-
-### 5. Known-Content Verification with Salt
-
-Verify the contents of an elided and salted envelope (for example "knows bob" with $SALT on the assertion)..
-
-If a "knows" envelope assertion is salted with `salt` (see below),
-an envelope of the salt can be retrieved as follows:
-```
-SALT=$(envelope assertion find predicate string knows $AKB_S | envelope assertion find predicate known salt | envelope extract object)
-```
-
-The same process as "Known-Content Verification" is then followed, but
-it's testing against an assertion salted with the shared `$SALT`
-secret.
-
-```
-ELIDED_DIGEST=$(envelope assertion at 0 $AKB_S_E | envelope digest)
-EXPECTED_DIGEST=$(envelope assertion create string knows string bob | envelope assertion add pred-obj known salt envelope $SALT | envelope digest)
-if [ "$ELIDED_DIGEST" = "$EXPECTED_DIGEST" ]; then echo "Elided content is 'knows bob' with the salt"; fi
-```
-
-This should return "Elided content is 'knows bob'.
-
-This confirms:
-- The elided content matches the expected content (with shared salt).
-
 ## Cryptographic Security Guarantees
 
 Elision in Gordian Envelopes provides these specific security guarantees:
@@ -213,7 +128,39 @@ Elision in Gordian Envelopes provides these specific security guarantees:
 4. **Salt-Based Privacy**: With salting, identical content produces different hashes.
 5. **Mathematical Soundness**: Protection is based on cryptographically secure hash functions.
 
-## Practical Examples
+## Salting for Privacy Protection
+
+Salting is a critical privacy enhancement for Gordian Envelopes that
+keeps elided data private. It ensures that even when the same
+information is elided from multiple documents, the resulting hashes
+are different, preventing correlation attacks.
+
+### The Problem Without Salting
+
+Without salting, elision would have a serious privacy weakness:
+
+- Identical content would produce identical hashes.
+- This would allow correlation between different elided documents.
+- An observer could determine if the same information was elided in multiple documents.
+- Common values could be guessed through dictionary attacks.
+
+### How Salting Works
+
+Salting solves this by adding random data to an Envelope leaf or node before hashing:
+
+```
+Without salt:  hash("name": "John Smith") → always the same hash
+With salt:     hash("name": "John Smith" + random_salt) → different hash each time
+```
+
+### Advanced Technical Considerations
+
+For implementers and cryptography specialists:
+
+1. **Salt Entropy**: Salts should be cryptographically random and of sufficient length
+
+
+## Practical Implementation: Elision
 
 ### Example 1: Field Elision with Complete Input/Output
 
@@ -309,32 +256,7 @@ Again, this demonstrate how elision preserves both the signature
 validity and structural integrity of documents while allowing
 appropriate content sharing for different contexts.
 
-## Salting for Privacy Protection
-
-Salting is a critical privacy enhancement for Gordian Envelopes that
-keeps elided data private. It ensures that even when the same
-information is elided from multiple documents, the resulting hashes
-are different, preventing correlation attacks.
-
-### The Problem Without Salting
-
-Without salting, elision would have a serious privacy weakness:
-
-- Identical content would produce identical hashes.
-- This would allow correlation between different elided documents.
-- An observer could determine if the same information was elided in multiple documents.
-- Common values could be guessed through dictionary attacks.
-
-### How Salting Works
-
-Salting solves this by adding random data to an Envelope leaf or node before hashing:
-
-```
-Without salt:  hash("name": "John Smith") → always the same hash
-With salt:     hash("name": "John Smith" + random_salt) → different hash each time
-```
-
-### Salting Implementation
+## Practical Implementation: Salting
 
 The
 [envelope-cli](https://github.com/BlockchainCommons/bc-envelope-cli-rust)
@@ -369,11 +291,91 @@ envelope format $AKB_S
 ]
 ```
 
-### Advanced Technical Considerations
+## Practical Implementation: Verification
 
-For implementers and cryptography specialists:
+Several verification methods are available for elided content:
 
-1. **Salt Entropy**: Salts should be cryptographically random and of sufficient length
+### 1. Structural Integrity Verification
+
+Verify an envelope's structure.
+```sh
+envelope digest "$ELIDED_ENVELOPE"
+```
+
+This should return a `ur:digest`.
+
+This confirms:
+- The overall structure remains intact.
+
+### 2. Signature Verification
+
+Verify an envelope's signature.
+
+```sh
+envelope verify -v "$PUBLIC_KEY" "$ELIDED_ENVELOPE"
+```
+This will either return `Error: could not verify a signature` (for
+failure) or the envelope (for success).
+
+This confirms:
+- The envelope was signed by the claimed entity.
+- No part of the content has been changed since signature.
+
+### 3. Elided Content Verifications
+
+Verify an envelope hasn't been changed.
+```sh
+ORIG_DIGEST=$(envelope digest $ENVELOPE)
+ELIDED_DIGEST=$(envelope digest $ELIDED_ENVELOPE)
+if [ "$ORIG_DIGEST" = "$ELIDED_DIGEST" ]; then echo "Verified content was elided"; fi
+```
+This should return "Verified content was elided".
+
+This confirms:
+- The elided envelope matches the original envelope before elision.
+
+### 4. Known-Content Verification
+
+Verify the contents of an elided envelope (for example "knows bob").
+
+```
+ELIDED_DIGEST=$(envelope assertion at 0 $AKB_E | envelope digest) 
+EXPECTED_DIGEST=$(envelope assertion create string knows string bob | envelope digest)
+if [ "$ELIDED_DIGEST" = "$EXPECTED_DIGEST" ]; then echo "Elided content is 'knows bob'"; fi
+```
+Note that this just checks the 0th assertion in the elided envelope. A
+more robust program would check against all of them.
+
+This should return "Elided content is 'knows bob'.
+
+This confirms:
+- The elided content matches the expected content.
+
+### 5. Known-Content Verification with Salt
+
+Verify the contents of an elided and salted envelope (for example "knows bob" with $SALT on the assertion)..
+
+If a "knows" envelope assertion is salted with `salt` (see below),
+an envelope of the salt can be retrieved as follows:
+```
+SALT=$(envelope assertion find predicate string knows $AKB_S | envelope assertion find predicate known salt | envelope extract object)
+```
+
+The same process as "Known-Content Verification" is then followed, but
+it's testing against an assertion salted with the shared `$SALT`
+secret.
+
+```
+ELIDED_DIGEST=$(envelope assertion at 0 $AKB_S_E | envelope digest)
+EXPECTED_DIGEST=$(envelope assertion create string knows string bob | envelope assertion add pred-obj known salt envelope $SALT | envelope digest)
+if [ "$ELIDED_DIGEST" = "$EXPECTED_DIGEST" ]; then echo "Elided content is 'knows bob' with the salt"; fi
+```
+
+This should return "Elided content is 'knows bob'.
+
+This confirms:
+- The elided content matches the expected content (with shared salt).
+
 
 ## Check Your Understanding
 
@@ -393,7 +395,7 @@ After understanding the cryptographic mechanics of elision, you can:
 - Alternatively explore [fair witness trust](fair-witness.md) or [key-management essentials](key-management.md).
 - Move on to [progressive trust](progressive-trust.md)
 
-## Appendix: Implementation Guide
+## Appendix: Practical Implementation Guide
 
 This section provides practical guidance for implementing elision in your own applications.
 
