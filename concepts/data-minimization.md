@@ -169,7 +169,7 @@ Understanding data minimization principles is one thing; implementing
 them effectively is another. Here's how these principles translate
 into practical action with Gordian Envelopes:
 
-### Practical Implementation of Data Minimization
+### Practical Implementation: Data Minimization
 
 1. **Create a Complete Source Document**
    - Begin with a comprehensive envelope containing all possible information.
