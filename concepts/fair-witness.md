@@ -132,7 +132,7 @@ When creating assertions with their XID, they should include:
    SIGNED_PROJECT=$(envelope sign -s "$PRIVATE_KEYS" "$WRAPPED_PROJECT")
    ```
 
-The final enveope should look like this:
+The final envelope should look like this:
 ```
 {
     "Financial API Security Overhaul" [
