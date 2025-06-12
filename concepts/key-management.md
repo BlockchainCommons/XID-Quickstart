@@ -73,7 +73,7 @@ trust](progressive-trust.md).
 
 Key can be rotated and if lost they can be recovered.
 
-## Key Rotation
+### Key Rotation
 
 Key rotation is the process of replacing existing keys with new
 ones. It's an essential practice for:
