@@ -362,7 +362,7 @@ XID(e4dd674b) [
 
 3. **Sign Recovery:**
 
-   ```sh
+  ```sh
   WRAPPED_RECOVERY_ATTESTATION=$(envelope subject type wrapped $RECOVERY_ATTESTATION)
   SIGNED_RECOVERY_ATTESTATION=$(envelope sign -s "$RECOVERY_KEY_PRIVATE" "$WRAPPED_RECOVERY_ATTESTATION")
   ```
