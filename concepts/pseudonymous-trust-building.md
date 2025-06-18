@@ -80,6 +80,7 @@ record specific information for commtiment.
    ```
 
 3.  **Encode:** Encode per the [ur:digest CDDL](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2021-002-digest.md#cddl)
+
    ```
    SUMMARY_HASH_BW=$(bytewords -i hex "5820"$SUMMARY_HASH -o minimal)
    SUMMARY_HASH_UR="ur:digest/"$SUMMARY_HASH_BW
