@@ -113,7 +113,7 @@ XID(68863088) [
    if [ "$COMPUTED_HASH" = "$SUMMARY_HASH" ]; then
        echo "Evidence verified - matches the commitment"
    fi
-  f ```
+   ```
 
 ### Evidence Commitments in Gordian Envelope
 
