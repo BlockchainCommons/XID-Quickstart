@@ -84,7 +84,6 @@ record specific information for commtiment.
    SUMMARY_HASH_BW=$(bytewords -i hex "5820"$SUMMARY_HASH -o minimal)
    SUMMARY_HASH_UR="ur:digest/"$SUMMARY_HASH_BW
    ```
-   ```
 
 4. **Include Hash in Assertions**: Reference the evidence in your XID
    ```
