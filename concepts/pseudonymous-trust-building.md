@@ -146,7 +146,7 @@ envelope format $ELIDED_PROJECT_E
 XID(03061331) [
     'key': PublicKeys(73fc5e62) [
         'allow': 'All'
-        'nickname': "BWHacker"
+        'nickname': "BRadvoc8"
     ]
     ELIDED
 ]
@@ -215,7 +215,7 @@ and elision that you'd use in any progressive trust situation:
    ```
    PRIVATE_KEYS=$(envelope generate prvkeys)
    PUBLIC_KEYS=$(envelope generate pubkeys "$PRIVATE_KEYS")
-   XID_DOC=$(envelope xid new --nickname "BWHacker" "$PUBLIC_KEYS")
+   XID_DOC=$(envelope xid new --nickname "BRadvoc8" "$PUBLIC_KEYS")
    X_XID_DOC=$(envelope assertion add pred-obj string email string "bwh@bwhacker.org" $XID_DOC)
    X_XID_DOC=$(envelope assertion add pred-obj string domain string "Distributed Systems & Security" $X_XID_DOC)
    ```
@@ -226,7 +226,7 @@ XID(03061331) [
     "email": "bwh@bwhacker.org"
     'key': PublicKeys(73fc5e62) [
         'allow': 'All'
-        'nickname': "BWHacker"
+        'nickname': "BRadvoc8"
     ]
 ]
 ```
@@ -244,7 +244,7 @@ XID(03061331) [
         "email": "bwh@bwhacker.org"
         'key': PublicKeys(73fc5e62) [
             'allow': 'All'
-            'nickname': "BWHacker"
+            'nickname': "BRadvoc8"
         ]
     ]
 } [
@@ -265,7 +265,7 @@ ELIDED_X_XID=$(envelope elide removing $EMAIL $SIGNED_X_XID)
         "domain": "Distributed Systems & Security"
         'key': PublicKeys(73fc5e62) [
             'allow': 'All'
-            'nickname': "BWHacker"
+            'nickname': "BRadvoc8"
         ]
         ELIDED
     ]
@@ -305,7 +305,7 @@ pseudonymous situation.
 ur:envelope/lftpsplotpsokscpfejtiejljpjkihjnihjtjyftcxfginjthsjtiainhsjzcxfpgdgacxgdjpjlimihiajyoytpsojpihjtiejljpjkihjpgsinjninjyhsjyinjljttpsoksdwgsinjninjyihiecxjyihiaisjtiniahsjzcxidhsiajeiojpjlkpjtiecxinjtcxiajpkkjojyjliojphsjoiskkoytpsojsihjtiejljpjkihjnihjtjyghhsjpioihjytpsotanshdhdcxaxambwehcnknwlnbdmsboyvllrweksdwfrdkcwiojnmenydycplnbsbabezcvakboytpsoisihjtiejljpjkihjptpsoksehghihiaisgdgtcxdpcxgdjpjlimihiajycxgthsjthsioihjpcxktinjyiscxeheycxkkihhsjpjkcxihksjoihjpinihjtiaihoytpsoihidhsjkinjktpsoksfzfyinjpihiajycxjlidjkihjpkohsjyinjljtcxjyisjpjlkpioisjlkpjycxjyisihcxjojpjlimihiajycxjojzkpjkcxjpihkoinihktcxjliycxjnihjyjpiniajkoytpsojzjpihjzhsjyinjljtjkisinjotpsoksdnfyinjpihiajycxjojpjlimihiajycxjlkoihjpjkinioisjycxhsjkcxgdjpjlimihiajycxgthsjthsioihjpoytpsojnjojljyihjtjyinhsjzfwinhsjktpsoksehfdhsiecxjnhsjthsioihjnihjtjycxjpihjkjojljtjkinidinjzinjykkcxiyjljpcxjojpjlimihiajycxjkkpiaiaihjkjkoytpsojejlidjkihjpkohsjyinjljttpsokshffwhgfdhsiajeihjpcxieihjkiniojtihiecxinjtjtjlkohsjyinkoihcxhskpjyisihjtjyiniahsjyinjljtcxjkkkjkjyihjncxjyishsjycxihksiaihihieihiecxjkihiakpjpinjykkcxjpihjskpinjpihjnihjtjyjkoyaxtpsotansghhdfzzcjtoscwmwmdbsaegsrhmetdknetisiovwmdehhdpyvlrortnndinttpesbktaaaprtplbendegmjtzehyfwpfttiooeksiehslyttsgsglkctvwgdatlsplspmysgrnghlostjz
 ```
 
-   The pseudoynmous "BWHacker" can examine that endorsement (`envelope
+   The pseudoynmous "BRadvoc8" can examine that endorsement (`envelope
    format $SIGNED_ENDORSEMENT) and then add it to a new version of
    their XID_DOC:
 
@@ -328,7 +328,7 @@ ur:envelope/lftpsplotpsokscpfejtiejljpjkihjnihjtjyftcxfginjthsjtiainhsjzcxfpgdga
                     "endorsementTarget": XID(03061331)
                     "endorser": "TechPM - Project Manager with 12 years experience"
                     "endorserLimitation": "Limited technical background in cryptography"
-                    "observation": "BWHacker designed innovative authentication system that exceeded security requirements"
+                    "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
                     "potentialBias": "Had management responsibility for project success"
                     "relationship": "Direct project oversight as Project Manager"
                 ]
@@ -338,7 +338,7 @@ ur:envelope/lftpsplotpsokscpfejtiejljpjkihjnihjtjyftcxfginjthsjtiainhsjzcxfpgdga
         ]
         'key': PublicKeys(73fc5e62) [
             'allow': 'All'
-            'nickname': "BWHacker"
+            'nickname': "BRadvoc8"
         ]
         ELIDED
     ]
@@ -365,7 +365,7 @@ Though this is a new verison of the `XID_DOC`, the XID and the public keys remai
                     "endorsementTarget": XID(03061331)
                     "endorser": "TechPM - Project Manager with 12 years experience"
                     "endorserLimitation": "Limited technical background in cryptography"
-                    "observation": "BWHacker designed innovative authentication system that exceeded security requirements"
+                    "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
                     "potentialBias": "Had management responsibility for project success"
                     "relationship": "Direct project oversight as Project Manager"
                 ]
@@ -375,7 +375,7 @@ Though this is a new verison of the `XID_DOC`, the XID and the public keys remai
         ]
         'key': PublicKeys(73fc5e62) [
             'allow': 'All'
-            'nickname': "BWHacker"
+            'nickname': "BRadvoc8"
         ]
         ELIDED
     ]
