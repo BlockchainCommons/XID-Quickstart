@@ -1,57 +1,84 @@
 # Public Participation Profiles
 
 ## Expected Learning Outcomes
+
 By the end of this document, you will:
+
 - Understand why pseudonymous contributors engage in public interest projects
 - Know how to build structured participation profiles that balance privacy and trust
-- Learn how to assess the risk-reward trade-offs of different disclosure levels
+- Learn how to assess the risk-reward trade-offs of different information disclosure levels
 - Understand how to progressively build trust through structured participation profiles
 - See how XIDs enable participation in meaningful projects while preserving privacy
 
 ## Introduction to Public Participation Profiles
 
-Public participation profiles enable contributors to engage in projects aligned with their values while maintaining control over their personal information. These profiles are essential for individuals who need to balance meaningful contribution with privacy protection.
+Public participation profiles enable contributors to engage in
+projects aligned with their values while maintaining control over
+their personal information. These profiles are essential for
+individuals who need to balance meaningful contribution with privacy
+protection.
 
-For many individuals like Amira, participating in projects creates a fundamental tension:
+For many individuals like Amira, participating in projects creates a
+fundamental tension:
 
-- **Privacy Needs**: Protection from surveillance, discrimination, retaliation, or unwanted exposure
-- **Contribution Desires**: Meaningful participation in projects aligned with their values and skills
+- **Privacy Needs**: Protection from surveillance, discrimination,
+    retaliation, or unwanted exposure
+- **Contribution Desires**: Meaningful participation in projects
+    aligned with their values and skills
 
-Public participation profiles resolve this tension by creating structured, verifiable digital representations that allow contributors to share what's necessary for trust while protecting what needs to remain private.
+Public participation profiles resolve this tension by creating
+structured, verifiable, [pseudonymous](pseudonymous-trust-building.md)
+digital representations that allow contributors to share what's
+necessary for trust while protecting what needs to remain private.
+
+This document is a capstone, merging many of the past lessons into a
+coherent whole.
 
 ## The Risk-Reward Calculus of Participation
 
-Pseudonymous contributors must carefully weigh the risks and rewards of participation:
+Pseudonymous contributors must carefully weigh the risks and rewards
+of participation:
 
 ### Risk Assessment Factors
 
-1. **Association Risk**: Could this information link to legal identity?
-2. **Uniqueness Risk**: How distinctive is this skill or experience?
-3. **Correlation Risk**: Could multiple disclosures be combined to identify me?
-4. **Temporal Risk**: Does this reveal a timeline that could be connected to me?
-5. **Network Risk**: Does this expose connections to known associates?
+1. **Community Quality**: Will the community respect privacy boundaries?
+2. **Association Risk**: Could this information link to legal identity?
+3. **Uniqueness Risk**: How distinctive is this skill or experience?
+4. **Correlation Risk**: Could multiple disclosures be combined to identify me?
+5. **Temporal Risk**: Does this reveal a timeline that could be connected to me?
+6. **Network Risk**: Does this expose connections to known associates?
 
 ### Benefit Assessment Factors
 
-1. **Trust Threshold**: What's the minimum needed for the desired role?
-2. **Impact Potential**: How significant is the potential contribution?
-3. **Value Alignment**: How important is this project to personal values?
-4. **Community Quality**: Will the community respect privacy boundaries?
-5. **Trust Transferability**: Can trust built here transfer to other contexts?
+1. **Value Alignment**: How important is this project to personal values?
+2. **Trust Transferability**: Can trust built here transfer to other contexts?
 
-The risk-reward calculus determines what information to include in a public participation profile, following the principle of **proportional disclosure**: higher-value projects justify higher (but still minimal) disclosure.
+The risk-reward calculus determines what information to include in a
+public participation profile, following the principle of
+**proportional disclosure**: higher-value projects justify higher (but
+still minimal) disclosure.
+
+1. **Impact Potential**: How significant is the potential contribution?
+2. **Trust Threshold**: What's the minimum disclosure needed for the desired role?
 
 ## Core Components of Participation Profiles
 
-XIDs provide an ideal foundation for building participation profiles that balance privacy and trust:
+XIDs provide an ideal foundation for building participation profiles
+that balance privacy and trust:
 
 ### 1. Stable Pseudonymous Identifier
 
-The foundation of a participation profile is a stable, cryptographically-verifiable identifier that doesn't reveal real-world identity:
+The foundation of a participation profile is a stable,
+cryptographically-verifiable identifier that doesn't reveal real-world
+identity:
 
 ```sh
 # Create a stable pseudonymous identifier
-PROFILE_XID=$(envelope xid new --name "BWHacker" "$PUBLIC_KEY")
+SEED=$(envelope generate seed)
+ur:seed/oyadgdmubaaewfoxskkobsjsnelfndbkgmylurlsdlfyke
+PRIVATE_KEY=$(envelope generate prvkeys --seed $SEED)
+PUBLIC_KEY=$(envelope generate pubkeys $PRIVATE_KEY)
+PROFILE_XID=$(envelope xid new --nickname "BRadvoc8" "$PUBLIC_KEY")
 ```
 
 The XID provides:
@@ -59,9 +86,30 @@ The XID provides:
 - Consistent identity across interactions
 - No inherent connection to real-world identity
 
-### 2. Self-Attestations of Technical Capability
+_For more, see [XID Fundamentals](xid.md)._
 
-Self-attestations establish baseline skills and experience without requiring identity disclosure:
+### 2. Value and Purpose Statements
+
+Value statements establish alignment without revealing personal
+background:
+
+```sh
+# Add value and purpose assertions
+PROFILE_XID=$(envelope assertion add pred-obj string "purpose" string "Contributing to privacy-preserving systems that protect vulnerable populations" "$PROFILE_XID")
+PROFILE_XID=$(envelope assertion add pred-obj string "values" string "Privacy as a human right, user agency, ethical data use" "$PROFILE_XID")
+```
+
+Effective privacy-respecting value statements:
+- Focus on universal principles rather than specific circumstances
+- Connect to project goals rather than personal background
+- Demonstrate alignment without revealing motivations
+- Show commitment to ethical practices
+
+
+### 3. Self-Attestations of Technical Capability
+
+Self-attestations establish baseline skills and experience, again
+without specific identity disclosure:
 
 ```sh
 # Add technical capability self-attestations
@@ -70,21 +118,28 @@ PROFILE_XID=$(envelope assertion add pred-obj string "experienceLevel" string "8
 PROFILE_XID=$(envelope assertion add pred-obj string "coreSkills" string "Cryptographic protocols, distributed consensus, mobile security" "$PROFILE_XID")
 ```
 
-Effective self-attestations:
+Effective privacy-respecting self-attestations:
 - Focus on relevant skills, not chronological history
 - Provide specific technical domains rather than job titles
 - Express experience in years rather than dates
 - Highlight distinctive capabilities without uniquely identifying details
 
-### 3. Verifiable Evidence Commitments
+_For more, see [Attestation & Endorsement Model](attestation-endorsement-model.md)._
 
-Evidence commitments allow contributors to prove capabilities without revealing sensitive information:
+### 4. Verifiable Evidence Commitments
+
+Some values or self-attestations might need to be hidden from the
+general public, while the identity still commits to them. This can be
+done with evidence commitments, which allow contributors to prove
+capabilities without revealing sensitive information:
 
 ```sh
 # Create evidence commitment
 PROJECT_SUMMARY="Designed privacy-preserving location system for safety applications"
-SUMMARY_HASH=$(echo "$PROJECT_SUMMARY" | envelope digest sha256)
-PROFILE_XID=$(envelope assertion add pred-obj string "evidenceCommitment" digest "$SUMMARY_HASH" "$PROFILE_XID")
+SUMMARY_HASH=$(echo "$PROJECT_SUMMARY" | shasum -a 256 | awk '{print $1}')
+SUMMARY_HASH_BW=$(bytewords -i hex "5820"$SUMMARY_HASH -o minimal)
+SUMMARY_HASH_UR="ur:digest/"$SUMMARY_HASH_BW
+PROFILE_XID=$(envelope assertion add pred-obj string "evidenceCommitment" digest "$SUMMARY_HASH_UR" "$PROFILE_XID")
 ```
 
 Evidence commitments enable:
@@ -93,32 +148,23 @@ Evidence commitments enable:
 - Verification without public exposure
 - Progressive trust development
 
-### 4. Value and Purpose Statements
-
-Value statements establish alignment without revealing personal background:
-
-```sh
-# Add value and purpose assertions
-PROFILE_XID=$(envelope assertion add pred-obj string "purpose" string "Contributing to privacy-preserving systems that protect vulnerable populations" "$PROFILE_XID")
-PROFILE_XID=$(envelope assertion add pred-obj string "values" string "Privacy as a human right, user agency, ethical data use" "$PROFILE_XID")
-```
-
-Effective value statements:
-- Focus on universal principles rather than specific circumstances
-- Connect to project goals rather than personal background
-- Demonstrate alignment without revealing motivations
-- Show commitment to ethical practices
+_For more, see [Pseudonymous Trust
+Building](pseudonymous-trust-building.md).__
 
 ### 5. Peer Attestations and Endorsements
 
-Peer attestations provide independent verification while preserving pseudonymity:
+Peer attestations provide independent verification while preserving
+pseudonymity:
 
 ```sh
 # Add peer attestation from another pseudonymous contributor
-PROFILE_XID=$(envelope assertion add pred-obj string "peerAttestation" envelope "$SIGNED_ENDORSEMENT" "$PROFILE_XID")
+PROFILE_XID=$(envelope assertion add pred-obj string peerEndorsements envelope $SIGNED_ENDORSEMENT $PROFILE_XID)
+
 ```
 
-Effective peer attestations:
+There is less concern about peer endorsements being specifically
+privacy-preserving, because they likely came from peers who have only interacted with the pseudonymous identity.Effective peer attestations:
+
 - Come from other trusted community members
 - Verify specific skills or contributions
 - Provide context about collaborative relationship
@@ -126,45 +172,50 @@ Effective peer attestations:
 
 ## The Participation Profile Lifecycle
 
-Public participation profiles evolve over time through a structured lifecycle:
+Public participation profiles evolve over time through a structured
+lifecycle:
 
 ### Phase 1: Initial Participation
 
 Start with minimal disclosure focusing on:
-- Basic pseudonymous identifier
-- General skill areas
-- Commitment to project values
-- Small initial contributions
+
+- Create basic pseudonymous identifier
+- Commit to project values
+- Define general skill areas
+- Offer small initial contributions
 
 This phase establishes basic presence with minimal privacy risk.
 
 ### Phase 2: Contribution Validation
 
 Build trust through validated contributions:
-- Specific technical skills with evidence
-- Work samples that can be evaluated on merit
-- Challenge solutions relevant to the project
+
+- Contribute solutions relevant to the project
 - Test implementations of project features
+- Offer specific technical skills with evidence
+- Provide work samples that can be evaluated on merit
 
 This phase demonstrates capabilities without revealing background.
 
 ### Phase 3: Reputation Development
 
 Strengthen trust through peer relationships:
-- Targeted endorsements from community members
-- Collaboration attestations showing teamwork
-- Consistent contribution patterns
-- Deepening engagement within safe boundaries
+
+- Consistently contribute to project
+- Deepen engagement within safe boundaries
+- Target endorsements from community members
+- Request collaboration attestations showing teamwork
 
 This phase establishes community trust while maintaining privacy.
 
 ### Phase 4: Role Expansion
 
 Take on greater responsibility based on earned trust:
-- Leadership in specific domain areas
-- Mentorship of newer contributors
-- Component ownership or maintenance
-- Expanded decision-making authority
+
+- Offer leadership in specific domain areas
+- Expand decision-making authority
+- Provide mentorship to newer contributors
+- Take on component ownership or maintenance
 
 This phase leverages established trust for greater impact.
 
@@ -255,8 +306,8 @@ TRUST_ASSERTION=$(envelope assertion add pred-obj string "trustLevel" string "0.
 ### Technical Skills Profile
 
 ```
-"BWHacker" [
-   "name": "BWHacker"
+"BRadvoc8" [
+   "name": "BRadvoc8"
    "publicKeys": ur:crypto-pubkeys/hdcxtbsrldcnldkplgsrtemwollopfhfaxuydaotptpdhtaadahtsaxlsdsdsaeaeae
    "domain": "Privacy-Preserving Mobile Development"
    "experienceLevel": "8 years development experience"
@@ -269,8 +320,8 @@ TRUST_ASSERTION=$(envelope assertion add pred-obj string "trustLevel" string "0.
 ### Collaboration Focus Profile
 
 ```
-"BWHacker" [
-   "name": "BWHacker"
+"BRadvoc8" [
+   "name": "BRadvoc8"
    "publicKeys": ur:crypto-pubkeys/hdcxtbsrldcnldkplgsrtemwollopfhfaxuydaotptpdhtaadahtsaxlsdsdsaeaeae
    "collaborationStyle": "Responsive communication, clear technical writing, constructive code review"
    "documentationSkills": "API documentation, security guidelines, user guides"
@@ -286,8 +337,8 @@ TRUST_ASSERTION=$(envelope assertion add pred-obj string "trustLevel" string "0.
 ### Public Interest Focus Profile
 
 ```
-"BWHacker" [
-   "name": "BWHacker"
+"BRadvoc8" [
+   "name": "BRadvoc8"
    "publicKeys": ur:crypto-pubkeys/hdcxtbsrldcnldkplgsrtemwollopfhfaxuydaotptpdhtaadahtsaxlsdsdsaeaeae
    "purpose": "Building technology that protects vulnerable users"
    "values": "Privacy as a human right, user agency, harm prevention"
