@@ -128,7 +128,7 @@ throughout the recovery process, preserving relationships and trust.
   ```sh
   PRIMARY_KEY_PRIVATE=$(envelope generate prvkeys)
   PRIMARY_KEY_PUBLIC=$(envelope generate pubkeys $PRIMARY_KEY_PRIVATE)
-  XID_DOC=$(envelope xid new --nickname "BWHacker" $PRIMARY_KEY_PUBLIC)
+  XID_DOC=$(envelope xid new --nickname "BRadvoc8" $PRIMARY_KEY_PUBLIC)
   ```
 
 **Function-Specific Keys**:
@@ -176,7 +176,7 @@ XID(e4dd674b) [
     ]
     'key': PublicKeys(26a3ad59) [
         'allow': 'All'
-        'nickname': "BWHacker"
+        'nickname': "BRadvoc8"
     ]
     'key': PublicKeys(63a005e6) [
         'allow': 'Sign'
@@ -227,7 +227,7 @@ Initial Result:
 XID(e4dd674b) [
     'key': PublicKeys(26a3ad59) [
         'allow': 'All'
-        'nickname': "BWHacker"
+        'nickname': "BRadvoc8"
     ]
     'key': PublicKeys(92e399cd) [
         'allow': 'Encrypt'
@@ -241,7 +241,7 @@ Later Result:
 XID(e4dd674b) [
     'key': PublicKeys(26a3ad59) [
         'allow': 'All'
-        'nickname': "BWHacker"
+        'nickname': "BRadvoc8"
     ]
     'key': PublicKeys(92e399cd) [
         'allow': 'Encrypt'
@@ -312,7 +312,7 @@ XID(e4dd674b) [
     ]
     'key': PublicKeys(26a3ad59) [
         'allow': 'All'
-        'nickname': "BWHacker"
+        'nickname': "BRadvoc8"
     ]
     'key': PublicKeys(63a005e6) [
         'allow': 'Sign'
