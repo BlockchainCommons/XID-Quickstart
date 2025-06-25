@@ -271,7 +271,7 @@ A proper endorsement includes:
 4. **Specific Observations**:
 
    ```sh
-   ENDORSEMENT=$(envelope assertion add pred-obj string "observation" string "BWHacker designed innovative authentication system that exceeded security requirements" "$ENDORSEMENT")
+   ENDORSEMENT=$(envelope assertion add pred-obj string "observation" string "BRadvoc8 designed innovative authentication system that exceeded security requirements" "$ENDORSEMENT")
    ```
 
 5. **Basis for Endorsement**:
@@ -306,7 +306,7 @@ The result is as follows:
         "endorsementTarget": XID(32862dda)
         "endorser": "TechPM - Project Manager with 12 years experience"
         "endorserLimitation": "Limited technical background in cryptography"
-        "observation": "BWHacker designed innovative authentication system that exceeded security requirements"
+        "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
         "potentialBias": "Had management responsibility for project success"
         "relationship": "Direct project oversight as Project Manager"
     ]
@@ -372,7 +372,7 @@ The result will look like:
                 "endorsementTarget": XID(32862dda)
                 "endorser": "TechPM - Project Manager with 12 years experience"
                 "endorserLimitation": "Limited technical background in cryptography"
-                "observation": "BWHacker designed innovative authentication system that exceeded security requirements"
+                "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
                 "potentialBias": "Had management responsibility for project success"
                 "relationship": "Direct project oversight as Project Manager"
             ]
