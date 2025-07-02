@@ -1,5 +1,7 @@
 # Public Participation Profile Examples
 
+⚠️ _This documentation has not been fully checked and proofed like the rest of the core concepts. Please see the main [Public Participation Profiles article](public-participation-profiles.md) article for this content, as the examples in this addendum may not work._
+
 ## Expected Learning Outcomes
 By the end of this document, you will:
 - Understand how to implement practical participation profiles using XIDs and Gordian Envelopes
