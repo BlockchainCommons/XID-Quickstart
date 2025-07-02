@@ -21,10 +21,10 @@ protection.
 For many individuals like Amira, participating in projects creates a
 fundamental tension:
 
-- **Privacy Needs**: Protection from surveillance, discrimination,
-    retaliation, or unwanted exposure
 - **Contribution Desires**: Meaningful participation in projects
     aligned with their values and skills
+- **Privacy Needs**: Protection from surveillance, discrimination,
+    retaliation, or unwanted exposure
 
 Public participation profiles resolve this tension by creating
 structured, verifiable, [pseudonymous](pseudonymous-trust-building.md)
@@ -53,13 +53,44 @@ of participation:
 1. **Value Alignment**: How important is this project to personal values?
 2. **Trust Transferability**: Can trust built here transfer to other contexts?
 
-The risk-reward calculus determines what information to include in a
-public participation profile, following the principle of
-**proportional disclosure**: higher-value projects justify higher (but
-still minimal) disclosure.
+### Impact vs Disclosure
+
+A risk-reward calculus can now combine benefits into an impact
+potential and use that to assess what information to include in a public
+participation profile, following the principle of **proportional
+disclosure**: higher-value projects justify higher (but still minimal)
+disclosure.
 
 1. **Impact Potential**: How significant is the potential contribution?
 2. **Trust Threshold**: What's the minimum disclosure needed for the desired role?
+
+### Balancing Disclosure Across Project Types
+
+
+**Documentation Projects:**
+
+- **Minimal disclosure needed**: Basic pseudonymous identity and writing skills
+- **Focus on**: Quality of writing and accuracy of content
+- **Trust signals**: Clarity, completeness, and accuracy of contributions
+
+**Application Development:**
+
+- **Moderate disclosure needed**: Technical skills and collaboration abilities
+- **Focus on**: Code quality, testing practices, design approach
+- **Trust signals**: Pull request quality, test coverage, code reviews
+
+**Security-Critical Projects:**
+
+- **Significant trust required**: Security expertise and ethical commitment
+- **Focus on**: Security knowledge, threat modeling ability, ethics
+- **Trust signals**: Security-focused contributions, vulnerability handling
+
+**Governance Participation:**
+
+- **Highest trust requirements**: Long-term commitment and values alignment
+- **Focus on**: Project values, decision-making approach, conflict resolution
+- **Trust signals**: Consistent demonstration of project values, contribution history
+
 
 ## Core Components of Participation Profiles
 
@@ -69,35 +100,20 @@ that balance privacy and trust:
 ### 1. Stable Pseudonymous Identifier
 
 The foundation of a participation profile is a stable,
-cryptographically-verifiable identifier that doesn't reveal real-world
-identity:
-
-```sh
-# Create a stable pseudonymous identifier
-SEED=$(envelope generate seed)
-ur:seed/oyadgdmubaaewfoxskkobsjsnelfndbkgmylurlsdlfyke
-PRIVATE_KEY=$(envelope generate prvkeys --seed $SEED)
-PUBLIC_KEY=$(envelope generate pubkeys $PRIVATE_KEY)
-PROFILE_XID=$(envelope xid new --nickname "BRadvoc8" "$PUBLIC_KEY")
-```
+cryptographically-verifiable identifier, such as a XID, that doesn't
+reveal real-world identity.
 
 The XID provides:
-- Cryptographic verification of control (via private key)
 - Consistent identity across interactions
 - No inherent connection to real-world identity
+- Cryptographic verification of control of identity (via private key)
 
 _For more, see [XID Fundamentals](xid.md)._
 
 ### 2. Value and Purpose Statements
 
 Value statements establish alignment without revealing personal
-background:
-
-```sh
-# Add value and purpose assertions
-PROFILE_XID=$(envelope assertion add pred-obj string "purpose" string "Contributing to privacy-preserving systems that protect vulnerable populations" "$PROFILE_XID")
-PROFILE_XID=$(envelope assertion add pred-obj string "values" string "Privacy as a human right, user agency, ethical data use" "$PROFILE_XID")
-```
+background.
 
 Effective privacy-respecting value statements:
 - Focus on universal principles rather than specific circumstances
@@ -105,18 +121,10 @@ Effective privacy-respecting value statements:
 - Demonstrate alignment without revealing motivations
 - Show commitment to ethical practices
 
-
 ### 3. Self-Attestations of Technical Capability
 
 Self-attestations establish baseline skills and experience, again
-without specific identity disclosure:
-
-```sh
-# Add technical capability self-attestations
-PROFILE_XID=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$PROFILE_XID")
-PROFILE_XID=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional development" "$PROFILE_XID")
-PROFILE_XID=$(envelope assertion add pred-obj string "coreSkills" string "Cryptographic protocols, distributed consensus, mobile security" "$PROFILE_XID")
-```
+without specific identity disclosure.
 
 Effective privacy-respecting self-attestations:
 - Focus on relevant skills, not chronological history
@@ -124,23 +132,15 @@ Effective privacy-respecting self-attestations:
 - Express experience in years rather than dates
 - Highlight distinctive capabilities without uniquely identifying details
 
-_For more, see [Attestation & Endorsement Model](attestation-endorsement-model.md)._
+_For more, see [Attestation & Endorsement
+Model](attestation-endorsement-model.md)._
 
 ### 4. Verifiable Evidence Commitments
 
 Some values or self-attestations might need to be hidden from the
 general public, while the identity still commits to them. This can be
 done with evidence commitments, which allow contributors to prove
-capabilities without revealing sensitive information:
-
-```sh
-# Create evidence commitment
-PROJECT_SUMMARY="Designed privacy-preserving location system for safety applications"
-SUMMARY_HASH=$(echo "$PROJECT_SUMMARY" | shasum -a 256 | awk '{print $1}')
-SUMMARY_HASH_BW=$(bytewords -i hex "5820"$SUMMARY_HASH -o minimal)
-SUMMARY_HASH_UR="ur:digest/"$SUMMARY_HASH_BW
-PROFILE_XID=$(envelope assertion add pred-obj string "evidenceCommitment" digest "$SUMMARY_HASH_UR" "$PROFILE_XID")
-```
+capabilities without revealing sensitive information.
 
 Evidence commitments enable:
 - Cryptographic verification that evidence existed at a certain time
@@ -154,35 +154,54 @@ Building](pseudonymous-trust-building.md).__
 ### 5. Peer Attestations and Endorsements
 
 Peer attestations provide independent verification while preserving
-pseudonymity:
-
-```sh
-# Add peer attestation from another pseudonymous contributor
-PROFILE_XID=$(envelope assertion add pred-obj string peerEndorsements envelope $SIGNED_ENDORSEMENT $PROFILE_XID)
-
-```
+pseudonymity.
 
 There is less concern about peer endorsements being specifically
-privacy-preserving, because they likely came from peers who have only interacted with the pseudonymous identity.Effective peer attestations:
+privacy-preserving, because they likely came from peers who have only
+interacted with the pseudonymous identity.
+
+Effective peer attestations:
 
 - Come from other trusted community members
 - Verify specific skills or contributions
 - Provide context about collaborative relationship
 - Include cryptographic signatures for verification
 
+_For more, see [Attestation & Endorsement
+Model](attestation-endorsement-model.md)._
+
+But of course there's the opportunity for more expansion in the
+future, as part of a participation profile lifecycle.
+
+## Best Practices for Participation Profiles
+
+1. **Start Minimal**: Begin with the least amount of disclosure needed for initial contribution.
+2. **Focus on Evidence**: Emphasize verifiable work rather than credentials or background.
+3. **Collect Targeted Endorsements**: Gather attestations specific to relevant skills and contexts.
+4. **Use Elision Strategically**: Create context-appropriate views for different interactions.
+5. **Update Progressively**: Add information gradually as trust develops.
+6. **Maintain Context Separation**: Use different profiles for different domains if necessary.
+7. **Document Boundaries**: Clearly communicate what information you will and won't share.
+8. **Establish Verification Methods**: Define how others can verify your contributions
+9. **Build Consistent Patterns**: Establish recognizable work patterns without revealing identity
+10. **Consider Recovery Options**: Plan for key management and profile recovery
+
+
 ## The Participation Profile Lifecycle
 
 Public participation profiles evolve over time through a structured
-lifecycle:
+lifecycle.
 
 ### Phase 1: Initial Participation
 
-Start with minimal disclosure focusing on:
+Start with minimal disclosure:
 
-- Create basic pseudonymous identifier
-- Commit to project values
-- Define general skill areas
-- Offer small initial contributions
+- Create basic pseudonymous identifier.
+- Commit to project values.
+- Define general skill areas.
+- Elide information that is too private; and/or
+   - Create evidence commitments for future usage.
+- Offer small initial contributions.
 
 This phase establishes basic presence with minimal privacy risk.
 
@@ -190,10 +209,10 @@ This phase establishes basic presence with minimal privacy risk.
 
 Build trust through validated contributions:
 
-- Contribute solutions relevant to the project
-- Test implementations of project features
-- Offer specific technical skills with evidence
-- Provide work samples that can be evaluated on merit
+- Contribute solutions relevant to the project.
+- Test implementations of project features.
+- Offer specific technical skills with evidence.
+- Provide work samples that can be evaluated on merit.
 
 This phase demonstrates capabilities without revealing background.
 
@@ -201,10 +220,14 @@ This phase demonstrates capabilities without revealing background.
 
 Strengthen trust through peer relationships:
 
-- Consistently contribute to project
-- Deepen engagement within safe boundaries
-- Target endorsements from community members
-- Request collaboration attestations showing teamwork
+- Consistently contribute to project.
+- Deepen engagement within safe boundaries.
+- Reveal commitments to specific individual as trust progresses; and/or
+   - Remove elisions.
+- Target endorsements from community members.
+- Request collaboration attestations showing teamwork.
+- Incorporate endorsements and attestations into profile.
+- Create trust networks among peers.
 
 This phase establishes community trust while maintaining privacy.
 
@@ -212,96 +235,335 @@ This phase establishes community trust while maintaining privacy.
 
 Take on greater responsibility based on earned trust:
 
-- Offer leadership in specific domain areas
-- Expand decision-making authority
-- Provide mentorship to newer contributors
-- Take on component ownership or maintenance
+- Offer leadership in specific domain areas.
+- Expand decision-making authority.
+- Provide mentorship to newer contributors.
+- Take on component ownership or maintenance.
 
 This phase leverages established trust for greater impact.
 
-## Balancing Disclosure Across Project Types
+### Phase 5: Profile Updates
 
-Different projects require different levels of trust and disclosure:
+Engage in logistical updates of profiles as necessary.
 
-### Documentation Projects
+- Change goals or values.
+- Add self-attestations for experience.
+- Remove or rotate keys.
+- Revoke profile.
 
-- **Minimal disclosure needed**: Basic pseudonymous identity and writing skills
-- **Focus on**: Quality of writing and accuracy of content
-- **Trust signals**: Clarity, completeness, and accuracy of contributions
+_Also see ["The Progressive Trust
+Module"](pseudonymous-trust-building.md#the-progressive-trust-model-expanding-the-life-cycle)
+for Pseudonymous Trust Building._
 
-### Application Development
+## Verifying Public Contributions
 
-- **Moderate disclosure needed**: Technical skills and collaboration abilities
-- **Focus on**: Code quality, testing practices, design approach
-- **Trust signals**: Pull request quality, test coverage, code reviews
-
-### Security-Critical Projects
-
-- **Significant trust required**: Security expertise and ethical commitment
-- **Focus on**: Security knowledge, threat modeling ability, ethics
-- **Trust signals**: Security-focused contributions, vulnerability handling
-
-### Governance Participation
-
-- **Highest trust requirements**: Long-term commitment and values alignment
-- **Focus on**: Project values, decision-making approach, conflict resolution
-- **Trust signals**: Consistent demonstration of project values, contribution history
-
-## Using XIDs for Participation Profiles
-
-XIDs provide ideal infrastructure for participation profiles through:
-
-### 1. Cryptographic Verifiability
-
-XIDs use public key cryptography to verify control without revealing identity:
+A XID's public key can be used to verify contributions without
+revealing identity.
 
 ```sh
 # Verify contribution signature
 envelope verify -v "$PUBLIC_KEY" "$SIGNED_CONTRIBUTION"
 ```
 
-### 2. Selective Disclosure
 
-Gordian Envelopes enable context-specific views of the same profile:
+## Practical Implementation: Public Participation Profiles
+
+### 1. Stable Pseudonymous Identifier
+
+```sh
+# Create a stable pseudonymous identifier
+SEED=$(envelope generate seed)
+ur:seed/oyadgdonrysoladirysspriofnbtlgcegoykpraabelfsp
+PRIVATE_KEY=$(envelope generate prvkeys --seed $SEED)
+PUBLIC_KEY=$(envelope generate pubkeys $PRIVATE_KEY)
+PROFILE_XID=$(envelope xid new --nickname "BRadvoc8" "$PUBLIC_KEY")
+XID=$(envelope xid id "$PROFILE_XID")
+```
+
+```
+XID(e94de728) [
+    'key': PublicKeys(71e87c7e) [
+        'allow': 'All'
+        'nickname': "BRadvoc8"
+    ]
+]
+```
+
+### 2. Value and Purpose Statements
+
+```sh
+# Add value and purpose assertions
+PROFILE_XID=$(envelope assertion add pred-obj string "purpose" string "Contributing to privacy-preserving systems that protect vulnerable populations" "$PROFILE_XID")
+PROFILE_XID=$(envelope assertion add pred-obj string "values" string "Privacy as a human right, user agency, ethical data use" "$PROFILE_XID")
+```
+
+```
+XID(e94de728) [
+    "purpose": "Contributing to privacy-preserving systems that protect vulnerable populations"
+    "values": "Privacy as a human right, user agency, ethical data use"
+    'key': PublicKeys(71e87c7e) [
+        'allow': 'All'
+        'nickname': "BRadvoc8"
+    ]
+]
+```
+
+### 3. Self-Attestations of Technical Capability
+
+```sh
+# Add technical capability self-attestations
+PROFILE_XID=$(envelope assertion add pred-obj string "domain" string "Distributed Systems & Security" "$PROFILE_XID")
+PROFILE_XID=$(envelope assertion add pred-obj string "experienceLevel" string "8 years professional development" "$PROFILE_XID")
+PROFILE_XID=$(envelope assertion add pred-obj string "coreSkills" string "Cryptographic protocols, distributed consensus, mobile security" "$PROFILE_XID")
+```
+
+```
+XID(e94de728) [
+    "coreSkills": "Cryptographic protocols, distributed consensus, mobile security"
+    "domain": "Distributed Systems & Security"
+    "experienceLevel": "8 years professional development"
+    "purpose": "Contributing to privacy-preserving systems that protect vulnerable populations"
+    "values": "Privacy as a human right, user agency, ethical data use"
+    'key': PublicKeys(71e87c7e) [
+        'allow': 'All'
+        'nickname': "BRadvoc8"
+    ]
+]
+```
+
+### 4. Verifiable Evidence Commitments
+
+```sh
+# Create evidence commitment
+PROJECT_SUMMARY="Designed privacy-preserving location system for safety applications"
+SUMMARY_HASH=$(echo "$PROJECT_SUMMARY" | shasum -a 256 | awk '{print $1}')
+SUMMARY_HASH_BW=$(bytewords -i hex "5820"$SUMMARY_HASH -o minimal)
+SUMMARY_HASH_UR="ur:digest/"$SUMMARY_HASH_BW
+PROFILE_XID=$(envelope assertion add pred-obj string "evidenceCommitment" digest "$SUMMARY_HASH_UR" "$PROFILE_XID")
+```
+
+```
+XID(e94de728) [
+    "coreSkills": "Cryptographic protocols, distributed consensus, mobile security"
+    "domain": "Distributed Systems & Security"
+    "evidenceCommitment": Digest(c0d10cdd)
+    "experienceLevel": "8 years professional development"
+    "purpose": "Contributing to privacy-preserving systems that protect vulnerable populations"
+    "values": "Privacy as a human right, user agency, ethical data use"
+    'key': PublicKeys(71e87c7e) [
+        'allow': 'All'
+        'nickname': "BRadvoc8"
+    ]
+]
+```
+
+### 5. Peer Attestations and Endorsements
+
+```sh
+# Add peer attestation from another pseudonymous contributor
+PROFILE_XID=$(envelope assertion add pred-obj string peerEndorsements envelope $SIGNED_ENDORSEMENT $PROFILE_XID)
+```
+
+```
+XID(e94de728) [
+    "coreSkills": "Cryptographic protocols, distributed consensus, mobile security"
+    "domain": "Distributed Systems & Security"
+    "evidenceCommitment": Digest(c0d10cdd)
+    "experienceLevel": "8 years professional development"
+    "peerEndorsements": {
+        "Endorsement: Financial API Project" [
+            "basis": "Direct observation throughout the project plus review of metrics"
+            "endorsementTarget": XID(e94de728)
+            "endorser": "TechPM - Project Manager with 12 years experience"
+            "endorserLimitation": "Limited technical background in cryptography"
+            "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
+            "potentialBias": "Had management responsibility for project success"
+            "relationship": "Direct project oversight as Project Manager"
+        ]
+    } [
+        'signed': Signature
+    ]
+    "purpose": "Contributing to privacy-preserving systems that protect vulnerable populations"
+    "values": "Privacy as a human right, user agency, ethical data use"
+    'key': PublicKeys(71e87c7e) [
+        'allow': 'All'
+        'nickname': "BRadvoc8"
+    ]
+]
+```
+
+## Practical Implementation: The Participation Profile Lifecycle
+
+A public participation profile can continue to change over
+time. Following are examples of some of the changes that might occur
+as part of a participation profile lifecycle.
+
+### 1. Selective Disclosure
+
+Gordian Envelopes enable context-specific views of the same
+profile. This may be used early in a participation profile lifecycle
+to limit disclosure.
 
 ```sh
 # Create context-specific view for a technical collaboration
-TECHNICAL_VIEW=$(envelope elide assertion predicate string "purpose" "$PROFILE_XID" 1)
+PROFILE_PURPOSE=$(envelope assertion find predicate string "purpose" $PROFILE_XID)
+TECHNICAL_VIEW=$(envelope elide removing $PROFILE_PURPOSE $PROFILE_XID)
 ```
 
-### 3. Progressive Trust Building
+```
+XID(e94de728) [
+    "coreSkills": "Cryptographic protocols, distributed consensus, mobile security"
+    "domain": "Distributed Systems & Security"
+    "evidenceCommitment": Digest(c0d10cdd)
+    "experienceLevel": "8 years professional development"
+    "peerEndorsements": {
+        "Endorsement: Financial API Project" [
+            "basis": "Direct observation throughout the project plus review of metrics"
+            "endorsementTarget": XID(e94de728)
+            "endorser": "TechPM - Project Manager with 12 years experience"
+            "endorserLimitation": "Limited technical background in cryptography"
+            "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
+            "potentialBias": "Had management responsibility for project success"
+            "relationship": "Direct project oversight as Project Manager"
+        ]
+    } [
+        'signed': Signature
+    ]
+    "values": "Privacy as a human right, user agency, ethical data use"
+    'key': PublicKeys(71e87c7e) [
+        'allow': 'All'
+        'nickname': "BRadvoc8"
+    ]
+    ELIDED
+]
+```
 
-XIDs support the gradual addition of attestations and endorsements:
+### 2. Progressive Trust Building
+
+XIDs support the gradual addition of attestations and
+endorsements. This "Reputation Development" occurs after early rounds
+of the Participation Profile Liifecycle and allows for the addition of
+more endorsements over time.
 
 ```sh
 # Add new peer attestation after successful collaboration
-UPDATED_PROFILE=$(envelope assertion add pred-obj string "peerAttestation" envelope "$NEW_ENDORSEMENT" "$PROFILE_XID")
+UPDATED_PROFILE=$(envelope assertion add pred-obj string "peerEndorsements" envelope "$SIGNED_NEW_ENDORSEMENT" "$PROFILE_XID")
 ```
 
-### 4. Revocable Credentials
+```
+XID(e94de728) [
+    "coreSkills": "Cryptographic protocols, distributed consensus, mobile security"
+    "domain": "Distributed Systems & Security"
+    "evidenceCommitment": Digest(c0d10cdd)
+    "experienceLevel": "8 years professional development"
+    "peerEndorsements": {
+        "Endorsement: Financial API Project" [
+            "basis": "Direct observation throughout the project plus review of metrics"
+            "endorsementTarget": XID(e94de728)
+            "endorser": "TechPM - Project Manager with 12 years experience"
+            "endorserLimitation": "Limited technical background in cryptography"
+            "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
+            "potentialBias": "Had management responsibility for project success"
+            "relationship": "Direct project oversight as Project Manager"
+        ]
+    } [
+        'signed': Signature
+    ]
+    "peerEndorsements": {
+        "Endorsement: Financial Privacy Project" [
+            "endorsementTarget": XID(e94de728)
+            "endorser": "architect of nuPri privacy format"
+            "observation": "BRadvoc8 implemented my architecture quickly and accurately, but also offered refinements which improvements! A++++"
+        ]
+    } [
+        'signed': Signature
+    ]
+    "purpose": "Contributing to privacy-preserving systems that protect vulnerable populations"
+    "values": "Privacy as a human right, user agency, ethical data use"
+    'key': PublicKeys(71e87c7e) [
+        'allow': 'All'
+        'nickname': "BRadvoc8"
+    ]
+]
+```
 
-XIDs support credential revocation if circumstances change:
+### 3. Revocable Credentials
+
+XIDs support revocation of a profile if circumstances change:
 
 ```sh
 # Update status of a credential
-REVOCATION_STATUS=$(envelope subject type string "CredentialStatus")
-REVOCATION_STATUS=$(envelope assertion add pred-obj string "status" string "revoked" "$REVOCATION_STATUS")
-REVOCATION_STATUS=$(envelope assertion add pred-obj string "revocationDate" string "2023-11-30" "$REVOCATION_STATUS")
+WRAPPED_XID=$(envelope subject type wrapped $PROFILE_XID)
+WRAPPED_XID=$(envelope assertion add pred-obj string "credentialStatus" string "revoked" "$WRAPPED_XID")
+WRAPPED_XID=$(envelope assertion add pred-obj string "revocationDate" string "2023-11-30" $WRAPPED_XID)
+WRAPPED_REVOCATION=$(envelope subject type wrapped $WRAPPED_XID)
+SIGNED_REVOCATION=$(envelope sign -s $PRIVATE_KEY $WRAPPED_REVOCATION)
 ```
 
-### 5. Trust Networks
+```
+{
+    {
+        XID(e94de728) [
+            "coreSkills": "Cryptographic protocols, distributed consensus, mobile security"
+            "domain": "Distributed Systems & Security"
+            "evidenceCommitment": Digest(c0d10cdd)
+            "experienceLevel": "8 years professional development"
+            "peerEndorsements": {
+                "Endorsement: Financial API Project" [
+                    "basis": "Direct observation throughout the project plus review of metrics"
+                    "endorsementTarget": XID(e94de728)
+                    "endorser": "TechPM - Project Manager with 12 years experience"
+                    "endorserLimitation": "Limited technical background in cryptography"
+                    "observation": "BRadvoc8 designed innovative authentication system that exceeded security requirements"
+                    "potentialBias": "Had management responsibility for project success"
+                    "relationship": "Direct project oversight as Project Manager"
+                ]
+            } [
+                'signed': Signature
+            ]
+            "purpose": "Contributing to privacy-preserving systems that protect vulnerable populations"
+            "values": "Privacy as a human right, user agency, ethical data use"
+            'key': PublicKeys(71e87c7e) [
+                'allow': 'All'
+                'nickname': "BRadvoc8"
+            ]
+        ]
+    } [
+        "credentialStatus": "revoked"
+        "revocationDate": "2023-11-30"
+    ]
+} [
+    'signed': Signature
+]
+```
+
+### 4. Trust Networks
 
 XIDs enable networks of verified relationships between pseudonymous identities:
 
 ```sh
 # Establish trust relationship between pseudonyms
-TRUST_ASSERTION=$(envelope subject type string "TrustRelationship")
-TRUST_ASSERTION=$(envelope assertion add pred-obj string "trusts" string "$TARGET_XID" "$TRUST_ASSERTION")
-TRUST_ASSERTION=$(envelope assertion add pred-obj string "context" string "Code Review" "$TRUST_ASSERTION")
-TRUST_ASSERTION=$(envelope assertion add pred-obj string "trustLevel" string "0.8" "$TRUST_ASSERTION")
+XID_TRUST=$XID
+XID_TRUST=$(envelope assertion add pred-obj string "trusts" string "$TARGET_XID" "$XID_TRUST")
+XID_TRUST=$(envelope assertion add pred-obj string "context" string "Code Review" "$XID_TRUST")
+XID_TRUST=$(envelope assertion add pred-obj string "trustLevel" string "0.8" "$XID_TRUST")
+XID_TRUST_WRAPPED=$(envelope subject type wrapped $XID_TRUST)
+XID_TRUST_SIGNED=$(envelope sign -s $PRIVATE_KEY $XID_TRUST_WRAPPED)
 ```
 
-## Practical Examples of Participation Profiles
+```
+{
+    XID(e94de728) [
+        "context": "Code Review"
+        "trustLevel": "0.8"
+        "trusts": "ur:xid/hdcximlecmgugsgdeymkhdoxcyjswyonnebyaykepsjtjktkvwpywktolpkotsbspdoldeecwsfh"
+    ]
+} [
+    'signed': Signature
+]
+```
+
+## Practical Implementation: Examples of Participation Profiles
 
 ### Technical Skills Profile
 
@@ -348,19 +610,6 @@ TRUST_ASSERTION=$(envelope assertion add pred-obj string "trustLevel" string "0.
 ]
 ```
 
-## Best Practices for Participation Profiles
-
-1. **Start Minimal**: Begin with the least amount of disclosure needed for initial contribution
-2. **Focus on Evidence**: Emphasize verifiable work rather than credentials or background
-3. **Collect Targeted Endorsements**: Gather attestations specific to relevant skills and contexts
-4. **Use Elision Strategically**: Create context-appropriate views for different interactions
-5. **Update Progressively**: Add information gradually as trust develops
-6. **Maintain Context Separation**: Use different profiles for different domains if necessary
-7. **Document Boundaries**: Clearly communicate what information you will and won't share
-8. **Establish Verification Methods**: Define how others can verify your contributions
-9. **Build Consistent Patterns**: Establish recognizable work patterns without revealing identity
-10. **Consider Recovery Options**: Plan for key management and profile recovery
-
 ## Check Your Understanding
 
 1. Why might someone like Amira need a public participation profile rather than using their real identity?
@@ -371,8 +620,8 @@ TRUST_ASSERTION=$(envelope assertion add pred-obj string "trustLevel" string "0.
 
 ## Next Steps
 
-- See practical implementation examples in [Public Participation Profile Examples](public-participation-profile-examples.md)
+- See practical implementation examples in [Public Participation Profile Examples](public-participation-profile-examples.md) [currently out of date]
 - Apply these concepts in [Tutorial 1: Your First XID](../tutorials/01-your-first-xid.md)
-- Learn about [Fair Witness Approach](fair-witness-approach.md) for making credible attestations
 - Explore [Progressive Trust Life Cycle](progressive-trust-lifecycle.md) for a structured approach to disclosure
+- Learn about [Fair Witness Approach](fair-witness-approach.md) for making credible attestations
 - Try creating different profile views with [Tutorial 3: Self-Attestation with XIDs](../tutorials/03-self-attestation-with-xids.md)
