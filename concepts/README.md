@@ -85,7 +85,7 @@ These concepts explore additional aspects of privacy, identity, and key manageme
    - *Balancing privacy needs with contribution desires*
    - *Risk-reward calculus for different disclosure levels*
 
-2. [Public Participation Profile Examples] [not currently update]
+2. [Public Participation Profile Examples] [not currently updated]
    - *Practical implementations of participation profiles using XIDs*
    - *Context-specific profile views through selective disclosure*
    - *Comprehensive assertion taxonomy for different trust levels*
