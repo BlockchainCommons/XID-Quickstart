@@ -32,27 +32,17 @@ This document outlines a streamlined approach to teaching XIDs (eXtensible IDent
 
 ### Conceptual Documentation
 
-To help users understand the theoretical foundations behind XIDs, we provide conceptual documentation:
-
-1. [XID Fundamentals](concepts/xid-fundamentals.md) - Understanding the basics of eXtensible IDentifiers
-2. [Gordian Envelope Basics](concepts/gordian-envelope-basics.md) - The data structure that powers XIDs
-3. [Data Minimization Principles](concepts/data-minimization-principles.md) - How to control information disclosure
-4. [Elision Cryptography](concepts/elision-cryptography.md) - Techniques for selective disclosure
-5. [Fair Witness Approach](concepts/fair-witness-approach.md) - Making trustworthy assertions
-6. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
-7. [Public Participation Profiles](concepts/public-participation-profiles.md) - Using XIDs in community contexts
-8. [Public Participation Profile Examples](concepts/public-participation-profile-examples.md) - Real-world examples of profiles
-9. [Key Management Essentials](concepts/key-management-essentials.md) - Securing and managing cryptographic keys
+The [concepts guide](concepts/README.md) explains the theoretical foundations. Read concepts before tutorials if you prefer understanding "why" before "how," or reference them as needed during hands-on work.
 
 ### Hands-on Tutorials
 
 The tutorials provide practical, step-by-step instructions for working with XIDs:
 
-1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Learn to create a basic pseudonymous identity
-2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Explore how XIDs are structured
-3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Create structured self-claims with verifiable evidence
-4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Build a network of trust through independent verification
-5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Master secure key management for XIDs
+1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Generate and verify a basic XID
+2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Examine XID components and add assertions
+3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Make verifiable claims about yourself
+4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Create and accept third-party endorsements
+5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Rotate keys while maintaining identity
 
 ## Recommended Learning Approach
 
@@ -67,15 +57,16 @@ For the most effective learning experience:
 
 | Concept | Related Tutorial |
 |---------|------------------|
-| XID Fundamentals | Tutorial 1: Creating Your First XID |
-| Gordian Envelope Basics | Tutorial 1 & 2 |
-| Data Minimization Principles | Tutorial 2: Understanding XID Structure |
-| Elision Cryptography | Tutorial 2: Understanding XID Structure |
-| Fair Witness Approach | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
-| Attestation & Endorsement Model | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
-| Pseudonymous Trust Building | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
-| Public Participation Profiles | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
-| Key Management Essentials | Tutorial 5: Key Management with XIDs |
+| [XID](concepts/xid.md) | Tutorial 1: Creating Your First XID |
+| [Gordian Envelope](concepts/gordian-envelope.md) | Tutorial 1 & 2 |
+| [Data Minimization](concepts/data-minimization.md) | Tutorial 2: Understanding XID Structure |
+| [Elision Cryptography](concepts/elision-cryptography.md) | Tutorial 2: Understanding XID Structure |
+| [Fair Witness](concepts/fair-witness.md) | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
+| [Attestation & Endorsement Model](concepts/attestation-endorsement-model.md) | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
+| [Progressive Trust](concepts/progressive-trust.md) | Tutorial 4: Peer Endorsement |
+| [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
+| [Public Participation Profiles](concepts/public-participation-profiles.md) | Tutorial 3 & 4: Self-Attestation and Peer Endorsement |
+| [Key Management](concepts/key-management.md) | Tutorial 5: Key Management with XIDs |
 
 ## Learning Outcomes
 
