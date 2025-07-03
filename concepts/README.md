@@ -1,6 +1,43 @@
-# XID Tutorial: Core Concepts
+# XID Concepts: Understanding the Foundation
+
+## What This Is & Why To Read It
+
+This guide documents the conceptual foundation of eXtensible IDentifiers (XIDs) and the Gordian architecture. These concepts explain how XIDs work, why specific design choices were made, and how the components interact to create a privacy-preserving identity system.
+
+### First Time Here?
+
+XIDs (eXtensible IDentifiers) are 32-byte cryptographic identifiers derived from public keys. They provide:
+- Stable identifiers that persist through key rotation and device changes
+- Selective disclosure through cryptographic elision (removal of data while maintaining verifiability)
+- Gradual trust building without requiring legal identity disclosure
+- User control over identity data and disclosure decisions
+
+This is experimental technology. The implementations continue to evolve as we explore the implications of elision-first design and progressive trust models.
+
+Reading these concepts helps you:
+- Understand the cryptographic and architectural principles before implementation
+- Learn the privacy and security trade-offs in identity system design
+- Contribute to the development of self-sovereign identity
+
+Key topics covered:
+- How XIDs maintain stable identifiers through key changes
+- Cryptographic techniques for selective disclosure
+- Trust building without identity revelation
+- Practical identity management frameworks
+
+## Quick Start Guide
+
+**New to XIDs?** Start with these three essential concepts:
+1. [XID](xid.md) - What XIDs are and why they matter (10 min)
+2. [Gordian Envelope](gordian-envelope.md) - The data structure that makes it work (15 min)
+3. [Data Minimization](data-minimization.md) - The privacy philosophy behind XIDs (10 min)
+
+**Ready to implement?** Jump to [Tutorial 1: Creating Your First XID](../tutorials/01-your-first-xid.md)
+
+**Experienced developer?** Use the [Concept Map](#concept-map) to navigate directly to topics of interest.
 
 ## Table of Contents
+- [Quick Start Guide](#quick-start-guide)
 - [Introduction to XIDs and Gordian Architecture](#introduction-to-xids-and-gordian-architecture)
 - [Core Concepts](#core-concepts)
 - [Trust Model Concepts](#trust-model-concepts)
@@ -10,90 +47,91 @@
 - [Reading Approach](#reading-approach)
 - [Questions to Consider](#questions-to-consider)
 - [Next Steps](#next-steps)
+- [Acknowledgments](#acknowledgments)
 
 ## Introduction to XIDs and Gordian Architecture
 
-The XID-Quickstart tutorial introduces developers to the Gordian architecture—a comprehensive technology stack developed by Blockchain Commons that embodies the principles of self-sovereign identity, data minimization, and progressive trust building. 
+The XID-Quickstart tutorial introduces the Gordian architecture—a technology stack developed by Blockchain Commons that implements self-sovereign identity, data minimization, and progressive trust building.
 
-The Gordian architecture consists of several components that work together to enable user-controlled digital identity and data:
-- **XIDs** (eXtensible IDentifiers): Privacy-respecting digital identifiers
-- **Gordian Envelopes**: Smart document format for selective disclosure
-- **Cryptographic libraries**: Underlying tools for security and verification
+The Gordian architecture includes:
+- **XIDs** (eXtensible IDentifiers): Privacy-preserving digital identifiers
+- **Gordian Envelopes**: Document format for selective disclosure
+- **Cryptographic libraries**: Tools for security and verification
 
-XIDs demonstrate how the Gordian architecture enables:
-- **Self-sovereign identity**: Complete user control over digital identity
-- **Data minimization**: Sharing only what's necessary in each context
+XIDs demonstrate how the Gordian architecture provides:
+- **Self-sovereign identity**: User control over digital identity
+- **Data minimization**: Sharing only necessary information
 - **Progressive trust**: Building verifiable reputation over time
-- **Key resilience**: Maintaining identity stability through key changes
+- **Key resilience**: Identity stability through key changes
 
-By understanding these concepts, you'll learn how to create systems where users maintain complete control over their digital identities while selectively building verifiable reputation.
+These concepts explain how users control their digital identities while building verifiable reputation.
 
 ## Core Concepts
 
 If you're new to XIDs and Gordian Envelopes, start with these fundamental concepts:
 
 1. [XID](xid.md) - Understanding eXtensible IDentifiers
-   - *Digital identifiers that put people in control of their digital identity*
-   - *Cryptographically verifiable, stable, and privacy-respecting*
-   - *Foundation for all the concepts and tutorials in this guide*
+   - 32-byte cryptographic identifiers derived from public key hashes
+   - Remain stable through key rotation, device changes, and recovery procedures
+   - Enable consistent pseudonymous identity across time and contexts
 
 2. [Gordian Envelope](gordian-envelope.md) - The data structure that powers XIDs
-   - *A powerful metadata container using subject-assertion-object model*
-   - *Enables selective disclosure through cryptographic elision*
-   - *Supports signed, verifiable claims while preserving privacy*
+   - Structured data format using subject-predicate-object triples
+   - Supports cryptographic signing, encryption, and selective disclosure
+   - Maintains document verifiability after data removal
 
 3. [Data Minimization](data-minimization.md) - Controlling information disclosure
-   - *The principle of sharing only necessary information*
-   - *Reducing privacy and security risks through minimal disclosure*
-   - *Balance between trust building and privacy protection*
+   - Principle of sharing only necessary information for each interaction
+   - Techniques for progressive disclosure as trust relationships develop
+   - Methods to balance transparency requirements with privacy needs
 
 4. [Elision Cryptography](elision-cryptography.md) - The cryptography of selective disclosure
-   - *Mathematical foundations for removing data while preserving integrity*
-   - *Cryptographic techniques using hashed elision and Merkle trees*
-   - *Enables verification of document integrity even with parts removed*
+   - Mathematical foundations for removing data while preserving integrity
+   - Merkle trees and salted hashes prevent correlation of elided data
+   - Enables partial document disclosure with cryptographic proof
 
 ## Trust Model Concepts
 
 These concepts cover how trust is built, verified, and managed in a privacy-preserving environment:
 
 1. [Fair Witness](fair-witness.md) - Making trustworthy assertions
-   - *Framework for creating verifiable assertions about observations*
-   - *Based on the legal concept of an impartial observer*
-   - *Supports reliable claims without central authority*
+   - Framework requiring transparency about context, methodology, and limitations
+   - Explicit disclosure of potential biases and observational constraints
+   - Applies to both self-attestations and peer endorsements
 
 2. [Attestation & Endorsement Model](attestation-endorsement-model.md) - Framework for claims and verification
-   - *Self-attestations: structured claims about your own skills or experiences*
-   - *Peer endorsements: verification from others that strengthens credibility*
-   - *Creating balanced, verifiable claims with appropriate evidence*
+   - Self-attestations: structured claims about personal capabilities
+   - Verifiable self-attestations: claims with independently checkable evidence
+   - Peer endorsements: third-party verification requiring recipient acceptance
 
 3. [Progressive Trust](progressive-trust.md) - Building trust incrementally over time
-   - *Trust development as a multi-phase lifecycle with 10 distinct phases*
-   - *Moving through stages from initial contact to trusted relationship*
-   - *Context-specific trust thresholds and risk evaluation*
+   - Ten-phase lifecycle from initial contact to sustained collaboration
+   - Context-specific trust evaluations based on risk assessment
+   - Restores human agency in trust decisions
 
 4. [Pseudonymous Trust Building](pseudonymous-trust-building.md) - Building trust without revealing identity
-   - *Creating reputation without disclosing legal identity*
-   - *Balancing privacy protection with meaningful contribution*
-   - *Methods for establishing credibility pseudonymously*
+   - Reputation building through cryptographic evidence commitments
+   - Iterative trust lifecycles that expand based on demonstrated reliability
+   - Peer endorsements that establish credibility without legal identity
 
 ## Privacy & Identity Concepts
 
 These concepts explore additional aspects of privacy, identity, and key management:
 
 1. [Public Participation Profiles](public-participation-profiles.md) - Managing public identity and reputation
-   - *Structured frameworks for participating in public projects*
-   - *Balancing privacy needs with contribution desires*
-   - *Risk-reward calculus for different disclosure levels*
+   - Framework combining XIDs, attestations, and progressive trust concepts
+   - Structured lifecycle for project participation with privacy preservation
+   - Risk-based disclosure strategies for different contribution contexts
 
-2. [Public Participation Profile Examples] [not currently updated]
-   - *Practical implementations of participation profiles using XIDs*
-   - *Context-specific profile views through selective disclosure*
-   - *Comprehensive assertion taxonomy for different trust levels*
+2. [Public Participation Profile Examples](public-participation-profile-examples.md) - Assertion taxonomy for trust levels
+   - Preliminary taxonomy of assertions for participation contexts
+   - Progressive disclosure patterns from anonymous to identified participation
+   - Note: Contains draft material requiring domain expert review
 
 3. [Key Management Essentials](key-management.md) - Securing and managing cryptographic keys
-   - *Best practices for key creation, storage, and rotation*
-   - *Recovery strategies for lost or compromised keys*
-   - *Progressive permissions for different security contexts*
+   - Trust-based key hierarchies with progressive permission models
+   - Key rotation strategies that maintain XID stability
+   - Recovery procedures that preserve identity continuity
 
 ## Concept Map
 
@@ -113,16 +151,16 @@ flowchart TD
     G --> H["Pseudonymous Trust Building<br>Trust Without Legal Identity"]
     H --> I["Public Participation Profiles<br>Structured Identity Framework"]
     
-    click A "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/xid.md" "XIDs: eXtensible IDentifiers"
-    click B "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/gordian-envelope.md" "Gordian Envelope: The data structure for XIDs"
-    click C "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/data-minimization.md" "Data Minimization: Controlling information disclosure"
-    click D "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/fair-witness.md" "Fair Witness: Making trustworthy assertions"
-    click E "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/elision-cryptography.md" "Elision Cryptography: The cryptography of selective disclosure"
-    click F "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/attestation-endorsement-model.md" "Attestation & Endorsement Model: Framework for claims"
-    click G "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/progressive-trust.md" "Progressive Trust: Building trust incrementally over time"
-    click H "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/pseudonymous-trust-building.md" "Pseudonymous Trust Building: Trust without revealing identity"
-    click I "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/public-participation-profiles.md" "Public Participation Profiles: Managing public identity and reputation"
-    click K "https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/key-management.md" "Key Management Essentials: Securing and managing cryptographic keys"
+    click A "./xid.md" "XIDs: eXtensible IDentifiers"
+    click B "./gordian-envelope.md" "Gordian Envelope: The data structure for XIDs"
+    click C "./data-minimization.md" "Data Minimization: Controlling information disclosure"
+    click D "./fair-witness.md" "Fair Witness: Making trustworthy assertions"
+    click E "./elision-cryptography.md" "Elision Cryptography: The cryptography of selective disclosure"
+    click F "./attestation-endorsement-model.md" "Attestation & Endorsement Model: Framework for claims"
+    click G "./progressive-trust.md" "Progressive Trust: Building trust incrementally over time"
+    click H "./pseudonymous-trust-building.md" "Pseudonymous Trust Building: Trust without revealing identity"
+    click I "./public-participation-profiles.md" "Public Participation Profiles: Managing public identity and reputation"
+    click K "./key-management.md" "Key Management Essentials: Securing and managing cryptographic keys"
 ```
 
 ## Relating Concepts to Tutorials
@@ -215,3 +253,13 @@ After exploring these concepts, you're ready to:
 - Apply these concepts to your own digital identity challenges
 - Join the [GitHub discussions](https://github.com/BlockchainCommons/XID-Quickstart/discussions) to share your insights and questions
 - Explore other [Blockchain Commons projects](https://www.blockchaincommons.com/projects.html) that implement these principles
+
+## Acknowledgments
+
+This concepts guide represents collaborative work within the Blockchain Commons community:
+
+- **Initial concepts and framework**: Christopher Allen (@ChristopherA)
+- **Extensive review and updates**: Shannon Appelcline (@shannona)
+- **Testing and validation**: All examples tested against bc-envelope-cli v0.18.0
+
+The concepts have evolved through community feedback and practical implementation experience. We welcome continued contributions to refine and expand these ideas.
