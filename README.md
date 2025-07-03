@@ -19,16 +19,17 @@ secure, privacy-preserving identity management.
 A XID is a decentralized self-sovereign identifier that's built on the
 concept of [data
 minimization](https://www.blockchaincommons.com/musings/musings-data-minimization/). It
-allows you to share only the minimum necessary information about an
-identity, and then to slowly disclose additional information through
-the process of [progressive
+allows you to initially share only the minimum necessary information
+about an identity, and then to slowly disclose additional information
+through the process of [progressive
 trust](https://www.blockchaincommons.com/musings/musings-progressive-trust/).
 
 A XID can be a foundation for attestation frameworks and fair witness
 models.  But it's a transformational technology that goes beyond
 current designs: it puts privacy and moreso user agency first in a way
 that the rest of the identity and credentials community generally
-don't, in part due to [their failure to adhere to early self-sovereign
+doesn't, in part due to [their failure to adhere to early
+self-sovereign
 principles](https://www.blockchaincommons.com/musings/musings-ssi-bankruptcy/).
 
 If self-sovereign identity and the desire to protect and empower users
@@ -38,20 +39,22 @@ step in making ethical, autonomous, self-soveriegn identity a reality.
 ### Why To Use This Tutorial
 
 Working with XIDs in this tutorial will give you hands-on experience
-with how you can cryptographically elide data while maintaining
-verifiability through signatures. More than that, it will demonstrate
-how to maintain a stable identifier even through key rotation, device
-additions, and recovery scenarios.
+with how you can maintain a stable identifier even through key
+rotation, device additions, and recovery scenarios.  It will also
+demonstrate how to cryptographically elide data while maintaining
+verifiability through signatures.
  
 ## Learning Materials
 
-This repository contains conceptual documentation, hands-on tutorials, and examples used by those tutorials.
+This repository contains conceptual documentation, hands-on tutorials,
+and examples used by those tutorials.
 
 ### Prerequisites
 
-- The `envelope` CLI tool, which can be installed from the [bc-envelope-cli-rust](https://github.com/BlockchainCommons/bc-envelope-cli-rust) repository
 - Basic familiarity with command-line tools
-- No prior knowledge of XIDs or Gordian Envelope is required
+- The `envelope` CLI tool, which can be installed from the [bc-envelope-cli-rust](https://github.com/BlockchainCommons/bc-envelope-cli-rust) repository
+
+_No prior knowledge of XIDs or Gordian Envelope is required._
 
 ### Quick-Start
 
@@ -63,20 +66,21 @@ This repository contains conceptual documentation, hands-on tutorials, and examp
 
 ### Core Concepts
 
-Optionally, start by exploring the theoretical foundations:
+If you choose to review the core concepts first, you will want to read some or all of:
 
 1. [XID Fundamentals](concepts/xid.md) - Understanding the basics of eXtensible IDentifiers
 2. [Gordian Envelope Basics](concepts/gordian-envelope.md) - The data structure that powers XIDs
 3. [Data Minimization Principles](concepts/data-minimization.md) - How to control information disclosure
 4. [Elision Cryptography](concepts/elision-cryptography.md) - Techniques for selective disclosure
 5. [Fair Witness Approach](concepts/fair-witness.md) - Making trustworthy assertions
-6. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
-7. [Public Participation Profiles](concepts/public-participation-profiles.md) - Using XIDs in community contexts
-8. [Key Management Essentials](concepts/key-management.md) - Securing and managing cryptographic keys
+6. [Attestation & Endorsement Model](attestation-endorsement-model.md) - Self-attestation and peer endorsement.
+7. [Key Management Essentials](concepts/key-management.md) - Securing and managing cryptographic keys
+8. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
+9. [Public Participation Profiles](concepts/public-participation-profiles.md) - Using XIDs in community contexts
 
 ### Hands-on Tutorials
 
-Then follow these tutorials for practical experience:
+The tutorials provide practical 
 
 1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Learn to create a basic pseudonymous identity
 2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Explore how XIDs are structured
@@ -84,7 +88,9 @@ Then follow these tutorials for practical experience:
 4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Build a network of trust through independent verification
 5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Master secure key management for XIDs
 
-See the [Learning Path](LEARNING_PATH.md) for a recommended approach to these materials.
+You may alternatively wish to use a [concept
+map](concepts/README.md#concept-map) or a [Learning
+Path](LEARNING_PATH.md) to step through these topics.
 
 ### Examples
 
