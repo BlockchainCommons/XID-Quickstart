@@ -8,46 +8,23 @@ _**A Tutorial Series for eXtensible IDentifiers (XIDs)**_
 [![Project Status: WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
 
-**XID-Quickstart** is a tutorial series for learning about eXtensible
-IDentifiers (XIDs) using Gordian Envelope technology. This repository
-contains conceptual documentation and hands-on examples to guide you
-through creating, understanding, and working with XIDs to support
-secure, privacy-preserving identity management.
+**XID-Quickstart** is a tutorial series for learning about eXtensible IDentifiers (XIDs) using Gordian Envelope technology. This repository contains conceptual documentation and hands-on examples to guide you through creating, understanding, and working with XIDs to support secure, privacy-preserving identity management.
 
 ## Why To Use XIDs
 
-A XID is a decentralized self-sovereign identifier that's built on the
-concept of [data
-minimization](https://www.blockchaincommons.com/musings/musings-data-minimization/). It
-allows you to initially share only the minimum necessary information
-about an identity, and then to slowly disclose additional information
-through the process of [progressive
-trust](https://www.blockchaincommons.com/musings/musings-progressive-trust/).
+A XID is a decentralized self-sovereign identifier that's built on the concept of [data minimization](https://www.blockchaincommons.com/musings/musings-data-minimization/). It allows you to initially share only the minimum necessary information about an identity, and then to slowly disclose additional information through the process of [progressive trust](https://www.blockchaincommons.com/musings/musings-progressive-trust/).
 
-A XID can be a foundation for attestation frameworks and fair witness
-models.  But it's a transformational technology that goes beyond
-current designs: it puts privacy and moreso user agency first in a way
-that the rest of the identity and credentials community generally
-doesn't, in part due to [their failure to adhere to early
-self-sovereign
-principles](https://www.blockchaincommons.com/musings/musings-ssi-bankruptcy/).
+A XID can be a foundation for attestation frameworks and fair witness models. But it's a transformational technology that goes beyond current designs: it puts privacy and moreso user agency first in a way that the rest of the identity and credentials community generally doesn't, in part due to [their failure to adhere to early self-sovereign principles](https://www.blockchaincommons.com/musings/musings-ssi-bankruptcy/).
 
-If self-sovereign identity and the desire to protect and empower users
-are important to you, then we hope you'll find XIDs a crucial next
-step in making ethical, autonomous, self-soveriegn identity a reality.
+If self-sovereign identity and the desire to protect and empower users are important to you, then we hope you'll find XIDs a crucial next step in making ethical, autonomous, self-sovereign identity a reality.
 
 ### Why To Use This Tutorial
 
-Working with XIDs in this tutorial will give you hands-on experience
-with how you can maintain a stable identifier even through key
-rotation, device additions, and recovery scenarios.  It will also
-demonstrate how to cryptographically elide data while maintaining
-verifiability through signatures.
+Working with XIDs in this tutorial will give you hands-on experience with how you can maintain a stable identifier even through key rotation, device additions, and recovery scenarios. It will also demonstrate how to cryptographically elide data while maintaining verifiability through signatures.
  
 ## Learning Materials
 
-This repository contains conceptual documentation, hands-on tutorials,
-and examples used by those tutorials.
+This repository contains conceptual documentation, hands-on tutorials, and examples used by those tutorials.
 
 ### Prerequisites
 
@@ -66,67 +43,42 @@ _No prior knowledge of XIDs or Gordian Envelope is required._
 
 ### Core Concepts
 
-If you choose to review the core concepts first, you will want to read some or all of:
+The [concepts guide](concepts/README.md) covers ten foundational concepts for XIDs, organized into:
+- Core technical concepts (XIDs, Gordian Envelopes, cryptography)
+- Trust and identity frameworks
+- Practical implementation guidance
 
-1. [XID Fundamentals](concepts/xid.md) - Understanding the basics of eXtensible IDentifiers
-2. [Gordian Envelope Basics](concepts/gordian-envelope.md) - The data structure that powers XIDs
-3. [Data Minimization Principles](concepts/data-minimization.md) - How to control information disclosure
-4. [Elision Cryptography](concepts/elision-cryptography.md) - Techniques for selective disclosure
-5. [Fair Witness Approach](concepts/fair-witness.md) - Making trustworthy assertions
-6. [Attestation & Endorsement Model](attestation-endorsement-model.md) - Self-attestation and peer endorsement.
-7. [Key Management Essentials](concepts/key-management.md) - Securing and managing cryptographic keys
-8. [Pseudonymous Trust Building](concepts/pseudonymous-trust-building.md) - Building trust without revealing identity
-9. [Public Participation Profiles](concepts/public-participation-profiles.md) - Using XIDs in community contexts
+The guide includes a visual concept map and multiple learning paths.
 
 ### Hands-on Tutorials
 
-The tutorials provide practical 
+The tutorials provide practical experience with XIDs:
 
-1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Learn to create a basic pseudonymous identity
-2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Explore how XIDs are structured
-3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Create structured self-claims with verifiable evidence
-4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Build a network of trust through independent verification
-5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Master secure key management for XIDs
+1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Create a pseudonymous identity
+2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Internal structure and components
+3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Make verifiable claims about yourself
+4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Third-party verification methods
+5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Key rotation and recovery strategies
 
-You may alternatively wish to use a [concept
-map](concepts/README.md#concept-map) or a [Learning
-Path](LEARNING_PATH.md) to step through these topics.
+See also the [concept map](concepts/README.md#concept-map) and [Learning Path](LEARNING_PATH.md) for alternative ways to navigate these materials.
 
 ### Examples
 
-The `examples` directory contains complete scripts implementing the
-functionality covered in each tutorial. These scripts can be used to
-see the full implementation or as a reference when working through the
-tutorials.
+The `examples` directory contains complete scripts implementing the functionality covered in each tutorial. These scripts can be used to see the full implementation or as a reference when working through the tutorials.
 
 ## ⚠️  Warning: Experimental Material Ahead! ⚠️
 
-Fundamentally, Blockchain Commons' current work with XIDs is
-**experimental**. This is more a **sandbox** for play with XIDs than a
-proper tutorial, we're just sharing what our play looks like in case
-you want to play with XIDs yourself.
+Fundamentally, Blockchain Commons' current work with XIDs is **experimental**. This is more a **sandbox** for play with XIDs than a proper tutorial, we're just sharing what our play looks like in case you want to play with XIDs yourself.
 
-But please be aware, XIDs are in an early development stage, and our
-experiments may not be the best way to do things. It's especially
-important to note that the methodologies that we're working with here
-have not been security tested. What does it really mean to have an
-ellision-first philosophy? What are the ramifications of including,
-then eliding private keys? Is the current XID structure the best one
-from a security point of view?
+But please be aware, XIDs are in an early development stage, and our experiments may not be the best way to do things. It's especially important to note that the methodologies that we're working with here have not been security tested. What does it really mean to have an elision-first philosophy? What are the ramifications of including, then eliding private keys? Is the current XID structure the best one from a security point of view?
 
-These are the type of questions we're asking here, and indeed we've
-refined and revisited some of our answers as we iterated these
-documents.
+These are the type of questions we're asking here, and indeed we've refined and revisited some of our answers as we iterated these documents.
 
-We welcome your experiments and your feedback (as issues, PRs, or in
-direct conversation), but we do not yet suggest using this work in any
-type of deployed system.
+We welcome your experiments and your feedback (as issues, PRs, or in direct conversation), but we do not yet suggest using this work in any type of deployed system.
 
 ## Project Status - Experimental
 
-These tutorials are currently in an experimental state. While usable
-for learning purposes, the underlying technologies and APIs may change
-significantly as development continues.
+These tutorials are currently in an experimental state. While usable for learning purposes, the underlying technologies and APIs may change significantly as development continues.
 
 ## Contributing
 
