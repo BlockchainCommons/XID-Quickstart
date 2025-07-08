@@ -58,7 +58,7 @@ _No prior knowledge of XIDs or Gordian Envelope is required._
 
 ### Quick-Start
 
-1. Install the `envelope` CLI tool: `cargo install envelope-cli`
+1. Install the `envelope` CLI tool: `cargo install bc-envelope-cli`
 2. Clone this repository: `git clone https://github.com/BlockchainCommons/XID-Quickstart.git`
 3. Optionally, review the core concepts from `concepts/README.md` until you're ready to get hands-on
 4. Navigate to the tutorials directory: `cd XID-Quickstart/tutorials`
