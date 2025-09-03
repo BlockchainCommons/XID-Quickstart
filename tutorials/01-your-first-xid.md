@@ -703,7 +703,7 @@ When you run the script, you'll see files created with the following structure:
 ```
 xid-20250510123456/
 ├── BRadvoc8-xid-basic-public.format    # Human-readable basic public XID
-├── BRadvoc8-xid-basic-public.xid       # Serialized basic public XID
+├── BRadvoc8-xid-basic-public.envelope       # Serialized basic public XID
 ├── BRadvoc8-xid-enhanced-public.envelope  # Serialized enhanced XID
 ├── BRadvoc8-xid-enhanced-public.format # Human-readable enhanced XID
 ├── BRadvoc8-xid-private.crypto-prvkey-base  # Private key material (SECRET!)

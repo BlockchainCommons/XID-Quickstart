@@ -50,7 +50,7 @@ echo -e "\nBasic Public XID:"
 envelope format "$BASIC_PUBLIC_XID"
 
 # Save the basic public XID
-echo "$BASIC_PUBLIC_XID" > "$OUTPUT_DIR/${XID_NAME}-xid-basic-public.xid"
+echo "$BASIC_PUBLIC_XID" > "$OUTPUT_DIR/${XID_NAME}-xid-basic-public.envelope"
 envelope format "$BASIC_PUBLIC_XID" > "$OUTPUT_DIR/${XID_NAME}-xid-basic-public.format"
 
 echo -e "\n## Step 3: Creating Enhanced Public XID with Persona Details"
