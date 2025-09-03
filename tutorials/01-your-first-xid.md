@@ -587,7 +587,6 @@ PUBLIC_KEYS=$(envelope generate pubkeys "$XID_PRVKEY_BASE")
 
 These public keys can be shared with others who need to verify attestations signed by this XID:
 
-🔎
 ```
 ur:crypto-pubkeys/hdcxtipscnhsondlbthsrfwzkefxttwttdgmkbvdtnlffsmsnsadwssyalrhlsrliaddlbehfcaflkfwelftbztk
 ```
