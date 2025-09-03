@@ -295,7 +295,10 @@ Let's compare where we're starting from and where we're heading:
 | No resolution methods | Multiple resolution URIs |
 | Not signed | Cryptographically signed |
 | Flat structure | Hierarchical organization |
+
+
 | **Sample Basic Public XID**                           | **Sample Enhanced XID**
+|----------------------------------|------------------------------|
 | XID(d5aad53e) [               | XID(d5aad53e) [
 |     'key': PublicKeys(...) [  |     'isA': "Persona"
 |         'allow': 'All'        |     "nickname": "BRadvoc8"
