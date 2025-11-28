@@ -753,6 +753,24 @@ Beyond the technical mechanics covered in the previous sections, there are sever
 
 **Advanced (Tutorial 02-03)**: You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity.
 
+## Key Terminology
+
+> **XID (eXtensible IDentifier)** - A self-contained identity document combining public keys, metadata, provenance, and cryptographic signatures into a single shareable object.
+>
+> **Subject** - The main thing an envelope describes; in XIDs, this is the XID identifier derived from your public key.
+>
+> **Assertion** - A predicate-object pair making a claim about the subject (e.g., `'key': PublicKeys(...)`).
+>
+> **Known Predicate** - Standardized predicate from the Gordian Envelope spec, shown in single quotes (`'key'`, `'verifiedBy'`, `'provenance'`).
+>
+> **String Predicate** - Custom application-specific predicate, shown in double quotes (`"nickname"`, `"service"`).
+>
+> **Elision** - Removing data while preserving the envelope's root hash, enabling selective disclosure with maintained cryptographic integrity.
+>
+> **Provenance Mark** - Cryptographic timestamp establishing when a document was created or updated, forming a verifiable chain of identity evolution.
+>
+> **Envelope Digest** - The root hash of an envelope structure; preserved across elision, enabling signature verification on different views of the same document.
+
 ## What's Next
 
 Amira now has a basic, secure XID - but it's quite simple. In the next tutorial, she'll build her BRadvoc8 persona and make it discoverable so others (like Ben from SisterSpaces) can find and verify her identity. We'll learn how to:
