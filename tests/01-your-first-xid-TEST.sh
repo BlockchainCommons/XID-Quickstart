@@ -1,5 +1,19 @@
 #!/bin/bash
-# Comprehensive test of Tutorial 01 - testing every code block
+#
+# 01-your-first-xid-TEST.sh - Test all code examples from Tutorial 01
+#
+# Validates that every command in Tutorial 01: Your First XID works correctly.
+# Tests XID creation, elision, signature verification, and provenance validation.
+#
+# Usage: ./01-your-first-xid-TEST.sh
+#
+# Dependencies: envelope (bc-envelope-cli-rust), provenance
+#
+# Exit Codes:
+#   0   All tests passed
+#   1   Test failure
+#
+
 set -e
 
 echo "=== COMPREHENSIVE TUTORIAL 01 CODE TEST ==="
@@ -148,5 +162,20 @@ else
     exit 1
 fi
 
+# Save files for Tutorial 02 to use
+echo "Saving Tutorial 01 artifacts..."
+OUTPUT_DIR="output/xid-$(date +%Y%m%d%H%M%S)"
+mkdir -p "$OUTPUT_DIR"
+
+# Save signed XID (complete version)
+echo "$XID" > "$OUTPUT_DIR/BRadvoc8-xid.envelope"
+envelope format "$XID" > "$OUTPUT_DIR/BRadvoc8-xid.format"
+
+# Save public XID (elided version)
+echo "$PUBLIC_XID" > "$OUTPUT_DIR/BRadvoc8-public.envelope"
+envelope format "$PUBLIC_XID" > "$OUTPUT_DIR/BRadvoc8-public.format"
+
+echo "✅ Files saved to: $OUTPUT_DIR"
+ls "$OUTPUT_DIR"
 echo ""
 echo "✅ ALL TESTS PASSED - Tutorial code is correct!"
