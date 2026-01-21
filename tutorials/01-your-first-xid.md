@@ -9,7 +9,7 @@ This tutorial introduces Amira, a software developer with a politically sensitiv
 ## Prerequisites
 
 - Basic terminal/command line familiarity
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.31.2 or later recommended)
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (`cargo install bc-envelope-cli` — release 0.31.2 or later recommended)
 
 ## What You'll Learn
 
@@ -28,29 +28,17 @@ Given Amira's background in a politically tense region, contributing openly to c
 
 However, Amira faces a dilemma: she can't contribute anonymously because anonymous contributions lack credibility. Project maintainers need confidence in the quality and provenance of code, especially for socially important applications. She needs a solution that protects her identity while allowing her to build a verifiable reputation for her skills.
 
-Amira needs a technological solution that allows her to:
-
-1. Share her valuable security expertise without revealing her real identity
-2. Build verifiable trust through the quality of her work, not her existing credentials
-3. Establish a consistent "BRadvoc8" (Basic Rights Advocate) digital presence that can evolve and build reputation over time
-4. Connect with project leaders like Ben from the women's services non-profit
-5. Protect herself from adversaries who might target her for her contributions
+Amira needs a technological solution that lets her share her security expertise without revealing her real identity, build trust through the quality of her work rather than existing credentials, and establish a consistent "BRadvoc8" (Basic Rights Advocate) presence that can evolve over time. She wants to connect with project leaders like Ben from the women's services non-profit while protecting herself from adversaries who might target her for her contributions.
 
 This is where XIDs come in: they enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity.
 
 ## Why XIDs Matter
 
-XIDs provide significant advantages that go well beyond standard cryptographic keys:
+XIDs provide significant advantages over standard cryptographic keys. Your XID identifier stays the same even when you rotate keys, giving you a stable identity that persists across key changes. You can selectively share different information with different parties—progressive trust—while keeping other details private.
 
-1. **Stable identity** - XIDs maintain the same identifier even when you rotate keys
-2. **Progressive trust** - XIDs let you selectively share different information with different parties
-3. **Rich metadata** - XIDs can contain structured attestations, endorsements, and claims
-4. **Peer attestation** - XIDs enable others to make cryptographically verifiable claims about your identity
-5. **Multi-key support** - XIDs can link multiple keys for different devices while maintaining a single identity
-6. **Recovery mechanisms** - XIDs support recovery without losing your reputation history
-7. **Cryptographic integrity** - XIDs preserve verifiability even when portions are elided
+XIDs support rich metadata: structured attestations, endorsements, and claims that describe your skills. Others can make cryptographically verifiable claims about you through peer attestation, and you can link multiple keys for different devices while maintaining a single identity. If something goes wrong, recovery mechanisms let you restore access without losing your reputation history. Most importantly, XIDs preserve cryptographic integrity even when portions are elided—you'll see this in action shortly.
 
-This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced capabilities like data minimization and rich persona structures.
+This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
 
 ## Step 1: Create Your XID
 
@@ -75,7 +63,7 @@ echo "Created your XID: $XID_NAME"
 │ Created your XID: BRadvoc8
 ```
 
-That single command did a lot of work. It generated an Ed25519 keypair (the same algorithm SSH, git, and Signal use), encrypted the private key with your password, added a provenance mark timestamping when this identity was born, and signed the whole thing with your "inception" key so others can verify it's authentic.
+That single command did a lot of work. It generated an Ed25519 keypair (the same algorithm SSH, git, and Signal use), encrypted the private key with your password, added a provenance mark establishing the genesis of this identity, and signed the whole thing with your "inception" key so others can verify it's authentic.
 
 The term "inception" refers to the signing public key that defines your XID from its very beginning. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key—the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key.
 
@@ -124,7 +112,7 @@ Notice where the nickname `"BRadvoc8"` appears: it's inside the `PublicKeys` sec
 
 The `ProvenanceMark(...)` is the "genesis" mark—the first in a chain that tracks this identity's evolution. The encrypted provenance generator is the secret that created this mark and will create all future marks when Amira updates her XIDDoc. Finally, `'signed': Signature(Ed25519)` confirms the entire document is cryptographically signed with the inception key.
 
-> **🔍 Notice the Quote Styles**:
+> **Notice the Quote Styles**:
 >
 > You see two quote styles in your XIDDoc:
 >
@@ -136,11 +124,11 @@ The `ProvenanceMark(...)` is the "genesis" mark—the first in a chain that trac
 > - As predicate: `'nickname': "BRadvoc8"` (known value `'nickname'` points to string `"BRadvoc8"`)
 > - As object: `'allow': 'All'` (known value `'allow'` points to known value `'All'`)
 >
-> This distinction ensures interoperability: tools that understand envelopes correctly interpret known values. In Tutorial 03, you'll add custom assertions using strings to build BRadvoc8's rich persona.
+> This distinction ensures interoperability: tools that understand envelopes correctly interpret known values. In a future tutorial, you'll add custom data using attachments to build BRadvoc8's verifiable attestations.
 
 BRadvoc8 is now a production-ready XID. Her private keys are encrypted, there's a provenance mark establishing when this identity was created, and the whole document is cryptographically signed. The only thing left before sharing it is to remove the private keys—which is what we'll do next.
 
-### 🔍 Understanding the Envelope Structure
+### Understanding the Envelope Structure
 
 Before going further, you need to understand the pattern that organizes all envelope data. Every envelope has a **subject** (the main thing) and **assertions** (claims about that thing).
 
@@ -165,13 +153,13 @@ This pattern nests. Look inside the `'key'` assertion:
 ]
 ```
 
-The `PublicKeys` object is itself a subject with its own assertions. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add GitHub credentials and SSH keys as nested assertions. For now, the key insight is that you can add, remove, or hide any assertion independently—which is exactly what we'll do next with the private keys.
+The `PublicKeys` object is itself a subject with its own assertions. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add your GitHub account and SSH keys as attachments—vendor-qualified containers for application-specific data. For now, the key insight is that you can add, remove, or hide any assertion independently—which is exactly what we'll do next with the private keys.
 
-### 🔍 About the Abbreviated Display
+### About the Abbreviated Display
 
 The `envelope format` output shows abbreviated labels like `PublicKeys(32de0f2b)` and `ENCRYPTED` rather than raw cryptographic data. This is intentional—showing hundreds of bytes of base64 would obscure the structure. The hex codes in parentheses are digest fragments that let you quickly identify which key or encrypted blob you're looking at.
 
-The abbreviations hide complexity: `PublicKeys` actually contains two separate keys (signing and encapsulation), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
+The abbreviations hide complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
 
 > **Important**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. Lose the keys, lose the identity—just like SSH.
 
@@ -282,7 +270,7 @@ fi
 
 The digests are identical. You removed the private key, yet the hash didn't change. How is that possible?
 
-### 🔍 Why Elision Preserves the Hash
+### Why Elision Preserves the Hash
 
 This seems impossible—normally, changing data changes its hash. But envelopes use a Merkle tree structure where each part has its own hash, and those hashes combine into the root hash. The root doesn't hash the content directly; it hashes the hashes.
 
@@ -296,9 +284,9 @@ Envelope Root Hash
 
 When you elide, you remove the content but keep its hash in the calculation. The `'privateKey': ENCRYPTED` assertion had hash `def456...` before elision. After elision, the marker `ELIDED` still uses that same hash `def456...` in the root calculation. Same inputs, same root hash.
 
-This is the foundation of selective disclosure. Amira signs her complete XIDDoc once, then creates different views by eliding different parts. Every view has the same root hash, so every view passes signature verification. She can show Ben her GitHub credentials while showing the public nothing—all from the same signed document.
+This is the foundation of selective disclosure. Amira signs her complete XIDDoc once, then creates different views by eliding different parts. Every view has the same root hash, so every view passes signature verification. She can show Ben her GitHub attestations while showing the public nothing—all from the same signed document.
 
-> **Essential insight**: Don't confuse the XID identifier with the envelope digest. The XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of the inception signing public key and never changes across document versions—it identifies Amira. The envelope digest identifies a specific document version and normally changes when you modify content. Elision is special: it's the only way to remove data without changing the digest.
+> **Remember**: Don't confuse the XID identifier with the envelope digest. The XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of the inception signing public key and never changes across document versions—it identifies Amira. The envelope digest identifies a specific document version and normally changes when you modify content. Elision is special: it's the only way to remove data without changing the digest.
 
 ## Step 3: Verification
 
@@ -360,7 +348,7 @@ Both checks passed using only the public XID—no secrets required. The signatur
 
 Notice the asymmetry: verifying signatures and provenance needs only public information, but creating signatures or advancing provenance requires secrets. This is why Amira can share her public XID freely—anyone can verify it, but only she can update it.
 
-> **Essential insight**: The provenance mark is public, but the generator that advances it is encrypted. In Tutorial 02, you'll see how provenance lets Ben verify he has the current version of BRadvoc8.
+> **Remember**: The provenance mark is public, but the generator that advances it is encrypted. In Tutorial 02, you'll see how provenance lets Ben verify he has the current version of BRadvoc8.
 
 ## Reviewing the XID Creation Workflow
 
@@ -436,7 +424,9 @@ The encrypted XID can live anywhere—USB drive, email, cloud storage, even prin
 >
 > **Elision** - Removing data while preserving the envelope's root hash, enabling selective disclosure with maintained cryptographic integrity.
 >
-> **Provenance Mark** - Cryptographic timestamp establishing when a document was created or updated, forming a verifiable chain of identity evolution. The genesis mark is the first in the chain.
+> **Selective Disclosure** - Sharing only the information needed for a specific context. Sign once, create multiple views by eliding different parts, and every view verifies against the same signature.
+>
+> **Provenance Mark** - Cryptographic marker establishing the sequence position of a document version, forming a verifiable chain of identity evolution. The genesis mark (sequence 0) is the first in the chain. Provides ordering, not timestamps.
 >
 > **Envelope Digest** - The root hash of an envelope structure; preserved across elision, enabling signature verification on different views of the same document.
 
@@ -446,13 +436,16 @@ BRadvoc8 is now a basic, secure XID, but it has a problem: nobody can verify the
 
 **Tutorial 02: Making Your XID Verifiable** shows how to solve this. Amira will add a `dereferenceVia` assertion pointing to where her XID is published, then advance the provenance chain. Ben can then fetch the latest version and verify it's fresh.
 
-**Tutorial 03: Building Your Persona** adds professional credentials to make BRadvoc8 credible. Amira will link her GitHub account, generate SSH signing keys for Git commits, and prove she controls those keys through challenge-response patterns.
-
-The progression matters: Tutorial 02 makes your identity verifiable (is this fresh?), Tutorial 03 makes it credible (does this person have real skills?). Together, they enable the trust-building that comes in later tutorials when Ben endorses BRadvoc8's contributions.
+From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and Tutorial 04 shows Ben how to cross-verify those claims against external sources. Together, they enable the trust-building that comes in later tutorials.
 
 ## Exercises
 
-Try these to solidify your understanding: Create your own XID with a pseudonym of your choice. Experiment with different passwords. Practice creating public versions by eliding private keys, then verify the signatures still work on the elided versions. Save your XID to a file and reload it to confirm nothing was lost.
+Try these to solidify your understanding:
+
+- Create your own XID with a pseudonym of your choice.
+- Experiment with different passwords.
+- Practice creating public versions by eliding private keys, then verify the signatures still work on the elided versions.
+- Save your XID to a file and reload it to confirm nothing was lost.
 
 ## Example Script
 

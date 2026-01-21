@@ -4,7 +4,7 @@ In Tutorial 01, Amira created her BRadvoc8 identity. Now she wants Ben from Sist
 
 **Time to complete: 10-15 minutes**
 
-> **Related Concepts**: This tutorial builds on [Tutorial 01: Your First XID](01-your-first-xid.md). Understanding provenance marks from that tutorial will help here.
+> **Related Concepts**: This tutorial introduces verification and freshness. To understand the underlying principles, see [Progressive Trust](../concepts/progressive-trust.md) for how trust builds incrementally, and [Data Minimization](../concepts/data-minimization.md) for controlling what you disclose when publishing.
 
 ## Prerequisites
 
@@ -26,9 +26,9 @@ In Tutorial 01, Amira created her BRadvoc8 identity. Now she wants Ben from Sist
 
 ## The Freshness Problem
 
-After Tutorial 01, Amira can give Ben her public XIDDoc directly—email it, share via Signal, whatever works. But what happens when she updates her XIDDoc next month? Ben has no way to know his copy is stale. He might verify signatures against outdated information, missing that Amira added new credentials or rotated keys.
+After Tutorial 01, Amira can give Ben her public XIDDoc directly—email it, share via Signal, whatever works. But what happens when she updates her XIDDoc next month? Ben has no way to know his copy is stale. He might verify signatures against outdated information, missing that Amira added new attestations or rotated keys.
 
-One simple solution is to publish the XIDDoc at a stable URL and embed that URL in the document itself (we'll discuss other solutions in Tutorial ??). Now Ben can fetch the current version whenever he needs it and verify through provenance marks that his copy is actually current, not an old snapshot someone gave him.
+One simple solution is to publish the XIDDoc at a stable URL and embed that URL in the document itself (we'll discuss other solutions in a future tutorial). Now Ben can fetch the current version whenever he needs it and verify through provenance marks that his copy is actually current, not an old snapshot someone gave him.
 
 This isn't about discovery (how Ben finds Amira's XID in the first place). It's about freshness (how Ben verifies he has the current version).
 
@@ -36,7 +36,7 @@ This isn't about discovery (how Ben finds Amira's XID in the first place). It's 
 
 ## Part I: Amira Publishes
 
-In this section, you'll add a publication URL to your XIDDoc and publish a public version.
+You'll add a publication URL to your XIDDoc and publish a public version.
 
 ### Step 1: Set Up Your Environment
 
@@ -74,14 +74,14 @@ envelope format "$XID" | head -10
 
 ### Step 2: Choose Your Publication URL
 
-Before adding `dereferenceVia`, decide where you'll publish. For this tutorial, we'll use a GitHub Gist, but any stable URL works—personal website, IPFS gateway, wherever you control.
+Before adding `dereferenceVia`, decide where you'll publish. For this tutorial, we'll use a GitHub repository, but any stable URL works—personal website, IPFS gateway, wherever you control.
 
 ```
-# Placeholder - we'll update with the real URL after creating the gist
-GIST_URL="https://gist.github.com/YOUR_USERNAME/GIST_ID/raw/xid.txt"
+# Your publication URL - we'll use a GitHub repository
+PUBLISH_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 ```
 
-Make sure your URL points to raw content, not an HTML page. For GitHub Gists, use the `/raw/` URL.
+Make sure your URL points to raw content, not an HTML page. For GitHub repositories, use the `/raw/` URL path.
 
 ### Step 3: Add dereferenceVia Assertion
 
@@ -89,7 +89,7 @@ Now add a `dereferenceVia` assertion that tells others where to fetch the curren
 
 ```
 XID_WITH_URL=$(envelope xid method add \
-    "$GIST_URL" \
+    "$PUBLISH_URL" \
     --verify inception \
     --password "$PASSWORD" \
     --sign inception \
@@ -104,7 +104,7 @@ envelope format "$XID_WITH_URL" | head -20
 │ Added dereferenceVia
 │ {
 │     XID(c7e764b7) [
-│         'dereferenceVia': URI(https://gist.github.com/YOUR_USERNAME/GIST_ID/raw/xid.txt)
+│         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
 │         'key': PublicKeys(...) [
 │             {
 │                 'privateKey': ENCRYPTED [
@@ -142,7 +142,7 @@ envelope format "$PUBLIC_XID"
 │ Exported public version
 │ {
 │     XID(c7e764b7) [
-│         'dereferenceVia': URI(https://gist.github.com/YOUR_USERNAME/GIST_ID/raw/xid.txt)
+│         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
 │         'key': PublicKeys(...) [
 │             'allow': 'All'
 │             'nickname': "BRadvoc8"
@@ -165,7 +165,7 @@ Why elide rather than simply omit? Elision keeps the hash contribution while rem
 
 ### Step 5: Publish Your XID
 
-Now publish the public version. We'll use GitHub Gist:
+Now publish the public version. We'll use a GitHub repository:
 
 ```
 # Save the public XID to a file
@@ -176,9 +176,9 @@ echo "Contents:"
 cat /tmp/xid-public.txt
 ```
 
-To publish on GitHub Gist: go to [gist.github.com](https://gist.github.com), create a new public gist with filename `xid.txt`, paste your public XID content, and click "Create public gist." Then click the "Raw" button and copy that URL—that's your `dereferenceVia` value.
+To publish on GitHub: create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern: `https://github.com/USERNAME/REPO/raw/main/xid.txt`.
 
-There's a chicken-and-egg problem here: you need the URL to add `dereferenceVia`, but you need to create the gist to get the URL. The solution is to create the gist first with placeholder content, copy the raw URL, then update your XIDDoc with that URL, export the public version again, and update the gist with the real content.
+There's a chicken-and-egg situation: you need the URL to add `dereferenceVia`, but you need to create the repo to get the URL. The solution is straightforward since GitHub URLs are predictable—decide your repo name first, construct the URL, add it to your XID, then create the repo with that content.
 
 ---
 
@@ -190,7 +190,7 @@ Now let's switch perspectives. Amira has published her BRadvoc8 XIDDoc and share
 
 Ben received a message from someone claiming to be "BRadvoc8":
 
-> "Hey Ben, I'm interested in contributing to SisterSpaces. Here's my XID: https://gist.github.com/bradvoc8/abc123/raw/xid.txt"
+> "Hey Ben, I'm interested in contributing to SisterSpaces. Here's my XID: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
 Ben doesn't know if this is legitimate. He needs to verify.
 
@@ -200,7 +200,7 @@ Ben fetches the XIDDoc from the URL Amira provided:
 
 ```
 # Ben's perspective - he only has the URL
-RECEIVED_URL="https://gist.github.com/bradvoc8/abc123/raw/xid.txt"
+RECEIVED_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
 # Fetch the XID (simulated - in practice, use curl)
 # FETCHED_XID=$(curl -s "$RECEIVED_URL")
@@ -211,10 +211,10 @@ FETCHED_XID="$PUBLIC_XID"
 echo "Fetched XID from: $RECEIVED_URL"
 envelope format "$FETCHED_XID" | head -15
 
-│ Fetched XID from: https://gist.github.com/bradvoc8/abc123/raw/xid.txt
+│ Fetched XID from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
 │ {
 │     XID(c7e764b7) [
-│         'dereferenceVia': URI(https://gist.github.com/bradvoc8/abc123/raw/xid.txt)
+│         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
 │         'key': PublicKeys(...) [
 │             'allow': 'All'
 │             'nickname': "BRadvoc8"
@@ -271,14 +271,14 @@ echo "dereferenceVia in XID:    $DEREFERENCE_URL"
 
 # In a real scenario, Ben would compare these
 # The dereferenceVia shows as URI(...) format, so we check if it contains the URL
-if echo "$DEREFERENCE_URL" | grep -q "gist.github.com"; then
+if echo "$DEREFERENCE_URL" | grep -q "github.com/BRadvoc8"; then
     echo "✅ URLs match - XID claims this is its canonical location"
 else
     echo "⚠️  URLs don't match - XID may have been copied from elsewhere"
 fi
 
-│ URL Ben fetched from:     https://gist.github.com/bradvoc8/abc123/raw/xid.txt
-│ dereferenceVia in XID:    URI(https://gist.github.com/bradvoc8/abc123/raw/xid.txt)
+│ URL Ben fetched from:     https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
+│ dereferenceVia in XID:    URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
 │ ✅ URLs match - XID claims this is its canonical location
 ```
 
@@ -350,7 +350,7 @@ echo "  • It has a valid provenance chain"
 echo ""
 echo "  ⚠️  NOT YET VERIFIED:"
 echo "  • That 'BRadvoc8' controls this GitHub account"
-echo "  • That 'BRadvoc8' has any specific capabilities"
+echo "  • That 'BRadvoc8' has any real-world skills"
 echo "  • Who 'BRadvoc8' really is"
 
 │ === Ben's Verification Summary ===
@@ -370,7 +370,7 @@ echo "  • Who 'BRadvoc8' really is"
 │
 │   ⚠️  NOT YET VERIFIED:
 │   • That 'BRadvoc8' controls this GitHub account
-│   • That 'BRadvoc8' has any specific capabilities
+│   • That 'BRadvoc8' has any real-world skills
 │   • Who 'BRadvoc8' really is
 ```
 
@@ -382,11 +382,11 @@ What can Ben trust at this point? The XID is self-consistent (signature verifies
 
 But two things remain assumed, not proven: that Amira actually controls the GitHub account where the XID is published, and that Amira is who she claims to be. This tutorial solved the freshness problem—Ben can always get the current version and detect tampering—but it didn't establish deeper trust.
 
-Tutorial 03 addresses what's missing: proof that Amira controls specific accounts like GitHub, SSH signing keys for Git commit verification, and stronger roots of trust through capability proofs.
+Tutorial 03 addresses what's missing: attestations that connect BRadvoc8 to real-world systems. Amira will add her GitHub account and SSH signing key as verifiable claims that Ben can cross-verify in Tutorial 04.
 
 ## Updating Your XID (Preview)
 
-When Amira wants to make changes—add credentials, change nickname, whatever—she updates her XIDDoc, then advances the provenance mark:
+When Amira wants to make changes—add attestations, change nickname, whatever—she updates her XIDDoc, then advances the provenance mark:
 
 ```
 UPDATED_XID=$(envelope xid provenance next \
@@ -408,6 +408,8 @@ BRadvoc8 now has a stable publication URL, provenance tracking for freshness ver
 
 > **`dereferenceVia`** - A known predicate indicating where the canonical version of this XID can be fetched. Uses `URI` type for the object.
 >
+> **Self-Consistency** - An XID is self-consistent when its signature verifies against its own embedded public key. Proves the document wasn't tampered with after signing, but not that the claims inside are true.
+>
 > **Freshness** - The property of having the most current version of an XID, verified through provenance marks.
 >
 > **Provenance Chain** - The sequence of provenance marks showing the history of XID updates. Each mark links to the previous.
@@ -416,14 +418,30 @@ BRadvoc8 now has a stable publication URL, provenance tracking for freshness ver
 
 ## Exercises
 
-Try publishing your XID for real: create a GitHub Gist, add the URL with `xid method add`, export the public version, and update the gist. Then practice advancing the provenance mark with `xid provenance next` and observe how the sequence numbers change. For extra credit, add multiple `dereferenceVia` assertions pointing to different mirrors.
+Try these to solidify your understanding:
+
+- Publish your XID for real: create a GitHub repository, add the URL with `xid method add`, export the public version, and commit it.
+- Practice advancing the provenance mark with `xid provenance next` and observe how the sequence numbers change.
+- Add multiple `dereferenceVia` assertions pointing to different mirrors.
+
+## Example Script
+
+A complete working script implementing this tutorial is available at `tests/02-making-xid-verifiable-TEST.sh`. Run it to see all steps in action:
+
+```
+bash tests/02-making-xid-verifiable-TEST.sh
+```
+
+This script tests both Amira's publication workflow and Ben's verification workflow.
 
 ## What's Next
 
-**Tutorial 03: Building Your Persona** adds capability proofs. Amira will prove she controls a GitHub account, add SSH signing keys for Git commits, and create stronger roots of trust through verifiable capabilities.
+**Tutorial 03: Offering Self-Attestation** adds verifiable claims. Amira will link her GitHub account and SSH signing key as attestations about her real-world activities.
 
-The key insight: this tutorial proves your XID is current. Tutorial 03 proves you have capabilities. Together, they build meaningful trust—enough for Ben to accept code contributions from BRadvoc8.
+**Tutorial 04: Cross-Verification** shows Ben's perspective. He'll verify Amira's attestations against external sources like GitHub's API and signed commits.
+
+The key insight: this tutorial proves your XID is current. Tutorial 03 offers attestations, and Tutorial 04 shows how to verify them. Together, they build meaningful trust—enough for Ben to accept code contributions from BRadvoc8.
 
 ---
 
-**Previous**: [Your First XID](01-your-first-xid.md) | **Next**: [Building Your Persona](03-building-persona.md)
+**Previous**: [Your First XID](01-your-first-xid.md) | **Next**: [Offering Self-Attestation](03-offering-self-attestation.md)
