@@ -45,7 +45,7 @@ cargo install bc-envelope-cli
 
 If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html) for easy installation instructions.
 
-## Step 1: Create Your XID
+## Step 1: Creating Your XID
 
 Now that we understand why XIDs are valuable, let's help Amira create her "BRadvoc8" identity. This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
 
@@ -196,32 +196,48 @@ The other thing of particular note is the quoted data. There are two styles of q
 > - **Single quotes** (`'key'`, `'nickname'`, `'All'`) designate **Known values**. These are standardized terms from the Gordian Envelope specification. They can be subjects, predicates (`'allow'`), or objects (`'All'`). These ensure different tools understand your XIDDoc the same way.
 > - **Double quotes** (`"BRadvoc8"`, `"github"`) designate **Strings**. This is custom application data you define.
 
-## Step 2: Creating a Public Version by Elision
+## Step 2: Creating a Public Version of Your XID by Elision
 
-Now Amira wants to create a shareable public version. Instead of creating a new XID, she **elides** (removes) the private key from her XID. This is a key envelope feature: **elision preserves the root hash**.
+Now Amira wants to create a shareable public version that does not contain her private key. She does this by using envelope's elision (removal) feature.
 
-First, since the XID was automatically wrapped and signed with `--sign inception`, we need to unwrap it to access its assertions:
+To do so, she must find the digest (hash) of the private key assertion. Every thing in an envelope has a hash: it's how the envelope is built and how it maintains signatures (more on that momentarily). Ones she finds the right hash, she simply tells the Envelope CLI to remove it. 
+
+### Finding the Private Key Digest
+
+In a graphical UI, this whole process might be as simple as clicking on the assertion in the envelope and hitting the DELETE key. In the Envelope CLI, it takes digging down through the layers of the envelope by unwrapping wrapped envelopes and finding assertions within them.
+
+First, since the XID was wrapped and signed with `--sign inception`, we need to unwrap it to access its assertions:
 
 ```
 # Unwrap the signed XID to access its assertions
 UNWRAPPED_XID=$(envelope extract wrapped "$XID")
 ```
 
-Now find the digest of the encrypted private key:
+Then we find the `key` assertion, which is a `known` value and extract the `PublicKeys` object:
 
 ```
 # Find the key assertion
 KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED_XID")
 KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
-
+```
+Finally, we can extract the `privateKey` assertion from _that_ and then record its digest.
+```
 # Find the private key assertion within the key object
 PRIVATE_KEY_ASSERTION=$(envelope assertion find predicate known privateKey "$KEY_OBJECT")
 PRIVATE_KEY_DIGEST=$(envelope digest "$PRIVATE_KEY_ASSERTION")
 
-echo "Found private key digest"
+if [ $PRIVATE_KEY_DIGEST ]
+then
+  echo "Found private key digest"
+else
+  echo "Error in private key retrieval"
+fi
+
 
 │ Found private key digest
 ```
+
+### Eliding Your XID
 
 Now elide the private key to create a public version:
 
@@ -258,6 +274,9 @@ envelope format "$PUBLIC_XID"
 │     'signed': Signature(Ed25519)
 │ ]
 ```
+
+Instead of creating a new XID, she **elides** (removes) the private key from her XID. This is a key envelope feature: **elision preserves the root hash**.
+
 
 **Important distinction - XID identifier vs Envelope hash:**
 
