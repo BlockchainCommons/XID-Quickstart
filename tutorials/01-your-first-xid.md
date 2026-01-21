@@ -9,7 +9,7 @@ This tutorial introduces Amira, a software developer with a politically sensitiv
 ## Prerequisites
 
 - Basic terminal/command line familiarity
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (`cargo install bc-envelope-cli` — release 0.32.0 or later recommended)
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.32.0 or later recommended)
 
 ## What You'll Learn
 
@@ -39,6 +39,17 @@ XIDs provide significant advantages over standard cryptographic keys. Your XID i
 XIDs support rich metadata: structured attestations, endorsements, and claims that describe your skills. Others can make cryptographically verifiable claims about you through peer attestation, and you can link multiple keys for different devices while maintaining a single identity. If something goes wrong, recovery mechanisms let you restore access without losing your reputation history. Most importantly, XIDs preserve cryptographic integrity even when portions are elided—you'll see this in action shortly.
 
 This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
+
+## Step 0: Setting Up Your Work Space
+
+This tutorial depends on [`bc-envelope-cli`](https://github.com/BlockchainCommons/bc-envelope-cli-rust), a Rust-based command-line interface.
+
+It can be easily installed using the `cargo` package management tool:
+```
+cargo install bc-envelope-cli
+```
+
+If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html) for easy installation instructions.
 
 ## Step 1: Create Your XID
 
