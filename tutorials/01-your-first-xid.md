@@ -24,17 +24,15 @@ This tutorial demonstrates how to create a basic XID (eXtensible IDentifier) tha
 
 Amira is a successful software developer working at a prestigious multinational bank in Boston. With her expertise in distributed systems security, she earns a comfortable living, but she wants more purpose in her work. She is considering contributing to social-impact programs, but she can't do so under her real name. That's because Amira's position is somewhat vulnerable. She's working on an H-1B visa, and in modern America, that could be revoked for any sort of activism. She also grew up in a politically tense region, and her work on social-impact projects could endanger family members back home. Yet she's deeply motivated to use her skills to help oppressed people globally. This tension between professional security and meaningful contribution creates a specific need.
 
-Anonymous submissions could resolve these issues, and Amira already has a pseuodnymous identity: "BRadvoc8" (Basic Rights Advocate). However, anonymous contributions lack credibility. Project maintainers need confidence in the quality and provenance of code, especially for socially important applications. Amira needs a solution that protects her identity while allowing her to build a verifiable reputation for her skills. This would allow her to build trust through the quality of her work rather than existing credentials and so establish a consistent presence that can evolve over time. 
+Anonymous submissions could resolve these issues, and Amira already has a pseuodnymous identity: "BRadvoc8" (Basic Rights Advocate). However, anonymous contributions lack credibility. Project maintainers need confidence in the quality and provenance of code, especially for socially important applications. Amira needs a better solution, one that protects her identity while allowing her to build a verifiable reputation for her skills. This would allow her to build trust through the quality of her work rather than existing credentials and so establish a consistent presence that can evolve over time. 
 
-On the advice of her friend Charlene, Amira investigates RISK, a network that connects developers with social-impact projects while protecting participants' privacy. It uses a Blockchain Commons technology called [XIDs](../concepts/xid.md): they enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity. Through RISK, Amira can connect with project leaders such as Ben, who runs a women's services non-profit, while protecting herself from adversaries who might target her or her family for her contributions.
+On the advice of her friend Charlene, Amira investigates RISK, a network that connects developers with social-impact projects and protects participants' privacy. It uses a Blockchain Commons technology called [XIDs](../concepts/xid.md): they enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity, protecting herself from adversaries who might target her or her family for her contributions. Through RISK, Amira can connect with project leaders such as Ben, who runs a women's services non-profit that Amira wishes to contribute to.
 
 ## Why XIDs Matter
 
-XIDs provide significant advantages over standard cryptographic keys. Your XID identifier stays the same even when you rotate keys, giving you a stable identity that persists across key changes. You can selectively share different information with different parties—progressive trust—while keeping other details private.
+XIDs provide significant advantages over standard cryptographic keys because they create a single stable identity, even if you have multiple keys for different devices and even if you rotate your keys. If something goes wrong, recovery mechanisms let you restore access to your identity (and so your reputation history).
 
-XIDs support rich metadata: structured attestations, endorsements, and claims that describe your skills. Others can make cryptographically verifiable claims about you through peer attestation, and you can link multiple keys for different devices while maintaining a single identity. If something goes wrong, recovery mechanisms let you restore access without losing your reputation history. Most importantly, XIDs preserve cryptographic integrity even when portions are elided—you'll see this in action shortly.
-
-This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
+XIDs support rich metadata: structured attestations, endorsements, and claims that describe your skills. Others can also make cryptographically verifiable claims about you through peer attestation. You can then selectively share different information with different parties, or use progressive trust to expand what you reveal to an individual over time, all while keeping other details private by eliding it. XIDs preserve the cryptographic integrity of the metadata even when portions are elided.
 
 ## Step 0: Setting Up Your Work Space
 
@@ -46,6 +44,8 @@ cargo install bc-envelope-cli
 ```
 
 If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html) for easy installation instructions.
+
+This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
 
 ## Step 1: Create Your XID
 
