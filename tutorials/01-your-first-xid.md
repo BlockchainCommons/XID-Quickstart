@@ -148,13 +148,17 @@ Note that a XID actually includes two keypairs that are bundled together:
 
 Your inception key is the `SigningPublicKey`. This is the key that defines your XID. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key. This is the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key, which is why that's called the inception key.
 
+> :warning: **Important Note**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
+
 As shown, the public halves of the keypair are readable by anyone, while the private halves are encrypted with your password; the public halves are readable by anyone. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
 
 #### A Review of Envelope Structure
 
-### Understanding the Envelope Structure
+If you are familar with envelope structure (here) and envelope format (below), then you can skip ahead to Step 2 and create a public version of XID. If, however, you are not that familiar with Gordian Envelope, then read on.
 
-Before going further, you need to understand the pattern that organizes all envelope data. Every envelope has a **subject** (the main thing) and **assertions** (claims about that thing).
+As noted, every envelope has a **subject** (the main thing) and **assertions** (claims about that thing), which each include a **predicate** and an **object**. This usually means the subject predicates the object or the subject has a predicate of the object.
+
+Here's how that structure appears in the sample XID Document:
 
 ```
 {
@@ -166,7 +170,7 @@ Before going further, you need to understand the pattern that organizes all enve
 }
 ```
 
-Your XID identifier `XID(c7e764b7)` is the subject. The assertions make claims about it: "this XID has these public keys" and "this XID has this provenance history." Each assertion is a predicate-object pair, like a simple sentence: subject has predicate pointing to object.
+The XID identifier `XID(c7e764b7)` is the subject. The assertions make claims about it: "this XID has these public keys" and "this XID has this provenance history."=
 
 This pattern nests. Look inside the `'key'` assertion:
 
@@ -177,35 +181,20 @@ This pattern nests. Look inside the `'key'` assertion:
 ]
 ```
 
-The `PublicKeys` object is itself a subject with its own assertions. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add your GitHub account and SSH keys as attachments—vendor-qualified containers for application-specific data. For now, the key insight is that you can add, remove, or hide any assertion independently—which is exactly what we'll do next with the private keys.
+The `PublicKeys` object is itself a subject with its own assertions. It `allow`s all access to the XID and it contains an `ENCRYPTED` `privateKey`. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add your GitHub account and SSH keys as attachments—vendor-qualified containers for application-specific data. 
 
-### About the Abbreviated Display
-
-The `envelope format` output shows abbreviated labels like `PublicKeys(32de0f2b)` and `ENCRYPTED` rather than raw cryptographic data. This is intentional—showing hundreds of bytes of base64 would obscure the structure. The hex codes in parentheses are digest fragments that let you quickly identify which key or encrypted blob you're looking at.
-
-The abbreviations hide complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
-
-> **Important**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. Lose the keys, lose the identity—just like SSH.
+Assertions can be added, removed, or hidden independently, no matter where they are in an envelope document. This is a key insight for their usage (and in fact you'll be hiding individual assertions momentarily).
 
 #### A Review of Envelope Format
 
-If you're familar 
+Envelope format shows you abbreviated labels for some data, such as `PublicKeys(32de0f2b)` and `ENCRYPTED`, rather than raw cryptographic data. This is intentional: showing hundreds of bytes of base64 would obscure the structure. In addition, the abbreviations hide complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
 
-> **Notice the Quote Styles**:
->
-> You see two quote styles in your XIDDoc:
->
-> - **Single quotes** (`'key'`, `'nickname'`, `'All'`): **Known values** - standardized terms from the Gordian Envelope specification. These ensure different tools understand your XIDDoc the same way.
-> - **Double quotes** (`"BRadvoc8"`, `"github"`): **Strings** - custom application data you define.
->
-> **Known values can be predicates OR objects**:
->
-> - As predicate: `'nickname': "BRadvoc8"` (known value `'nickname'` points to string `"BRadvoc8"`)
-> - As object: `'allow': 'All'` (known value `'allow'` points to known value `'All'`)
->
-> This distinction ensures interoperability: tools that understand envelopes correctly interpret known values. In a future tutorial, you'll add custom data using attachments to build BRadvoc8's verifiable attestations.
+The hex codes in parentheses are digest fragments that let you quickly identify which key or encrypted blob you're looking at. Each one is a hash of the data in question.
 
-BRadvoc8 is now a production-ready XID. Her private keys are encrypted, there's a provenance mark establishing when this identity was created, and the whole document is cryptographically signed. The only thing left before sharing it is to remove the private keys—which is what we'll do next.
+The other thing of particular note is the quoted data. There are two styles of quotes:
+
+> - **Single quotes** (`'key'`, `'nickname'`, `'All'`) designate **Known values**. These are standardized terms from the Gordian Envelope specification. They can be subjects, predicates (`'allow'`), or objects (`'All'`). These ensure different tools understand your XIDDoc the same way.
+> - **Double quotes** (`"BRadvoc8"`, `"github"`) designate **Strings**. This is custom application data you define.
 
 ## Step 2: Creating a Public Version by Elision
 
