@@ -1,6 +1,6 @@
 # Creating Your First XID
 
-This tutorial introduces Amira, a software developer with a politically sensitive background who wants to contribute to social impact projects without risking her professional position or revealing her identity. By the end, you'll have created a basic XID (eXtensible IDentifier) that enables pseudonymous contributions while maintaining security.
+This tutorial demonstrates how to create a basic XID (eXtensible IDentifier) that enables pseudonymous contributions while maintaining security. It does so through the story of [Amira](https://w3c-ccg.github.io/amira/), a software developer with a politically sensitive background who wants to contribute to social impact projects without risking her professional position or revealing her identity.
 
 **Time to complete: 10-15 minutes**
 
@@ -22,15 +22,11 @@ This tutorial introduces Amira, a software developer with a politically sensitiv
 
 ## Amira's Story: Why Pseudonymous Identity Matters
 
-Amira is a successful software developer working at a prestigious multinational bank in Boston. With her expertise in distributed systems security, she earns a comfortable living, but she wants more purpose in her work. On the advice of her friend Charlene, Amira discovers RISK, a network that connects developers with social impact projects while protecting participants' privacy.
+Amira is a successful software developer working at a prestigious multinational bank in Boston. With her expertise in distributed systems security, she earns a comfortable living, but she wants more purpose in her work. She is considering contributing to social-impact programs, but she can't do so under her real name. That's because Amira's position is somewhat vulnerable. She's working on an H-1B visa, and in modern America, that could be revoked for any sort of activism. She also grew up in a politically tense region, and her work on social-impact projects could endanger family members back home. Yet she's deeply motivated to use her skills to help oppressed people globally. This tension between professional security and meaningful contribution creates a specific need.
 
-Given Amira's background in a politically tense region, contributing openly to certain social impact projects could risk her visa status, professional position, or even the safety of family members back home. Yet she's deeply motivated to use her skills to help oppressed people globally. This tension between professional security and meaningful contribution creates a specific need.
+Anonymous submissions could resolve these issues, and Amira already has a pseuodnymous identity: "BRadvoc8" (Basic Rights Advocate). However, anonymous contributions lack credibility. Project maintainers need confidence in the quality and provenance of code, especially for socially important applications. Amira needs a solution that protects her identity while allowing her to build a verifiable reputation for her skills. This would allow her to build trust through the quality of her work rather than existing credentials and so establish a consistent presence that can evolve over time. 
 
-However, Amira faces a dilemma: she can't contribute anonymously because anonymous contributions lack credibility. Project maintainers need confidence in the quality and provenance of code, especially for socially important applications. She needs a solution that protects her identity while allowing her to build a verifiable reputation for her skills.
-
-Amira needs a technological solution that lets her share her security expertise without revealing her real identity, build trust through the quality of her work rather than existing credentials, and establish a consistent "BRadvoc8" (Basic Rights Advocate) presence that can evolve over time. She wants to connect with project leaders like Ben from the women's services non-profit while protecting herself from adversaries who might target her for her contributions.
-
-This is where XIDs come in: they enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity.
+On the advice of her friend Charlene, Amira investigates RISK, a network that connects developers with social-impact projects while protecting participants' privacy. It uses a Blockchain Commons technology called [XIDs](../concepts/xid.md): they enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity. Through RISK, Amira can connect with project leaders such as Ben, who runs a women's services non-profit, while protecting herself from adversaries who might target her or her family for her contributions.
 
 ## Why XIDs Matter
 
