@@ -76,9 +76,9 @@ fi
 This command runs the `envelope` command twice.
 
 1. It uses `envelope generate keypairs` to generate an Ed25519 keypair (the same algorithm SSH, git, and Signal use). This generates two URs, containing the private and public keys, respectively.
-2. It uses `envelope xid new` to create a XID based on that Ed25519 keypair. This generates a Gordian Envelope, containing the XID.
+2. It uses `envelope xid new` to create a XID based on that Ed25519 keypair. This generates a XID Document (XIDDoc), which can be read as a Gordian Envelope.
 
-Several arguments to the second command affect how the XID is produced:
+Several arguments to the second command affect how the XID Document is produced:
 
 1. Your private key is kept in your XID structure, but `--private encrypt` encrypts it, with `--encrypt-password` allowing its decryption with a password.
 2. A set `--nickname` is added to the XID structure.
@@ -95,14 +95,14 @@ A XID builds on several other Blockchain Commons technologies, primarily [Gordia
  
 ### View your XID structure
 
-The `envelope format` command can always be used to display a human-readable version of a Gordian Envelope, including a XID document.
+The `envelope format` command can always be used to display a human-readable version of a Gordian Envelope, including a XID Document.
 
 ```
 envelope format "$XID"
 
 │ {
 │     XID(c7e764b7) [
-│         'key': PublicKeys(88d90933, SigningPublicKey(c5385c8f, Ed25519PublicKey(a1fae6ca)), EncapsulationPublicKey(a20a01e7, X25519PublicKey(a20a01e7))) [
+│         'key': PublicKeys(88d90933, SigningPublicKey(c7e764b7, Ed25519PublicKey(a1fae6ca)), EncapsulationPublicKey(a20a01e7, X25519PublicKey(a20a01e7))) [
 │             {
 │                 'privateKey': ENCRYPTED [
 │                     'hasSecret': EncryptedKey(Argon2id)
@@ -128,37 +128,29 @@ envelope format "$XID"
 │ ]
 ```
 
-The output reveals the structure of your XIDDoc (XID document). The curly braces `{ }` indicate wrapping, which is required for signing. Inside, you see `XID(c7e764b7)`, Amira's unique identifier derived from her public key. This identifier never changes as long as she uses the same keys.
+Here's what all the sections mean:
 
-The `PublicKeys(...)` section contains both public keys (safe to share), while `ENCRYPTED` marks where your private keys are protected. The `'hasSecret': EncryptedKey(Argon2id)` notation tells you Argon2id encryption is protecting your secrets—a modern algorithm designed to resist brute-force attacks.
+- The curly braces `{ }` indicate wrapping, which is required for signing.
+   - The signature occurs at the end under `signed`, with the `[ ]` indicating that it's an assertion on the `{ }` wrapped envelope. It confirms the entire document is cryptographically signed with the inception key.
+-  `XID(c7e764b7)` is Amira's unique identifier, derived from her public key. This identifier never changes.
+- The `PublicKeys(...)` section contains two public keys and is safe to share.
+   - The `privateKey` section has been `ENCRYPTED`, indicating that the private keys are protected.
+      -  The `'hasSecret': EncryptedKey(Argon2id)` notation indicates that the private keys are encrypted with Argon2id, a modern algorithm designed to resist brute-force attacks.
+      - `salt` is a random value that further obscures its subject. It's applied to the wrapped `{ }` section including the privatekey (and also used later for the provenance mark.
+   - The `allow` statement determines what access these keys have to this identity, as described in [key management](../concepts/key-management.md). By default, keys have total access (`All`).
+   - The `nickname` is inside the `PublicKeys` section, not at the top level. That's because a nickname labels a key, not the XID Document. Later aeys could have different nicknames while maintaining the same XID identity.
+- The `ProvenanceMark(...)` is a "genesis" mark: the first in a chain that tracks this identity's evolution.
+   - The encrypted `provenanceGenerator` is the secret that created this mark and will create all future marks when Amira updates her XIDDoc. 
 
-You now have two keypairs bundled together: a signing keypair for creating and verifying signatures, and an encapsulation keypair for encryption and decryption. The private halves are encrypted with your password; the public halves are readable by anyone. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
+Note that a XID actually includes two keypairs that are bundled together: 
+- a `Signing` keypair for creating and verifying signatures.
+- an `Encapsulation` keypair for encryption and decryption.
 
-> :book: ***What is an inception key?***
+Your inception key is the `SigningPublicKey`. This is the key that defines your XID. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key. This is the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key, which is why that's called the inception key.
 
-The term "inception" refers to the signing public key that defines your XID from its very beginning. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key—the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key.
+As shown, the public halves of the keypair are readable by anyone, while the private halves are encrypted with your password; the public halves are readable by anyone. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
 
-
-
-Notice where the nickname `"BRadvoc8"` appears: it's inside the `PublicKeys` section, not at the top level. The nickname labels the key, not the document. This matters because Amira could later add additional keys with different nicknames while maintaining the same XID identity.
-
-The `ProvenanceMark(...)` is the "genesis" mark—the first in a chain that tracks this identity's evolution. The encrypted provenance generator is the secret that created this mark and will create all future marks when Amira updates her XIDDoc. Finally, `'signed': Signature(Ed25519)` confirms the entire document is cryptographically signed with the inception key.
-
-> **Notice the Quote Styles**:
->
-> You see two quote styles in your XIDDoc:
->
-> - **Single quotes** (`'key'`, `'nickname'`, `'All'`): **Known values** - standardized terms from the Gordian Envelope specification. These ensure different tools understand your XIDDoc the same way.
-> - **Double quotes** (`"BRadvoc8"`, `"github"`): **Strings** - custom application data you define.
->
-> **Known values can be predicates OR objects**:
->
-> - As predicate: `'nickname': "BRadvoc8"` (known value `'nickname'` points to string `"BRadvoc8"`)
-> - As object: `'allow': 'All'` (known value `'allow'` points to known value `'All'`)
->
-> This distinction ensures interoperability: tools that understand envelopes correctly interpret known values. In a future tutorial, you'll add custom data using attachments to build BRadvoc8's verifiable attestations.
-
-BRadvoc8 is now a production-ready XID. Her private keys are encrypted, there's a provenance mark establishing when this identity was created, and the whole document is cryptographically signed. The only thing left before sharing it is to remove the private keys—which is what we'll do next.
+#### A Review of Envelope Structure
 
 ### Understanding the Envelope Structure
 
@@ -194,6 +186,26 @@ The `envelope format` output shows abbreviated labels like `PublicKeys(32de0f2b)
 The abbreviations hide complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
 
 > **Important**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. Lose the keys, lose the identity—just like SSH.
+
+#### A Review of Envelope Format
+
+If you're familar 
+
+> **Notice the Quote Styles**:
+>
+> You see two quote styles in your XIDDoc:
+>
+> - **Single quotes** (`'key'`, `'nickname'`, `'All'`): **Known values** - standardized terms from the Gordian Envelope specification. These ensure different tools understand your XIDDoc the same way.
+> - **Double quotes** (`"BRadvoc8"`, `"github"`): **Strings** - custom application data you define.
+>
+> **Known values can be predicates OR objects**:
+>
+> - As predicate: `'nickname': "BRadvoc8"` (known value `'nickname'` points to string `"BRadvoc8"`)
+> - As object: `'allow': 'All'` (known value `'allow'` points to known value `'All'`)
+>
+> This distinction ensures interoperability: tools that understand envelopes correctly interpret known values. In a future tutorial, you'll add custom data using attachments to build BRadvoc8's verifiable attestations.
+
+BRadvoc8 is now a production-ready XID. Her private keys are encrypted, there's a provenance mark establishing when this identity was created, and the whole document is cryptographically signed. The only thing left before sharing it is to remove the private keys—which is what we'll do next.
 
 ## Step 2: Creating a Public Version by Elision
 
