@@ -45,13 +45,11 @@ cargo install bc-envelope-cli
 
 If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html) for easy installation instructions.
 
-This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
-
 ## Step 1: Create Your XID
 
-Now that we understand why XIDs are valuable, let's help Amira create her "BRadvoc8" identity.
+Now that we understand why XIDs are valuable, let's help Amira create her "BRadvoc8" identity. This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
 
-Like creating an SSH key with `ssh-keygen`, this single operation creates your complete XID with both private and public keys:
+A single `envelope` operation creates a complete XID that contains both private and public keys:
 
 ```
 XID_NAME=BRadvoc8
@@ -65,20 +63,39 @@ XID=$(envelope generate keypairs --signing ed25519 | \
     --generator encrypt \
     --sign inception)
 
-echo "Created your XID: $XID_NAME"
+if [ $XID ]
+then
+  echo "Created your XID: $XID_NAME"
+else
+  echo "Error in XID creation"
+fi
 
 │ Created your XID: BRadvoc8
 ```
 
-That single command did a lot of work. It generated an Ed25519 keypair (the same algorithm SSH, git, and Signal use), encrypted the private key with your password, added a provenance mark establishing the genesis of this identity, and signed the whole thing with your "inception" key so others can verify it's authentic.
+This command runs the `envelope` command twice.
 
-The term "inception" refers to the signing public key that defines your XID from its very beginning. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key—the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key.
+1. It uses `envelope generate keypairs` to generate an Ed25519 keypair (the same algorithm SSH, git, and Signal use). This generates two URs, containing the private and public keys, respectively.
+2. It uses `envelope xid new` to create a XID based on that Ed25519 keypair. This generates a Gordian Envelope, containing the XID.
 
-You now have two keypairs bundled together: a signing keypair for creating and verifying signatures, and an encapsulation keypair for encryption and decryption. The private halves are encrypted with your password; the public halves are readable by anyone. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
+Several arguments to the second command affect how the XID is produced:
 
-> **Security Note**: Your XID contains your private keys (encrypted with your password). This is like your SSH `id_rsa` file - keep your passphrase secure! The same keys will always generate the same XID identifier deterministically.
+1. Your private key is kept in your XID structure, but `--private encrypt` encrypts it, with `--encrypt-password` allowing its decryption with a password.
+2. A set `--nickname` is added to the XID structure.
+3. A provenance mark is added to the XID structure with `--generator encrypt`.
+4. The entire XID is "wrapped" and then signed with your inception key thanks to `--sign inception`, which allows others to verify its authenticity.
 
-**View your XID structure:**
+> :warning: **Security Note**: Your XID contains your private keys (encrypted with your password). Though they are encrypted, you should still be leary of distributing a XID file that contains those private keys. Fortunately, you can elide (remove) that data, as described below. Obviously, you must also be careful to protect your password.
+
+A XID builds on several other Blockchain Commons technologies, primarily [Gordian Envelope](../concepts/gordian-envelope.md) and Provenance Marks.
+
+> :book: ***What is a provenance mark?*** A provenance mark is a forward-commitment hash chain. It will be used to record the evolution of this identity, showing that each version is linked to the previous one (and also, which is the newest version of a set).
+
+> :book: **What is a wrapped envelope?** A Gordian Envelope is a package of informational triplets in the form of subject-predicate-object. An assertion (the predicate and the object) always apply to a specific subject. To make an assertion apply to more information, you wrap the envelope, and then apply the assertion to the wrapped envelope. Signatures are assertions, so for a signature to apply to an entire envelope (in this case, all of the XID information), it must be wrapped prior to signing.
+ 
+### View your XID structure
+
+The `envelope format` command can always be used to display a human-readable version of a Gordian Envelope, including a XID document.
 
 ```
 envelope format "$XID"
@@ -114,6 +131,14 @@ envelope format "$XID"
 The output reveals the structure of your XIDDoc (XID document). The curly braces `{ }` indicate wrapping, which is required for signing. Inside, you see `XID(c7e764b7)`, Amira's unique identifier derived from her public key. This identifier never changes as long as she uses the same keys.
 
 The `PublicKeys(...)` section contains both public keys (safe to share), while `ENCRYPTED` marks where your private keys are protected. The `'hasSecret': EncryptedKey(Argon2id)` notation tells you Argon2id encryption is protecting your secrets—a modern algorithm designed to resist brute-force attacks.
+
+You now have two keypairs bundled together: a signing keypair for creating and verifying signatures, and an encapsulation keypair for encryption and decryption. The private halves are encrypted with your password; the public halves are readable by anyone. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
+
+> :book: ***What is an inception key?***
+
+The term "inception" refers to the signing public key that defines your XID from its very beginning. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key—the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key.
+
+
 
 Notice where the nickname `"BRadvoc8"` appears: it's inside the `PublicKeys` section, not at the top level. The nickname labels the key, not the document. This matters because Amira could later add additional keys with different nicknames while maintaining the same XID identity.
 
