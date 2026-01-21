@@ -9,7 +9,7 @@ In Tutorial 01, Amira created her BRadvoc8 identity. Now she wants Ben from Sist
 ## Prerequisites
 
 - Completed Tutorial 01 (have a working XIDDoc)
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.31.2 or later)
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.32.0 or later)
 - A GitHub account (for publishing - can use any public URL)
 
 ## What You'll Learn
@@ -88,7 +88,7 @@ Make sure your URL points to raw content, not an HTML page. For GitHub repositor
 Now add a `dereferenceVia` assertion that tells others where to fetch the current version of your XIDDoc:
 
 ```
-XID_WITH_URL=$(envelope xid method add \
+XID_WITH_URL=$(envelope xid resolution add \
     "$PUBLISH_URL" \
     --verify inception \
     --password "$PASSWORD" \
@@ -127,7 +127,7 @@ envelope format "$XID_WITH_URL" | head -20
 
 The command added a `'dereferenceVia': URI(...)` assertion, verified the existing signature, re-signed with your inception key, and kept your private keys encrypted. Notice that `dereferenceVia` is a known value (single quotes) from the Gordian Envelope specification, and its object is a `URI` type rather than a plain string. This assertion tells anyone who receives your XIDDoc: "To get the current version, fetch from this URL."
 
-You can add multiple `dereferenceVia` assertions for redundancy—different mirrors pointing to the same XID.
+You can add multiple `dereferenceVia` assertions for redundancy by running the command again with a different URL. For example, you might point to both a GitHub raw URL and a personal domain, so if one source becomes unavailable, verifiers can still fetch your current XIDDoc from the other.
 
 ### Step 4: Export Public Version
 
@@ -202,16 +202,16 @@ Ben fetches the XIDDoc from the URL Amira provided:
 # Ben's perspective - he only has the URL
 RECEIVED_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
-# Fetch the XID (simulated - in practice, use curl)
+# Fetch the XIDDoc (simulated - in practice, use curl)
 # FETCHED_XID=$(curl -s "$RECEIVED_URL")
 
 # For this tutorial, simulate with the published XID
 FETCHED_XID="$PUBLIC_XID"
 
-echo "Fetched XID from: $RECEIVED_URL"
+echo "Fetched XIDDoc from: $RECEIVED_URL"
 envelope format "$FETCHED_XID" | head -15
 
-│ Fetched XID from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
+│ Fetched XIDDoc from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
 │ {
 │     XID(c7e764b7) [
 │         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
@@ -259,7 +259,7 @@ The signature verified, which means the document is signed by its own inception 
 
 ### Step 8: Ben Checks the dereferenceVia URL
 
-Ben compares where he fetched the XID from to the `dereferenceVia` URL inside it:
+Ben compares where he fetched the XIDDoc from to the `dereferenceVia` URL inside it:
 
 ```
 # Extract the dereferenceVia URL from the XID
@@ -420,7 +420,7 @@ BRadvoc8 now has a stable publication URL, provenance tracking for freshness ver
 
 Try these to solidify your understanding:
 
-- Publish your XID for real: create a GitHub repository, add the URL with `xid method add`, export the public version, and commit it.
+- Publish your XID for real: create a GitHub repository, add the URL with `xid resolution add`, export the public version, and commit it.
 - Practice advancing the provenance mark with `xid provenance next` and observe how the sequence numbers change.
 - Add multiple `dereferenceVia` assertions pointing to different mirrors.
 

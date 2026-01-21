@@ -11,7 +11,7 @@ This tutorial shows how Ben cross-verifies Amira's attestations against external
 ## Prerequisites
 
 - Understanding of Tutorials 01-03
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.32.0 or later)
 - `curl` and `jq` for API queries (standard on macOS/Linux)
 
 ## What You'll Learn
@@ -38,20 +38,20 @@ This is cross-verification: checking claims against multiple independent sources
 
 ### Step 1: Fetch the XIDDoc
 
-Ben fetches Amira's published XID:
+Ben fetches Amira's published XIDDoc:
 
 ```
 # Ben's perspective - he only has the URL
-XID_URL="https://raw.githubusercontent.com/BRadvoc8/BRadvoc8/master/xid.txt"
+XID_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
-# Fetch the XID
+# Fetch the XIDDoc
 FETCHED_XID=$(curl -sL "$XID_URL")
 
-echo "Fetched XID from: $XID_URL"
+echo "Fetched XIDDoc from: $XID_URL"
 envelope xid id "$FETCHED_XID"
 
-│ Fetched XID from: https://raw.githubusercontent.com/BRadvoc8/BRadvoc8/master/xid.txt
-│ ur:xid/hdcxoypmsovtkttlsfrloeprreynmokbbtpauofebdfpoyylvtdptetodyahzslpeovtoyaylkgd
+│ Fetched XIDDoc from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
+│ ur:xid/hdcxhecefsnnionspljpftktetwymnfmcyecveuotktpwenlhyhdpmpykpchcmzchywzfelovwrf
 ```
 
 ### Step 2: Verify Self-Consistency
@@ -90,11 +90,11 @@ provenance validate --format json-pretty "$PROVENANCE_MARK" | head -20
 │   "chains": [
 │     {
 │       "chain_id": "...",
-│       "has_genesis": true,
+│       "has_genesis": false,
 │       "sequences": [
 │         {
-│           "start_seq": 0,
-│           "end_seq": 0,
+│           "start_seq": 1,
+│           "end_seq": 1,
 │           "marks": [...]
 │         }
 │       ]
@@ -103,7 +103,7 @@ provenance validate --format json-pretty "$PROVENANCE_MARK" | head -20
 │ }
 ```
 
-The output shows `has_genesis: true` (the chain started properly) and the current sequence. For the real BRadvoc8 XID built all-at-once, this is sequence 0. If you followed T02→T03 publishing updates, you'd see sequence 1. Either way, Ben can verify the chain is intact.
+The output shows `has_genesis: false` because Ben only has the current provenance mark (seq 1), not the original genesis mark (seq 0). The `start_seq: 1, end_seq: 1` confirms this is the second version. The real BRadvoc8 XID is at sequence 1—the basic XID was published first at sequence 0, then the GitHub attestation was added and provenance advanced to sequence 1. Ben doesn't need the genesis mark to verify the current state; he just needs to know this is version 1 of the identity.
 
 ---
 
@@ -123,21 +123,23 @@ envelope format "$ATTACHMENT"
 │ Found attachment:
 │ {
 │     "BRadvoc8" [
-│         'dereferenceVia': URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+│         'dereferenceVia': URI(https://api.github.com/users/BRadvoc8)
 │         'isA': "GitHubAccount"
-│         "createdAt": 2026-01-21T00:39:19Z
+│         "createdAt": 2026-01-21T05:34:20Z
 │         "sshSigningKey": SigningPublicKey(714b3b69, SSHPublicKey(f733cab9))
-│         "sshSigningKeyProof": "BRadvoc8 controls SSH signing key registered on GitHub as of 2026-01-20" [
+│         "sshSigningKeyProof": "BRadvoc8 controls SSH signing key registered on GitHub as of 2026-01-21" [
 │             'signed': Signature(SshEd25519)
 │         ]
 │         "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe"
+│         "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+│         "updatedAt": 2026-01-21T05:34:20Z
 │     ]
 │ } [
 │     'vendor': "self"
 │ ]
 ```
 
-The attachment contains everything Ben needs for verification: the claimed GitHub username (`"BRadvoc8"`), a `dereferenceVia` URL pointing to GitHub's API where he can check the claim, the SSH signing key in text format, a proof-of-control signed with that key, and a creation timestamp. Each piece plays a role in the verification chain he's about to build.
+The attachment contains everything Ben needs for verification: the claimed GitHub username (`"BRadvoc8"`), a `dereferenceVia` URL pointing to the GitHub account itself, the SSH signing key in text format, a proof-of-control signed with that key, an `sshSigningKeysURL` pointing directly to GitHub's signing keys API for verification, and timestamps. Each piece plays a role in the verification chain he's about to build.
 
 ### Step 5: Extract the Claimed SSH Key
 
@@ -242,16 +244,16 @@ Ben compares the XID's provenance with GitHub's timeline:
 ```
 echo "Timeline analysis:"
 echo "  - GitHub key registered: $GITHUB_CREATED"
-echo "  - XID provenance: sequence 0 (or 1 if updated)"
-echo "  - XID attachment created: 2026-01-20 (from createdAt in attachment)"
+echo "  - XID provenance: sequence 1"
+echo "  - XID attachment created: 2026-01-21 (from createdAt in attachment)"
 
 │ Timeline analysis:
 │   - GitHub key registered: 2025-05-10T02:15:26Z
-│   - XID provenance: sequence 0 (genesis, or 1 if updated)
-│   - XID attachment created: 2026-01-20 (from createdAt in attachment)
+│   - XID provenance: sequence 1 (one update since genesis)
+│   - XID attachment created: 2026-01-21 (from createdAt in attachment)
 ```
 
-The provenance mark doesn't contain a timestamp—only a sequence number. The real BRadvoc8 XID is at sequence 0 (all changes made before initial publication). If you followed T02→T03 with updates, yours might be at sequence 1. Either way, combined with GitHub's timestamp showing the SSH key was registered in May 2025, Ben can establish that the SSH key has a longer history than the XID itself—BRadvoc8 was active on GitHub before creating this XID document.
+The provenance mark doesn't contain a timestamp—only a sequence number. The real BRadvoc8 XID is at sequence 1 (basic XID published at seq 0, then updated with GitHub attestation at seq 1). Combined with GitHub's timestamp showing the SSH key was registered in May 2025, Ben can establish that the SSH key has a longer history than the XID itself—BRadvoc8 was active on GitHub before creating this XID document.
 
 > **Provenance = Ordering**:
 >
@@ -282,6 +284,18 @@ curl -s "https://api.github.com/repos/BRadvoc8/BRadvoc8/commits/$RECENT_COMMIT" 
 ```
 
 GitHub verified this commit's signature using the registered signing key. This closes the loop: the key in BRadvoc8's XID was used to create actual commits, GitHub independently verified those signatures against its own registry, and all three sources (XID, API, commits) point to the same key. An attacker would need to compromise all three to forge this evidence.
+
+> **Repository Authority: The Deeper Link**
+>
+> Ben verified that the SSH key in BRadvoc8's XID matches GitHub's registry. But there's an even stronger connection he could check: the repository's **inception commit**.
+>
+> The BRadvoc8/BRadvoc8 repository was created with an inception commit signed by the same SSH key that appears in the XID. This creates cryptographic proof that whoever controls the XID also controls the publication repository—not just a GitHub account, but the specific location where the XID is published.
+>
+> Why does this matter? Someone could register "BRadvoc8" on GitHub, add an SSH key, and publish a fake XID. But they couldn't forge the inception commit signature without the original SSH private key. The inception commit is a temporal anchor that proves: "On this date, whoever held this SSH private key created this repository."
+>
+> Ben isn't checking inception authority in this tutorial—it requires examining the repository's git history rather than the API. But understanding this link completes the trust chain: XID → SSH key → inception commit → repository control. For high-stakes verification, checking the inception commit signature against the XID's SSH key provides the strongest proof of publication authority.
+>
+> For more on this pattern, see the [Open Integrity](https://github.com/OpenIntegrityProject/core) project, which formalizes repository authority through inception commits.
 
 ---
 
@@ -318,7 +332,7 @@ Ben summarizes his verification:
 echo "=== Verification Summary for BRadvoc8 ==="
 echo ""
 echo "✅ XID self-consistent (signature valid)"
-echo "✅ Provenance chain intact (genesis)"
+echo "✅ Provenance chain intact (seq 1)"
 echo "✅ SSH signing key matches GitHub registry"
 echo "✅ Key registered on GitHub: $GITHUB_CREATED"
 echo "✅ Signed commits verified by GitHub"
@@ -338,7 +352,7 @@ echo "  - Build trust incrementally through collaboration"
 │ === Verification Summary for BRadvoc8 ===
 │
 │ ✅ XID self-consistent (signature valid)
-│ ✅ Provenance chain intact (genesis)
+│ ✅ Provenance chain intact (seq 1)
 │ ✅ SSH signing key matches GitHub registry
 │ ✅ Key registered on GitHub: 2025-05-10T02:15:26Z
 │ ✅ Signed commits verified by GitHub
@@ -396,7 +410,7 @@ This is the verification side of self-attestation. Amira's claims in T03 are now
 
 Try these to solidify your understanding:
 
-- Fetch a real XID (if one is published) and verify its attestations.
+- Fetch a real XIDDoc (if one is published) and verify its attestations.
 - Query GitHub's API directly using `curl` and explore what information is available.
 - Create your own GitHub account, register a signing key, and verify the API shows it correctly.
 - Think about what additional evidence would strengthen trust beyond what's shown here.
@@ -409,7 +423,7 @@ A complete working script implementing this tutorial is available at `tests/04-c
 bash tests/04-cross-verification-TEST.sh
 ```
 
-This script fetches the real BRadvoc8 XID, extracts the GitHub attachment, queries GitHub's API, and compares the keys—demonstrating the complete cross-verification workflow.
+This script fetches the real BRadvoc8 XIDDoc, extracts the GitHub attachment, queries GitHub's API, and compares the keys—demonstrating the complete cross-verification workflow.
 
 ## What's Next
 

@@ -9,7 +9,7 @@ This tutorial introduces Amira, a software developer with a politically sensitiv
 ## Prerequisites
 
 - Basic terminal/command line familiarity
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (`cargo install bc-envelope-cli` — release 0.31.2 or later recommended)
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (`cargo install bc-envelope-cli` — release 0.32.0 or later recommended)
 
 ## What You'll Learn
 

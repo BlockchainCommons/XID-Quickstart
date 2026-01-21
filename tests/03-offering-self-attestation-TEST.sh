@@ -42,7 +42,7 @@ XID=$(envelope generate keypairs --signing ed25519 | \
     --sign inception)
 
 # Add dereferenceVia
-XID=$(envelope xid method add \
+XID=$(envelope xid resolution add \
     "$PUBLISH_URL" \
     --verify inception \
     --password "$PASSWORD" \
@@ -94,11 +94,14 @@ echo ""
 echo "=== Step 4: Build GitHub Account Payload ==="
 GITHUB_ACCOUNT=$(envelope subject type string "$XID_NAME")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj known isA string "GitHubAccount" "$GITHUB_ACCOUNT")
-GITHUB_ACCOUNT=$(envelope assertion add pred-obj known dereferenceVia uri "https://api.github.com/users/$XID_NAME/ssh_signing_keys" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj known dereferenceVia uri "https://api.github.com/users/$XID_NAME" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKeysURL" uri "https://api.github.com/users/$XID_NAME/ssh_signing_keys" "$GITHUB_ACCOUNT")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKey" ur "$SSH_PUBKEYS" "$GITHUB_ACCOUNT")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKeyText" string "$SSH_EXPORT" "$GITHUB_ACCOUNT")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKeyProof" envelope "$PROOF" "$GITHUB_ACCOUNT")
-GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "createdAt" date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$GITHUB_ACCOUNT")
+CURRENT_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "createdAt" date "$CURRENT_TIMESTAMP" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "updatedAt" date "$CURRENT_TIMESTAMP" "$GITHUB_ACCOUNT")
 
 echo "GitHub account payload:"
 envelope format "$GITHUB_ACCOUNT"
@@ -159,12 +162,37 @@ else
 fi
 echo ""
 
-echo "=== Step 6: Export Public Version ==="
-PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID_WITH_ATTACHMENT")
+echo "=== Step 6: Advance Provenance ==="
+XID_UPDATED=$(envelope xid provenance next \
+    --verify inception \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --password "$PASSWORD" \
+    --encrypt-password "$PASSWORD" \
+    "$XID_WITH_ATTACHMENT")
+
+echo "Advanced provenance"
+echo "$XID_UPDATED" > "$OUTPUT_DIR/06-xid-provenance-advanced.envelope"
+
+# Verify provenance advanced to sequence 1
+PROV_MARK=$(envelope xid provenance get "$XID_UPDATED")
+PROV_JSON=$(provenance validate --format json-compact "$PROV_MARK" 2>&1 | grep -o '{.*}')
+PROV_SEQ=$(echo "$PROV_JSON" | jq -r '.chains[0].sequences[0].end_seq')
+if [ "$PROV_SEQ" = "1" ]; then
+    echo "✅ Provenance advanced to sequence $PROV_SEQ"
+else
+    echo "❌ ERROR: Expected sequence 1, got $PROV_SEQ"
+    exit 1
+fi
+echo ""
+
+echo "=== Step 7: Export Public Version ==="
+PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID_UPDATED")
 
 echo "Exported public version"
-echo "$PUBLIC_XID" > "$OUTPUT_DIR/06-public-xid.envelope"
-envelope format "$PUBLIC_XID" > "$OUTPUT_DIR/06-public-xid.format"
+echo "$PUBLIC_XID" > "$OUTPUT_DIR/07-public-xid.envelope"
+envelope format "$PUBLIC_XID" > "$OUTPUT_DIR/07-public-xid.format"
 
 # Verify attachment survives export
 ATTACHMENT=$(envelope xid attachment all "$PUBLIC_XID" | head -1)
@@ -184,7 +212,7 @@ else
 fi
 echo ""
 
-echo "=== Step 7: Verify Signature on Public Version ==="
+echo "=== Step 8: Verify Signature on Public Version ==="
 UNWRAPPED=$(envelope extract wrapped "$PUBLIC_XID")
 KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED")
 KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
@@ -198,7 +226,7 @@ else
 fi
 echo ""
 
-echo "=== Step 8: Validate Provenance Mark ==="
+echo "=== Step 9: Validate Provenance Mark ==="
 PROVENANCE_MARK=$(envelope xid provenance get "$PUBLIC_XID")
 echo "Provenance mark: $(echo "$PROVENANCE_MARK" | head -c 50)..."
 
@@ -209,7 +237,7 @@ else
 fi
 echo ""
 
-echo "=== Step 9: Extract and Verify Attachment Structure ==="
+echo "=== Step 10: Extract and Verify Attachment Structure ==="
 echo "Attachment content:"
 envelope format "$ATTACHMENT" | head -15
 

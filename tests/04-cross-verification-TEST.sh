@@ -38,8 +38,8 @@ OUTPUT_DIR="output/test-04-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$OUTPUT_DIR"
 
 if [ "$LIVE_MODE" = true ]; then
-    echo "=== LIVE MODE: Fetching Real BRadvoc8 XID ==="
-    XID_URL="https://raw.githubusercontent.com/BRadvoc8/BRadvoc8/master/xid.txt"
+    echo "=== LIVE MODE: Fetching Real BRadvoc8 XIDDoc ==="
+    XID_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
     echo "Fetching from: $XID_URL"
     FETCHED_XID=$(curl -sL "$XID_URL")
@@ -49,7 +49,7 @@ if [ "$LIVE_MODE" = true ]; then
         exit 1
     fi
 
-    echo "✅ Fetched XID successfully"
+    echo "✅ Fetched XIDDoc successfully"
     echo "$FETCHED_XID" > "$OUTPUT_DIR/00-fetched-xid.envelope"
 else
     echo "=== LOCAL MODE: Creating Test XID ==="
@@ -68,7 +68,7 @@ else
         --sign inception)
 
     # Add dereferenceVia
-    XID=$(envelope xid method add \
+    XID=$(envelope xid resolution add \
         "$PUBLISH_URL" \
         --verify inception \
         --password "$PASSWORD" \
@@ -89,11 +89,14 @@ else
 
     GITHUB_ACCOUNT=$(envelope subject type string "$XID_NAME")
     GITHUB_ACCOUNT=$(envelope assertion add pred-obj known isA string "GitHubAccount" "$GITHUB_ACCOUNT")
-    GITHUB_ACCOUNT=$(envelope assertion add pred-obj known dereferenceVia uri "https://api.github.com/users/$XID_NAME/ssh_signing_keys" "$GITHUB_ACCOUNT")
+    GITHUB_ACCOUNT=$(envelope assertion add pred-obj known dereferenceVia uri "https://api.github.com/users/$XID_NAME" "$GITHUB_ACCOUNT")
+    GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKeysURL" uri "https://api.github.com/users/$XID_NAME/ssh_signing_keys" "$GITHUB_ACCOUNT")
     GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKey" ur "$SSH_PUBKEYS" "$GITHUB_ACCOUNT")
     GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKeyText" string "$SSH_EXPORT" "$GITHUB_ACCOUNT")
     GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKeyProof" envelope "$PROOF" "$GITHUB_ACCOUNT")
-    GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "createdAt" date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$GITHUB_ACCOUNT")
+    CURRENT_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "createdAt" date "$CURRENT_TIMESTAMP" "$GITHUB_ACCOUNT")
+    GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "updatedAt" date "$CURRENT_TIMESTAMP" "$GITHUB_ACCOUNT")
 
     XID=$(envelope xid attachment add \
         --vendor "self" \
@@ -106,6 +109,16 @@ else
         --encrypt-password "$PASSWORD" \
         "$XID")
 
+    # Advance provenance (mirrors T03 workflow)
+    XID=$(envelope xid provenance next \
+        --verify inception \
+        --sign inception \
+        --private encrypt \
+        --generator encrypt \
+        --password "$PASSWORD" \
+        --encrypt-password "$PASSWORD" \
+        "$XID")
+
     # Export public version
     FETCHED_XID=$(envelope xid export --private elide --generator elide "$XID")
 
@@ -114,8 +127,8 @@ else
 fi
 echo ""
 
-echo "=== Step 1: Display Fetched XID ==="
-echo "Fetched XID:"
+echo "=== Step 1: Display Fetched XIDDoc ==="
+echo "Fetched XIDDoc:"
 envelope format "$FETCHED_XID" | head -20
 echo "..."
 echo ""
@@ -239,7 +252,7 @@ echo "XID Identifier: $(envelope xid id "$FETCHED_XID")"
 echo ""
 echo "Verification Results:"
 echo "  ✅ XID self-consistent (signature valid)"
-echo "  ✅ Provenance chain intact (genesis)"
+echo "  ✅ Provenance chain intact (seq 1)"
 echo "  ✅ GitHub attachment present"
 echo "  ✅ SSH signing key extractable"
 

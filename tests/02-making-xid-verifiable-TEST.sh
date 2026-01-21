@@ -49,7 +49,7 @@ envelope format "$XID" | head -10
 echo ""
 
 echo "=== Step 2: Add dereferenceVia Assertion ==="
-XID_WITH_URL=$(envelope xid method add \
+XID_WITH_URL=$(envelope xid resolution add \
     "$GIST_URL" \
     --verify inception \
     --password "$PASSWORD" \
@@ -174,8 +174,8 @@ echo ""
 RECEIVED_URL="$GIST_URL"
 FETCHED_XID="$PUBLIC_XID"
 
-echo "=== Step 6 (Ben): Fetch and Display XID ==="
-echo "Ben fetched XID from: $RECEIVED_URL"
+echo "=== Step 6 (Ben): Fetch and Display XIDDoc ==="
+echo "Ben fetched XIDDoc from: $RECEIVED_URL"
 envelope format "$FETCHED_XID" | head -15
 echo ""
 
