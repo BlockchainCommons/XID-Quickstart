@@ -34,8 +34,12 @@ XID=$(envelope generate keypairs --signing ed25519 | \
     --generator encrypt \
     --sign inception)
 
-echo "✓ Created your XID: $XID_NAME"
-echo ""
+if [ $XID ]
+then
+  echo "✓ Created your XID: $XID_NAME"
+else
+  echo "❌ ERROR: XID creation"
+fiecho ""
 
 # View XID structure
 echo "Viewing XID structure:"
@@ -58,7 +62,12 @@ KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
 PRIVATE_KEY_ASSERTION=$(envelope assertion find predicate known privateKey "$KEY_OBJECT")
 PRIVATE_KEY_DIGEST=$(envelope digest "$PRIVATE_KEY_ASSERTION")
 
-echo "✓ Found private key digest"
+if [ $PRIVATE_KEY_DIGEST ]
+then
+  echo "✓ Found private key digest"
+else
+  echo "❌ Error: Private Key Retrieval"
+fi
 
 # Elide the private key
 PUBLIC_XID=$(envelope elide removing "$PRIVATE_KEY_DIGEST" "$XID")
@@ -78,7 +87,7 @@ echo "Original XID digest: $ORIGINAL_DIGEST"
 echo "Public XID digest:   $PUBLIC_DIGEST"
 
 if [ "$ORIGINAL_DIGEST" = "$PUBLIC_DIGEST" ]; then
-    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash!"
+    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash\!"
 else
     echo "❌ ERROR: Digests differ"
     exit 1
