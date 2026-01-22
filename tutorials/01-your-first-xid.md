@@ -9,7 +9,8 @@ This tutorial demonstrates how to create a basic XID (eXtensible IDentifier) tha
 ## Prerequisites
 
 - Basic terminal/command line familiarity
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.32.0 or later recommended)
+- The [Gordian Envelope CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.32.0 or later recommended)
+- Optionally, the [Provenance Mark CLI](https://github.com/BlockchainCommons/provenance-mark-cli-rust) (release 0.6.0 or later recommended)
 
 ## What You'll Learn
 
@@ -41,6 +42,10 @@ This tutorial depends on [`bc-envelope-cli`](https://github.com/BlockchainCommon
 It can be easily installed using the `cargo` package management tool:
 ```
 cargo install bc-envelope-cli
+```
+If you want to optionally check Provenance Marks, you can also install the Provenance Mark CLI with `cargo`:
+```
+cargo install provenance-mark-cli
 ```
 
 If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html) for easy installation instructions.
@@ -315,36 +320,44 @@ The digests are identical. You removed the private key, yet the hash didn't chan
 
 ## Step 3: Verification
 
-Now let's verify both the signature and provenance on our XID:
+There are two ways to verify XIDs:
+* The signature can be verified against a public key.
+* The provenance mark can be validated.
 
+The signature is verified against a public key. Again, we have to dig down through the envelope to get to it:
 ```
-# Extract public keys (the XID contains everything needed for verification)
+UNWRAPPED_XID=$(envelope extract wrapped "$XID")
 KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED_XID")
 KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
 PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
+```
+You can then use envelope's `verify` command to verify the signature of the `PUBLIC_XID` versus that public key:
 
-# Verify the signature
-envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified!"
+```
+envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified\!"
 
 │ ✅ Signature verified!
 ```
 
-Now verify the provenance mark - notice we can verify from the **public** XID:
+This confirms that this XID Document has been signed by the owner of the public key within the document. Alternatively, if the public key were retrieved from a PKI or other published site, it would confirm that the document was signed by the owner of the published public key. In the future, this verification will demonstrate that updates of this XID Document continue to be signed by this original (inception) key.
+
+The provenance mark can similarly be verified. To do this, extract the Provenance Mark with the `xid provenance` command:
 
 ```
-# Extract the provenance mark from the PUBLIC XID (no secrets needed!)
 PROVENANCE_MARK=$(envelope xid provenance get "$PUBLIC_XID")
+```
 
-# Check that it's a valid genesis mark
+Afterward, if you have installed the Provenance Mark CLI, you can validate the Provenance Mark:
+
+```
 provenance validate "$PROVENANCE_MARK"
 
 │ ✅ (silent success - provenance check passed!)
 ```
 
-Want to see what was verified? Get the detailed report:
+Here's a more detailed report on what the Provenance Mark CLI is checking:
 
 ```
-# Show detailed assessment report
 provenance validate --format json-pretty "$PROVENANCE_MARK"
 
 │ {
@@ -369,23 +382,13 @@ provenance validate --format json-pretty "$PROVENANCE_MARK"
 │ }
 ```
 
-Both checks passed using only the public XID—no secrets required. The signature confirms this XIDDoc is authentically from BRadvoc8 (signed by the inception key). The provenance shows `has_genesis: true` and `sequence: 0`, meaning this is the first version in the chain with no issues found.
+The Provenance Mark CLI shows `has_genesis: true` and `sequence: 0`, meaning this is the first version in the chain with no issues found. In other words, you're just verifying that you have a Genesis Mark, which is the first provenance mark in a chain. (When you create more marks in the chain, you'll be able to verify that two provenance marks are connected, but that's for the future.
 
-Notice the asymmetry: verifying signatures and provenance needs only public information, but creating signatures or advancing provenance requires secrets. This is why Amira can share her public XID freely—anyone can verify it, but only she can update it.
+Here's a few things to note in your verification:
+* All verification was down with the `PUBLIC_XID`; no secret information is needed.
+* This demonstrates an asymmetry common in cryptography: Amira creates information with her secrets, and only she can update it. But after she distributes her public XID, anyone can check it.
 
-> **Remember**: The provenance mark is public, but the generator that advances it is encrypted. In Tutorial 02, you'll see how provenance lets Ben verify he has the current version of BRadvoc8.
-
-## Reviewing the XID Creation Workflow
-
-The single command you ran combined several operations that would otherwise take eight or more steps. Understanding what happened helps when things go wrong.
-
-The `--private encrypt` flag encrypted your private keys with your password, following the SSH model: you can share the file freely because the secrets are protected. The public parts (nickname, public keys, provenance) remain readable to anyone.
-
-The `--generator encrypt` flag encrypted the provenance generator—the secret that creates provenance marks. The generator created the initial "genesis" mark you see now, and will create all subsequent marks when Amira updates her XIDDoc. The mark itself is public (it timestamps when this identity version was created), but the generator must stay secret. Only someone with the generator can advance the provenance chain, proving updates are legitimate.
-
-The `--sign inception` flag signed the entire document with the inception key. This is the sign-then-elide workflow: you sign the complete document (including encrypted private keys), then elide sensitive parts for sharing. Because elision preserves the hash, the signature verifies on both versions.
-
-> **Learn more**: The [Signing and Verification](../concepts/signing.md) concept doc explains the cryptographic details. Tutorial 02 shows how provenance enables freshness verification.
+--EDITED DOWN TO HERE--
 
 ## File Organization
 
