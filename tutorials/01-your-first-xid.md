@@ -85,7 +85,7 @@ Several arguments to the second command affect how the XID Document is produced:
 3. A provenance mark is added to the XID structure with `--generator encrypt`.
 4. The entire XID is "wrapped" and then signed with your inception key thanks to `--sign inception`, which allows others to verify its authenticity.
 
-> :warning: **Security Note**: Your XID contains your private keys (encrypted with your password). Though they are encrypted, you should still be leary of distributing a XID file that contains those private keys. Fortunately, you can elide (remove) that data, as described below. Obviously, you must also be careful to protect your password.
+> :warning: **Private Keys On Board**: Your XID contains your private keys (encrypted with your password). Though they are encrypted, you should still be leary of distributing a XID file that contains those private keys. Fortunately, you can elide (remove) that data, as described below. Obviously, you must also be careful to protect your password.
 
 A XID builds on several other Blockchain Commons technologies, primarily [Gordian Envelope](../concepts/gordian-envelope.md) and Provenance Marks.
 
@@ -148,7 +148,7 @@ Note that a XID actually includes two keypairs that are bundled together:
 
 Your inception key is the `SigningPublicKey`. This is the key that defines your XID. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key. This is the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key, which is why that's called the inception key.
 
-> :warning: **Important Note**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
+> :warning: **XIDs Remain Consistent**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
 
 As shown, the public halves of the keypair are readable by anyone, while the private halves are encrypted with your password; the public halves are readable by anyone. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
 
@@ -175,7 +175,7 @@ The XID identifier `XID(c7e764b7)` is the subject. The assertions make claims ab
 This pattern nests. Look inside the `'key'` assertion:
 
 ```
-'key': PublicKeys(88d90933) [     ← Subject of this nested envelope
+'key': PublicKeys(88d90933...) [     ← Subject of this nested envelope
     'allow': 'All'                 ← Assertion about the key
     'privateKey': ENCRYPTED        ← Another assertion
 ]
@@ -239,7 +239,7 @@ fi
 
 ### Eliding Your XID
 
-Now elide the private key to create a public version:
+Eliding your private key from your XID to create a public version simply requires using the `elide` command to remove the data represented by that digest:
 
 ```
 PUBLIC_XID=$(envelope elide removing "$PRIVATE_KEY_DIGEST" "$XID")
@@ -248,17 +248,17 @@ echo "Created public version by eliding private key"
 │ Created public version by eliding private key
 ```
 
-View the public version:
+The `envelope format` command shows that the public version no longer includes that whole branch of data.
 
 ```
 envelope format "$PUBLIC_XID"
 
 │ {
 │     XID(c7e764b7) [
-│         'key': PublicKeys(32de0f2b) [
+│         'key': PublicKeys(88d90933, SigningPublicKey(c7e764b7, Ed25519PublicKey(a1fae6ca)), EncapsulationPublicKey(a20a01e7, X25519PublicKey(a20a01e7))) [
 │             'allow': 'All'
 │             'nickname': "BRadvoc8"
-│             ELIDED                      ← Private key removed
+|             ELIDED
 │         ]
 │         'provenance': ProvenanceMark(632330b4) [
 │             {
@@ -275,28 +275,19 @@ envelope format "$PUBLIC_XID"
 │ ]
 ```
 
-Instead of creating a new XID, she **elides** (removes) the private key from her XID. This is a key envelope feature: **elision preserves the root hash**.
+Note that this preserves the signature *despite* removing some of the data in the envelope. This is a purposeful feature of Gordian Envelope.
 
+#### A Review of Envelope Hashes & Signatures
 
-**Important distinction - XID identifier vs Envelope hash:**
+If you are already comfortable with the structure of Gordian Envelopes, how they hash data, and how data is signed, skip down to Step 3. Otherwise, read on.
 
-Notice `XID(c7e764b7)` is the same as before. But **this doesn't prove elision preserved the hash!** Here's why:
+Gordian Envelope is built on hashes. Every subject, every predicate, every object, and every assertion has a hash. Leaves (such as subject, predicates, and objects) have hashes of the content of the leaf, while nodes (such as assertions, collections of assertions, and wrapped content) have hashes that are built from the hashes of the objects they contain. A signature is made not across the content of an envelope, but against the root (or top-level) hash of an envelope.
 
-- **`XID(c7e764b7)`** = XID identifier (derived from the inception public key)
-  - Stays the same across ALL versions of this identity
-  - Would be the same even if you completely changed the document
-  - Identifies the **entity**, not the document version
+When data is elided from an envelope, its content is removed, but the hash remains. That means that all of the node hashes above that leaf hash remain the same, including the root hash. Since it's the root hash that is signed, not the full envelope content, the signature remains valid.
 
-- **Envelope digest** = Hash of the entire envelope structure
-  - Changes when document content changes
-  - THIS is what elision preserves
-  - THIS is what allows signatures to verify
+> :warning: **Root Hash is Not XID Identifier.** The root hash is composed from the hashes of _all_ the data within an envelope. It changes if you change the document. It's an identifier for a specific version of your XID Document. The XID identifier is the hash of your inception public key. It never changes. It's an identifier for your identity. 
 
-**Critical:** The XID identifier is persistent (based on inception public key), so seeing it unchanged proves nothing about hash preservation. We need to compare the **envelope digest**.
-
-### Proving Elision Preserves the Envelope Hash
-
-The tutorial claims that elision preserves the root hash. Let's **verify** this claim by comparing the digests:
+You can verify your root hash does not change after you elide data with the `envelope digest` command:
 
 ```
 # Get digest of original XID (with encrypted private key)
@@ -310,7 +301,7 @@ echo "Original XID digest: $ORIGINAL_DIGEST"
 echo "Public XID digest:   $PUBLIC_DIGEST"
 
 if [ "$ORIGINAL_DIGEST" = "$PUBLIC_DIGEST" ]; then
-    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash!"
+    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash\!"
 else
     echo "❌ ERROR: Digests differ"
 fi
@@ -320,25 +311,7 @@ fi
 │ ✅ VERIFIED: Digests are identical - elision preserved the root hash!
 ```
 
-The digests are identical. You removed the private key, yet the hash didn't change. How is that possible?
-
-### Why Elision Preserves the Hash
-
-This seems impossible—normally, changing data changes its hash. But envelopes use a Merkle tree structure where each part has its own hash, and those hashes combine into the root hash. The root doesn't hash the content directly; it hashes the hashes.
-
-```
-Envelope Root Hash
-    ├─ Subject Hash (XID identifier)
-    ├─ Assertion 1 Hash ('key' → PublicKeys)
-    ├─ Assertion 2 Hash ('provenance' → ProvenanceMark)
-    └─ Assertion 3 Hash (nested 'privateKey' → ENCRYPTED)
-```
-
-When you elide, you remove the content but keep its hash in the calculation. The `'privateKey': ENCRYPTED` assertion had hash `def456...` before elision. After elision, the marker `ELIDED` still uses that same hash `def456...` in the root calculation. Same inputs, same root hash.
-
-This is the foundation of selective disclosure. Amira signs her complete XIDDoc once, then creates different views by eliding different parts. Every view has the same root hash, so every view passes signature verification. She can show Ben her GitHub attestations while showing the public nothing—all from the same signed document.
-
-> **Remember**: Don't confuse the XID identifier with the envelope digest. The XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of the inception signing public key and never changes across document versions—it identifies Amira. The envelope digest identifies a specific document version and normally changes when you modify content. Elision is special: it's the only way to remove data without changing the digest.
+The digests are identical. You removed the private key, yet the hash didn't change. 
 
 ## Step 3: Verification
 
