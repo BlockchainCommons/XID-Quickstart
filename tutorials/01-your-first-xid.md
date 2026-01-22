@@ -97,7 +97,9 @@ A XID builds on several other Blockchain Commons technologies, primarily [Gordia
 > :book: ***What is a provenance mark?*** A provenance mark is a forward-commitment hash chain. It will be used to record the evolution of this identity, showing that each version is linked to the previous one (and also, which is the newest version of a set).
 
 > :book: **What is a wrapped envelope?** A Gordian Envelope is a package of informational triplets in the form of subject-predicate-object. An assertion (the predicate and the object) always apply to a specific subject. To make an assertion apply to more information, you wrap the envelope, and then apply the assertion to the wrapped envelope. Signatures are assertions, so for a signature to apply to an entire envelope (in this case, all of the XID information), it must be wrapped prior to signing.
- 
+
+> :brain: **Learn more**: The [Signing and Verification](../concepts/signing.md) concept doc explains the cryptographic details of many of these elements. 
+
 ### View your XID structure
 
 The `envelope format` command can always be used to display a human-readable version of a Gordian Envelope, including a XID Document.
@@ -318,7 +320,7 @@ fi
 
 The digests are identical. You removed the private key, yet the hash didn't change. 
 
-## Step 3: Verification
+## Step 3: Verifying a XID
 
 There are two ways to verify XIDs:
 * The signature can be verified against a public key.
@@ -388,9 +390,7 @@ Here's a few things to note in your verification:
 * All verification was down with the `PUBLIC_XID`; no secret information is needed.
 * This demonstrates an asymmetry common in cryptography: Amira creates information with her secrets, and only she can update it. But after she distributes her public XID, anyone can check it.
 
---EDITED DOWN TO HERE--
-
-## File Organization
+## Step 4: Organizing Your Files
 
 For real-world usage, Amira will organize her files in a dedicated directory. The pattern mirrors SSH: `BRadvoc8-xid.envelope` is like `id_rsa` (keep secret), and `BRadvoc8-xid-public.envelope` is like `id_rsa.pub` (safe to share).
 
@@ -402,19 +402,54 @@ xid-20251117/
 └── BRadvoc8-xid-public.format     # Human-readable version
 ```
 
+Your complete XID file contains everything: private keys (encrypted), public keys, nickname, provenance, and signature. If you lose this file without a backup, you lose your identity, just like losing `id_rsa`. Unlike SSH keys, your XID also includes identity metadata (nickname, permissions, provenance history), making it a complete, self-contained identity document rather than just raw key material.
+
+You might have many different public XID files, each elided in different ways. Obviously, you'll want to keep your private key out of all of them, but you might also decide to reveal different information to different people, as part of selective disclosure.
+
 The `.envelope` files contain the binary serialized format that tools work with. The `.format` files are human-readable versions for inspection. The timestamp-based directory keeps versions organized.
 
-Your complete XID file contains everything: private keys (encrypted), public keys, nickname, provenance, and signature. If you lose this file without a backup, you lose your identity—just like losing `id_rsa`. Unlike SSH keys, your XID also includes identity metadata (nickname, permissions, provenance history), making it a complete, self-contained identity document rather than just raw key material.
+## Example Script
 
-## The Bigger Picture
+A complete working script implementing this tutorial is available at `tests/01-your-first-xid-TEST.sh`. Run it to see all steps in action:
 
-What Amira created is more than a keypair. BRadvoc8's identity is fully under her control—no service provider issued it, no platform can suspend it. This is self-sovereign identity: she owns the keys and the resulting document.
+```
+bash tests/01-your-first-xid-TEST.sh
+```
 
-This XID implements pseudonymity rather than anonymity. Anonymous contributions lack credibility; project maintainers can't trust them. But BRadvoc8 can build reputation over time through verifiable contributions while protecting Amira's real-world identity. It's the same model authors use with pen names: Mark Twain built a reputation while Samuel Clemens stayed private.
+This script will create all the files shown in the File Organization section (below) with proper naming conventions and directory structure.
 
-The encrypted XID can live anywhere—USB drive, email, cloud storage, even printed as a QR code—because it's a self-contained cryptographic object. The infrastructure is in the document itself, not in some external system.
+## Summary: The Bigger Picture
 
-## Common Questions
+What Amira created is more than a keypair. She created the BRadvoc8 identity, which is fully under her control. No service provider issued it, and no platform can suspend it. This is self-sovereign identity: Amira owns the keys and the resulting document.
+
+Amira's XID implements pseudonymity rather than anonymity, and that's exactly what she wants. Anonymous contributions lack credibility; project maintainers can't trust them. But BRadvoc8 can build reputation over time through verifiable contributions while protecting Amira's real-world identity. It's the same model authors use with pen names: Mark Twain built a reputation while Samuel Clemens stayed private.
+
+The encrypted XID depends on no centralized structure. Because it's a self-contained cryptographic object, the XID can live anywhere: on a USB drive, in email, in cloud storage, even printed as a QR code. The infrastructure is in the document itself, not in some external system.
+
+## Exercises
+
+Try these to solidify your understanding:
+
+- Create your own XID with a pseudonym of your choice.
+- Experiment with different passwords.
+- Practice creating public versions by eliding private keys, then verify the signatures still work on the elided versions.
+- Save your XID to a file and reload it to confirm nothing was lost.
+
+## What's Next
+
+BRadvoc8 is now a basic, secure XID, but it has a problem: nobody can verify they have the current version. If Amira updates her XIDDoc tomorrow, how would Ben know he has stale data?
+
+**Tutorial 02: Making Your XID Verifiable** shows how to solve this. Amira will add a `dereferenceVia` assertion pointing to where her XID is published, then advance the provenance chain. Ben can then fetch the latest version and verify it's fresh.
+
+From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and Tutorial 04 shows Ben how to cross-verify those claims against external sources. Together, they enable the trust-building that comes in later tutorials.
+
+**Next Tutorial**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) - Publish your XID and enable freshness verification.
+
+---
+
+[[EDITED TO HERE]]
+
+## Appendix I: Common Questions
 
 ### Q: Why Ed25519 instead of Schnorr or other algorithms?
 
@@ -432,7 +467,7 @@ The encrypted XID can live anywhere—USB drive, email, cloud storage, even prin
 
 **Advanced (Tutorials ??-??)**: You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity.
 
-## Key Terminology
+## Appendix II: Key Terminology
 
 > **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document versions because it's bound to that original key.
 >
@@ -458,33 +493,6 @@ The encrypted XID can live anywhere—USB drive, email, cloud storage, even prin
 >
 > **Envelope Digest** - The root hash of an envelope structure; preserved across elision, enabling signature verification on different views of the same document.
 
-## What's Next
-
-BRadvoc8 is now a basic, secure XID, but it has a problem: nobody can verify they have the current version. If she updates her XIDDoc tomorrow, how would Ben know he has stale data?
-
-**Tutorial 02: Making Your XID Verifiable** shows how to solve this. Amira will add a `dereferenceVia` assertion pointing to where her XID is published, then advance the provenance chain. Ben can then fetch the latest version and verify it's fresh.
-
-From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and Tutorial 04 shows Ben how to cross-verify those claims against external sources. Together, they enable the trust-building that comes in later tutorials.
-
-## Exercises
-
-Try these to solidify your understanding:
-
-- Create your own XID with a pseudonym of your choice.
-- Experiment with different passwords.
-- Practice creating public versions by eliding private keys, then verify the signatures still work on the elided versions.
-- Save your XID to a file and reload it to confirm nothing was lost.
-
-## Example Script
-
-A complete working script implementing this tutorial is available at `tests/01-your-first-xid-TEST.sh`. Run it to see all steps in action:
-
-```
-bash tests/01-your-first-xid-TEST.sh
-```
-
-This script will create all the files shown in the File Organization section with proper naming conventions and directory structure.
 
 ---
 
-**Next Tutorial**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) - Publish your XID and enable freshness verification.
