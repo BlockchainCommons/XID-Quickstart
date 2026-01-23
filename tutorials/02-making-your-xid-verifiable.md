@@ -2,7 +2,9 @@
 
 In Tutorial 01, Amira created her BRadvoc8 identity. Now she wants Ben from SisterSpaces to be able to verify that he always has the current version of her XIDDoc. This tutorial shows how to make your XIDDoc fetchable and verifiable without relying on direct communication.
 
-**Time to complete: 10-15 minutes**
+**Time to complete**: ~10-15 minutes
+**Difficulty**: Beginner
+**Builds on**: Tutorial 01
 
 > **Related Concepts**: This tutorial introduces verification and freshness. To understand the underlying principles, see [Progressive Trust](../concepts/progressive-trust.md) for how trust builds incrementally, and [Data Minimization](../concepts/data-minimization.md) for controlling what you disclose when publishing.
 
@@ -38,9 +40,23 @@ This isn't about discovery (how Ben finds Amira's XID in the first place). It's 
 
 You'll add a publication URL to your XIDDoc and publish a public version.
 
-### Step 1: Set Up Your Environment
+### Step 0: Verify Dependencies
 
-First, let's reload from Tutorial 01. If you saved your XIDDoc to a file:
+Ensure you have the required tools from Tutorial 01:
+
+```
+envelope --version
+provenance --version
+
+│ bc-envelope-cli 0.32.0
+│ provenance-mark-cli 0.6.0
+```
+
+If not installed, see Tutorial 01 Step 0 for installation instructions.
+
+### Step 1: Load Your XID
+
+Load your XIDDoc from Tutorial 01. If you saved it to a file:
 
 ```
 XID_NAME="BRadvoc8"
@@ -81,7 +97,7 @@ Before adding `dereferenceVia`, decide where you'll publish. For this tutorial, 
 PUBLISH_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 ```
 
-Make sure your URL points to raw content, not an HTML page. For GitHub repositories, use the `/raw/` URL path.
+> :warning: **Raw Content Required**: Your URL must point to raw content, not an HTML page. For GitHub repositories, use the `/raw/` URL path. If verifiers fetch an HTML page instead of the actual XID data, verification will fail.
 
 ### Step 3: Add dereferenceVia Assertion
 
@@ -125,7 +141,16 @@ envelope format "$XID_WITH_URL" | head -20
 │ ]
 ```
 
-The command added a `'dereferenceVia': URI(...)` assertion, verified the existing signature, re-signed with your inception key, and kept your private keys encrypted. Notice that `dereferenceVia` is a known value (single quotes) from the Gordian Envelope specification, and its object is a `URI` type rather than a plain string. This assertion tells anyone who receives your XIDDoc: "To get the current version, fetch from this URL."
+This command does several things at once:
+
+1. `xid resolution add "$PUBLISH_URL"` adds a `dereferenceVia` assertion with your URL
+2. `--verify inception` checks the existing signature before modifying
+3. `--password "$PASSWORD"` decrypts secrets needed for signing
+4. `--sign inception` re-signs the updated document
+5. `--private encrypt` and `--generator encrypt` keep secrets encrypted
+6. `--encrypt-password "$PASSWORD"` sets the encryption password
+
+The result: a `'dereferenceVia': URI(...)` assertion was added, the signature was verified and refreshed, and private keys stayed encrypted. Notice that `dereferenceVia` is a known value (single quotes) from the Gordian Envelope specification, and its object is a `URI` type rather than a plain string. This assertion tells anyone who receives your XIDDoc: "To get the current version, fetch from this URL."
 
 You can add multiple `dereferenceVia` assertions for redundancy by running the command again with a different URL. For example, you might point to both a GitHub raw URL and a personal domain, so if one source becomes unavailable, verifiers can still fetch your current XIDDoc from the other.
 
@@ -157,7 +182,7 @@ envelope format "$PUBLIC_XID"
 │ ]
 ```
 
-> **Callback to Tutorial 01**: In Tutorial 01, you manually found digests and used `envelope elide removing` to create public versions. The `xid export` command does this automatically—it knows which parts of an XID should be elided for public sharing.
+> :book: **Callback to Tutorial 01**: In Tutorial 01, you manually found digests and used `envelope elide removing` to create public versions. The `xid export` command does this automatically—it knows which parts of an XID should be elided for public sharing.
 
 Notice the difference: where your complete XID shows `ENCRYPTED`, the public version shows `ELIDED`. The signature is still present and verifiable, the XID identifier is unchanged, but the private key and provenance generator are replaced with placeholders.
 
@@ -178,13 +203,15 @@ cat /tmp/xid-public.txt
 
 To publish on GitHub: create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern: `https://github.com/USERNAME/REPO/raw/main/xid.txt`.
 
-There's a chicken-and-egg situation: you need the URL to add `dereferenceVia`, but you need to create the repo to get the URL. The solution is straightforward since GitHub URLs are predictable—decide your repo name first, construct the URL, add it to your XID, then create the repo with that content.
+> :warning: **Chicken-and-Egg**: You need the URL to add `dereferenceVia`, but you need to create the repo to get the URL. The solution: GitHub URLs are predictable. Decide your repo name first, construct the URL, add it to your XID, then create the repo with that content. If you change the URL later, you must re-sign and republish.
 
 ---
 
 ## Part II: Ben Verifies
 
-Now let's switch perspectives. Amira has published her BRadvoc8 XIDDoc and shared the URL with Ben via Signal. Ben wants to verify he's working with a legitimate, current XIDDoc.
+**Perspective shift**: You've been Amira, creating and publishing your XID. Now you're Ben—someone who received an XID URL and needs to verify it before trusting the sender.
+
+This matters because anyone can publish anything. Ben received a message claiming to be "BRadvoc8," but how does he know the message is legitimate? How does he know he has the current version, not a stale copy? The verification workflow answers these questions without requiring direct contact with Amira.
 
 ### Ben's Starting Point
 
@@ -255,7 +282,29 @@ fi
 
 The signature verified, which means the document is signed by its own inception key and no tampering occurred after signing. The signature covers the entire document, so any modification would fail verification.
 
-> **XID Self-Containment**: Notice that Ben extracted the verification keys from the XID itself. He didn't need Amira to send keys separately. XIDs contain everything needed for verification. "Share XIDs, not keys."
+> :book: **XID Self-Containment**: Notice that Ben extracted the verification keys from the XID itself. He didn't need Amira to send keys separately. XIDs contain everything needed for verification. "Share XIDs, not keys."
+
+#### What If the XID Was Tampered?
+
+What happens if an attacker intercepts and modifies the XID before Ben receives it?
+
+```
+# Simulate tampering - an attacker changes the nickname
+TAMPERED_XID=$(echo "$FETCHED_XID" | sed 's/BRadvoc8/Imposter/')
+
+# Ben tries to verify the tampered version
+if envelope verify -v "$PUBLIC_KEYS" "$TAMPERED_XID" >/dev/null 2>&1; then
+    echo "✅ Signature verified"
+else
+    echo "❌ Signature FAILED - tampering detected!"
+fi
+
+│ ❌ Signature FAILED - tampering detected!
+```
+
+Any modification—even a single character—invalidates the signature. The cryptographic hash of the tampered document no longer matches what was signed. This is why signature verification is Ben's first check: it catches any tampering that occurred after Amira signed the document.
+
+> :brain: **Learn more**: The [Signing and Verification](../concepts/signing-verification.md) concept doc explains how envelope signatures work and why elision preserves signature validity.
 
 ### Step 8: Ben Checks the dereferenceVia URL
 
@@ -328,6 +377,36 @@ provenance validate --format json-pretty "$PROVENANCE_MARK"
 
 The output tells Ben this chain has a valid starting point (`has_genesis: true`), this is the original version with no updates yet (`start_seq: 0, end_seq: 0`), and there are no problems found (`issues: []`). If Amira had made updates, the sequence numbers would be higher and Ben could verify the chain of updates is unbroken.
 
+#### Detecting Stale Copies
+
+What if someone gave Ben an old copy of the XID instead of the current one? He can compare provenance marks to detect this:
+
+```
+# Ben has two versions - one from a friend, one freshly fetched
+# Compare their sequence numbers
+
+# Simulate: OLD_MARK from friend's copy (sequence 0)
+# Simulate: NEW_MARK from fresh fetch (sequence 1 after an update)
+
+OLD_SEQ=0   # From stale copy
+NEW_SEQ=1   # From fresh fetch
+
+echo "Copy from friend:  sequence $OLD_SEQ"
+echo "Fresh from URL:    sequence $NEW_SEQ"
+
+if [ "$NEW_SEQ" -gt "$OLD_SEQ" ]; then
+    echo "⚠️  Friend's copy is STALE - use the fresh version!"
+fi
+
+│ Copy from friend:  sequence 0
+│ Fresh from URL:    sequence 1
+│ ⚠️  Friend's copy is STALE - use the fresh version!
+```
+
+Higher sequence number means newer version. Ben should always fetch from `dereferenceVia` to ensure he has the current XIDDoc, especially before making trust decisions.
+
+> :brain: **Learn more**: The [Provenance Marks](../concepts/provenance-marks.md) concept doc explains the cryptographic chain structure and how it prevents history falsification.
+
 ### Step 10: Ben's Verification Summary
 
 Ben can now summarize what he knows:
@@ -376,13 +455,17 @@ echo "  • Who 'BRadvoc8' really is"
 
 ---
 
-## Understanding the Trust Model
+### About the Trust Model
 
-What can Ben trust at this point? The XID is self-consistent (signature verifies), has continuity (provenance chain is intact), and claims its publication location (dereferenceVia matches fetch URL). These are cryptographically verified.
+*If you're ready to move on, skip to "Updating Your XID". Otherwise, read on to understand what Ben can and cannot trust at this point.*
+
+What can Ben trust? Three things are cryptographically verified: the XID is self-consistent (signature verifies), it has continuity (provenance chain is intact), and it claims its publication location (dereferenceVia matches fetch URL).
 
 But two things remain assumed, not proven: that Amira actually controls the GitHub account where the XID is published, and that Amira is who she claims to be. This tutorial solved the freshness problem—Ben can always get the current version and detect tampering—but it didn't establish deeper trust.
 
 Tutorial 03 addresses what's missing: attestations that connect BRadvoc8 to real-world systems. Amira will add her GitHub account and SSH signing key as verifiable claims that Ben can cross-verify in Tutorial 04.
+
+> :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explores the full trust hierarchy and how verification layers combine.
 
 ## Updating Your XID (Preview)
 
@@ -404,7 +487,7 @@ Then she exports the new public version and publishes it to the same URL. When B
 
 BRadvoc8 now has a stable publication URL, provenance tracking for freshness verification, and cryptographic integrity through self-signing. The freshness problem is solved: Ben can fetch current versions without waiting for Amira to send updates, verify he has the latest copy, and detect if someone gives him stale data.
 
-## Key Terminology
+## Appendix: Key Terminology
 
 > **`dereferenceVia`** - A known predicate indicating where the canonical version of this XID can be fetched. Uses `URI` type for the object.
 >
@@ -420,9 +503,17 @@ BRadvoc8 now has a stable publication URL, provenance tracking for freshness ver
 
 Try these to solidify your understanding:
 
+**Publishing exercises (Amira's perspective):**
+
 - Publish your XID for real: create a GitHub repository, add the URL with `xid resolution add`, export the public version, and commit it.
+- Add multiple `dereferenceVia` assertions pointing to different mirrors (e.g., GitHub and a personal domain).
 - Practice advancing the provenance mark with `xid provenance next` and observe how the sequence numbers change.
-- Add multiple `dereferenceVia` assertions pointing to different mirrors.
+
+**Verification exercises (Ben's perspective):**
+
+- Download someone else's published XIDDoc and run the full verification workflow: signature, dereferenceVia match, and provenance check.
+- Deliberately tamper with a copy (change a character) and verify that signature verification fails.
+- Compare two versions of the same XID with different sequence numbers to see how freshness detection works.
 
 ## Example Script
 
