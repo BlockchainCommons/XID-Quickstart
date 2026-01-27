@@ -452,15 +452,7 @@ From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and
 
 **Next Tutorial**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) - Publish your XID and enable freshness verification.
 
----
-
-[[EDITED TO HERE]]
-
 ## Appendix I: Common Questions
-
-### Q: Why Ed25519 instead of Schnorr or other algorithms?
-
-**A:** Ed25519 is the industry standard (SSH, git, Signal) with wide compatibility and excellent security. Advanced users can use other algorithms (`--signing schnorr`, `--signing ecdsa`, `--signing mldsa44`), but Ed25519 is recommended for beginners.
 
 ### Q: What if I lose my XID file?
 
@@ -468,37 +460,45 @@ From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and
 
 ### Q: Can I use this XID on multiple devices?
 
-**A:** Yes! Copy your `BRadvoc8-xid.envelope` file to other devices. Since the private keys are encrypted, the file is reasonably safe to sync via cloud storage (as long as you have a strong passphrase!).
+**A:** Yes! Copy your `BRadvoc8-xid.envelope` file to other devices. Since the private keys are encrypted, the file is reasonably safe to sync via cloud storage (as long as you have a strong passphrase!). The XID identifier stays the same regardless of which device you're using. 
 
-**Like SSH keys**: You can use the same XID across multiple devices, just like you might copy `id_rsa` to a new machine. The XID identifier stays the same regardless of which device you're using. Unlike SSH keys, you can revoke a key pair while keeping your XID persistent.
+You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity. More on this in future tutorials.
 
-**Advanced (Tutorials ??-??)**: You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity.
+### Q: What if I need to revoke my keyes?
+
+**A:** Unlike with SSH keys, you can revoke a key pair while keeping your XID persistent.
+
+### Q: Why is signing done with Ed25519 instead of Schnorr or other algorithms?
+
+**A:** Ed25519 is the industry standard (SSH, git, Signal) with wide compatibility and excellent security. Advanced users can use other algorithms (`--signing schnorr`, `--signing ecdsa`, `--signing mldsa44`), but Ed25519 is recommended for beginners.
 
 ## Appendix II: Key Terminology
 
-> **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document versions because it's bound to that original key.
->
-> **XIDDoc (XID Document)** - The envelope document containing an XID and its assertions (keys, provenance, metadata). This is what you create, update, and share.
->
-> **Inception Key** - The signing public key that defines your XID from the beginning. Your XID identifier is the SHA-256 hash of this key's CBOR representation. The term "inception" emphasizes that this key establishes the identity at its origin.
->
-> **Provenance Generator** - The secret that creates provenance marks. It created your genesis mark and will create all future marks when you update your XIDDoc. Separate from the inception key.
->
-> **Subject** - The main thing an envelope describes; in XIDDocs, this is the XID identifier.
->
 > **Assertion** - A predicate-object pair making a claim about the subject (e.g., `'key': PublicKeys(...)`).
->
-> **Known Value** - Standardized term from the Gordian Envelope spec, shown in single quotes. Can be a predicate (`'key'`, `'nickname'`) or an object (`'All'`).
->
-> **String** - Custom application data, shown in double quotes (`"BRadvoc8"`, `"github"`).
 >
 > **Elision** - Removing data while preserving the envelope's root hash, enabling selective disclosure with maintained cryptographic integrity.
 >
-> **Selective Disclosure** - Sharing only the information needed for a specific context. Sign once, create multiple views by eliding different parts, and every view verifies against the same signature.
+> **Envelope Digest** - The root hash of an envelope structure, preserved across elision, enabling signature verification on different views of the same document.
+>
+> **Inception Key** - The signing public key that defines your XID from the beginning. Your XID identifier is the SHA-256 hash of this key's CBOR representation. The term "inception" emphasizes that this key establishes the identity at its origin.
+>
+> **Known Value** - Standardized term from the Gordian Envelope spec, shown in single quotes. Can be a subject, a predicate, or an object.
+>
+> **Provenance Generator** - The secret that creates provenance marks. It created your genesis mark and will create all future marks when you update your XIDDoc. Separate from the inception key.
 >
 > **Provenance Mark** - Cryptographic marker establishing the sequence position of a document version, forming a verifiable chain of identity evolution. The genesis mark (sequence 0) is the first in the chain. Provides ordering, not timestamps.
 >
-> **Envelope Digest** - The root hash of an envelope structure; preserved across elision, enabling signature verification on different views of the same document.
+> **Selective Disclosure** - Sharing only the information needed for a specific context. Sign once, create multiple views by eliding different parts, and every view verifies against the same signature.
+>
+> **String** - Custom application data, shown in double quotes (`"BRadvoc8"`, `"github"`).
+>
+> **Subject** - The main thing an envelope describes; in XIDDocs, this is the XID identifier.
+>
+>  **View** - A version of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure.
+> 
+> **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document versions because it's bound to that original key.
+>
+> **XIDDoc (XID Document)** - The envelope document containing an XID and its assertions (keys, provenance, metadata). This is what you create, update, and share.
 
 ---
 
