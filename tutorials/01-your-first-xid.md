@@ -44,7 +44,7 @@ This tutorial depends on [`bc-envelope-cli`](https://github.com/BlockchainCommon
 cargo install bc-envelope-cli
 ```
 
-If you want to optionally check Provenance Marks, you can also install the Provenance Mark CLI:
+If you want to optionally check Provenance Marks, you can also install the Provenance Mark CLI with `cargo`:
 
 ```
 cargo install provenance-mark-cli
@@ -52,7 +52,7 @@ cargo install provenance-mark-cli
 
 If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html) for easy installation instructions.
 
-## Step 1: Create Your XID
+## Step 1: Creating Your XID
 
 Now that you understand why XIDs are valuable, you're ready to help Amira create her "BRadvoc8" identity. This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
 
@@ -207,7 +207,7 @@ The other thing of particular note is the quoted data. There are two styles of q
 - **Single quotes** (`'key'`, `'nickname'`, `'All'`) designate **Known values**. These are standardized terms from the Gordian Envelope specification. They can be subjects, predicates (`'allow'`), or objects (`'All'`). These ensure different tools understand your XIDDoc the same way.
 - **Double quotes** (`"BRadvoc8"`, `"github"`) designate **Strings**. This is custom application data you define.
 
-## Step 2: Creating a Public Version by Elision
+## Step 2: Creating a Public Version of Your XID with Elision
 
 Now Amira wants to create a shareable public version that does not contain her private key. She does this by using envelope's elision (removal) feature.
 
@@ -217,14 +217,14 @@ To do so, she must find the digest (hash) of the private key assertion. Every th
 
 In a graphical UI, this whole process might be as simple as clicking on the assertion in the envelope and hitting the DELETE key. In the Envelope CLI, it takes digging down through the layers of the envelope by unwrapping wrapped envelopes and finding assertions within them.
 
-First, since the XID was wrapped and signed with `--sign inception`, we need to unwrap it to access its assertions:
+First, since the XID was wrapped and signed with `--sign inception`, you need to unwrap it to access its assertions:
 
 ```
 # Unwrap the signed XID to access its assertions
 UNWRAPPED_XID=$(envelope extract wrapped "$XID")
 ```
 
-Then we find the `key` assertion, which is a `known` value and extract the `PublicKeys` object:
+Then you find the `key` assertion, which is a `known` value and extract the `PublicKeys` object:
 
 ```
 # Find the key assertion
@@ -232,7 +232,7 @@ KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED_XID")
 KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
 ```
 
-Finally, we can extract the `privateKey` assertion from _that_ and then record its digest:
+Finally, you can extract the `privateKey` assertion from _that_ and then record its digest:
 
 ```
 # Find the private key assertion within the key object
@@ -260,7 +260,7 @@ echo "Created public version by eliding private key"
 │ Created public version by eliding private key
 ```
 
-View the public version:
+Afterward, you can view the public version:
 
 ```
 envelope format "$PUBLIC_XID"
@@ -287,37 +287,21 @@ envelope format "$PUBLIC_XID"
 │ ]
 ```
 
-Note that this preserves the signature *despite* removing some of the data in the envelope. This is a purposeful feature of Gordian Envelope.
+This formatting implies that the signature has been preserved, *despite* removing some of the data in the envelope. This is a purposeful feature of Gordian Envelope.
+
+Here's how it works:
 
 #### A Review of Envelope Hashes & Signatures
 
 If you are already comfortable with the structure of Gordian Envelopes, how they hash data, and how data is signed, skip down to Step 3. Otherwise, read on.
 
-Gordian Envelope is built on hashes. Every subject, every predicate, every object, and every assertion has a hash. Leaves (such as subjects, predicates, and objects) have hashes of the content of the leaf, while nodes (such as assertions, collections of assertions, and wrapped content) have hashes that are built from the hashes of the objects they contain. A signature is made not across the content of an envelope, but against the root (or top-level) hash of an envelope.
+Gordian Envelope is built on hashes. Every subject, every predicate, every object, and every assertion has a hash. Leaves (such as subject, predicates, and objects) have hashes of the content of the leaf, while nodes (such as assertions, collections of assertions, and wrapped content) have hashes that are built from the hashes of the objects they contain. A signature is made not across the content of an envelope, but against the root (or top-level) hash of an envelope.
 
 When data is elided from an envelope, its content is removed, but the hash remains. That means that all of the node hashes above that leaf hash remain the same, including the root hash. Since it's the root hash that is signed, not the full envelope content, the signature remains valid.
 
-> :warning: **Root Hash is Not XID Identifier.** The root hash is composed from the hashes of _all_ the data within an envelope. It changes if you change the document. It's an identifier for a specific version of your XID Document. The XID identifier is the hash of your inception public key. It never changes. It's an identifier for your identity.
+> :warning: **The Root Hash is Not Xthe ID Identifier.** The root hash is composed from the hashes of _all_ the data within an envelope. It changes if you change the document. It's an identifier for a specific version of your XID Document. The XID identifier is the hash of your inception public key. It never changes. It's an identifier for your identity. 
 
-**Important distinction - XID identifier vs Envelope hash:**
-
-Notice `XID(c7e764b7)` is the same as before. But **this doesn't prove elision preserved the hash!** Here's why:
-
-- **`XID(c7e764b7)`** = XID identifier (derived from the inception public key)
-  - Stays the same across ALL versions of this identity
-  - Would be the same even if you completely changed the document
-  - Identifies the **entity**, not the document version
-
-- **Envelope digest** = Hash of the entire envelope structure
-  - Changes when document content changes
-  - THIS is what elision preserves
-  - THIS is what allows signatures to verify
-
-**Critical:** The XID identifier is persistent (based on inception public key), so seeing it unchanged proves nothing about hash preservation. We need to compare the **envelope digest**.
-
-### Proving Elision Preserves the Envelope Hash
-
-The tutorial claims that elision preserves the root hash. Let's **verify** this claim by comparing the digests:
+You can verify your root hash does not change after you elide data with the `envelope digest` command:
 
 ```
 # Get digest of original XID (with encrypted private key)
@@ -331,7 +315,7 @@ echo "Original XID digest: $ORIGINAL_DIGEST"
 echo "Public XID digest:   $PUBLIC_DIGEST"
 
 if [ "$ORIGINAL_DIGEST" = "$PUBLIC_DIGEST" ]; then
-    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash!"
+    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash\!"
 else
     echo "❌ ERROR: Digests differ"
 fi
@@ -341,60 +325,48 @@ fi
 │ ✅ VERIFIED: Digests are identical - elision preserved the root hash!
 ```
 
-The digests are identical. You removed the private key, yet the hash didn't change. How is that possible?
+The digests are identical. You removed the private key, yet the hash didn't change. 
 
-### Why Elision Preserves the Hash
+## Step 3: Verifying a XID
 
-This seems impossible—normally, changing data changes its hash. But envelopes use a Merkle tree structure where each part has its own hash, and those hashes combine into the root hash. The root doesn't hash the content directly; it hashes the hashes.
+There are two ways to verify XIDs:
+* The signature can be verified against a public key.
+* The provenance mark can be validated.
 
+A digital signature is verified against a public key. For a XID, that's the public signing key. Again, you have to dig down through the envelope to get to it:
 ```
-Envelope Root Hash
-    ├─ Subject Hash (XID identifier)
-    ├─ Assertion 1 Hash ('key' → PublicKeys)
-    ├─ Assertion 2 Hash ('provenance' → ProvenanceMark)
-    └─ Assertion 3 Hash (nested 'privateKey' → ENCRYPTED)
-```
-
-When you elide, you remove the content but keep its hash in the calculation. The `'privateKey': ENCRYPTED` assertion had hash `def456...` before elision. After elision, the marker `ELIDED` still uses that same hash `def456...` in the root calculation. Same inputs, same root hash.
-
-This is the foundation of selective disclosure. Amira signs her complete XIDDoc once, then creates different views by eliding different parts. Every view has the same root hash, so every view passes signature verification. She can show Ben her GitHub attestations while showing the public nothing—all from the same signed document.
-
-> :brain: **Technical depth**: The Merkle tree structure is fully specified in the [Gordian Envelope IETF draft](https://developer.blockchaincommons.com/envelope/). Understanding how hashes compose is essential for advanced use cases like partial reveals and multi-party verification.
-
-> **Remember**: Don't confuse the XID identifier with the envelope digest. The XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of the inception signing public key and never changes across document versions—it identifies Amira. The envelope digest identifies a specific document version and normally changes when you modify content. Elision is special: it's the only way to remove data without changing the digest.
-
-## Step 3: Verification
-
-Now let's verify both the signature and provenance on our XID:
-
-```
-# Extract public keys (the XID contains everything needed for verification)
+UNWRAPPED_XID=$(envelope extract wrapped "$XID")
 KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED_XID")
 KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
 PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
+```
+You can then use envelope's `verify` command to verify the signature of the `PUBLIC_XID` versus that public key:
 
-# Verify the signature
-envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified!"
+```
+envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified\!"
 
 │ ✅ Signature verified!
 ```
 
-Now verify the provenance mark - notice we can verify from the **public** XID:
+This confirms that this XID Document has been signed by the owner of the public key within the document. Alternatively, if the public key were retrieved from a PKI or other published site, it would confirm that the document was signed by the owner of the published public key. In the future, this verification will demonstrate that updates of this XID Document continue to be signed by this original (inception) key.
+
+The provenance mark can similarly be verified. To do this, extract the Provenance Mark with the `xid provenance` command:
 
 ```
-# Extract the provenance mark from the PUBLIC XID (no secrets needed!)
 PROVENANCE_MARK=$(envelope xid provenance get "$PUBLIC_XID")
+```
 
-# Check that it's a valid genesis mark
+Afterward, if you have installed the Provenance Mark CLI, you can validate the Provenance Mark:
+
+```
 provenance validate "$PROVENANCE_MARK"
 
 │ ✅ (silent success - provenance check passed!)
 ```
 
-Want to see what was verified? Get the detailed report:
+Here's a more detailed report on what the Provenance Mark CLI is checking:
 
 ```
-# Show detailed assessment report
 provenance validate --format json-pretty "$PROVENANCE_MARK"
 
 │ {
@@ -419,25 +391,13 @@ provenance validate --format json-pretty "$PROVENANCE_MARK"
 │ }
 ```
 
-Both checks passed using only the public XID—no secrets required. The signature confirms this XIDDoc is authentically from BRadvoc8 (signed by the inception key). The provenance shows `has_genesis: true` and `sequence: 0`, meaning this is the first version in the chain with no issues found.
+The Provenance Mark CLI shows `has_genesis: true` and `sequence: 0`, meaning this is the first version in the chain with no issues found. In other words, you're just verifying that you have a Genesis Mark, which is the first provenance mark in a chain. (When you create more marks in the chain, you'll be able to verify that two provenance marks are connected, but that's for the future.)
 
-Notice the asymmetry: verifying signatures and provenance needs only public information, but creating signatures or advancing provenance requires secrets. This is why Amira can share her public XID freely—anyone can verify it, but only she can update it.
+Here's a few things to note in your verification:
+* All verification was down with the public version of the XID; no secret information is needed.
+* This demonstrates an asymmetry common in cryptography: Amira creates information with her secrets, and only she can update it. But after she distributes her public XID, anyone can check it.
 
-> **Remember**: The provenance mark is public, but the generator that advances it is encrypted. In Tutorial 02, you'll see how provenance lets Ben verify he has the current version of BRadvoc8.
-
-## Reviewing the XID Creation Workflow
-
-The single command you ran combined several operations that would otherwise take eight or more steps. Understanding what happened helps when things go wrong.
-
-The `--private encrypt` flag encrypted your private keys with your password, following the SSH model: you can share the file freely because the secrets are protected. The public parts (nickname, public keys, provenance) remain readable to anyone.
-
-The `--generator encrypt` flag encrypted the provenance generator—the secret that creates provenance marks. The generator created the initial "genesis" mark you see now, and will create all subsequent marks when Amira updates her XIDDoc. The mark itself is public (it timestamps when this identity version was created), but the generator must stay secret. Only someone with the generator can advance the provenance chain, proving updates are legitimate.
-
-The `--sign inception` flag signed the entire document with the inception key. This is the sign-then-elide workflow: you sign the complete document (including encrypted private keys), then elide sensitive parts for sharing. Because elision preserves the hash, the signature verifies on both versions.
-
-> **Learn more**: The [Signing and Verification](../concepts/signing.md) concept doc explains the cryptographic details. Tutorial 02 shows how provenance enables freshness verification.
-
-## File Organization
+## Step 4: Organizing Your Files
 
 For real-world usage, Amira will organize her files in a dedicated directory. The pattern mirrors SSH: `BRadvoc8-xid.envelope` is like `id_rsa` (keep secret), and `BRadvoc8-xid-public.envelope` is like `id_rsa.pub` (safe to share).
 
@@ -449,19 +409,72 @@ xid-20251117/
 └── BRadvoc8-xid-public.format     # Human-readable version
 ```
 
+Your complete XID file contains everything: private keys (encrypted), public keys, nickname, provenance, and signature. If you lose this file without a backup, you lose your identity, just like losing `id_rsa`. Unlike SSH keys, your XID also includes identity metadata (nickname, permissions, provenance history), making it a complete, self-contained identity document rather than just raw key material.
+
+You might have many different public XID files, each elided in different ways. Obviously, you'll want to keep your private key out of all of them, but you might also decide to reveal different information to different people, as part of selective disclosure.
+
 The `.envelope` files contain the binary serialized format that tools work with. The `.format` files are human-readable versions for inspection. The timestamp-based directory keeps versions organized.
 
-Your complete XID file contains everything: private keys (encrypted), public keys, nickname, provenance, and signature. If you lose this file without a backup, you lose your identity—just like losing `id_rsa`. Unlike SSH keys, your XID also includes identity metadata (nickname, permissions, provenance history), making it a complete, self-contained identity document rather than just raw key material.
+## Summary: The Bigger Picture
 
-## The Bigger Picture
+What Amira created is more than a keypair. She created the BRadvoc8 identity, which is fully under her control. No service provider issued it, and no platform can suspend it. This is self-sovereign identity: Amira owns the keys and the resulting document.
 
-What Amira created is more than a keypair. BRadvoc8's identity is fully under her control—no service provider issued it, no platform can suspend it. This is self-sovereign identity: she owns the keys and the resulting document.
+Amira's XID implements pseudonymity rather than anonymity, and that's exactly what she wants. Anonymous contributions lack credibility; project maintainers can't trust them. But BRadvoc8 can build reputation over time through verifiable contributions while protecting Amira's real-world identity. It's the same model authors use with pen names: Mark Twain built a reputation while Samuel Clemens stayed private.
 
-This XID implements pseudonymity rather than anonymity. Anonymous contributions lack credibility; project maintainers can't trust them. But BRadvoc8 can build reputation over time through verifiable contributions while protecting Amira's real-world identity. It's the same model authors use with pen names: Mark Twain built a reputation while Samuel Clemens stayed private.
+The encrypted XID depends on no centralized structure. Because it's a self-contained cryptographic object, the XID can live anywhere: on a USB drive, in email, in cloud storage, even printed as a QR code. The infrastructure is in the document itself, not in some external system.
 
-The encrypted XID can live anywhere—USB drive, email, cloud storage, even printed as a QR code—because it's a self-contained cryptographic object. The infrastructure is in the document itself, not in some external system.
+### Example Script
 
-## Appendix: Key Terminology
+A complete working script implementing this tutorial is available at `tests/01-your-first-xid-TEST.sh`. Run it to see all steps in action:
+
+```
+bash tests/01-your-first-xid-TEST.sh
+```
+
+This script will create all the files shown in the File Organization section (below) with proper naming conventions and directory structure.
+
+### Exercises
+
+Try these to solidify your understanding:
+
+- Create your own XID with a pseudonym of your choice.
+- Experiment with different passwords.
+- Practice creating public versions by eliding private keys, then verify the signatures still work on the elided versions.
+- Save your XID to a file and reload it to confirm nothing was lost.
+
+## What's Next
+
+BRadvoc8 is now a basic, secure XID, but it has a problem: nobody can verify they have the current version. If Amira updates her XID Document tomorrow, how would Ben know he has stale data?
+
+**Tutorial 02: Making Your XID Verifiable** shows how to solve this. Amira will add a `dereferenceVia` assertion pointing to where her XID is published, then advance the provenance chain. Ben can then fetch the latest version and verify it's fresh.
+
+From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and Tutorial 04 shows Ben how to cross-verify those claims against external sources. Together, they enable the trust-building that comes in later tutorials.
+
+**Next Tutorial**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) - Publish your XID and enable freshness verification.
+
+---
+
+[[EDITED TO HERE]]
+
+## Appendix I: Common Questions
+
+### Q: Why Ed25519 instead of Schnorr or other algorithms?
+
+**A:** Ed25519 is the industry standard (SSH, git, Signal) with wide compatibility and excellent security. Advanced users can use other algorithms (`--signing schnorr`, `--signing ecdsa`, `--signing mldsa44`), but Ed25519 is recommended for beginners.
+
+### Q: What if I lose my XID file?
+
+**A:** If you lose your `BRadvoc8-xid.envelope` file without a backup, **you lose your identity**. This is just like losing your SSH `id_rsa` file. There's no recovery mechanism without a backup - make sure to store encrypted copies in multiple secure locations.
+
+### Q: Can I use this XID on multiple devices?
+
+**A:** Yes! Copy your `BRadvoc8-xid.envelope` file to other devices. Since the private keys are encrypted, the file is reasonably safe to sync via cloud storage (as long as you have a strong passphrase!).
+
+**Like SSH keys**: You can use the same XID across multiple devices, just like you might copy `id_rsa` to a new machine. The XID identifier stays the same regardless of which device you're using. Unlike SSH keys, you can revoke a key pair while keeping your XID persistent.
+
+**Advanced (Tutorials ??-??)**: You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity.
+
+## Appendix II: Key Terminology
 
 > **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document versions because it's bound to that original key.
 >
@@ -486,53 +499,6 @@ The encrypted XID can live anywhere—USB drive, email, cloud storage, even prin
 > **Provenance Mark** - Cryptographic marker establishing the sequence position of a document version, forming a verifiable chain of identity evolution. The genesis mark (sequence 0) is the first in the chain. Provides ordering, not timestamps.
 >
 > **Envelope Digest** - The root hash of an envelope structure; preserved across elision, enabling signature verification on different views of the same document.
-
----
-
-## Common Questions
-
-### Q: Why Ed25519 instead of Schnorr or other algorithms?
-
-**A:** Ed25519 is the industry standard (SSH, git, Signal) with wide compatibility and excellent security. Advanced users can use other algorithms (`--signing schnorr`, `--signing ecdsa`, `--signing mldsa44`), but Ed25519 is recommended for beginners.
-
-### Q: What if I lose my XID file?
-
-**A:** If you lose your `BRadvoc8-xid.envelope` file without a backup, **you lose your identity**. This is just like losing your SSH `id_rsa` file. There's no recovery mechanism without a backup - make sure to store encrypted copies in multiple secure locations.
-
-### Q: Can I use this XID on multiple devices?
-
-**A:** Yes! Copy your `BRadvoc8-xid.envelope` file to other devices. Since the private keys are encrypted, the file is reasonably safe to sync via cloud storage (as long as you have a strong passphrase!).
-
-**Like SSH keys**: You can use the same XID across multiple devices, just like you might copy `id_rsa` to a new machine. The XID identifier stays the same regardless of which device you're using. Unlike SSH keys, you can revoke a key pair while keeping your XID persistent.
-
-**Advanced (Tutorials 10-12)**: You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity.
-
-## What's Next
-
-BRadvoc8 is now a basic, secure XID, but it has a problem: nobody can verify they have the current version. If she updates her XIDDoc tomorrow, how would Ben know he has stale data?
-
-**Tutorial 02: Making Your XID Verifiable** shows how to solve this. Amira will add a `dereferenceVia` assertion pointing to where her XID is published, then advance the provenance chain. Ben can then fetch the latest version and verify it's fresh.
-
-From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and Tutorial 04 shows Ben how to cross-verify those claims against external sources. Together, they enable the trust-building that comes in later tutorials.
-
-## Exercises
-
-Try these to solidify your understanding:
-
-- Create your own XID with a pseudonym of your choice.
-- Experiment with different passwords.
-- Practice creating public versions by eliding private keys, then verify the signatures still work on the elided versions.
-- Save your XID to a file and reload it to confirm nothing was lost.
-
-## Example Script
-
-A complete working script implementing this tutorial is available at `tests/01-your-first-xid-TEST.sh`. Run it to see all steps in action:
-
-```
-bash tests/01-your-first-xid-TEST.sh
-```
-
-This script will create all the files shown in the File Organization section with proper naming conventions and directory structure.
 
 ---
 
