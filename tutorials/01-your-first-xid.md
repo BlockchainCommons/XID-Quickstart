@@ -28,13 +28,13 @@ Amira is a successful software developer working at a prestigious multinational 
 
 Anonymous submissions could resolve these issues, and Amira already has a pseudonymous identity: "BRadvoc8" (Basic Rights Advocate). However, anonymous contributions lack credibility. Project maintainers need confidence in the quality and provenance of code, especially for socially important applications. Amira needs a better solution, one that protects her identity while allowing her to build a verifiable reputation for her skills. This would allow her to build trust through the quality of her work rather than existing credentials and so establish a consistent presence that can evolve over time.
 
-On the advice of her friend Charlene, Amira investigates RISK, a network that connects developers with social-impact projects and protects participants' privacy. It uses a Blockchain Commons technology called [XIDs](../concepts/xid.md): they enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity, protecting herself from adversaries who might target her or her family for her contributions. Through RISK, Amira can connect with project leaders such as Ben, who runs a women's services non-profit that Amira wishes to contribute to.
+On the advice of her friend Charlene, Amira investigates RISK, a network that connects developers with social-impact projects and protects participants' privacy. It uses a Blockchain Commons technology called [XIDs](../concepts/xid.md): these "eXtensible IDentifiers" enable pseudonymous identity with progressive trust development, allowing Amira to safely collaborate on projects aligned with her values while maintaining separation between her pseudonymous contributions and her legal identity, protecting herself from adversaries who might target her or her family for her contributions. Through RISK, Amira can connect with project leaders such as Ben, who runs a women's services non-profit that Amira wishes to contribute to.
 
 ## Why XIDs Matter
 
 XIDs provide significant advantages over standard cryptographic keys because they create a single stable identity, even if you have multiple keys for different devices and even if you rotate your keys. If something goes wrong, recovery mechanisms let you restore access to your identity (and so your reputation history).
 
-XIDs support rich metadata: structured attestations, endorsements, and claims that describe your skills. Others can also make cryptographically verifiable claims about you through peer attestation. You can then selectively share different information with different parties, or use progressive trust to expand what you reveal to an individual over time, all while keeping other details private by eliding it. XIDs preserve the cryptographic integrity of the metadata even when portions are elided.
+XIDs support rich metadata, which can include structured attestations, endorsements, and claims that describe your skills. Others can also make cryptographically verifiable claims about you through peer attestation. You can then selectively share different information with different parties, or use progressive trust to expand what you reveal to an individual over time, all while keeping other details private by eliding it. XIDs preserve the cryptographic integrity of the metadata even when portions are elided.
 
 ## Step 0: Setting Up Your Workspace
 
@@ -54,7 +54,7 @@ If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lan
 
 ## Step 1: Create Your XID
 
-Now that we understand why XIDs are valuable, let's help Amira create her "BRadvoc8" identity. This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
+Now that you understand why XIDs are valuable, you're ready to help Amira create her "BRadvoc8" identity. This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features like data minimization and rich persona structures.
 
 A single `envelope` operation creates a complete XID that contains both private and public keys:
 
@@ -87,9 +87,9 @@ This command runs the `envelope` command twice:
 
 Several arguments to the second command affect how the XID Document is produced:
 
-1. `--private encrypt` keeps private keys but encrypts them, with `--encrypt-password` allowing decryption with a password.
+1. `--private encrypt` encrypts the private keys, which are stored in the XID Document, with `--encrypt-password` allowing decryption with a password.
 2. `--nickname` adds an identity label to the XID structure.
-3. `--generator encrypt` adds a provenance mark to the XID structure (encrypted).
+3. `--generator encrypt` adds an provenance mark to the XID structure, with its secret being encrypted.
 4. `--sign inception` wraps and signs the entire XID, allowing others to verify its authenticity.
 
 > :warning: **Private Keys On Board**: Your XID contains your private keys (encrypted with your password). Though they are encrypted, you should still be wary of distributing a XID file that contains those private keys. Fortunately, you can elide (remove) that data, as described below. Obviously, you must also be careful to protect your password.
@@ -98,7 +98,7 @@ A XID builds on several other Blockchain Commons technologies, primarily [Gordia
 
 > :book: **What is a provenance mark?** A provenance mark is a forward-commitment hash chain. It will be used to record the evolution of this identity, showing that each version is linked to the previous one (and also, which is the newest version of a set).
 
-> :book: **What is a wrapped envelope?** A Gordian Envelope is a package of informational triplets in the form of subject-predicate-object. An assertion (the predicate and the object) always applies to a specific subject. To make an assertion apply to more information, you wrap the envelope, and then apply the assertion to the wrapped envelope. Signatures are assertions, so for a signature to apply to an entire envelope (in this case, all of the XID information), it must be wrapped prior to signing.
+> :book: **What is a wrapped envelope?** A Gordian Envelope is a package of informational triplets in the form of subject-predicate-object. An assertion (the predicate and the object) always applies to a specific subject. To make an assertion apply to more information, you wrap the envelope, and then apply the assertion to the wrapped envelope. Signatures are assertions, so for a signature to apply to an entire envelope (in this case, all of the XID information), the envelope must be wrapped prior to signing.
 
 > :brain: **Learn more**: The [Signing and Verification](../concepts/signing.md) concept doc explains the cryptographic details of many of these elements.
 
@@ -111,7 +111,7 @@ envelope format "$XID"
 
 │ {
 │     XID(c7e764b7) [
-│         'key': PublicKeys(88d90933, SigningPublicKey(c5385c8f, Ed25519PublicKey(a1fae6ca)), EncapsulationPublicKey(a20a01e7, X25519PublicKey(a20a01e7))) [
+│         'key': PublicKeys(88d90933, SigningPublicKey(c7e764b7, Ed25519PublicKey(a1fae6ca)), EncapsulationPublicKey(a20a01e7, X25519PublicKey(a20a01e7))) [
 │             {
 │                 'privateKey': ENCRYPTED [
 │                     'hasSecret': EncryptedKey(Argon2id)
@@ -137,7 +137,7 @@ envelope format "$XID"
 │ ]
 ```
 
-Here's what all the sections mean:
+Here's what the individual parts of that "formatting" mean:
 
 - The curly braces `{ }` indicate wrapping, which is required for signing.
    - The signature occurs at the end under `signed`, with the `[ ]` indicating that it's an assertion on the `{ }` wrapped envelope. It confirms the entire document is cryptographically signed with the inception key.
@@ -149,21 +149,21 @@ Here's what all the sections mean:
    - The `allow` statement determines what access these keys have to this identity, as described in [key management](../concepts/key-management.md). By default, keys have total access (`All`).
    - The `nickname` is inside the `PublicKeys` section, not at the top level. That's because a nickname labels a key, not the XID Document. Later keys could have different nicknames while maintaining the same XID identity.
 - The `ProvenanceMark(...)` is a "genesis" mark: the first in a chain that tracks this identity's evolution.
-   - The encrypted `provenanceGenerator` is the secret that created this mark and will create all future marks when Amira updates her XIDDoc.
+   - The encrypted `provenanceGenerator` is the secret that created this mark and will create all future marks when Amira updates her XID Document.
 
 Note that a XID actually includes two keypairs that are bundled together:
 - a `Signing` keypair for creating and verifying signatures.
 - an `Encapsulation` keypair for encryption and decryption.
 
-Your inception key is the `SigningPublicKey`. This is the key that defines your XID. Your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this inception signing key. This is the cryptographic foundation of your identity. This is why the identifier never changes: it's permanently bound to that original key, which is why that's called the inception key.
+As shown, the public halves of the keypairs are readable by anyone, while the private halves are encrypted with your password. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
 
-> :warning: **XIDs Remain Consistent**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
+Your `SigningPublicKey` is also your "inception key" because your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this signing key. That's why it's called an inception key: it's the key that defines your XID. Your identifier never changes because it's permanently bound to this original key.
 
-As shown, the public halves of the keypair are readable by anyone, while the private halves are encrypted with your password. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
+> :warning: **The Signing Key Defines the Identity**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
 
 #### A Review of Envelope Structure
 
-If you are familiar with envelope structure (here) and envelope format (below), then you can skip ahead to Step 2 and create a public version of XID. If, however, you are not that familiar with Gordian Envelope, then read on.
+If you are familiar with envelope structure (discussed here) and envelope format (discussed below), then you can skip ahead to Step 2 and create a public version of Amira's XID. If, however, you are not that familiar with Gordian Envelope, then read on.
 
 As noted, every envelope has a **subject** (the main thing) and **assertions** (claims about that thing), which each include a **predicate** and an **object**. This usually means the subject predicates the object or the subject has a predicate of the object.
 
@@ -179,7 +179,7 @@ Here's how that structure appears in the sample XID Document:
 }
 ```
 
-The XID identifier `XID(c7e764b7)` is the subject. The assertions make claims about it: "this XID has these public keys" and "this XID has this provenance history."
+The XID identifier `XID(c7e764b7)` is the subject. The assertions make claims about it: "this XID has these public keys" and "this XID has this provenance history." Assertions can be added, removed, or hidden independently, no matter where they are in an envelope document. This is a key insight for their usage (and in fact you'll be hiding individual assertions momentarily).
 
 This pattern nests. Look inside the `'key'` assertion:
 
@@ -190,15 +190,17 @@ This pattern nests. Look inside the `'key'` assertion:
 ]
 ```
 
-The `PublicKeys` object is itself a subject with its own assertions. It `allow`s all access to the XID and it contains an `ENCRYPTED` `privateKey`. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add your GitHub account and SSH keys as attachments—vendor-qualified containers for application-specific data.
-
-Assertions can be added, removed, or hidden independently, no matter where they are in an envelope document. This is a key insight for their usage (and in fact you'll be hiding individual assertions momentarily).
+The `PublicKeys` object is itself a subject with its own assertions. It `allow`s all access to the XID and it contains an `ENCRYPTED` `privateKey`. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add your GitHub account and SSH keys as `attachments—vendor-qualified` containers for application-specific data.
 
 #### A Review of Envelope Format
 
-Envelope format shows you abbreviated labels for some data, such as `PublicKeys(32de0f2b)` and `ENCRYPTED`, rather than raw cryptographic data. This is intentional: showing hundreds of bytes of base64 would obscure the structure. In addition, the abbreviations hide complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
+Envelope format shows you abbreviated labels for some data, such as `PublicKeys(32de0f2b)` and `ENCRYPTED`, rather than raw cryptographic data. This is intentional: showing hundreds of bytes of base64 would obscure the structure. Envelope format also hides complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
 
-The hex codes in parentheses are digest fragments that let you quickly identify which key or encrypted blob you're looking at. Each one is a hash of the data in question.
+The hex codes in parentheses are digest fragments that let you quickly identify which key or encrypted blob you're looking at. Each one is a hash of the data in question. For example, the following shows all the keys in a XID, with their hashes. Note that the hash of the `SigningPublicKey`, `c7e764b7`, is the same as your XID! That's correct: as discussed elsewhere, the XID is the hash of your signing key!
+
+```
+         'key': PublicKeys(88d90933, SigningPublicKey(c7e764b7, Ed25519PublicKey(a1fae6ca)), EncapsulationPublicKey(a20a01e7, X25519PublicKey(a20a01e7))) [
+```
 
 The other thing of particular note is the quoted data. There are two styles of quotes:
 
