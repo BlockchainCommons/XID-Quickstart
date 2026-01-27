@@ -1,6 +1,6 @@
 # Making Your XID Verifiable
 
-In Tutorial 01, Amira created her BRadvoc8 identity. Now she wants Ben from SisterSpaces to be able to verify that he always has the current version of her XIDDoc. This tutorial shows how to make your XIDDoc fetchable and verifiable without relying on direct communication.
+This tutorial demonstrates how to maintain a XID's freshness without direct communication through the use of a publication URL and provenance marks. It does so through the continuation of Amira's story. In Tutorial 01, Amira created her BRadvoc8 identity. Now she wants Ben from SisterSpaces to be able to verify that he always has the current version of her XIDDoc.
 
 **Time to complete**: ~10-15 minutes
 **Difficulty**: Beginner
@@ -10,25 +10,24 @@ In Tutorial 01, Amira created her BRadvoc8 identity. Now she wants Ben from Sist
 
 ## Prerequisites
 
-- Completed Tutorial 01 (have a working XIDDoc)
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.32.0 or later)
+- Completed [Tutorial 01](01-your-first-xid.md) (have a working XIDDoc)
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (already installed in Tutorial 01)
+- The [Provenance Mark CLI](https://github.com/BlockchainCommons/provenance-mark-cli-rust) (release 0.6.0 or later recommended)
 - A GitHub account (for publishing - can use any public URL)
 
 ## What You'll Learn
 
 **Part I - Amira publishes:**
 - How to add a `dereferenceVia` assertion pointing to where your XIDDoc can be fetched
-- How to export a public version suitable for publishing
 
 **Part II - Ben verifies:**
-- How to verify an XID's signature (self-consistency)
 - How to check `dereferenceVia` matches the fetch URL
 - How to check provenance marks for freshness
-- What trust level this establishes (and what it doesn't)
+- What trust level this & signature checking establishes (and what it doesn't)
 
-## The Freshness Problem
+## Amira's Story: The Freshness Problem
 
-After Tutorial 01, Amira can give Ben her public XIDDoc directly—email it, share via Signal, whatever works. But what happens when she updates her XIDDoc next month? Ben has no way to know his copy is stale. He might verify signatures against outdated information, missing that Amira added new attestations or rotated keys.
+After Tutorial 01, Amira can give Ben her public XIDDoc directly. She can email it, share via Signal, or do whatever else works. But what happens when she updates her XIDDoc next month? Ben has no way to know his copy is stale. He might verify signatures against outdated information, missing that Amira added new attestations or rotated keys.
 
 One simple solution is to publish the XIDDoc at a stable URL and embed that URL in the document itself (we'll discuss other solutions in a future tutorial). Now Ben can fetch the current version whenever he needs it and verify through provenance marks that his copy is actually current, not an old snapshot someone gave him.
 
@@ -42,7 +41,7 @@ You'll add a publication URL to your XIDDoc and publish a public version.
 
 ### Step 0: Verify Dependencies
 
-Ensure you have the required tools from Tutorial 01:
+Before you start, ensure that you have the required CLI tools from Tutorial 01:
 
 ```
 envelope --version
@@ -52,20 +51,21 @@ provenance --version
 │ provenance-mark-cli 0.6.0
 ```
 
-If not installed, see Tutorial 01 Step 0 for installation instructions.
+If either tool is not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#step-0-setting-up-your-workspace) for installation instructions.
 
 ### Step 1: Load Your XID
 
-Load your XIDDoc from Tutorial 01. If you saved it to a file:
-
+Make sure to recreate your environmental variables:
 ```
 XID_NAME="BRadvoc8"
-PASSWORD="your-password-from-tutorial-01"
-
-# If you saved to file:
+PASSWORD="Amira's strong password"
+```
+If you saved your XID to a file, you can load it:
+```
 XID=$(cat xid-*/BRadvoc8-xid.envelope)
-
-# Or recreate for this tutorial:
+```
+Else, recreate it for this tutorial:
+```
 XID=$(envelope generate keypairs --signing ed25519 | \
     envelope xid new \
     --private encrypt \
@@ -73,8 +73,11 @@ XID=$(envelope generate keypairs --signing ed25519 | \
     --nickname "$XID_NAME" \
     --generator encrypt \
     --sign inception)
-
 echo "Loaded XID: $XID_NAME"
+```
+
+Afterward, you can check that it loaded correctly with `envelope format`:
+```
 envelope format "$XID" | head -10
 
 │ Loaded XID: BRadvoc8
@@ -90,18 +93,18 @@ envelope format "$XID" | head -10
 
 ### Step 2: Choose Your Publication URL
 
-Before adding `dereferenceVia`, decide where you'll publish. For this tutorial, we'll use a GitHub repository, but any stable URL works—personal website, IPFS gateway, wherever you control.
+You now must decide where you'll publish your XID to.  For this tutorial, we'll use a GitHub repository, but any stable URL website or IPFS gateway will work, just be sure that it's something that you personally control, since one of the advantages of your XID is that it's self-sovereign,
 
 ```
-# Your publication URL - we'll use a GitHub repository
 PUBLISH_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 ```
 
-> :warning: **Raw Content Required**: Your URL must point to raw content, not an HTML page. For GitHub repositories, use the `/raw/` URL path. If verifiers fetch an HTML page instead of the actual XID data, verification will fail.
+> :warning: **Raw Content Required**: Your URL must point to raw content, not an HTML page.  If verifiers fetch an HTML page instead of the actual XID data, verification will fail. For GitHub repositories, use the `/raw/` URL path. 
 
 ### Step 3: Add dereferenceVia Assertion
 
-Now add a `dereferenceVia` assertion that tells others where to fetch the current version of your XIDDoc:
+You now need to link your publication URL to your XID. This is done by adding a `dereferenceVia` URL, which says how to "resolve" the XID.
+Passing the original `$XID` to the `xid resolution add` command will do this:
 
 ```
 XID_WITH_URL=$(envelope xid resolution add \
@@ -113,8 +116,23 @@ XID_WITH_URL=$(envelope xid resolution add \
     --generator encrypt \
     --encrypt-password "$PASSWORD" \
     "$XID")
+```
+This command uses the following new arguments:
 
-echo "Added dereferenceVia"
+1. `--verify inception` says to verify that the signature of the original `$XID` was made with its inception key.
+2. `--password "$PASSWORD"` decrypts the previously encrypted information with the password.
+
+You want the new, updated XID to have the same protections as the original, so you repeat the various encryption and signature commands:
+
+1. `--private encrypt` to encrypt the private key.
+2. `--generate encrypt` to encrypt the provenance mark generate.
+3. `--encrypt-password` to use the `$PASSWORD` for descryption.
+4. `--sign` to sign the new document.
+
+Note that you didn't have to repeat commands like `--nickname`. That's because the whole previous XID Document was read in. You just had to redo the encryption and signing at the end.
+
+You can use `envelope format` to see what your updated XID looks like:
+```
 envelope format "$XID_WITH_URL" | head -20
 
 │ Added dereferenceVia
@@ -141,22 +159,13 @@ envelope format "$XID_WITH_URL" | head -20
 │ ]
 ```
 
-This command does several things at once:
+The metadata of the new XID Document should be identical to the original. The signature was verified then refreshed, while private keys and the provenance mark generator were re-encrypted. 
 
-1. `xid resolution add "$PUBLISH_URL"` adds a `dereferenceVia` assertion with your URL
-2. `--verify inception` checks the existing signature before modifying
-3. `--password "$PASSWORD"` decrypts secrets needed for signing
-4. `--sign inception` re-signs the updated document
-5. `--private encrypt` and `--generator encrypt` keep secrets encrypted
-6. `--encrypt-password "$PASSWORD"` sets the encryption password
-
-The result: a `'dereferenceVia': URI(...)` assertion was added, the signature was verified and refreshed, and private keys stayed encrypted. Notice that `dereferenceVia` is a known value (single quotes) from the Gordian Envelope specification, and its object is a `URI` type rather than a plain string. This assertion tells anyone who receives your XIDDoc: "To get the current version, fetch from this URL."
-
-You can add multiple `dereferenceVia` assertions for redundancy by running the command again with a different URL. For example, you might point to both a GitHub raw URL and a personal domain, so if one source becomes unavailable, verifiers can still fetch your current XIDDoc from the other.
+Notice that `dereferenceVia` is a known value (single quotes) from the Gordian Envelope specification, and its object is a `URI` type rather than a plain string. This assertion tells anyone who receives your XID Document: "To get the current version, fetch from this URL." You can add multiple `dereferenceVia` assertions for redundancy by running the command again with a different URL. For example, you might point to both a GitHub raw URL and a personal domain, so if one source becomes unavailable, verifiers can still fetch your current XID Document from the other.
 
 ### Step 4: Export Public Version
 
-Create a version safe for publishing by eliding the private keys and provenance generator:
+You now want to create a view of this XID version that is safe for publishing by eliding the private keys and provenance generator. In Tutorial 01, you manually found digests and used `envelope elide removing` to create a public view. We used that demonstration to show how elision works. However, there's a simpler command that automatically elides not only the private keys, but also the provenance mark generator: `xid export`. That's what you'll want to use most of the time (when you're not learning about elision!):
 
 ```
 PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID_WITH_URL")
@@ -182,15 +191,11 @@ envelope format "$PUBLIC_XID"
 │ ]
 ```
 
-> :book: **Callback to Tutorial 01**: In Tutorial 01, you manually found digests and used `envelope elide removing` to create public versions. The `xid export` command does this automatically—it knows which parts of an XID should be elided for public sharing.
-
-Notice the difference: where your complete XID shows `ENCRYPTED`, the public version shows `ELIDED`. The signature is still present and verifiable, the XID identifier is unchanged, but the private key and provenance generator are replaced with placeholders.
-
-Why elide rather than simply omit? Elision keeps the hash contribution while removing the content, so the signature still verifies. If you omitted the private key entirely, the envelope's hash would change, invalidating the signature.
+As usual, this removes the content you want to hide, but maintains the hashes, so that the root hash and the signature remain the same.
 
 ### Step 5: Publish Your XID
 
-Now publish the public version. We'll use a GitHub repository:
+You can now publish the public version to your GitHub repository.
 
 ```
 # Save the public XID to a file
@@ -201,11 +206,7 @@ echo "Contents:"
 cat /tmp/xid-public.txt
 ```
 
-To publish on GitHub: create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern: `https://github.com/USERNAME/REPO/raw/main/xid.txt`.
-
-> :warning: **Chicken-and-Egg**: You need the URL to add `dereferenceVia`, but you need to create the repo to get the URL. The solution: GitHub URLs are predictable. Decide your repo name first, construct the URL, add it to your XID, then create the repo with that content. If you change the URL later, you must re-sign and republish.
-
----
+To publish this file to GitHub, create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern: `https://github.com/USERNAME/REPO/raw/main/xid.txt`.
 
 ## Part II: Ben Verifies
 
