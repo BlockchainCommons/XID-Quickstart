@@ -80,7 +80,7 @@ fi
 │ Created your XID: BRadvoc8
 ```
 
-This command runs the `envelope` command twice:
+This command runs the `envelope` CLI twice:
 
 1. `envelope generate keypairs` creates an Ed25519 keypair (the same algorithm SSH, git, and Signal use). This generates two URs, containing the private and public keys, respectively.
 2. `envelope xid new` creates a XID based on that Ed25519 keypair. This generates a XID Document (XIDDoc), which can be read as a Gordian Envelope.
@@ -157,7 +157,7 @@ Note that a XID actually includes two keypairs that are bundled together:
 
 As shown, the public halves of the keypairs are readable by anyone, while the private halves are encrypted with your password. This mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID bundles both into a single document.
 
-Your `SigningPublicKey` is also your "inception key" because your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this signing key. That's why it's called an inception key: it's the key that defines your XID. Your identifier never changes because it's permanently bound to this original key.
+Your `SigningPublicKey` is also called your "inception key" because your XID identifier (`XID(c7e764b7)`) is the SHA-256 hash of this signing key. Hence the name: it's the key that defines your XID. Your identifier never changes because it's permanently bound to this original key.
 
 > :warning: **The Signing Key Defines the Identity**: The same keypairs always produce the same XID identifier because it's derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
 
@@ -194,7 +194,7 @@ The `PublicKeys` object is itself a subject with its own assertions. It `allow`s
 
 #### A Review of Envelope Format
 
-Envelope format shows you abbreviated labels for some data, such as `PublicKeys(32de0f2b)` and `ENCRYPTED`, rather than raw cryptographic data. This is intentional: showing hundreds of bytes of base64 would obscure the structure. Envelope format also hides complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
+Envelope format shows you abbreviated labels for some data such as `PublicKeys(32de0f2b)` and `ENCRYPTED` rather than raw cryptographic data. This is intentional: showing hundreds of bytes of base64 would obscure the structure. Envelope format also hides complexity: `PublicKeys` actually contains two separate keys (a signing key and an encapsulation key), `ENCRYPTED` contains the ciphertext plus Argon2id parameters, and `Salt` contains random bytes that make each XIDDoc's digest unique. You don't need to see this detail to work with XIDs, but knowing it's there helps when things go wrong.
 
 The hex codes in parentheses are digest fragments that let you quickly identify which key or encrypted blob you're looking at. Each one is a hash of the data in question. For example, the following shows all the keys in a XID, with their hashes. Note that the hash of the `SigningPublicKey`, `c7e764b7`, is the same as your XID! That's correct: as discussed elsewhere, the XID is the hash of your signing key!
 
@@ -209,13 +209,13 @@ The other thing of particular note is the quoted data. There are two styles of q
 
 ## Step 2: Creating a Public Version of Your XID with Elision
 
-Now Amira wants to create a shareable public version that does not contain her private key. She does this by using envelope's elision (removal) feature.
+Now Amira wants to create a shareable public version of her XID that does not contain her private key. She does this by using envelope's elision (removal) feature.
 
 To do so, she must find the digest (hash) of the private key assertion. Every thing in an envelope has a hash: it's how the envelope is built and how it maintains signatures (more on that momentarily). Once she finds the right hash, she simply tells the Envelope CLI to remove it.
 
 ### Finding the Private Key Digest
 
-In a graphical UI, this whole process might be as simple as clicking on the assertion in the envelope and hitting the DELETE key. In the Envelope CLI, it takes digging down through the layers of the envelope by unwrapping wrapped envelopes and finding assertions within them.
+In a graphical UI, this whole process might be as simple as clicking on the assertion in the envelope and hitting the DELETE key. In the Envelope CLI, it takes digging down through the layers of the envelope by unwrapping wrapped envelopes and finding assertions within them before identifying a digest for deletion.
 
 First, since the XID was wrapped and signed with `--sign inception`, you need to unwrap it to access its assertions:
 
@@ -260,7 +260,7 @@ echo "Created public version by eliding private key"
 │ Created public version by eliding private key
 ```
 
-Afterward, you can view the public version:
+Afterward, you can view this new public version of your XID:
 
 ```
 envelope format "$PUBLIC_XID"
@@ -299,7 +299,7 @@ Gordian Envelope is built on hashes. Every subject, every predicate, every objec
 
 When data is elided from an envelope, its content is removed, but the hash remains. That means that all of the node hashes above that leaf hash remain the same, including the root hash. Since it's the root hash that is signed, not the full envelope content, the signature remains valid.
 
-> :warning: **The Root Hash is Not Xthe ID Identifier.** The root hash is composed from the hashes of _all_ the data within an envelope. It changes if you change the document. It's an identifier for a specific version of your XID Document. The XID identifier is the hash of your inception public key. It never changes. It's an identifier for your identity. 
+> :warning: **The Root Hash is Not the ID Identifier.** The root hash is composed from the hashes of _all_ the data within an envelope. It changes if you change the document. It's an identifier for a specific version of your XID Document. In contrast, the XID identifier is the hash of your inception public key. It never changes. It's an identifier for your identity. 
 
 You can verify your root hash does not change after you elide data with the `envelope digest` command:
 
@@ -330,7 +330,7 @@ The digests are identical. You removed the private key, yet the hash didn't chan
 ## Step 3: Verifying a XID
 
 There are two ways to verify XIDs:
-* The signature can be verified against a public key.
+* The signature can be verified.
 * The provenance mark can be validated.
 
 A digital signature is verified against a public key. For a XID, that's the public signing key. Again, you have to dig down through the envelope to get to it:
@@ -348,7 +348,7 @@ envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signatur
 │ ✅ Signature verified!
 ```
 
-This confirms that this XID Document has been signed by the owner of the public key within the document. Alternatively, if the public key were retrieved from a PKI or other published site, it would confirm that the document was signed by the owner of the published public key. In the future, this verification will demonstrate that updates of this XID Document continue to be signed by this original (inception) key.
+This confirms that this XID Document has been signed by the owner of the public key within the document. Alternatively, if the public key were retrieved from a PKI or other published site, it would confirm that the document was signed by the owner of the published public key. In the future, this verification will demonstrate that updates of this XID Document continue to be signed by this original (inception) key or by a new key that has been authorized by the inception key, possibly through a chain of authorizations.
 
 The provenance mark can similarly be verified. To do this, extract the Provenance Mark with the `xid provenance` command:
 
@@ -391,11 +391,11 @@ provenance validate --format json-pretty "$PROVENANCE_MARK"
 │ }
 ```
 
-The Provenance Mark CLI shows `has_genesis: true` and `sequence: 0`, meaning this is the first version in the chain with no issues found. In other words, you're just verifying that you have a Genesis Mark, which is the first provenance mark in a chain. (When you create more marks in the chain, you'll be able to verify that two provenance marks are connected, but that's for the future.)
+The Provenance Mark CLI shows `has_genesis: true`, `start_seq: 0` and `end_seq: 0`, meaning this is the first version in the chain with no issues found. In other words, you're just verifying that you have a Genesis Mark, which is the first provenance mark in a chain. (When you create more marks in the chain, you'll be able to verify that two provenance marks are connected, but that's for the future.)
 
-Here's a few things to note in your verification:
-* All verification was down with the public version of the XID; no secret information is needed.
-* This demonstrates an asymmetry common in cryptography: Amira creates information with her secrets, and only she can update it. But after she distributes her public XID, anyone can check it.
+Here's a few things to note in the verification you did of the XID:
+* All verification was down with the public version of the XID; no secret information was needed.
+* This demonstrates an asymmetry common in cryptography: Amira creates information with her secrets, and only she can update that information. But after she distributes her public XID, anyone can check it.
 
 ## Step 4: Organizing Your Files
 
