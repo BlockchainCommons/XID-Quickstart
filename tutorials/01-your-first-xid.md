@@ -494,11 +494,11 @@ You can also create device-specific keys and delegate permissions, allowing each
 
 > **Assertion** - A predicate-object pair making a claim about the subject (e.g., `'key': PublicKeys(...)`).
 >
-> **Edition** - A version of a XIDDoc (or other envelope) that is different from previous edition due to the addition, removal, or update of information. An edition may have many views, which selectively elide information from the master document.
+> **Edition** - A version of a XIDDoc (or other envelope) that is different from previous edition due to the addition, removal, or update of information. An edition may have many views, which selectively elide information from the master document. If an envelope contains a provenance mark, it is incremented when a new edition is created.
 >
 > **Elision** - Removing data while preserving the envelope's root hash, enabling selective disclosure with maintained cryptographic integrity.
 >
-> **Envelope** - Gordian Envelope, a smart-document system that supports the deterministic storage of data and its distribution in multiple selectively disclosed views to support data minimization.
+> **Envelope** - Gordian Envelope, a smart-document system that supports the deterministic storage of data and its distribution in multiple selectively disclosed views to support data minimization. 
 >
 > **Envelope Digest** - The root hash of an envelope structure, preserved across elision, enabling signature verification on different views of the same document.
 >
