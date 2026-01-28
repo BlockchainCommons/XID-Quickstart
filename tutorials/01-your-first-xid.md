@@ -518,7 +518,7 @@ You can also create device-specific keys and delegate permissions, allowing each
 >
 > **Subject** - The main thing an envelope describes; in XIDDocs, this is the XID identifier.
 >
-> **View** - A version of an edition of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure.
+> **View** - A version form of a specific edition of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure.
 > 
 > **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document editions because it's bound to that original key.
 >
