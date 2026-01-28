@@ -231,33 +231,39 @@ Ben doesn't know if this is legitimate. He needs to verify. How does he do so?? 
 
 ## Part II: Ben Verifies
 
-Ben will test the XID Document via a variety of means.
+Ben has been mailed the XID Document and will test it via a variety of means.
 
 ### Step 6: Ben Fetches the XIDDoc
 
-First, Ben fetches the current version of the XID Document from the `dereferenceVia` found in the version he was mailed.
+First, Ben fetches the current version of the XID Document from the `dereferenceVia` found in the version that he was mailed.
 
-He could just input it into his browser and cut and paste the file, but the following instead allows it to be retrieved from the comand line:
+He could just input the URL into his browser and then cut and paste the file, but the following instead allows him to retrieve the dereferenced XIDDoc using the command line.
 ```
 RECEIVED_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 CURL_URL=`echo $RECEIVED_URL | sed 's/\/\/github.com\//\/\/raw.githubusercontent.com\//; s/\/raw\//\//'`
-FETCHED_XID=$(curl -H 'Accept: application/vnd.github.v3.raw' $CURL_URL)
+FETCHED_XID=$(curl -H 'Accept: application/vnd.github.v3.raw' $CURL_URL | head -1)
 ```
 
-He'll of course want to review this XID:
+> :warning: **Variable URLs**: The `dereferenceVia` indicated that Ben should retrieve the current XIDDoc from `https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt`. That's a standard GitHub URL for retrieving raw files using a browser. However, it doesn't work with `curl`, which instead requires an equivalent URL. Replace the `github.com` site name with `raw.githubusercontent.com` and drop the `/raw/` directory to instead retrieve from the command line.
+
+You may notice that the `FETCHED_URL` command only retrieves the first line of the dereference URL, with `head -1`. That is purposeful for this tutorial, but not general best practice, which would be to instead read the last line of the file, with `tail -1`. Here's the reason: a file can contain multiple copies of an envelope, each a UR stored on a seperate line. Optimally, these lines will be arranged in chronological order, with the oldest envelope at the top and the newest at the bottom. That's what we're depending on in this tutorial: that the first line of the file will contain the first edition of the envelope, which is the example we're discussing here. We'll be continuing to step down through the GitHub file for additional editions in future tutorials. 
+
+We can depend on this ordering in this tutorial because we're preparing the files for use. You can't depend on it when you're dereferencing an arbitrary XID that's been sent to you, but that's fine. XIDs have provenance marks, and the provenance marks will tell you which version is the newest. That's their whole purpose!
+
+Ben will of course want to review the XID that he retrieved:
 ```
 envelope format "$FETCHED_XID" | head -15
 
-│ Fetched XIDDoc from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
+│ ✅ Fetched XIDDoc from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
 │ {
-│     XID(c7e764b7) [
+│     XID(5f1c3d9e) [
 │         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
-│         'key': PublicKeys(...) [
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
 │             'allow': 'All'
 │             'nickname': "BRadvoc8"
 │             ELIDED
 │         ]
-│         'provenance': ProvenanceMark(632330b4) [
+│         'provenance': ProvenanceMark(1896ba49) [
 │             ELIDED
 │         ]
 │     ]
@@ -268,20 +274,45 @@ envelope format "$FETCHED_XID" | head -15
 
 Retrieving a XID in this way is a crucial step because anyone could pass around a XID Document, and more so, anyone could pass around a very old XID Document that has old, inaccurate information. By including a `dereferenceVia` that refers to a URL that she controls, Amira has ensured that if someone receives her XID Document, they should then go to the URL to pick up a current version, which Ben does.
 
-Ben now has the current version of XIDDoc. But can he trust it?
+Ben now suspects he has the current version of XIDDoc.
 
-### Step 7: Ben Verifies the Signature
+### Step 7: Ben Checks the dereferenceVia URL
 
-As demonstrated in [Tutorial 01](01-your-first-xid.md#step-3-verifying-a-xid), Ben will want to check that the XID is signed by its own key:
+Ben has now received a XID Doc, dereferenced it to access an up-to-date version of the document, and retrieved that dereferenced document. So he has the most up-to-date version, right? Not necessarily! It's possible that the URL is no longer Amira's primary publication location. This could easily be the case if someone else sent Ben a very old copy of the XIDDoc. To verify this isn't the case, Ben should check the `dereferenceVia` one more time, looking at the new document that he downloaded. He does this by extracting the `dereferenceVia` from this fetched and unwrapped XID, and comparing it to the URL that he used to lookup the XID.
 
 ```
-# Extract the public keys from the XID itself
+UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
+DEREFERENCE_ASSERTION=$(envelope assertion find predicate known dereferenceVia "$UNWRAPPED")
+DEREFERENCE_URL=$(envelope extract object "$DEREFERENCE_ASSERTION" | envelope format | sed 's/.*URI(\(.*\))/\1/')
+
+echo "URL Ben fetched from:     $RECEIVED_URL"
+echo "dereferenceVia in XID:    $DEREFERENCE_URL"
+
+if [ "$RECEIVED_URL" = "$DEREFERENCE_URL" ]; then
+    echo "✅ URLs match - XID claims this is its canonical location"
+else
+    echo "⚠️  URLs don't match - XID may have been copied from elsewhere"
+fi
+
+│ URL Ben fetched from:     https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
+│ dereferenceVia in XID:    URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+│ ✅ URLs match - XID claims this is its canonical location
+```
+
+If the URLs match, Ben is even more certain that he has the most up-to-date XIDDoc. If they don't, then Ben should look at the `dereferenceVia` in the new XIDDoc that he retrieved, and follow it to the URL that _it_ points to, repeating steps 6-7 until he actually gets a XIDDoc that matches its own `dereferenceVia`. (Usually these additional steps wont' be required at all, but they should definitely be part of a verifier checklist.)
+
+Barring some weird issue like a circular set of dereferences, or a dead URL, Ben should now have a XIDDoc that is the newest version. But can he trust it?
+
+### Step 8: Ben Verifies the Signature & Provenance
+
+Ben will now repeat the steps from [Tutorial 01](01-your-first-xid.md#step-3-verifying-a-xid), verifying the signature and the provenance mark.
+
+```
 UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
 KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED")
 KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
 PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 
-# Verify the signature
 if envelope verify -v "$PUBLIC_KEYS" "$FETCHED_XID" >/dev/null 2>&1; then
     echo "✅ Signature verified - XID is self-consistent"
 else
@@ -289,12 +320,16 @@ else
     exit 1
 fi
 
+PROVENANCE_MARK=$(envelope xid provenance get "$FETCHED_XID")
+
+echo "Checking provenance mark..."
+provenance validate "$PROVENANCE_MARK" && echo "✅ Provenance chain intact"
+
 │ ✅ Signature verified - XID is self-consistent
+| ✅ Provenance chain intact
 ```
 
-The signature verified, which means the document is signed by its own inception key and no tampering occurred after signing. The signature covers the entire document, so any modification would fail verification.
-
-> :book: **XID Self-Containment**: Notice that Ben extracted the verification keys from the XID itself. He didn't need Amira to send keys separately. XIDs contain everything needed for verification. "Share XIDs, not keys."
+We could also examine details of the provenance mark with `provenance validate --format json-pretty "$PROVENANCE_MARK"`, but since this is our first publication, it'll look the same as it did in Tutorial 01. The more interesting test would come if Ben had multiple, different copies of the XID, and needed to determine which was stale and which fresh, but that's a topic for a future Tutorial.
 
 #### What If the XID Was Tampered?
 
@@ -316,122 +351,38 @@ fi
 │ ❌ Signature FAILED - tampering detected!
 ```
 
-This is why signature verification is Ben's first check: it catches any tampering that occurred after Amira signed the document.
+This is why signature verification is an important check: it catches any tampering that occurred after Amira signed the document.
 
 > :brain: **Learn more**: The [Signing and Verification](../concepts/signing-verification.md) concept doc explains how envelope signatures work and why elision preserves signature validity.
 
-### Step 8: Ben Checks the dereferenceVia URL
+### Step 9: Ben Assesses What He Has Learned
 
-Now that Ben knows that he has a valid, up-to-date version of the XID, he should check the `dereferenceVia` one more time. He does so by extracting the `dereferenceVia` from this fetched and unwrapped XID, and comparing it to the URL that he used to lookup the XID.
+Although Ben has run a few tests, he still has limited information about the BRadvoc8 identity. So what can he trust?
 
-```
-DEREFERENCE_ASSERTION=$(envelope assertion find predicate known dereferenceVia "$UNWRAPPED")
-DEREFERENCE_URL=$(envelope extract object "$DEREFERENCE_ASSERTION" | envelope format | sed 's/.*URI(\(.*\))/\1/')
+Three things have been cryptographically verified:
 
-echo "URL Ben fetched from:     $RECEIVED_URL"
-echo "dereferenceVia in XID:    $DEREFERENCE_URL"
+* The XID was signed by someone holding the private signing key referenced in the XID.
+   * _This means that the XID is self-consistent_.
+* The XID hasn't been tampered with since it was signed.
+   * _This means that the XID is what the signer signed-off on (but not that the content is necessarily true)._
+*  The provenance mark verifies, without any errors highlighting gaps.
+   * _This means that the provenance chain is complete; to be precise, detailed data shows that the XID is a first edition._
+ 
+One thing is very likely verified:
 
-if [ "$RECEIVED_URL" = "$DEREFERENCE_URL" ]; then
-    echo "✅ URLs match - XID claims this is its canonical location"
-else
-    echo "⚠️  URLs don't match - XID may have been copied from elsewhere"
-fi
+* The XID is the most up-to-date edition of the identifier.
+   * _There still is the possibility that Amira made a newer XID without updating the `dereferenceVia` site, but Ben did his due dilligence to show that it's unlikely that he has an out-of-date version of the XID._
+ 
+But a few other things are just assumed, without proof:
 
-│ URL Ben fetched from:     https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
-│ dereferenceVia in XID:    URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
-│ ✅ URLs match - XID claims this is its canonical location
-```
+* Amira has control of the GitHub account.
+   * _Though Amira's XID being on the GitHub account is suggestive, more would need to be done to prove she owned it._
+* Amira is who she says she is.
+   * _A pseudonymous identity can never provide absolute proof of who someone is, but attestations and cross-verifications can offer increasingly strong evidence._
+ 
+The next two tutorials will concentrate on showing how a XID can better support these assumptions.
 
-If the URLs match, Ben is even more certain that he has the most up-to-date URL. If they don't that's probably because Amira stopped using the repository where Ben retrieved the XID from, and has pointed to a new one. In this case, Ben would repeat steps 6-8 with the new `$DEREFERENCE_URL`.
-
-### Step 9: Ben Checks Provenance
-
-Lastly, Ben checks the provenance mark to understand its history. This is also a repeat of work you did in Tutorial 01, but the result is going to be a little different this time, because the new XID is a second generation version, with that `dereferenceVia` added.
-
-The first think we do is extract the mark and make sure it's part of a complete chain:
-```
-PROVENANCE_MARK=$(envelope xid provenance get "$FETCHED_XID")
-
-echo "Checking provenance mark..."
-provenance validate "$PROVENANCE_MARK" && echo "✅ Provenance chain intact"
-```
-
-As before, we can look at more details on the provenance mark:
-```
-echo "Provenance details:"
-provenance validate --format json-pretty "$PROVENANCE_MARK"
-
-│ Checking provenance mark...
-│ ✅ Provenance chain intact
-│
-│ Provenance details:
-│ {
-|  "marks": [
-|    "ur:provenance/lfaxhdimptttolwzplwfgwwppliopatlkejnnlurbzatmhskctpklgjsfdgdreyaoxrsaxdynlrpqdcketnsjzbwsgtnynotflzonsseonldrhnlidlpbkromdrtcsdrrtvlzciswlimsgmsdyfwyaldcyhkmdvepmascyoliafyzosftslnytjosglbfpcygobtrsutmtmnhpaxmusgotfpfgaoqdgortmo"
-|   ],
-|   "chains": [
-|     {
-|       "chain_id": "a9d1a6f2aef34fecae67b1d57c6d99df150790c51faa8d714850b5f8a4bf0330",
-|       "has_genesis": true,
-|       "marks": [
-|
-| "ur:provenance/lfaxhdimptttolwzplwfgwwppliopatlkejnnlurbzatmhskctpklgjsfdgdreyaoxrsaxdynlrpqdcketnsjzbwsgtnynotflzonsseonldrhnlidlpbkromdrtcsdrrtvlzciswlimsgmsdyfwyaldcyhkmdvepmascyoliafyzosftslnytjosglbfpcygobtrsutmtmnhpaxmusgotfpfgaoqdgortmo"
-|     ],
-|      "sequences": [
-|        {
-|          "start_seq": 0,
-|          "end_seq": 0,
-|          "marks": [
-|            {
-|              "mark":
-| "ur:provenance/lfaxhdimptttolwzplwfgwwppliopatlkejnnlurbzatmhskctpklgjsfdgdreyaoxrsaxdynlrpqdcketnsjzbwsgtnynotflzonsseonldrhnlidlpbkromdrtcsdrrtvlzciswlimsgmsdyfwyaldcyhkmdvepmascyoliafyzosftslnytjosglbfpcygobtrsutmtmnhpaxmusgotfpfgaoqdgortmo",
-|              "issues": []
-|            }
-|          ]
-|        }
-|      ]
-|    }
-|  ]
-| }
-```
-
-The output tells Ben this chain has a valid starting point (`has_genesis: true`), this is the original version with no updates yet (`start_seq: 0, end_seq: 0`), and there are no problems found (`issues: []`). If Amira had made updates, the sequence numbers would be higher and Ben could verify the chain of updates is unbroken.
-
-[[OPEN QUESTION: WHY DIDN'T THE PROVENANCE MARK UPDATE? HOW IS THIS NOT A PROBLEM?]]
-
-If Ben ended up with multiple copies of Amira's XID, 
-
-#### Detecting Stale Copies
-
-What if someone gave Ben an old copy of the XID instead of the current one? He can compare provenance marks to detect this:
-
-```
-# Ben has two versions - one from a friend, one freshly fetched
-# Compare their sequence numbers
-
-# Simulate: OLD_MARK from friend's copy (sequence 0)
-# Simulate: NEW_MARK from fresh fetch (sequence 1 after an update)
-
-OLD_SEQ=0   # From stale copy
-NEW_SEQ=1   # From fresh fetch
-
-echo "Copy from friend:  sequence $OLD_SEQ"
-echo "Fresh from URL:    sequence $NEW_SEQ"
-
-if [ "$NEW_SEQ" -gt "$OLD_SEQ" ]; then
-    echo "⚠️  Friend's copy is STALE - use the fresh version!"
-fi
-
-│ Copy from friend:  sequence 0
-│ Fresh from URL:    sequence 1
-│ ⚠️  Friend's copy is STALE - use the fresh version!
-```
-
-Higher sequence number means newer version. Ben should always fetch from `dereferenceVia` to ensure he has the current XIDDoc, especially before making trust decisions.
-
-> :brain: **Learn more**: The [Provenance Marks](../concepts/provenance-marks.md) concept doc explains the cryptographic chain structure and how it prevents history falsification.
-
-### Step 10: Ben's Verification Summary
+> :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explores the full trust hierarchy and how verification layers combine.
 
 Ben can now summarize what he knows:
 
@@ -442,7 +393,7 @@ echo "XID Identifier: $(envelope xid id "$FETCHED_XID")"
 echo "Nickname: BRadvoc8"
 echo ""
 echo "Verification Results:"
-echo "  ✅ Signature: Valid (self-signed)"
+echo "  ✅ Signature: Valid (self-consistent XID, no tampering)"
 echo "  ✅ dereferenceVia: Matches fetch URL"
 echo "  ✅ Provenance: Valid genesis mark (version 0)"
 echo ""
@@ -462,7 +413,7 @@ echo "  • Who 'BRadvoc8' really is"
 │ Nickname: BRadvoc8
 │
 │ Verification Results:
-│   ✅ Signature: Valid (self-signed)
+│   ✅ Signature: Valid (self-consistent XID, no tampering)
 │   ✅ dereferenceVia: Matches fetch URL
 │   ✅ Provenance: Valid genesis mark (version 0)
 │
@@ -477,69 +428,11 @@ echo "  • Who 'BRadvoc8' really is"
 │   • Who 'BRadvoc8' really is
 ```
 
----
+## Summary: What You Accomplished
 
-### About the Trust Model
+BRadvoc8 now has a stable publication URL, provenance tracking for edition verification, and cryptographic integrity through self-signing. The freshness problem is solved: Ben can fetch current versions without waiting for Amira to send updates, verify that he has the latest copy, and detect if someone gives him stale data.
 
-*If you're ready to move on, skip to "Updating Your XID". Otherwise, read on to understand what Ben can and cannot trust at this point.*
-
-What can Ben trust? Three things are cryptographically verified: the XID is self-consistent (signature verifies), it has continuity (provenance chain is intact), and it claims its publication location (dereferenceVia matches fetch URL).
-
-But two things remain assumed, not proven: that Amira actually controls the GitHub account where the XID is published, and that Amira is who she claims to be. This tutorial solved the freshness problem—Ben can always get the current version and detect tampering—but it didn't establish deeper trust.
-
-Tutorial 03 addresses what's missing: attestations that connect BRadvoc8 to real-world systems. Amira will add her GitHub account and SSH signing key as verifiable claims that Ben can cross-verify in Tutorial 04.
-
-> :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explores the full trust hierarchy and how verification layers combine.
-
-## Updating Your XID (Preview)
-
-When Amira wants to make changes—add attestations, change nickname, whatever—she updates her XIDDoc, then advances the provenance mark:
-
-```
-UPDATED_XID=$(envelope xid provenance next \
-    --password "$PASSWORD" \
-    --sign inception \
-    --private encrypt \
-    --generator encrypt \
-    --encrypt-password "$PASSWORD" \
-    "$XID_WITH_CHANGES")
-```
-
-Then she exports the new public version and publishes it to the same URL. When Ben fetches it, he sees the same XID identifier (the identity persists), a higher sequence number (so he knows this is newer), and a valid provenance chain (proving the updates are legitimate, not forged).
-
-## What You Accomplished
-
-BRadvoc8 now has a stable publication URL, provenance tracking for freshness verification, and cryptographic integrity through self-signing. The freshness problem is solved: Ben can fetch current versions without waiting for Amira to send updates, verify he has the latest copy, and detect if someone gives him stale data.
-
-## Appendix: Key Terminology
-
-> **`dereferenceVia`** - A known predicate indicating where the canonical version of this XID can be fetched. Uses `URI` type for the object.
->
-> **Self-Consistency** - An XID is self-consistent when its signature verifies against its own embedded public key. Proves the document wasn't tampered with after signing, but not that the claims inside are true.
->
-> **Freshness** - The property of having the most current version of an XID, verified through provenance marks.
->
-> **Provenance Chain** - The sequence of provenance marks showing the history of XID updates. Each mark links to the previous.
->
-> **Sequence Number** - The position in the provenance chain (0 = genesis, 1 = first update, etc.).
-
-## Exercises
-
-Try these to solidify your understanding:
-
-**Publishing exercises (Amira's perspective):**
-
-- Publish your XID for real: create a GitHub repository, add the URL with `xid resolution add`, export the public version, and commit it.
-- Add multiple `dereferenceVia` assertions pointing to different mirrors (e.g., GitHub and a personal domain).
-- Practice advancing the provenance mark with `xid provenance next` and observe how the sequence numbers change.
-
-**Verification exercises (Ben's perspective):**
-
-- Download someone else's published XIDDoc and run the full verification workflow: signature, dereferenceVia match, and provenance check.
-- Deliberately tamper with a copy (change a character) and verify that signature verification fails.
-- Compare two versions of the same XID with different sequence numbers to see how freshness detection works.
-
-## Example Script
+### Example Script
 
 A complete working script implementing this tutorial is available at `tests/02-making-xid-verifiable-TEST.sh`. Run it to see all steps in action:
 
@@ -549,6 +442,20 @@ bash tests/02-making-xid-verifiable-TEST.sh
 
 This script tests both Amira's publication workflow and Ben's verification workflow.
 
+### Exercises
+
+Try these to solidify your understanding:
+
+**Publishing exercises (Amira's perspective):**
+
+- Publish your XID for real: create a GitHub repository, add the URL with `xid resolution add`, export the public version, and commit it.
+- Add multiple `dereferenceVia` assertions pointing to different mirrors (e.g., GitHub and a personal domain).
+
+**Verification exercises (Ben's perspective):**
+
+- Download someone else's published XIDDoc and run the full verification workflow: signature, dereferenceVia match, and provenance check.
+- Deliberately tamper with a copy (change a character) and verify that signature verification fails.
+
 ## What's Next
 
 **Tutorial 03: Offering Self-Attestation** adds verifiable claims. Amira will link her GitHub account and SSH signing key as attestations about her real-world activities.
@@ -557,6 +464,17 @@ This script tests both Amira's publication workflow and Ben's verification workf
 
 The key insight: this tutorial proves your XID is current. Tutorial 03 offers attestations, and Tutorial 04 shows how to verify them. Together, they build meaningful trust—enough for Ben to accept code contributions from BRadvoc8.
 
----
+[ **Next Tutorial:** [Offering Self-Attestation](03-offering-self-attestation.md) | **Previous Tutorial**: [Your First XID](01-your-first-xid.md) ]
 
-**Previous**: [Your First XID](01-your-first-xid.md) | **Next**: [Offering Self-Attestation](03-offering-self-attestation.md)
+
+## Appendix I: Key Terminology
+
+> **`dereferenceVia`** - A known predicate indicating where the canonical version of this XID can be fetched. Uses `URI` type for the object.
+>
+> **Freshness** - The property of having the most current version of an XID, verified through publication URLs and provenance marks.
+>
+> **Provenance Chain** - The sequence of provenance marks showing the history of XID updates. Each mark links to the previous.
+>
+> **Self-Consistency** - An XID is self-consistent when its signature verifies against its own embedded public key. This proves the document wasn't tampered with after signing, but not that the claims inside are true.
+>
+> **Sequence Number** - The position in the provenance chain (0 = genesis, 1 = first update, etc.).
