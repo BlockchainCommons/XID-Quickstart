@@ -433,3 +433,37 @@ Amira has *offered* her attestations. But claims without verification are just a
 ---
 
 **Previous**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) | **Next**: [Cross-Verification](04-cross-verification.md)
+
+===
+
+This was in 02, but this is the first tutorial where we actually have a second edition XID, so something like it should go here instead
+
+#### Detecting Stale Copies
+
+What if someone gave Ben an old copy of the XID instead of the current one? He can compare provenance marks to detect this:
+
+```
+# Ben has two versions - one from a friend, one freshly fetched
+# Compare their sequence numbers
+
+# Simulate: OLD_MARK from friend's copy (sequence 0)
+# Simulate: NEW_MARK from fresh fetch (sequence 1 after an update)
+
+OLD_SEQ=0   # From stale copy
+NEW_SEQ=1   # From fresh fetch
+
+echo "Copy from friend:  sequence $OLD_SEQ"
+echo "Fresh from URL:    sequence $NEW_SEQ"
+
+if [ "$NEW_SEQ" -gt "$OLD_SEQ" ]; then
+    echo "⚠️  Friend's copy is STALE - use the fresh version!"
+fi
+
+│ Copy from friend:  sequence 0
+│ Fresh from URL:    sequence 1
+│ ⚠️  Friend's copy is STALE - use the fresh version!
+```
+
+Higher sequence number means newer version. Ben should always fetch from `dereferenceVia` to ensure he has the current XIDDoc, especially before making trust decisions.
+
+> :brain: **Learn more**: The [Provenance Marks](../concepts/provenance-marks.md) concept doc explains the cryptographic chain structure and how it prevents history falsification.
