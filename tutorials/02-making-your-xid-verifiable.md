@@ -208,35 +208,31 @@ cat /tmp/xid-public.txt
 
 To publish this file to GitHub, create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern: `https://github.com/USERNAME/REPO/raw/main/xid.txt`.
 
-## Part II: Ben Verifies
+## Ben's Story: A Perspective Shift
 
-**Perspective shift**: You've been Amira, creating and publishing your XID. Now you're Ben—someone who received an XID URL and needs to verify it before trusting the sender.
-
-This matters because anyone can publish anything. Ben received a message claiming to be "BRadvoc8," but how does he know the message is legitimate? How does he know he has the current version, not a stale copy? The verification workflow answers these questions without requiring direct contact with Amira.
-
-### Ben's Starting Point
-
-Ben received a message from someone claiming to be "BRadvoc8":
+Though this is Amira's story, she trying to join a larger ecosystem of socially conscious programmers and the organizations they support. That's where Ben comes into the story. He runs SisterSpaces, a womens' services nonprofit. Ben received a message from someone claiming to be "BRadvoc8":
 
 > "Hey Ben, I'm interested in contributing to SisterSpaces. Here's my XID: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
-Ben doesn't know if this is legitimate. He needs to verify.
+Ben doesn't know if this is legitimate. He needs to verify. How does he do so?? How does he know he has the current version, not a stale copy? The verification workflow answers these questions without requiring direct contact with Amira.
+
+## Part II: Ben Verifies
+
+Ben will test the XID Document via a variety of means.
 
 ### Step 6: Ben Fetches the XIDDoc
 
-Ben fetches the XIDDoc from the URL Amira provided:
+First, Ben fetches the current version of the XID Document from the `dereferenceVia` found in the version he was mailed.
 
+He could just input it into his browser and cut and paste the file, but the following instead allows it to be retrieved from the comand line:
 ```
-# Ben's perspective - he only has the URL
 RECEIVED_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
+CURL_URL=`echo $RECEIVED_URL | sed 's/\/\/github.com\//\/\/raw.githubusercontent.com\//; s/\/raw\//\//'`
+FETCHED_XID=$(curl -H 'Accept: application/vnd.github.v3.raw' $CURL_URL)
+```
 
-# Fetch the XIDDoc (simulated - in practice, use curl)
-# FETCHED_XID=$(curl -s "$RECEIVED_URL")
-
-# For this tutorial, simulate with the published XID
-FETCHED_XID="$PUBLIC_XID"
-
-echo "Fetched XIDDoc from: $RECEIVED_URL"
+He'll of course want to review this XID:
+```
 envelope format "$FETCHED_XID" | head -15
 
 │ Fetched XIDDoc from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
@@ -257,11 +253,13 @@ envelope format "$FETCHED_XID" | head -15
 │ ]
 ```
 
-Ben now has an XIDDoc. But can he trust it?
+Retrieving a XID in this way is a crucial step because anyone could pass around a XID Document, and more so, anyone could pass around a very old XID Document that has old, inaccurate information. By including a `dereferenceVia` that refers to a URL that she controls, Amira has ensured that if someone receives her XID Document, they should then go to the URL to pick up a current version, which Ben does.
+
+Ben now has the current version of XIDDoc. But can he trust it?
 
 ### Step 7: Ben Verifies the Signature
 
-First, Ben checks if the XID is self-consistent - signed by its own key:
+As demonstrated in [Tutorial 01](01-your-first-xid.md#step-3-verifying-a-xid), Ben will want to check that the XID is signed by its own key:
 
 ```
 # Extract the public keys from the XID itself
@@ -274,7 +272,7 @@ PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 if envelope verify -v "$PUBLIC_KEYS" "$FETCHED_XID" >/dev/null 2>&1; then
     echo "✅ Signature verified - XID is self-consistent"
 else
-    echo "❌ Signature FAILED - XID may be tampered!"
+    echo "❌ Signature FAILED - XID may be tampered\!"
     exit 1
 fi
 
@@ -287,41 +285,40 @@ The signature verified, which means the document is signed by its own inception 
 
 #### What If the XID Was Tampered?
 
-What happens if an attacker intercepts and modifies the XID before Ben receives it?
+What happens if an attacker intercepts and modifies the XID before Ben receives it? The following change simulates tampering by removing the last character from the $FETCHED_XID variable. A more sophisticated attacker would use a UR playground to change the content of the envelope, but the results would be the same.
 
 ```
-# Simulate tampering - an attacker changes the nickname
-TAMPERED_XID=$(echo "$FETCHED_XID" | sed 's/BRadvoc8/Imposter/')
+TAMPERED_XID=${FETCHED_XID::-1}
+```
 
-# Ben tries to verify the tampered version
+In either case, the verification would fail because any modification, even a single character, invalidates the signature: the cryptographic hash of the tampered document no longer matches what was signed.
+
+```
 if envelope verify -v "$PUBLIC_KEYS" "$TAMPERED_XID" >/dev/null 2>&1; then
     echo "✅ Signature verified"
 else
-    echo "❌ Signature FAILED - tampering detected!"
+    echo "❌ Signature FAILED - tampering detected\!"
 fi
 
 │ ❌ Signature FAILED - tampering detected!
 ```
 
-Any modification—even a single character—invalidates the signature. The cryptographic hash of the tampered document no longer matches what was signed. This is why signature verification is Ben's first check: it catches any tampering that occurred after Amira signed the document.
+This is why signature verification is Ben's first check: it catches any tampering that occurred after Amira signed the document.
 
 > :brain: **Learn more**: The [Signing and Verification](../concepts/signing-verification.md) concept doc explains how envelope signatures work and why elision preserves signature validity.
 
 ### Step 8: Ben Checks the dereferenceVia URL
 
-Ben compares where he fetched the XIDDoc from to the `dereferenceVia` URL inside it:
+Now that Ben knows that he has a valid, up-to-date version of the XID, he should check the `dereferenceVia` one more time. He does so by extracting the `dereferenceVia` from this fetched and unwrapped XID, and comparing it to the URL that he used to lookup the XID.
 
 ```
-# Extract the dereferenceVia URL from the XID
 DEREFERENCE_ASSERTION=$(envelope assertion find predicate known dereferenceVia "$UNWRAPPED")
-DEREFERENCE_URL=$(envelope extract object "$DEREFERENCE_ASSERTION" | envelope format)
+DEREFERENCE_URL=$(envelope extract object "$DEREFERENCE_ASSERTION" | envelope format | sed 's/.*URI(\(.*\))/\1/')
 
 echo "URL Ben fetched from:     $RECEIVED_URL"
 echo "dereferenceVia in XID:    $DEREFERENCE_URL"
 
-# In a real scenario, Ben would compare these
-# The dereferenceVia shows as URI(...) format, so we check if it contains the URL
-if echo "$DEREFERENCE_URL" | grep -q "github.com/BRadvoc8"; then
+if [ "$RECEIVED_URL" = "$DEREFERENCE_URL" ]; then
     echo "✅ URLs match - XID claims this is its canonical location"
 else
     echo "⚠️  URLs don't match - XID may have been copied from elsewhere"
@@ -332,7 +329,7 @@ fi
 │ ✅ URLs match - XID claims this is its canonical location
 ```
 
-If the URLs match, the document "knows" where it's published—the document and its location agree. If someone copied it to a different location, the `dereferenceVia` would still point to the original, tipping Ben off that he might not be fetching from the canonical source.
+If the URLs match, Ben is even more certain that he has the most up-to-date URL. If they don't that's probably because Amira stopped using the repository where Ben retrieved the XID from, and has pointed to a new one. In this case, Ben would repeat steps 6-8 with the new `$DEREFERENCE_URL`.
 
 ### Step 9: Ben Checks Provenance
 
