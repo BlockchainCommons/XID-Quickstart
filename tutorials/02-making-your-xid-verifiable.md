@@ -333,17 +333,18 @@ If the URLs match, Ben is even more certain that he has the most up-to-date URL.
 
 ### Step 9: Ben Checks Provenance
 
-Now Ben checks the provenance mark to understand its history:
+Lastly, Ben checks the provenance mark to understand its history. This is also a repeat of work you did in Tutorial 01, but the result is going to be a little different this time, because the new XID is a second generation version, with that `dereferenceVia` added.
 
+The first think we do is extract the mark and make sure it's part of a complete chain:
 ```
-# Extract and check the provenance mark
 PROVENANCE_MARK=$(envelope xid provenance get "$FETCHED_XID")
 
 echo "Checking provenance mark..."
 provenance validate "$PROVENANCE_MARK" && echo "✅ Provenance chain intact"
+```
 
-# Get detailed information
-echo ""
+As before, we can look at more details on the provenance mark:
+```
 echo "Provenance details:"
 provenance validate --format json-pretty "$PROVENANCE_MARK"
 
@@ -352,28 +353,40 @@ provenance validate --format json-pretty "$PROVENANCE_MARK"
 │
 │ Provenance details:
 │ {
-│   "chains": [
-│     {
-│       "chain_id": "632330b4...",
-│       "has_genesis": true,
-│       "sequences": [
-│         {
-│           "start_seq": 0,
-│           "end_seq": 0,
-│           "marks": [
-│             {
-│               "mark": "ur:provenance/...",
-│               "issues": []
-│             }
-│           ]
-│         }
-│       ]
-│     }
-│   ]
-│ }
+|  "marks": [
+|    "ur:provenance/lfaxhdimptttolwzplwfgwwppliopatlkejnnlurbzatmhskctpklgjsfdgdreyaoxrsaxdynlrpqdcketnsjzbwsgtnynotflzonsseonldrhnlidlpbkromdrtcsdrrtvlzciswlimsgmsdyfwyaldcyhkmdvepmascyoliafyzosftslnytjosglbfpcygobtrsutmtmnhpaxmusgotfpfgaoqdgortmo"
+|   ],
+|   "chains": [
+|     {
+|       "chain_id": "a9d1a6f2aef34fecae67b1d57c6d99df150790c51faa8d714850b5f8a4bf0330",
+|       "has_genesis": true,
+|       "marks": [
+|
+| "ur:provenance/lfaxhdimptttolwzplwfgwwppliopatlkejnnlurbzatmhskctpklgjsfdgdreyaoxrsaxdynlrpqdcketnsjzbwsgtnynotflzonsseonldrhnlidlpbkromdrtcsdrrtvlzciswlimsgmsdyfwyaldcyhkmdvepmascyoliafyzosftslnytjosglbfpcygobtrsutmtmnhpaxmusgotfpfgaoqdgortmo"
+|     ],
+|      "sequences": [
+|        {
+|          "start_seq": 0,
+|          "end_seq": 0,
+|          "marks": [
+|            {
+|              "mark":
+| "ur:provenance/lfaxhdimptttolwzplwfgwwppliopatlkejnnlurbzatmhskctpklgjsfdgdreyaoxrsaxdynlrpqdcketnsjzbwsgtnynotflzonsseonldrhnlidlpbkromdrtcsdrrtvlzciswlimsgmsdyfwyaldcyhkmdvepmascyoliafyzosftslnytjosglbfpcygobtrsutmtmnhpaxmusgotfpfgaoqdgortmo",
+|              "issues": []
+|            }
+|          ]
+|        }
+|      ]
+|    }
+|  ]
+| }
 ```
 
 The output tells Ben this chain has a valid starting point (`has_genesis: true`), this is the original version with no updates yet (`start_seq: 0, end_seq: 0`), and there are no problems found (`issues: []`). If Amira had made updates, the sequence numbers would be higher and Ben could verify the chain of updates is unbroken.
+
+[[OPEN QUESTION: WHY DIDN'T THE PROVENANCE MARK UPDATE? HOW IS THIS NOT A PROBLEM?]]
+
+If Ben ended up with multiple copies of Amira's XID, 
 
 #### Detecting Stale Copies
 
