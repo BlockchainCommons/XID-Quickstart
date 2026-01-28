@@ -494,7 +494,7 @@ You can also create device-specific keys and delegate permissions, allowing each
 
 > **Assertion** - A predicate-object pair making a claim about the subject (e.g., `'key': PublicKeys(...)`).
 >
-> **Edition** - A version of a XIDDoc (or other envelope) that is different from previous edition due to the addition, removal, or update of information. An edition may have many views, which selectively elide information from the master document. If an envelope contains a provenance mark, it is incremented when a new edition is created.
+> **Edition** - A version of a XIDDoc (or other envelope) that is different from previous editions due to the addition, removal, or update of information. An edition may have many views, which selectively elide information from the master document. If an envelope contains a provenance mark, it is incremented when a new edition is created.
 >
 > **Elision** - Removing data while preserving the envelope's root hash, enabling selective disclosure with maintained cryptographic integrity.
 >
@@ -518,7 +518,7 @@ You can also create device-specific keys and delegate permissions, allowing each
 >
 > **Subject** - The main thing an envelope describes; in XIDDocs, this is the XID identifier.
 >
-> **View** - A variant of an edition of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure.
+> **View** - A version of an edition of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure.
 > 
 > **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document editions because it's bound to that original key.
 >
