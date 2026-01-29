@@ -27,9 +27,9 @@ This tutorial demonstrates how to maintain a XID's freshness without direct comm
 
 ## Amira's Story: The Freshness Problem
 
-After Tutorial 01, Amira can give Ben her public XIDDoc directly. She can email it, share via Signal, or do whatever else works. But what happens when she updates her XIDDoc next month? Ben has no way to know his copy is stale. He might verify signatures against outdated information, missing that Amira added new attestations or rotated keys.
+After Tutorial 01, Amira can give Ben her public XIDDoc directly. She can email it, share it via Signal, or do whatever else works. But what happens when she updates her XIDDoc next month? Ben has no way to know his copy is stale. He might verify signatures against outdated information, not knowing that Amira added new attestations or rotated keys.
 
-One simple solution is to publish the XIDDoc at a stable URL and embed that URL in the document itself. (WWe'll discuss other solutions in a future tutorial.) Now Ben can fetch the current version whenever he needs it and verify through provenance marks that his copy is actually current, not an old snapshot someone gave him.
+One simple solution is to publish the XIDDoc at a stable URL and embed that URL in the document itself. (We'll discuss other solutions in a future tutorial.) Now Ben can fetch the current version whenever he needs it and verify through the URL and/or provenance marks that his copy is actually current, not an old snapshot someone gave him.
 
 This isn't about discovery (how Ben finds Amira's XID in the first place). It's about freshness (how Ben verifies he has the current version).
 
@@ -53,12 +53,12 @@ If either tool is not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#s
 
 ### Step 1: Load Your XID
 
-Make sure to recreate your environmental variables:
+To reload your XID, first be sure to recreate your environmental variables:
 ```
 XID_NAME="BRadvoc8"
 PASSWORD="Amira's strong password"
 ```
-If you saved your XID to a file, you can load it:
+If you saved your XID to a file, you can now load it:
 ```
 XID=$(cat xid-*/BRadvoc8-xid.envelope)
 ```
@@ -120,14 +120,15 @@ XID_WITH_URL=$(envelope xid resolution add \
 ```
 This command uses the following new arguments:
 
-1. `--verify inception` says to verify that the signature of the original `$XID` was made with its inception key.
-2. `--password "$PASSWORD"` decrypts the previously encrypted information with the password.
+1. The `$PUBLISH_URL` is of course required by `xid resolution add`.
+2. `--verify inception` says to verify that the signature of the original `$XID` was made with its inception key.
+3. `--password "$PASSWORD"` decrypts the previously encrypted information with the `$PASSWORD`.
 
 You want the new, updated XID to have the same protections as the original, so you also repeat the various encryption and signature commands as part of the creation for your updated XID:
 
 1. `--private encrypt` to encrypt the private key.
 2. `--generate encrypt` to encrypt the provenance mark generate.
-3. `--encrypt-password` to use the `$PASSWORD` for decryption.
+3. `--encrypt-password` to use the `$PASSWORD` in future decryption.
 4. `--sign` to sign the new document.
 
 Note that you didn't have to repeat commands like `--nickname`. That's because the whole previous XID Document was read in. You just had to redo the encryption and signing at the end.
@@ -172,9 +173,9 @@ The metadata of the new XID Document should be identical to the original. The si
 
 Notice that `dereferenceVia` is a known value (single quotes) from the Known Values registry, and its object is a `URI` type rather than a plain string. This assertion tells anyone who receives your XID Document: "To get the current version, fetch from this URL." You can add multiple `dereferenceVia` assertions for redundancy by running the command again with a different URL. For example, you might point to both a GitHub raw URL and a personal domain, so if one source becomes unavailable, verifiers can still fetch your current XID Document from the other.
 
-### Step 4: Export Public Version
+### Step 4: Export Public View
 
-You now want to create a view of this XID version that is safe for publishing by eliding the private keys. In Tutorial 01, you manually found digests and used `envelope elide removing` to create a public view. We used that demonstration to show how elision works. However, there's a simpler command that automatically elides not only the private keys, but also the provenance mark generator: `xid export`. That's what you'll want to use most of the time (when you're not learning about elision!):
+You now want to elide the private keys in the XID, to create a view of this edition that is safe for publication. In Tutorial 01, you manually found digests and used `envelope elide removing` to create a public view. We used that demonstration to show how elision works. However, there's a simpler command that optionally elides the private keys and/or  the provenance mark generator: `xid export`. That's what you'll want to use most of the time (when you're not learning about elision!):
 
 ```
 PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID_WITH_URL")
@@ -204,7 +205,7 @@ As usual, this removes the content you want to hide, but maintains the hashes, s
 
 ### Step 5: Publish Your XID
 
-You should now save the public version to a file.
+You should now save the public view to a file.
 
 ```
 # Save the public XID to a file
@@ -215,7 +216,7 @@ echo "Contents:"
 cat /tmp/xid-public.txt
 ```
 
-To upload this file to GitHub, create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern: `https://github.com/USERNAME/REPO/raw/main/xid.txt`.
+To upload this file to GitHub, create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern, `https://github.com/USERNAME/REPO/raw/main/xid.txt`, which should be what you recorded in `dereferenceVia`.
 
 Publish literally means "to make public", so this is (at last) the publication of your XID. You've locked down the content as shown in this XIDDoc as the first edition. If you make changes (as you do starting in Tutorial 03), at that point you will update the provenance mark before you republish, so that recipients can figure out which edition is the newest. 
 
@@ -223,11 +224,11 @@ Note that publication doesn't only mean uploading something to a public-facing w
 
 ## Ben's Story: A Perspective Shift
 
-Though this is Amira's story, she trying to join a larger ecosystem of socially conscious programmers and the organizations they support. That's where Ben comes into the story. He runs SisterSpaces, a womens' services nonprofit. Ben received a message from someone claiming to be "BRadvoc8":
+Though this is Amira's story, she is trying to join a larger ecosystem of socially conscious programmers and the organizations they support. That's where Ben comes into the story. He runs SisterSpaces, a womens' services nonprofit. Ben received a message from someone claiming to be "BRadvoc8":
 
 > "Hey Ben, I'm interested in contributing to SisterSpaces. Here's my XID: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
-Ben doesn't know if this is legitimate. He needs to verify. How does he do so?? How does he know he has the current version, not a stale copy? The verification workflow answers these questions without requiring direct contact with Amira.
+Ben doesn't know if this is legitimate. He needs to verify. How does he do so? How does he know he has the current version of Amira's XID, not a stale copy? The verification workflow answers these questions without requiring direct contact with Amira.
 
 ## Part II: Ben Verifies
 
@@ -278,7 +279,7 @@ Ben now suspects he has the current version of XIDDoc.
 
 ### Step 7: Ben Checks the dereferenceVia URL
 
-Ben has now received a XID Doc, dereferenced it to access an up-to-date version of the document, and retrieved that dereferenced document. So he has the most up-to-date version, right? Not necessarily! It's possible that the URL is no longer Amira's primary publication location. This could easily be the case if someone else sent Ben a very old copy of the XIDDoc. To verify this isn't the case, Ben should check the `dereferenceVia` one more time, looking at the new document that he downloaded. He does this by extracting the `dereferenceVia` from this fetched and unwrapped XID, and comparing it to the URL that he used to lookup the XID.
+Since Ben has dereferenced the XID that Amira mailed him, to access an up-to-date version of the document, he has the most up-to-date version, right? Not necessarily! It's possible that the URL is no longer Amira's primary publication location, and there's actually a newer version elsewhere! To verify this isn't the case, Ben should check the `dereferenceVia` one more time, looking at the new document that he downloaded. He does this by extracting the `dereferenceVia` from this fetched and unwrapped XID, and comparing it to the URL that he used to lookup the XID.
 
 ```
 UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
@@ -299,7 +300,7 @@ fi
 │ ✅ URLs match - XID claims this is its canonical location
 ```
 
-If the URLs match, Ben is even more certain that he has the most up-to-date XIDDoc. If they don't, then Ben should look at the `dereferenceVia` in the new XIDDoc that he retrieved, and follow it to the URL that _it_ points to, repeating steps 6-7 until he actually gets a XIDDoc that matches its own `dereferenceVia`. (Usually these additional steps wont' be required at all, but they should definitely be part of a verifier checklist.)
+If the URLs match, Ben is even more certain that he has the most up-to-date XIDDoc. If they don't, then Ben should look at the `dereferenceVia` in the new XIDDoc that he retrieved and follow it to the URL that _it_ points to, repeating steps 6-7 until he actually gets a XIDDoc that matches its own `dereferenceVia`. (Usually these additional steps wont' be required at all, but they should definitely be part of a verifier checklist.)
 
 Barring some weird issue like a circular set of dereferences, or a dead URL, Ben should now have a XIDDoc that is the newest version. But can he trust it?
 
@@ -329,9 +330,9 @@ provenance validate "$PROVENANCE_MARK" && echo "✅ Provenance chain intact"
 | ✅ Provenance chain intact
 ```
 
-We could also examine details of the provenance mark with `provenance validate --format json-pretty "$PROVENANCE_MARK"`, but since this is our first publication, it'll look the same as it did in Tutorial 01. The more interesting test would come if Ben had multiple, different copies of the XID, and needed to determine which was stale and which fresh, but that's a topic for a future Tutorial.
+We could also examine details of the provenance mark with `provenance validate --format json-pretty "$PROVENANCE_MARK"`, but since this is Amira's first edition, it'll look the same as it did in Tutorial 01. The more interesting test would come if Ben had multiple, different copies of the XIDDoc and needed to determine which was stale and which fresh, but that's a topic for a future Tutorial.
 
-#### What If the XID Was Tampered?
+#### What If the XID Was Tampered with?
 
 What happens if an attacker intercepts and modifies the XID before Ben receives it? The following change simulates tampering by removing the last character from the $FETCHED_XID variable. A more sophisticated attacker would use a UR playground to change the content of the envelope, but the results would be the same.
 
@@ -371,7 +372,7 @@ Three things have been cryptographically verified:
 One thing is very likely verified:
 
 * The XID is the most up-to-date edition of the identifier.
-   * _There still is the possibility that Amira made a newer XID without updating the `dereferenceVia` site, but Ben did his due dilligence to show that it's unlikely that he has an out-of-date version of the XID._
+   * _There still is the possibility that Amira made a newer XID without updating the `dereferenceVia` site, but Ben did enough due dilligence to demonstrate that it's unlikely that he has an out-of-date version of the XID._
  
 But a few other things are just assumed, without proof:
 
@@ -430,7 +431,7 @@ echo "  • Who 'BRadvoc8' really is"
 
 ## Summary: What You Accomplished
 
-BRadvoc8 now has a stable publication URL, provenance tracking for edition verification, and cryptographic integrity through self-signing. The freshness problem is solved: Ben can fetch current versions without waiting for Amira to send updates, verify that he has the latest copy, and detect if someone gives him stale data.
+BRadvoc8 now has a stable publication URL, provenance tracking for edition verification, and cryptographic integrity through self-signing. The freshness problem is also solved: Ben can fetch current versions without waiting for Amira to send updates, verify that he has the latest copy, and detect if someone gives him stale data.
 
 ### Example Script
 
@@ -462,7 +463,7 @@ Try these to solidify your understanding:
 
 **Tutorial 04: Cross-Verification** shows Ben's perspective. He'll verify Amira's attestations against external sources like GitHub's API and signed commits.
 
-The key insight: this tutorial proves your XID is current. Tutorial 03 offers attestations, and Tutorial 04 shows how to verify them. Together, they build meaningful trust—enough for Ben to accept code contributions from BRadvoc8.
+Together with this tutorial's proof that a XID is current, the next two additions will build meaningful trust: enough for Ben to accept code contributions from BRadvoc8.
 
 [ **Next Tutorial:** [Offering Self-Attestation](03-offering-self-attestation.md) | **Previous Tutorial**: [Your First XID](01-your-first-xid.md) ]
 
