@@ -61,7 +61,7 @@ A single `envelope` operation creates a complete XID that contains both private 
 XID_NAME=BRadvoc8
 PASSWORD="Amira's strong password"
 
-XID=$(envelope generate keypairs --signing ed25519 | \
+XID=$(envelope generate keypairs --signing ed25519 │ \
     envelope xid new \
     --private encrypt \
     --encrypt-password "$PASSWORD" \
@@ -109,7 +109,7 @@ The `envelope format` command can always be used to display a human-readable ver
 envelope format "$XID"
 
 │ {
-|    XID(5f1c3d9e) [
+│    XID(5f1c3d9e) [
 │         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
 │             {
 │                 'privateKey': ENCRYPTED [
@@ -171,7 +171,7 @@ Here's how that structure appears in the sample XID Document:
 {
    XID(5f1c3d9e) [                         ← SUBJECT
     [
-        'key': PublicKeys(...)            `← ASSERTION (predicate: object)
+        'key': PublicKeys(...)             ← ASSERTION (predicate: object)
         'provenance': ProvenanceMark(...)  ← ASSERTION (predicate: object)
     ]
 }
@@ -188,7 +188,7 @@ This pattern nests. Look inside the `'key'` assertion:
 ]
 ```
 
-The `PublicKeys` object is itself a subject with its own assertions. It `allow`s all access to the XID and it contains an `ENCRYPTED` `privateKey`. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add your GitHub account and SSH keys as `attachments—vendor-qualified` containers for application-specific data.
+The `PublicKeys` object is itself a subject with its own assertions. It `allow`s all access to the XID and it contains an `ENCRYPTED` `privateKey`. This recursive structure lets you build arbitrarily rich identity documents. In Tutorial 03, you'll add your GitHub account and SSH keys as `attachments-vendor-qualified` containers for application-specific data.
 
 #### A Review of Envelope Format
 
@@ -220,16 +220,16 @@ In a graphical UI, this whole process might be as simple as clicking on the priv
 This requires knowing how the envelope is structured:
 ```
 │ {
-|    XID(5f1c3d9e) [
+│    XID(5f1c3d9e) [
 │         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
 │             {
 │                 'privateKey': ENCRYPTED [
 │                     'hasSecret': EncryptedKey(Argon2id)
 │                 ]
 │             }
-| ...
-|   ]
-| }
+│ ...
+│   ]
+│ }
 ```
 
 This shows that we need to unwrap the envelope (since it was wrapped and signed with `--sign inception`), then find the `'key'` assertion, and then find the `'privateKey'` assertion.
@@ -279,26 +279,26 @@ Afterward, you can examine this new public view of your XID:
 ```
 envelope format "$PUBLIC_XID"
 
-| {
-|     XID(5f1c3d9e) [
-|         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
-|             'allow': 'All'
-|             'nickname': "BRadvoc8"
-|             ELIDED
-|         ]
-|         'provenance': ProvenanceMark(1896ba49) [
-|             {
-|                 'provenanceGenerator': ENCRYPTED [
-|                     'hasSecret': EncryptedKey(Argon2id)
-|                 ]
-|             } [
-|                 'salt': Salt
-|             ]
-|         ]
-|     ]
-| } [
-|     'signed': Signature(Ed25519)
-| ]
+│ {
+│     XID(5f1c3d9e) [
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             'allow': 'All'
+│             'nickname': "BRadvoc8"
+│             ELIDED
+│         ]
+│         'provenance': ProvenanceMark(1896ba49) [
+│             {
+│                 'provenanceGenerator': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             } [
+│                 'salt': Salt
+│             ]
+│         ]
+│     ]
+│ } [
+│     'signed': Signature(Ed25519)
+│ ]
 ```
 
 It looks identical except the `privateKey` section is gone, replaced with `ELIDED`. Also of note is the fact that this formatting implies that the signature has been preserved, *despite* removing some of the data in the envelope. That's accurate: this is a purposeful feature of Gordian Envelope.
@@ -307,9 +307,41 @@ It looks identical except the `privateKey` section is gone, replaced with `ELIDE
 
 If you are already comfortable with the structure of Gordian Envelopes, how they hash data, and how data is signed, skip down to Step 3.  Otherwise, here's the skinny on how that signature is preserved even after we elided information:
 
-Gordian Envelope is built on hashes. Every subject, every predicate, every object, and every assertion has a hash. Leaves (such as subject, predicates, and objects) have hashes of the content of that leaf, while nodes (such as assertions, collections of assertions, and wrapped content) have hashes that are built from the hashes of the objects they contain. A signature is made not across the content of an envelope, but against the root (or top-level) hash of an envelope.
+Gordian Envelope is built on hashes. Every subject, every predicate, every object, and every assertion has a hash. Leaves (such as subject, predicates, and objects) have hashes of the content of that leaf, while nodes (such as the top-level of your envelope, assertions, collections of a subject and assertions, and wrapped content) have hashes that are built from the hashes of the objects they contain. A signature is made not across the content of an envelope, but against the root (or top-level) hash of an envelope.
+
+Here's what a fragment of that looks like, generated with `envelope format --type tree $XID`, which shows abbreviations of all the hashes in an envelope:
+```
+1da62441 NODE                                                ← ROOT Hash (1da62441)
+    34446925 subj WRAPPED                                    ← Wrapped Envelope Hash (34446925)
+        bc6369ae cont NODE                                   ← Subject + Assertion(s) Node Hash (bc6369ae)
+            2b2d09ab subj XID(5f1c3d9e)                      ← XID Subject Hash (2b2d09ab)
+            e0c2825c ASSERTION                               ← Provenance Assertion Hash (e0c2825c)
+                c1736fc8 pred 'provenance'
+                c38203ae obj NODE
+                    53da07ce subj ProvenanceMark(1896ba49)
+                    9a0110e6 ELIDED
+    ...
+    d5625d76 ASSERTION                                        ← Signature Assertion Hash (d5625d76)
+        d0e39e78 pred 'signed'
+        91ccf7a3 obj Signature(Ed25519)
+```
+The root node has an (abbreviated) hash of `1da62441`, which is built from the wrapped subject hash of `34446925` and the signature assertion hash of `d5625d76`. The wrapped envelope's hash is built from the node hash of `bc6369ae`, which is built from the XID subject hash of `2b2d09ab` and a string of assertions attached to that subject, the first of which is provenance assertion, which has a hash of `e0c2825c`. Etc.
 
 When data is elided from an envelope, its content is removed, but the hash remains. That means that all of the node hashes above that leaf hash remain the same, including the root hash. Since it's the root hash that is signed, not the full envelope content, the signature remains valid.
+
+The above example shows a new elision, of the secret within the provenance mark assertion. Making a further elision of the entire provenance mark assertion demonstrates that the upper-level hashes remain in place:
+```
+1da62441 NODE                                                ← ROOT Hash (still 1da62441)
+    34446925 subj WRAPPED                                    ← Wrapped Envelope Hash (still 34446925)
+        bc6369ae cont NODE                                   ← Subject + Assertion(s) Node Hash (still bc6369ae)
+            2b2d09ab subj XID(5f1c3d9e)                      ← XID Subject Hash (2b2d09ab)
+            e0c2825c ELIDED                                  ← Elided (Provenance Assertion) Hash (still e0c2825c)
+    ...
+    d5625d76 ASSERTION                                        ← Signature Assertion Hash (d5625d76)
+        d0e39e78 pred 'signed'
+        91ccf7a3 obj Signature(Ed25519)
+
+```
 
 > :warning: **The Root Hash is Not the ID Identifier.** The root hash is composed from the hashes of _all_ the data within an envelope. It changes if you change the document. It's an identifier for all views of a specific edition of your XID Document. In contrast, the XID identifier is the hash of your inception public key. It never changes. It's an identifier for all editions of your XID Document (or if you prefer: it's the identifier for your identity). 
 
@@ -378,35 +410,35 @@ By default, `provenance validate` offers no response if the provenance mark is v
 ```
 provenance validate --format json-pretty "$PROVENANCE_MARK"
 
-| {
-|   "marks": [
-|
-| "ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy"
-|   ],
-|   "chains": [
-|     {
-|       "chain_id": "61a8fa603b7ebe4bad7bb82fc5858b9d55fda26811e1070b44d80369486c6202",
-|       "has_genesis": true,
-|       "marks": [
-|
-| "ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy"
-|       ],
-|       "sequences": [
-|         {
-|           "start_seq": 0,
-|           "end_seq": 0,
-|           "marks": [
-|             {
-|               "mark":
-| "ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy",
-|               "issues": []
-|             }
-|           ]
-|         }
-|       ]
-|     }
-|   ]
-| }
+│ {
+│   "marks": [
+│
+│ "ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy"
+│   ],
+│   "chains": [
+│     {
+│       "chain_id": "61a8fa603b7ebe4bad7bb82fc5858b9d55fda26811e1070b44d80369486c6202",
+│       "has_genesis": true,
+│       "marks": [
+│
+│ "ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy"
+│       ],
+│       "sequences": [
+│         {
+│           "start_seq": 0,
+│           "end_seq": 0,
+│           "marks": [
+│             {
+│               "mark":
+│ "ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy",
+│               "issues": []
+│             }
+│           ]
+│         }
+│       ]
+│     }
+│   ]
+│ }
 ```
 
 This says very little so far, but that's to be expected: the power of provenance marks is in seeing that multiple published editions of documents are related—and you haven't even published a single version of Amira's XID yet! Nonethless, you can see from`has_genesis: true`, `start_seq: 0`, and `end_seq: 0` that this is the first edition in the provenance mark chain (the "genesis mark"), with no issues found. This will become more meaningful in tutorial 03 when you produce a second edition of Amira's XID for publication, and advance the provenance mark as a result.
@@ -425,7 +457,7 @@ The complete `BRadvoc8-xid.envelope` file contains everything: private keys (enc
 
 There might be many different public views of your current XID, of which `BRadvoc8-xid-public.envelope` would be just one, with each view elided in different ways. Obviously, you'll want to keep your private key out of all of them, but you might also decide to reveal different information to different people, as part of selective disclosure.
 
-Formatted outputs can similar be output:
+Formatted outputs can similarly be output:
 ```
 envelope format $XID > BRadvoc8-xid.format
 envelope format $PUBLIC_XID > BRadvoc8-xid-public.format

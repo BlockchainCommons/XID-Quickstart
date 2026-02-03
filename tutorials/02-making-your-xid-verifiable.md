@@ -78,7 +78,6 @@ Afterward, you can check that it loaded correctly with `envelope format`:
 ```
 envelope format "$XID" | head -10
 
-│ ✅ Loaded XID: BRadvoc8
 │ {
 │     XID(5f1c3d9e) [
 │         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
@@ -410,7 +409,7 @@ echo "  • Who 'BRadvoc8' really is"
 
 │ === Ben's Verification Summary ===
 │
-│ XID Identifier: c7e764b7...
+│ XID Identifier: 5f1c3d9e...
 │ Nickname: BRadvoc8
 │
 │ Verification Results:
