@@ -32,7 +32,7 @@ This is the difference between saying "I'm a developer" and showing a commit his
 
 ## Why Attachments Matter
 
-In Tutorial 01, you saw assertions like `'key': PublicKeys(...)` and `'provenance': ProvenanceMark(...)`. In Tutorial 02, you added `dereferenceVia: ...`. These are *known* assertions: standardized parts of the XID specification that tools understand.
+In Tutorial 01, you saw XID assertions like `'key': PublicKeys(...)` and `'provenance': ProvenanceMark(...)`. In Tutorial 02, you added `dereferenceVia: ...`. These are *known* assertions: standardized parts of the XID specification that tools understand.
 
 If you're familiar with Gordian Envelope, you might want to add a credential as a new assertion with something like the following:
 
@@ -42,7 +42,7 @@ envelope assertion add pred-obj string "github" string "BRadvoc8" "$XID"
 
 Don't! 
 
-XIDs are defined to have specific structures so that XID Documents are well-formed and interoperable. The XID layer of the `envelope-cli` supports that by provides specific  operations (e.g., `xid key add` and `xid resolution add`) rather than raw assertion manipulation. If you try to add an assertion like the above by hand, first of all you'll have troubles because you'll need to get it to the right level of the XID. (The following doesn't! It adds it to the current predicate block, which is the signature. If you run `envelope assertion add pred-obj string "github" string "BRadvoc8" "$XID" | envelope format`, you'll see what that looks like, and it's probably not at all what was desired, since you want to make an assertion about the identity, which is to say the XID, not the whole wrapped package.) Even if you managed to addyour new credential to the correct layer of the XID document, you'd be muddying up the core assertion-space of the XID, where programs will be looking for keys, provenance marks, and `dereferenceVia information.
+XIDs are defined to have specific structures so that XID Documents are well-formed and interoperable. The XID layer of the `envelope-cli` supports that by providing specific  operations (e.g., `xid key add` and `xid resolution add`) rather than encouraging raw assertion manipulation. If you try to add an assertion like the above by hand, first of all you'll have troubles because you'll need to get it to the right level of the XID. (The following doesn't! It adds it to the current predicate block, which is the signature. If you run `envelope assertion add pred-obj string "github" string "BRadvoc8" "$XID" | envelope format`, you'll see what that looks like, and it's probably not at all what was desired, since you want to make an assertion about the identity, which is to say the XID, not the whole wrapped package.) Even if you managed to add your new credential to the correct layer of the XID document, you'd be muddying up the core assertion-space of the XID, where people and programs will be looking for keys, provenance marks, and `dereferenceVia information.
 
 XID offers an alternative that maintains the inteoperability of XID: for custom data like GitHub accounts, XIDs use **attachments**, which are vendor-qualified containers for application-specific payloads. It works as follows:
 
@@ -66,7 +66,7 @@ Attachments solve several problems. They keep the XID core clean so that your id
 
 Most importantly, attachments allow **arbitrary predicates**. Where the XID core has a fixed schema, inside an attachment payload you define your own structure with whatever predicates make sense for your domain. GitHub accounts need `sshSigningKey` and `sshSigningKeysURL` while a professional certification might need `issuer`, `expirationDate`, and `credentialID`. Attachments are where domain-specific schemas live.
 
-Think of attachments as labeled boxes you attach to your identity. The labels tell others what's inside and who packed it. Ben might understand `vendor: "self"` GitHub attachments but ignore `vendor: "com.example"` attachments he doesn't recognize.
+Think of attachments as labeled boxes that you attach to your identity. The labels tell others what's inside and who packed it. Ben might understand `vendor: "self"` GitHub attachments but ignore `vendor: "com.example"` attachments he doesn't recognize.
 
 > :brain: **Learn more**: The [Attestation & Endorsement Model](../concepts/attestation-endorsement-model.md) concept doc explains the full framework for claims, evidence, and verification in XIDs.
 
