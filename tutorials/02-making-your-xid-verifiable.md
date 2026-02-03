@@ -45,7 +45,7 @@ Before you start, ensure that you have the required CLI tools from Tutorial 01:
 envelope --version
 provenance --version
 
-│ bc-envelope-cli 0.32.0
+│ bc-envelope-cli 0.33.0
 │ provenance-mark-cli 0.6.0
 ```
 

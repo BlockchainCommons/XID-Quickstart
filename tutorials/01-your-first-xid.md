@@ -10,7 +10,7 @@ This tutorial demonstrates how to create a basic XID (eXtensible IDentifier) tha
 ## Prerequisites
 
 - Basic terminal/command line familiarity
-- The [Gordian Envelope CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool (release 0.32.0 or later recommended)
+- The [Gordian Envelope CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool (release 0.33.0 or later recommended)
 - The [Provenance Mark CLI](https://github.com/BlockchainCommons/provenance-mark-cli-rust) tool (release 0.6.0 or later recommended)
 
 ## What You'll Learn
