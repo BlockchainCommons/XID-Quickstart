@@ -307,9 +307,41 @@ It looks identical except the `privateKey` section is gone, replaced with `ELIDE
 
 If you are already comfortable with the structure of Gordian Envelopes, how they hash data, and how data is signed, skip down to Step 3.  Otherwise, here's the skinny on how that signature is preserved even after we elided information:
 
-Gordian Envelope is built on hashes. Every subject, every predicate, every object, and every assertion has a hash. Leaves (such as subject, predicates, and objects) have hashes of the content of that leaf, while nodes (such as assertions, collections of assertions, and wrapped content) have hashes that are built from the hashes of the objects they contain. A signature is made not across the content of an envelope, but against the root (or top-level) hash of an envelope.
+Gordian Envelope is built on hashes. Every subject, every predicate, every object, and every assertion has a hash. Leaves (such as subject, predicates, and objects) have hashes of the content of that leaf, while nodes (such as the top-level of your envelope, assertions, collections of a subject and assertions, and wrapped content) have hashes that are built from the hashes of the objects they contain. A signature is made not across the content of an envelope, but against the root (or top-level) hash of an envelope.
+
+Here's what a fragment of that looks like, generated with `envelope format --type tree $XID`, which shows abbreviations of all the hashes in an envelope:
+```
+1da62441 NODE                                                ← ROOT Hash (1da62441)
+    34446925 subj WRAPPED                                    ← Wrapped Envelope Hash (34446925)
+        bc6369ae cont NODE                                   ← Subject + Assertion(s) Node Hash (bc6369ae)
+            2b2d09ab subj XID(5f1c3d9e)                      ← XID Subject Hash (2b2d09ab)
+            e0c2825c ASSERTION                               ← Provenance Assertion Hash (e0c2825c)
+                c1736fc8 pred 'provenance'
+                c38203ae obj NODE
+                    53da07ce subj ProvenanceMark(1896ba49)
+                    9a0110e6 ELIDED
+    ...
+    d5625d76 ASSERTION                                        ← Signature Assertion Hash (d5625d76)
+        d0e39e78 pred 'signed'
+        91ccf7a3 obj Signature(Ed25519)
+```
+The root node has an (abbreviated) hash of `1da62441`, which is built from the wrapped subject hash of `34446925` and the signature assertion hash of `d5625d76`. The wrapped envelope's hash is built from the node hash of `bc6369ae`, which is built from the XID subject hash of `2b2d09ab` and a string of assertions attached to that subject, the first of which is provenance assertion, which has a hash of `e0c2825c`. Etc.
 
 When data is elided from an envelope, its content is removed, but the hash remains. That means that all of the node hashes above that leaf hash remain the same, including the root hash. Since it's the root hash that is signed, not the full envelope content, the signature remains valid.
+
+The above example shows a new elision, of the secret within the provenance mark assertion. Making a further elision of the entire provenance mark assertion demonstrates that the upper-level hashes remain in place:
+```
+1da62441 NODE                                                ← ROOT Hash (still 1da62441)
+    34446925 subj WRAPPED                                    ← Wrapped Envelope Hash (still 34446925)
+        bc6369ae cont NODE                                   ← Subject + Assertion(s) Node Hash (still bc6369ae)
+            2b2d09ab subj XID(5f1c3d9e)                      ← XID Subject Hash (2b2d09ab)
+            e0c2825c ELIDED                                  ← Elided (Provenance Assertion) Hash (still e0c2825c)
+    ...
+    d5625d76 ASSERTION                                        ← Signature Assertion Hash (d5625d76)
+        d0e39e78 pred 'signed'
+        91ccf7a3 obj Signature(Ed25519)
+
+```
 
 > :warning: **The Root Hash is Not the ID Identifier.** The root hash is composed from the hashes of _all_ the data within an envelope. It changes if you change the document. It's an identifier for all views of a specific edition of your XID Document. In contrast, the XID identifier is the hash of your inception public key. It never changes. It's an identifier for all editions of your XID Document (or if you prefer: it's the identifier for your identity). 
 
