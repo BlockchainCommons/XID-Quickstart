@@ -24,13 +24,13 @@ A fresh, self-consistent XID proves that an identity exists and that you have th
 - How to advance provenance after making changes
 - How to detect stale XIDs with provenance marks
  
-## Amira's Story: Why Credentials Matter
+## Amira's Story: The Importance of Credentials
 
 In Tutorials 01 and 02, Amira established that BRadvoc8 exists and is verifiable. But existence isn't enough. When Ben considers accepting code contributions from BRadvoc8, he's asking: "Can this person actually deliver quality work?" To answer this question, Amira needs to connect her XID to real-world evidence of her skills. She can do this with her GitHub account, which shows her contributions, and she can prove her control of that account with her SSH signing key, which proves each GitHub commit came from BRadvoc8 using cryptographic signatures. These aren't just claims,they're verifiable links to external systems that Ben can use to check the evidence himself.
 
 This is the difference between saying "I'm a developer" and showing a commit history. The XID becomes a bridge between Amira's pseudonymous identity and her demonstrable skills.
 
-## About Attachments
+## Why Attachments Matter
 
 In Tutorial 01, you saw assertions like `'key': PublicKeys(...)` and `'provenance': ProvenanceMark(...)`. In Tutorial 02, you added `dereferenceVia: ...`. These are *known* assertions: standardized parts of the XID specification that tools understand.
 
@@ -82,7 +82,7 @@ Ensure you have the required tools:
 envelope --version
 provenance --version
 
-│ bc-envelope-cli 0.32.0
+│ bc-envelope-cli 0.33.0
 │ provenance-mark-cli 0.6.0
 ```
 
