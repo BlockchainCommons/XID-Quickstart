@@ -2,15 +2,15 @@
 [[conformsTo: will be string [URL]
 [[down the line: known value
 
-# Offering Self-Attestation
+# Offering Service Attestations
 
-A fresh, self-consistent XID proves that an identity exists and that you have the most up-to-date version, but not that the holder of the identity has skills worth trusting. Creating those through attestations is the next step. This tutorial shows how Amira adds attestations to her XID—verifiable claims about her activities. She'll link her GitHub account and SSH signing key, creating evidence that Ben can later verify against external sources.
+A fresh, self-consistent XID proves that an identity exists and that you have the most up-to-date version, but not that the holder of the identity has skills worth trusting. One way to attest to skills is to link to an account at a service where the skills are visible (e.g., a programming hub, a writing hub, a Q&A service) and then prove control of that account. That's what Amira will do in this tutorial. She'll link her GitHub account and use her SSH signing key there as evidence that Ben can later verify using the external service.
 
 **Time to complete**: ~15-20 minutes
 **Difficulty**: Beginner
 **Builds on**: Tutorials 01-02
 
-> :brain: **Related Concepts**: This tutorial covers self-attestation. For deeper understanding, see [Attestation & Endorsement Model](../concepts/attestation-endorsement-model.md) for the framework of claims and verification, [Fair Witness](../concepts/fair-witness.md) for making trustworthy assertions, and [Pseudonymous Trust Building](../concepts/pseudonymous-trust-building.md) for building reputation while maintaining privacy.
+> :brain: **Related Concepts**: This tutorial covers service-related attestation. For deeper understanding, see [Attestation & Endorsement Model](../concepts/attestation-endorsement-model.md) for the framework of claims and verification, [Fair Witness](../concepts/fair-witness.md) for making trustworthy assertions, and [Pseudonymous Trust Building](../concepts/pseudonymous-trust-building.md) for building reputation while maintaining privacy.
 
 ## Prerequisites
 
@@ -21,62 +21,25 @@ A fresh, self-consistent XID proves that an identity exists and that you have th
 
 ## What You'll Learn
 
-- How attachments differ from raw assertions in XIDs
-- How to add vendor-qualified payloads to your XIDDoc
+- How to link XIDs to online services
 - How SSH signing keys differ from authentication keys
 - How proof-of-control establishes temporal claims
 - How to advance provenance after making changes
 - How to detect stale XIDs with provenance marks
  
-## Amira's Story: The Importance of Credentials
+## Amira's Story: The Importance of Attestations
 
-In Tutorials 01 and 02, Amira established that BRadvoc8 exists and is verifiable. But existence isn't enough. When Ben considers accepting code contributions from BRadvoc8, he's asking: "Can this person actually deliver quality work?" To answer this question, Amira needs to connect her XID to real-world evidence of her skills. She can do this with her GitHub account, which shows her contributions, and she can prove her control of that account with her SSH signing key, which proves each GitHub commit came from BRadvoc8 using cryptographic signatures. These aren't just claims,they're verifiable links to external systems that Ben can use to check the evidence himself.
+In Tutorials 01 and 02, Amira established that BRadvoc8 exists and is verifiable. But existence isn't enough. When Ben considers accepting code contributions from BRadvoc8, he's asking: "Can this person actually deliver quality work?" Proving that usually requires attestations or credentials. An attestation is typically someone saying "I did that" or "I can do that" or "I control that" (a self-attestation) or a third-party saying the same. If the third-party is recognized as someone who certifies attestations, the more official result is a credential.
+
+So how can Amira prove to Ben that she has programming skills? She could seek out third-party attestations by asking others to witness her work or for peers to endorse her. But she doesn't yet have witnesses or peers for her BRadvoc8 identity. She could provide some details of her real-life job, but might threaten her anonymity. (We'll talk about "Fair Witness Attestations" in [Tutorial 05](05-fair-witness-attestations.md), about "Managing Sensitive Claims" in [Tutorial 06](06-managing-sensitive-claims.md), and about "Peer Endorsements" in [Tutorial 08](08-peer-endorsements.md).) That leaves her with things she can say herself, but she knows any self-attestation needs to backed up with proof for it to be meaningful to Ben.
+
+Fortunately, the internet gives Amira a possibility: BRadvoc8 has already created repos of related work at GitHub, so she can link to her account at that service. Then, all she has to do is prove control of the account with her SSH signing key, which also links to each GitHub commit in her BRadvoc8 account using cryptographic signatures. The result isn't an unverified self-attestation, but instead a verifiable link to an external service that Ben can use to check the evidence himself.
 
 This is the difference between saying "I'm a developer" and showing a commit history. The XID becomes a bridge between Amira's pseudonymous identity and her demonstrable skills.
 
-## Why Attachments Matter
-
-In Tutorial 01, you saw XID assertions like `'key': PublicKeys(...)` and `'provenance': ProvenanceMark(...)`. In Tutorial 02, you added `dereferenceVia: ...`. These are *known* assertions: standardized parts of the XID specification that tools understand.
-
-If you're familiar with Gordian Envelope, you might want to add a credential as a new assertion with something like the following:
-
-```
-envelope assertion add pred-obj string "github" string "BRadvoc8" "$XID"
-```
-
-Don't! 
-
-XIDs are defined to have specific structures so that XID Documents are well-formed and interoperable. The XID layer of the `envelope-cli` supports that by providing specific  operations (e.g., `xid key add` and `xid resolution add`) rather than encouraging raw assertion manipulation. If you try to add an assertion like the above by hand, first of all you'll have troubles because you'll need to get it to the right level of the XID. (The following doesn't! It adds it to the current predicate block, which is the signature. If you run `envelope assertion add pred-obj string "github" string "BRadvoc8" "$XID" | envelope format`, you'll see what that looks like, and it's probably not at all what was desired, since you want to make an assertion about the identity, which is to say the XID, not the whole wrapped package.) Even if you managed to add your new credential to the correct layer of the XID document, you'd be muddying up the core assertion-space of the XID, where people and programs will be looking for keys, provenance marks, and `dereferenceVia information.
-
-XID offers an alternative that maintains the inteoperability of XID: for custom data like GitHub accounts, XIDs use **attachments**, which are vendor-qualified containers for application-specific payloads. It works as follows:
-
-```
-envelope xid attachment add \
-    --vendor "self" \
-    --payload "$GITHUB_ACCOUNT" \
-    ...
-    $XID
-```
-
-The `--vendor` qualifier indicates who defined this attachment format. Using `"self"` means Amira defined it for her own use. Organizations might use domain names (`"com.example"`) for their custom formats.
-
-The `--payload` then is a complete envelope that contains the content for the attachment.
-
-The creation of that sub-envelope and the full context of that `envelope xid attachment add` command will be the heart of this tutorial.
-
-### :book: Why Attachments?
-
-Attachments solve several problems. They keep the XID core clean so that your identity isn't cluttered with application-specific details. They then namespace custom data so different applications don't collide. And they're explicitly optional: tools that don't understand an attachment can safely ignore it while still processing the XID.
-
-Most importantly, attachments allow **arbitrary predicates**. Where the XID core has a fixed schema, inside an attachment payload you define your own structure with whatever predicates make sense for your domain. GitHub accounts need `sshSigningKey` and `sshSigningKeysURL` while a professional certification might need `issuer`, `expirationDate`, and `credentialID`. Attachments are where domain-specific schemas live.
-
-Think of attachments as labeled boxes that you attach to your identity. The labels tell others what's inside and who packed it. Ben might understand `vendor: "self"` GitHub attachments but ignore `vendor: "com.example"` attachments he doesn't recognize.
-
-> :brain: **Learn more**: The [Attestation & Endorsement Model](../concepts/attestation-endorsement-model.md) concept doc explains the full framework for claims, evidence, and verification in XIDs.
-
 ## Part I: Amira Adds Her GitHub Account
 
-To create credentials for Amira, you will generate an SSH signing key, create a proof that you control it, bundle everything into a GitHub account attachment, and publish the updated XID with an updated provenance mark. When your done, your XID will contain verifiable claims that Ben can check against external sources.
+To link Amira's XID with her GitHub account, you will generate an SSH signing key, create a proof that you control it, bundle everything into a GitHub account envelope, link it as a service, and publish the updated XID with an updated provenance mark. When you're done, your XID will contain verifiable claims that Ben can check against external sources.
 
 ### Step 0: Verify Dependencies
 
