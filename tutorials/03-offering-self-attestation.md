@@ -218,10 +218,9 @@ fi
 
 ### Step 4: Build GitHub Account Payload
 
-Now assemble the attachment payload—all the information about Amira's GitHub presence:
+You can now assemble a complete envelope with all of the information about Amira's GitHub account, including the `$PROOF` that you earlier created and another pair of self-claimed timestamps. If any of this use of envelope subjects and assertions is unffamiliar, you should consult the [Gordian Envelope concepts](../concepts/gordian-envelope.md).
 
 ```
-# Build the GitHub account structure
 GITHUB_ACCOUNT=$(envelope subject type string "$XID_NAME")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj known isA string "GitHubAccount" "$GITHUB_ACCOUNT")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj known dereferenceVia uri "https://api.github.com/users/$XID_NAME" "$GITHUB_ACCOUNT")
@@ -251,11 +250,16 @@ envelope format "$GITHUB_ACCOUNT"
 │ ]
 ```
 
-This builds the payload step by step. Each `envelope assertion add` command adds one predicate-object pair:
+This builds the payload step by step. The `subject type` command describes the name of the GitHub account (which happens to be the same as the `$XID_NAME` we've defined, but that doesn't have to be the case).
 
-| Command | Predicate Type | Purpose |
+| `subject` Command | Subject Type | Purpose |
 |---------|---------------|---------|
-| `subject type string "$XID_NAME"` | (creates subject) | Sets "BRadvoc8" as the envelope subject |
+| `string "$XID_NAME"` | String (`"$XID_NAME"`) | Sets "BRadvoc8" as the envelope subject |
+
+Each `envelope assertion add pred-obj` command then adds one predicate-object pair as an assertion to that subject.
+
+| `assertion` Command | Predicate Type | Purpose |
+|---------|---------------|---------|
 | `known isA string "GitHubAccount"` | Known (`'isA'`) | Declares what this envelope represents |
 | `known dereferenceVia uri "..."` | Known (`'dereferenceVia'`) | Points to authoritative source |
 | `string "sshSigningKeysURL" uri "..."` | Custom (`"sshSigningKeysURL"`) | Where to verify the key is registered |
@@ -265,19 +269,12 @@ This builds the payload step by step. Each `envelope assertion add` command adds
 | `string "createdAt" date "..."` | Custom (`"createdAt"`) | When this attestation was created |
 | `string "updatedAt" date "..."` | Custom (`"updatedAt"`) | When this attestation was last modified |
 
-Notice the pattern: `known` predicates use envelope-standard semantics (single quotes in output), while `string` predicates are domain-specific (double quotes in output).
+In all we have: the account name as subject, a type marker (`isA: "GitHubAccount"`), a verification URL (`dereferenceVia` pointing to GitHub's API), the public key in both structured (`ur`) and text formats, the proof-of-control, and those additional timestamps.
 
-> :book: **Why This Structure?**
->
-> The `dereferenceVia` URL points to the GitHub account itself (not the signing keys) because `isA` declares this is a "GitHubAccount". In envelope design, `dereferenceVia` must point to the authoritative source of whatever the subject claims to be—the type and the dereference target must match semantically. If someone fetches the `dereferenceVia` URL expecting a GitHub account, they should get account information, not a list of SSH keys.
->
-> The signing keys endpoint goes in a custom predicate (`sshSigningKeysURL`) since it's verification data *about* the account, not the account itself. This is the flexibility attachments provide—you define whatever predicates your domain needs. We use `known` predicates (`isA`, `dereferenceVia`) for standard envelope semantics and `string` predicates for domain-specific data like `sshSigningKey` and `sshSigningKeysURL`. Notice the consistent `sshSigning*` prefix—related fields should share naming patterns.
->
-> Both `createdAt` and `updatedAt` are included even though they're identical now. When Amira later updates this attestation (perhaps rotating her SSH key), `createdAt` stays fixed while `updatedAt` changes. This lets Ben distinguish "how long has this claim existed?" from "when was it last verified?"
-
-Notice what we included: the account name as subject, a type marker (`isA: "GitHubAccount"`), a verification URL (`dereferenceVia` pointing to GitHub's API), the public key in both structured (`ur`) and text formats, the proof-of-control, and timestamps.
-
-The `dereferenceVia` URI is particularly important—it tells Ben exactly where to check whether this key is actually registered on GitHub. That verification happens in Tutorial 04.
+* The *`dereferenceVia`* URL points to the GitHub account itself (not the signing keys) because `isA` declares this is a "GitHubAccount". In envelope design, `dereferenceVia` must point to the authoritative source of whatever the subject claims to be: the type and the dereference target must match semantically. If someone fetches the `dereferenceVia` URL expecting a GitHub account, they should get account information, not a list of SSH keys. This `dereferenceVia` URI is particularly important: it will tell Ben exactly where to check and whether this key is actually registered on GitHub. That verification happens in Tutorial 04.
+* The *signing keys endpoint* is in a custom predicate (`sshSigningKeysURL`) since it's verification data *about* the account, not the account itself. This is the flexibility that attachments provide: you define whatever predicates your domain needs. We use `known` predicates (`isA`, `dereferenceVia`) for standard envelope semantics (depicted by single quotes in output) and `string` predicates for domain-specific data like `sshSigningKey` and `sshSigningKeysURL` (depicted by double quotes in output).
+   * Though they're attachment-specific, the `sshSigning*` prefix—related fields should share naming patterns.
+* Both *`createdAt`* and *`updatedAt`* are included even though they're identical now. When Amira later updates this attestation (perhaps rotating her SSH key), `createdAt` stays fixed while `updatedAt` changes. This lets Ben distinguish "how long has this claim existed?" from "when was it last verified?"
 
 ### Step 5: Add Attachment to XID
 
