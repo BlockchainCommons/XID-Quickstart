@@ -1,7 +1,3 @@
-[[need to redo this as a service instead of attachment
-[[conformsTo: will be string [URL]
-[[down the line: known value
-
 # Offering Service Attestations
 
 A fresh, self-consistent XID proves that an identity exists and that you have the most up-to-date version, but not that the holder of the identity has skills worth trusting. One way to attest to skills is to link to an account at a service where the skills are visible (e.g., a programming hub, a writing hub, a Q&A service) and then prove control of that account. That's what Amira will do in this tutorial. She'll link her GitHub account and use her SSH signing key there as evidence that Ben can later verify using the external service.
@@ -33,7 +29,7 @@ In Tutorials 01 and 02, Amira established that BRadvoc8 exists and is verifiable
 
 So how can Amira prove to Ben that she has programming skills? She could seek out third-party attestations by asking others to witness her work or for peers to endorse her. But she doesn't yet have witnesses or peers for her BRadvoc8 identity. She could provide some details of her real-life job, but might threaten her anonymity. (We'll talk about "Fair Witness Attestations" in [Tutorial 05](05-fair-witness-attestations.md), about "Managing Sensitive Claims" in [Tutorial 06](06-managing-sensitive-claims.md), and about "Peer Endorsements" in [Tutorial 08](08-peer-endorsements.md).) That leaves her with things she can say herself, but she knows any self-attestation needs to backed up with proof for it to be meaningful to Ben.
 
-Fortunately, the internet gives Amira a possibility: BRadvoc8 has already created repos of related work at GitHub, so she can link to her account at that service. Then, all she has to do is prove control of the account with her SSH signing key, which also links to each GitHub commit in her BRadvoc8 account using cryptographic signatures. The result isn't an unverified self-attestation, but instead a verifiable link to an external service that Ben can use to check the evidence himself.
+Fortunately, the internet gives Amira a possibility: BRadvoc8 has already created repos of related work at GitHub, so she can link to her account at that service. Then, all she has to do is prove control of the BRadvoc8 GitHub account by showing that she controls the SSH signing key that was used for the cryptographic signature for each GitHub commit there. The result isn't an unverified self-attestation, but instead a verifiable link to an external service that Ben can use to check the evidence himself.
 
 This is the difference between saying "I'm a developer" and showing a commit history. The XID becomes a bridge between Amira's pseudonymous identity and her demonstrable skills.
 
@@ -59,8 +55,8 @@ If either tool is not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#s
 >
 > Your output will continue to differ, as discussed in Tutorial 01, because these examples use the **real published BRadvoc8 XID** at `github.com/BRadvoc8/BRadvoc8`. New differences that you will see in this Tutorial include:
 >
-> - Your timestamps and cryptographic digests will differ
-> - Your SSH key fingerprints will be unique
+> - Your timestamps and cryptographic digests will differ.
+> - Your SSH key fingerprints will be unique.
 
 ### Step 1: Load Your XID
 
@@ -99,11 +95,15 @@ echo "$SSH_EXPORT"
 │ ✅ Generated SSH signing key:
 │ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
 
+This is what you would then [upload to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) as an SSH signing key ... but you don't actually have to for these tutorials because we'll test against the [existing BRadvoc8 account](https://github.com/BRadvoc8/BRadvoc8) in the next tutorial when we discuss ["Cross Verification"](04-cross-verification.md).
+
 > :book: **SSH Signing vs SSH Authentication**: GitHub has two separate SSH key registries. Authentication keys (`/users/{user}/keys`) control access to repositories. Signing keys (`/users/{user}/ssh_signing_keys`) verify commit signatures. Amira is adding a signing key. It proves that her commits are authentic, not that she can push to repos.
 
 #### Optional Alternative: Use An Existing Key
 
-If you already have an SSH signing key registered on GitHub, you can import it instead of generating a new one. The following commands will fill your environmental variables from an existing key:
+In the "story" of these tutorials, Amira created her SSH key at some time in the past, uploaded it to GitHub as a signing key on May 2025, and has been signing commits with it for projects that fall into a similar public-good space as the work that Amira might do for Ben at SisterSpaces. So she needs to access that key and make it available on the command-line for the XID work she's going to do.
+
+If you already have an SSH signing key registered on GitHub, you can import it from your local files instead of generating a new one. The following commands will fill your environmental variables from an existing key (with the file name changed as appropriate):
 
 ```
 SSH_PRVKEYS=$(cat ~/.ssh/your_signing_key | envelope import)
@@ -111,17 +111,15 @@ SSH_PUBKEYS=$(cat ~/.ssh/your_signing_key.pub | envelope import)
 SSH_EXPORT=$(cat ~/.ssh/your_signing_key.pub)
 ```
 
-The real BRadvoc8 XID uses an existing key that was registered on GitHub in May 2025.
-
 #### A Review of Key Usage 
 
 Amira now has multiple keys serving different purposes:
 
-| Key | Purpose | Compromise Impact |
-|-----|---------|-------------------|
-| XID signing key | Signs XID document updates | Identity compromised |
-| XID key agreement key | Establishes shared secrets for encryption | Past messages exposed |
-| SSH signing key | Signs Git commits | Code authorship forged |
+| Key | Purpose | Compromise Impact | Location |
+|-----|---------|-------------------|----------|
+| XID signing key | Signs XID document updates | Identity compromised | XID |
+| XID key agreement key | Establishes shared secrets for encryption | Past messages exposed | XID |
+| SSH signing key | Signs Git commits | Code authorship forged | Local |
 
 Why separate keys? Compromise containment. Each key serves one purpose, limiting damage from any single compromise. For example, if Amira's SSH key is stolen, an attacker can forge commits, but her XID identity remains intact. She can revoke the compromised SSH key and add a new one without losing her identity or reputation history. 
 
@@ -129,7 +127,7 @@ Even the XID signing key can be rotated if compromised. You can add a new XID si
 
 ### Step 3: Create Proof-of-Control
 
-You don't just want to add Amira's SSH signing key to her XID. That would be another unproven bit of data. For it to be meaningful, you also want to prove that Amira controls the SSH signing key. This can be done with a signed statement declaring ownership at a specific point in time, which will be the next thing you'll create.
+You don't just want to add Amira's SSH signing key to her XID. That would not prove that Amira controls the signing key (and therefore the GitHub account where the key is used to sign commits). Amira can prove that she controls the GitHub SSH signing key by creating a signed statement declaring ownership at a declared point in time. This will be the next thing you'll create.
 
 ```
 CURRENT_DATE=$(date -u +"%Y-%m-%d")
@@ -145,9 +143,9 @@ envelope format "$PROOF"
 │ ]
 ```
 
-This proof is created as an envelope with a subject (the statement) and an assertion (the signature).  We'll be continuing to build out a larger envelope in the next step before attaching it to the XID. The proof demonstrates that whoever holds the SSH private key signed a statement claiming association with BRadvoc8 at a claimed date. The date isn't verified, but the
+This proof is created as an envelope with a subject (the statement) and an assertion (the signature).  We'll be continuing to build out a larger envelope in the next step before attaching it to the XID. With this proof, Amira definitively demonstrates that she controls the SSH signing key. (She signed with it!) The date isn't verified, but it has been attested to by the holder of the SSH signing key. If you trust the signer, you trust the date; if you don't trust the signer, you don't.
 
-> :book: **How Could You Prove the Time?** The above simply shows that the witness (the signer) claims a specific time. To actually prove a time requires a trusted third party. One method is to hash a document, put the hash on the blockchain, and then refer to the hash. Another is to use a Time Stamp Authority (TSA) as defined in [RFC 3161](https://www.ietf.org/rfc/rfc3161.txt).
+> :book: **How Could You Prove the Time?** The above simply shows that the witness (the signer) attests to a specific time. To actually prove a time requires a trusted third party. One method is to hash a document, put the hash on the blockchain, and then refer to the hash. Another is to use a Time Stamp Authority (TSA) as defined in [RFC 3161](https://www.ietf.org/rfc/rfc3161.txt).
 
 #### Verifying the Proof
 
@@ -184,11 +182,12 @@ fi
 
 ### Step 4: Build GitHub Account Payload
 
-You can now assemble a complete envelope with all of the information about Amira's GitHub account, including the `$PROOF` that you earlier created and another pair of self-claimed timestamps. If any of this use of envelope subjects and assertions is unffamiliar, you should consult the [Gordian Envelope concepts](../concepts/gordian-envelope.md).
+You can now assemble a complete envelope with all of the information about Amira's GitHub account, including the `$PROOF` that you earlier created and another pair of self-claimed timestamps. If any of this use of envelope subjects and assertions is unfamiliar, you should consult the [Gordian Envelope concepts document](../concepts/gordian-envelope.md).
 
 ```
 GITHUB_ACCOUNT=$(envelope subject type string "$XID_NAME")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj known isA string "GitHubAccount" "$GITHUB_ACCOUNT")
+GITHUB_ACCOUNT=$(envelope assertion add pred-obj known conformsTo string "https://github.com" "$GITHUB_ACCOUNT")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj known dereferenceVia uri "https://api.github.com/users/$XID_NAME" "$GITHUB_ACCOUNT")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKeysURL" uri "https://api.github.com/users/$XID_NAME/ssh_signing_keys" "$GITHUB_ACCOUNT")
 GITHUB_ACCOUNT=$(envelope assertion add pred-obj string "sshSigningKey" ur "$SSH_PUBKEYS" "$GITHUB_ACCOUNT")
@@ -202,18 +201,19 @@ echo "GitHub account payload:"
 envelope format "$GITHUB_ACCOUNT"
 
 │ GitHub account payload:
-│ "BRadvoc8" [
-│     'dereferenceVia': URI(https://api.github.com/users/BRadvoc8)
-│     'isA': "GitHubAccount"
-│     "createdAt": 2026-01-21T05:34:20Z
-│     "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
-│     "sshSigningKey": SigningPublicKey(714b3b69, SSHPublicKey(f733cab9))
-│     "sshSigningKeyProof": "BRadvoc8 controls SSH signing key registered on GitHub as of 2026-01-21" [
-│         'signed': Signature(SshEd25519)
-│     ]
-│     "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe"
-│     "updatedAt": 2026-01-21T05:34:20Z
-│ ]
+| "BRadvoc8" [
+|    'isA': "GitHubAccount"
+|    "createdAt": 2026-01-21T05:34:20Z
+|    "sshSigningKey": SigningPublicKey(714b3b69, SSHPublicKey(f733cab9))
+|    "sshSigningKeyProof": "BRadvoc8 controls this SSH key on 2026-02-04" [
+|        'signed': Signature(SshEd25519)
+|    ]
+|    "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe"
+|    "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|    "updatedAt": 2026-01-21T05:34:20Z
+|    'conformsTo': "https://github.com"
+|    'dereferenceVia': URI(https://api.github.com/users/BRadvoc8)
+]
 ```
 
 This builds the payload step by step. The `subject type` command describes the name of the GitHub account (which happens to be the same as the `$XID_NAME` we've defined, but that doesn't have to be the case).
@@ -227,6 +227,7 @@ Each `envelope assertion add pred-obj` command then adds one predicate-object pa
 | `assertion` Command | Predicate Type | Purpose |
 |---------|---------------|---------|
 | `known isA string "GitHubAccount"` | Known (`'isA'`) | Declares what this envelope represents |
+| `known conformsTo string "https://github.com"` | Known (`'conformsTo'`) | [Standard](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#conformsTo) for the resource |
 | `known dereferenceVia uri "..."` | Known (`'dereferenceVia'`) | Points to authoritative source |
 | `string "sshSigningKeysURL" uri "..."` | Custom (`"sshSigningKeysURL"`) | Where to verify the key is registered |
 | `string "sshSigningKey" ur "$SSH_PUBKEYS"` | Custom (`"sshSigningKey"`) | The key in structured UR format |
@@ -238,11 +239,12 @@ Each `envelope assertion add pred-obj` command then adds one predicate-object pa
 In all we have: the account name as subject, a type marker (`isA: "GitHubAccount"`), a verification URL (`dereferenceVia` pointing to GitHub's API), the public key in both structured (`ur`) and text formats, the proof-of-control, and those additional timestamps.
 
 * The *`dereferenceVia`* URL points to the GitHub account itself (not the signing keys) because `isA` declares this is a "GitHubAccount". In envelope design, `dereferenceVia` must point to the authoritative source of whatever the subject claims to be: the type and the dereference target must match semantically. If someone fetches the `dereferenceVia` URL expecting a GitHub account, they should get account information, not a list of SSH keys. This `dereferenceVia` URI is particularly important: it will tell Ben exactly where to check and whether this key is actually registered on GitHub. That verification happens in Tutorial 04.
+* The *`conformsTo` known value is drawn from the [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#conformsTo). Ideally, it should be a description of how the GitHub resource is commonly defined, but here we just point to the URL that all GitHub accounts conform to.
 * The *signing keys endpoint* is in a custom predicate (`sshSigningKeysURL`) since it's verification data *about* the account, not the account itself. This is the flexibility that attachments provide: you define whatever predicates your domain needs. We use `known` predicates (`isA`, `dereferenceVia`) for standard envelope semantics (depicted by single quotes in output) and `string` predicates for domain-specific data like `sshSigningKey` and `sshSigningKeysURL` (depicted by double quotes in output).
    * Though they're attachment-specific, the `sshSigning*` prefix—related fields should share naming patterns.
 * Both *`createdAt`* and *`updatedAt`* are included even though they're identical now. When Amira later updates this attestation (perhaps rotating her SSH key), `createdAt` stays fixed while `updatedAt` changes. This lets Ben distinguish "how long has this claim existed?" from "when was it last verified?"
 
-### Step 5: Add Attachment to XID
+### Step 5: Add Service to XID
 
 Now add this payload as an attachment to your XID:
 
