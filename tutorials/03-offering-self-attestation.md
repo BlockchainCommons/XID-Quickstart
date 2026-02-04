@@ -72,7 +72,7 @@ Think of attachments as labeled boxes that you attach to your identity. The labe
 
 ## Part I: Amira Adds Her GitHub Account
 
-Now for the hands-on work. You'll generate an SSH signing key, create a proof that you control it, bundle everything into a GitHub account attachment, and publish the updated XID. By the end, your XID will contain verifiable claims that Ben can check against external sources.
+To create credentials for Amira, you will generate an SSH signing key, create a proof that you control it, bundle everything into a GitHub account attachment, and publish the updated XID with an updated provenance mark. When your done, your XID will contain verifiable claims that Ben can check against external sources.
 
 ### Step 0: Verify Dependencies
 
@@ -86,17 +86,14 @@ provenance --version
 │ provenance-mark-cli 0.6.0
 ```
 
-If not installed, see Tutorial 01 Step 0 for installation instructions.
+If either tool is not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#step-0-setting-up-your-workspace) for installation instructions.
 
 > :warning: **Important: Your Output Will Differ**
 >
-> From this point forward, tutorial examples show output from the **real published BRadvoc8 XID** at `github.com/BRadvoc8/BRadvoc8`. When you follow along with your own XID:
+> Your output will continue to differ, as discussed in Tutorial 01, because these examples use the **real published BRadvoc8 XID** at `github.com/BRadvoc8/BRadvoc8`. New differences that you will see in this Tutorial include:
 >
-> - Your XID identifier (e.g., `XID(c8eb0124)`) will be different
 > - Your timestamps and cryptographic digests will differ
 > - Your SSH key fingerprints will be unique
->
-> **This is expected.** The structure and workflow remain the same—only the specific values change. Focus on understanding what each step accomplishes, not matching exact output.
 
 ### Step 1: Load Your XID
 
@@ -109,77 +106,71 @@ PASSWORD="your-password-from-previous-tutorials"
 # Load your XID (adjust path as needed)
 XID=$(cat xid-*/BRadvoc8-xid.envelope)
 
-echo "Loaded XID: $XID_NAME"
+echo "✅ Loaded XID: $XID_NAME"
 envelope xid id "$XID"
 
-│ Loaded XID: BRadvoc8
+│ ✅ Loaded XID: BRadvoc8
 │ ur:xid/hdcxltkttdhsjztodsfygmfzdmvajocftohtrltabzbazmkbsalnhfhywfneaohycfynbejokkda
 ```
 
 ### Step 2: Generate SSH Signing Key
 
-Amira needs an SSH key specifically for signing Git commits. This is different from SSH authentication keys—GitHub maintains them separately.
+Amira needs an SSH keys specifically for signing Git commits, which is different from her SSH authentication keys and maintained seperately by GitHub. She can generate them with `envelope`, requesting keys of the type `--signing ssh-ed25519`, which is the preferred type for GitHub.
 
 ```
-# Generate SSH signing keypair (Ed25519 via SSH format)
 SSH_PRVKEYS=$(envelope generate prvkeys --signing ssh-ed25519)
 SSH_PUBKEYS=$(envelope generate pubkeys "$SSH_PRVKEYS")
-
-# Export the public key in standard SSH format
+```
+She can then `export` those keys to tranform that `UR` format used by envelope into an interoperable SSH format (_not_ raw Ed25519) that is recognized by GitHub:
+```
 SSH_EXPORT=$(envelope export "$SSH_PUBKEYS")
 
-echo "Generated SSH signing key:"
+echo "✅ Generated SSH signing key:"
 echo "$SSH_EXPORT"
+```
 
-│ Generated SSH signing key:
+│ ✅ Generated SSH signing key:
 │ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
 ```
 
-> :book: **SSH Signing vs Authentication**:
->
-> GitHub has two separate SSH key registries. Authentication keys (`/users/{user}/keys`) control access to repositories. Signing keys (`/users/{user}/ssh_signing_keys`) verify commit signatures. Amira is adding a signing key—it proves her commits are authentic, not that she can push to repos.
+> :book: **SSH Signing vs SSH Authentication**: GitHub has two separate SSH key registries. Authentication keys (`/users/{user}/keys`) control access to repositories. Signing keys (`/users/{user}/ssh_signing_keys`) verify commit signatures. Amira is adding a signing key. It proves that her commits are authentic, not that she can push to repos.
 
-The `envelope generate prvkeys --signing ssh-ed25519` command creates keys in SSH format rather than raw Ed25519. This matters because Git's signature verification expects SSH-formatted keys.
+#### Optional Alternative: Use An Existing Key
 
-> **Using an Existing SSH Key**:
->
-> If you already have an SSH signing key registered on GitHub, you can import it instead of generating a new one:
->
-> ```
-> SSH_PRVKEYS=$(cat ~/.ssh/your_signing_key | envelope import)
-> SSH_PUBKEYS=$(cat ~/.ssh/your_signing_key.pub | envelope import)
-> SSH_EXPORT=$(cat ~/.ssh/your_signing_key.pub)
-> ```
->
-> The real BRadvoc8 XID uses an existing key that was registered on GitHub in May 2025.
+If you already have an SSH signing key registered on GitHub, you can import it instead of generating a new one. The following commands will fill your environmental variables from an existing key:
 
-> :warning: **Key Separation**:
->
-> Amira now has multiple keys serving different purposes:
->
-> | Key | Purpose | Compromise Impact |
-> |-----|---------|-------------------|
-> | XID signing key | Signs XID document updates | Identity compromised |
-> | XID key agreement key | Establishes shared secrets for encryption | Past messages exposed |
-> | SSH signing key | Signs Git commits | Code authorship forged |
->
-> Why separate keys? Compromise containment. If Amira's SSH key is stolen, an attacker can forge commits—but her XID identity remains intact. She can revoke the compromised SSH key and add a new one without losing her identity or reputation history. Each key serves one purpose, limiting damage from any single compromise.
->
-> Even the XID signing key can be rotated if compromised—you can add a new signing key and revoke the old one while keeping the same XID identifier. Your identity persists across key changes.
+```
+SSH_PRVKEYS=$(cat ~/.ssh/your_signing_key | envelope import)
+SSH_PUBKEYS=$(cat ~/.ssh/your_signing_key.pub | envelope import)
+SSH_EXPORT=$(cat ~/.ssh/your_signing_key.pub)
+```
+
+The real BRadvoc8 XID uses an existing key that was registered on GitHub in May 2025.
+
+#### A Review of Key Usage 
+
+Amira now has multiple keys serving different purposes:
+
+| Key | Purpose | Compromise Impact |
+|-----|---------|-------------------|
+| XID signing key | Signs XID document updates | Identity compromised |
+| XID key agreement key | Establishes shared secrets for encryption | Past messages exposed |
+| SSH signing key | Signs Git commits | Code authorship forged |
+
+Why separate keys? Compromise containment. Each key serves one purpose, limiting damage from any single compromise. For example, if Amira's SSH key is stolen, an attacker can forge commits, but her XID identity remains intact. She can revoke the compromised SSH key and add a new one without losing her identity or reputation history. 
+
+Even the XID signing key can be rotated if compromised. You can add a new XID signing key and revoke the old one while keeping the same XID identifier. Your identity persists across key changes.
 
 ### Step 3: Create Proof-of-Control
 
-Before adding the key to her XID, Amira creates a proof that she controls it. This is a signed statement declaring ownership at a specific point in time:
+You don't just want to add Amira's SSH signing key to her XID. That would be another unproven bit of data. For it to be meaningful, you also want to prove that Amira controls the SSH signing key. This can be done with a signed statement declaring ownership at a specific point in time, which will be the next thing you'll create.
 
 ```
-# Get current date
 CURRENT_DATE=$(date -u +"%Y-%m-%d")
-
-# Create and sign a proof-of-control statement
 PROOF_STATEMENT=$(envelope subject type string "$XID_NAME controls this SSH key on $CURRENT_DATE")
 PROOF=$(envelope sign --signer "$SSH_PRVKEYS" "$PROOF_STATEMENT")
 
-echo "Created proof-of-control"
+echo "✅ Created proof-of-control"
 envelope format "$PROOF"
 
 │ Created proof-of-control
@@ -188,11 +179,13 @@ envelope format "$PROOF"
 │ ]
 ```
 
-This proof demonstrates that whoever holds the SSH private key signed a statement claiming association with BRadvoc8 on this date.
+This proof is created as an envelope with a subject (the statement) and an assertion (the signature).  We'll be continuing to build out a larger envelope in the next step before attaching it to the XID. The proof demonstrates that whoever holds the SSH private key signed a statement claiming association with BRadvoc8 at a claimed date. The date isn't verified, but the
+
+> :book: **How Could You Prove the Time?** The above simply shows that the witness (the signer) claims a specific time. To actually prove a time requires a trusted third party. One method is to hash a document, put the hash on the blockchain, and then refer to the hash. Another is to use a Time Stamp Authority (TSA) as defined in [RFC 3161](https://www.ietf.org/rfc/rfc3161.txt).
 
 #### Verifying the Proof
 
-Ben can later verify this proof using the public key embedded in the XID:
+Ben can later verify this proof using the public SSH signing key that we will embed in the XID.
 
 ```
 # Verify the proof signature
@@ -205,28 +198,23 @@ fi
 │ ✅ Proof signature verified - key holder signed this statement
 ```
 
-This confirms the statement was signed by whoever controls the SSH private key. It doesn't prove *who* that is—just that they could sign.
+This confirms the statement was signed by whoever controls the SSH private key. It doesn't prove *who* that is, just that they held the key.
 
-#### What If the Proof Was Tampered?
+If the proof were tampered with, the signature would no longer verify:
 
 ```
-# Simulate tampering - an attacker changes the date
 TAMPERED_PROOF=$(echo "$PROOF" | sed 's/2026-01-21/2025-01-01/')
 
 if envelope verify -v "$SSH_PUBKEYS" "$TAMPERED_PROOF" >/dev/null 2>&1; then
     echo "✅ Signature verified"
 else
-    echo "❌ Signature FAILED - tampering detected!"
+    echo "❌ Signature FAILED - tampering detected\!"
 fi
 
 │ ❌ Signature FAILED - tampering detected!
 ```
 
-Any modification invalidates the signature. Ben can trust that the proof content matches exactly what was signed.
-
-> :book: **Temporal Limitation**:
->
-> This proof is a snapshot, not an ongoing guarantee. It proves Amira controlled the key when she signed—it doesn't prove she controls it now, or that she'll control it tomorrow. Keys can be compromised. Ben will need to check external sources (GitHub's current registry, recent signed commits) for stronger assurance. Tutorial 04 covers this verification.
+> :warning: **Temporal Limitation**: Even if the date check were verified, the proof is a snapshot, not an ongoing guarantee. It proves Amira controlled the key when she signed, not that she controls it now or tomorrow. Keys can be compromised. Ben will need to check external sources (GitHub's current registry, recent signed commits) for stronger assurance. Tutorial 04 covers this verification.
 
 ### Step 4: Build GitHub Account Payload
 
