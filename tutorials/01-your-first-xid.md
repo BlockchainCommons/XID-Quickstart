@@ -51,6 +51,18 @@ cargo install provenance-mark-cli
 
 If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html) for easy installation instructions.
 
+> :warning: **Important: Your Output Will Differ**
+>
+> Tutorial examples show output from the **real published BRadvoc8 XID** at `github.com/BRadvoc8/BRadvoc8`. When you follow along, your output will differ. In this
+> document, that includes:
+>
+> - A different XID identifier
+> - Different keys identifiers
+> - A different provenance mark
+> - Different hashes for `--type tree`
+>
+> Additional differences at this level will appear in future tutorials.
+
 ## Step 1: Creating Your XID
 
 Now that you understand why XIDs are valuable, you're ready to help Amira create her "BRadvoc8" identity. This first tutorial is deliberately simple to get you started with the basics. In subsequent tutorials, we'll explore more advanced features including the creation of rich persona structures.
