@@ -249,7 +249,7 @@ In all we have: the account name as subject, a type marker (`isA: "GitHubAccount
 Now add this payload as an attachment to your XID:
 
 ```
-XID_WITH_ATTACHMENT=$(envelope xid attachment add \
+XID_WITH_SERVICE=$(envelope xid service add \
     --vendor "self" \
     --payload "$GITHUB_ACCOUNT" \
     --verify inception \
