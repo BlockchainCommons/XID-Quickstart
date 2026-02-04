@@ -1,3 +1,7 @@
+[[need to redo this as a service instead of attachment
+[[conformsTo: will be string [URL]
+[[down the line: known value
+
 # Offering Self-Attestation
 
 A fresh, self-consistent XID proves that an identity exists and that you have the most up-to-date version, but not that the holder of the identity has skills worth trusting. Creating those through attestations is the next step. This tutorial shows how Amira adds attestations to her XID—verifiable claims about her activities. She'll link her GitHub account and SSH signing key, creating evidence that Ben can later verify against external sources.
