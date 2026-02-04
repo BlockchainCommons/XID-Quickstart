@@ -61,7 +61,7 @@ If you don't have `cargo` installed, see [_The Cargo Book_](https://doc.rust-lan
 > - A different provenance mark
 > - Different hashes for `--type tree`
 >
-> Additional differences at this level will appear in future tutorials.
+> **This is expected.** The structure and workflow remain the same, only the specific values change. Focus on understanding what each step accomplishes, not matching exact output. Additional differences at this level will appear in future tutorials.
 
 ## Step 1: Creating Your XID
 
