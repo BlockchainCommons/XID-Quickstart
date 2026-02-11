@@ -1,4 +1,4 @@
-# Tutorial 05: Fair Witness Attestations
+# Tutorial 03: Self Attestations
 
 Build credibility through specific, factual claims that invite verification rather than demand belief.
 
