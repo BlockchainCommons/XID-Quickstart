@@ -1,4 +1,4 @@
-# Tutorial 03: Self Attestations
+# Tutorial 03: Creating Self Attestations
 
 Build credibility through specific, factual claims that invite verification rather than demand belief.
 
