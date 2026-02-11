@@ -1,3 +1,21 @@
+Some notes for next time:
+I think for relatively unstructured, natural language assertions, the `"attestation"` and `"verifiableAt"` predicates work fine. Did you want me to assign known values to those?
+
+
+I would remove the pronoun "I" from the attestation: "contributed mass spec..". This is because the "I" can already be inferred from the fact that it is an assertion about the target, by the source. That way the claim could be extracted and replicated by someone else who corroborates the claim without confusion as to who "I" is.
+Edited
+11m
+
+
+That way the same claim could be made by a different source about the same target just by cloning the claim.
+10m
+
+
+I would also use the URI type for the object of `'verifiableAt'`.
+
+
+===
+
 # Tutorial 03: Creating Self Attestations
 
 Build credibility through specific, factual claims that invite verification rather than demand belief.
