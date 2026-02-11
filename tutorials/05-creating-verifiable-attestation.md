@@ -1,4 +1,4 @@
-# Offering Service Attestations
+# Tutorial 05: Creating Verifiable Attestations
 
 A fresh, self-consistent XID proves that an identity exists and that you have the most up-to-date version, but not that the holder of the identity has skills worth trusting. One way to attest to skills is to link to an account at a service where the skills are visible (e.g., a programming hub, a writing hub, a Q&A service) and then prove control of that account. That's what Amira will do in this tutorial. She'll link her GitHub account and use her SSH signing key there as evidence that Ben can later verify using the external service.
 
