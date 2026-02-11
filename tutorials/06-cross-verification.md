@@ -1,4 +1,4 @@
-# Cross-Verification
+# Tutorial 06: Cross-Verification
 
 In Tutorial 03, Amira added her GitHub account and SSH signing key to her XIDDoc. She *offered* these as attestations—claims about her skills and activities. But claims aren't proof. Ben needs to verify them independently before trusting BRadvoc8 with code contributions.
 
