@@ -471,14 +471,17 @@ CLAIM=$(envelope assertion add pred-obj \
 
   XID_ID=$(envelope xid id $XID)
 TARGET=$(envelope subject type ur "$XID_ID")
-TARGET=$(envelope assertion add pred-obj string "claim" envelope $CLAIM $TARGET)
+TARGET=$(envelope assertion add pred-obj string "attestation" envelope $CLAIM $TARGET)
 
 EDGE=$(envelope subject type string "coding-experience-1")
 EDGE=$(envelope assertion add pred-obj known isA string "foaf:pastProject" "$EDGE")
 EDGE=$(envelope assertion add pred-obj known source ur "$XID_ID" "$EDGE")
 EDGE=$(envelope assertion add pred-obj known target envelope "$TARGET" "$EDGE")
+WRAPPED_EDGE=$(envelope subject type wrapped $EDGE)
+SIGNED_EDGE=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$WRAPPED_EDGE")
 
-XID_WITH_EDGE=$(envelope xid edge add $EDGE $XID)                 
+
+XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)                 
 
 ==
 
