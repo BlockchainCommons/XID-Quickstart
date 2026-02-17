@@ -1,6 +1,6 @@
 # XID-Quickstart
 
-> :warning: **NOTE:** This Quickstart is in process. The [concepts guide](concepts/README.md) is robust at this time, but the examples reflect a version of `envelope-cli` that is slightly old, and so may be out of date. [Tutorial #1](tutorials/01-your-first-xid.md) and [Tutorial #2](tutorials/02-understanding-xid-structure.md) have been fully released, while the later tutorials are undergoing updates for the newest capabilities of `envelope-cli` as well as a full edit.
+> :warning: **NOTE:** This Quickstart is in process. The [concepts guide](concepts/README.md) is robust at this time, but the examples reflect a version of `envelope-cli` that is slightly old, and so may be out of date. [Tutorial #1](tutorials/01-your-first-xid.md) and [Tutorial #2](tutorials/02-making-your-xid-verifiable.md) have been fully released, while the later tutorials are undergoing updates for the newest capabilities of `envelope-cli` as well as a full edit.
 
 ## Introduction
 
@@ -57,7 +57,7 @@ The guide includes a visual concept map and multiple learning paths.
 The tutorials provide practical experience with XIDs:
 
 1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Create a pseudonymous identity
-2. [Understanding XID Structure](tutorials/02-understanding-xid-structure.md) - Internal structure and components
+2. [Understanding XID Structure](tutorials/02-making-your-xid-verifiable.md) - Internal structure and components
 3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Make verifiable claims about yourself
 4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Third-party verification methods
 5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Key rotation and recovery strategies
