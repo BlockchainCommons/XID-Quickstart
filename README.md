@@ -1,5 +1,7 @@
 # XID-Quickstart
 
+> :warning: **NOTE:** This Quickstart is in process. The [concepts guide](concepts/README.md) is robust at this time, but the examples reflect a version of `envelope-cli` that is slightly old, and so may be out of date. [Tutorial #1](tutorials/01-your-first-xid.md) and [Tutorial #2](tutorials/02-understanding-xid-structure.md) have been fully released, while the later tutorials are undergoing updates for the newest capabilities of `envelope-cli` as well as a full edit.
+
 ## Introduction
 
 _**A Tutorial Series for eXtensible IDentifiers (XIDs)**_
