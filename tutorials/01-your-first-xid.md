@@ -483,6 +483,7 @@ xid-20251117/
 ├── BRadvoc8-xid-public.envelope   # Public XID (private keys elided)
 └── BRadvoc8-xid-public.format     # Human-readable view
 ```
+Having offered this example, we're going to move over to a more tutorial-specific format for storing files in the next tutorial.
 
 ## Summary: The Bigger Picture
 
