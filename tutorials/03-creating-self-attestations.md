@@ -30,26 +30,25 @@ To fulfill this need, Amira can add attestations to her XID, which she can do wi
 
 Amira needs a different approach: specific claims that point to verifiable evidence.
 
----
-
 ## Part I: About Fair Witness Attestations
 
 *This section explains the concepts behind attestations. If you're ready to start creating one, skip to [Part II](#part-ii-creating-a-detached-attestation).*
 
-> :book: **Fair Witness Methodology**: State only what you can personally verify—specific, factual claims that point to observable evidence rather than opinions or vague assertions.
+Amira has to make a self-attestation. But, not all attestations are created equal. Some are vague and hard to pin down, while others are so specific that they can be proved with other references. Compare these two attestations:
 
-Compare these two claims:
-
-| Claim | Type | Why |
+| Claim | Quality | Support |
 |-------|------|-----|
 | "I'm good at security" | Weak | Opinion, nothing to check |
 | "I contributed to Galaxy Project (PR #12847)" | Strong | Verifiable on GitHub |
 
-The strong claim invites validation rather than demanding belief. For pseudonymous contributors who can't flash a diploma, evidence-backed claims ARE your credentials.
+The strong claim invites validation rather than demanding belief. For pseudonymous contributors who can't flash a diploma, evidence-backed attestations ARE your credentials.
 
-> :book: **Detached Attestation**: A signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+When Amira is making self-attestations, she will therefore do her best to both create attestations that are verifiable and then provide the methodology for verifying.
 
-**Why detached?** Skill claims work better as separate documents. You can share specific attestations with specific people, revoke them independently, and keep your XIDDoc lean. The attestation references your XID identifier, so verifiers can confirm it came from you.
+[put in Fair Witness stuff here.]
+
+> :book: **Fair Witness Methodology**: State only what you can personally verify: specific, factual claims that point to observable evidence rather than opinions or vague assertions.
+
 
 > :brain: **Learn more**: The [Self-Attestation](../concepts/self-attestation.md) concept doc explains the relationship between self-claims and endorsements.
 
@@ -58,6 +57,12 @@ The strong claim invites validation rather than demanding belief. For pseudonymo
 ## Part II: Creating a Detached Attestation
 
 Amira contributed to Galaxy Project, an open source bioinformatics platform. Her pull request added mass spectrometry visualization features. This is the kind of specific, verifiable claim that builds real credibility.
+
+> :book: **Detached Attestation**: A signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+
+**Why detached?** Skill claims work better as separate documents. You can share specific attestations with specific people, revoke them independently, and keep your XIDDoc lean. The attestation references your XID identifier, so verifiers can confirm it came from you.
+
+
 
 ### Step 0: Verify Dependencies
 
