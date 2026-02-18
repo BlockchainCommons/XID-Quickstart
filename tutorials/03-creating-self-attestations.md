@@ -249,15 +249,16 @@ ATTESTATION=$(envelope assertion add pred-obj known isA known 'attestation' "$CL
 ATTESTATION=$(envelope assertion add pred-obj known source ur $XID_ID "$ATTESTATION")
 ATTESTATION=$(envelope assertion add pred-obj known target ur $XID_ID "$ATTESTATION")
 ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri "https://github.com/galaxyproject/galaxy/pull/12847" "$ATTESTATION")
-
+ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$ATTESTATION")
 envelope format "$ATTESTATION"
 
-| "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
-|     'isA': 'attestation'
-|     'source': XID(5f1c3d9e)
-|     'target': XID(5f1c3d9e)
-|     'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
-| ]
+"Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
+    'isA': 'attestation'
+    'date': "2025-10-18T19:27-10:00"
+    'source': XID(5f1c3d9e)
+    'target': XID(5f1c3d9e)
+    'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
+]
 ```
 
 Each assertion within the claim is a standardize known value that reveals a specific piece of metadata:
@@ -265,10 +266,13 @@ Each assertion within the claim is a standardize known value that reveals a spec
 | Assertion | Known Value | Value | Purpose |
 |-----------|-----------|-------|---------|
 | 1 | `'isA'` | `'attestation'` | Declares this is an attestation |
+| 2 | `'date'` | ISO 8601 | Claims when claim was constructed |
 | 2 | `'source'` | XID ID | Says who is making the claim |
 | 3 | `'target'` | XID ID | Says who the claim is about |
 | 4 | `"verifiableAt"` | URI | Points to evidence for independent verification |
 
+> :warning: **Dates Are Unreliable!**  The date is actually another unverifiable claim: it could be set to whatever the attestation creator wanted to. Nonetheless, it has use because a good faith creator will date claims correctly, making it easy to which claims are newer in case of a superseding claim being issued.
+  
 ### Step 8: Sign the Attestation
 
 You're now ready to wrap the attestation and sign it with the private key that you created specifically for this purpose. The signature proves that the signer made this claim:
@@ -282,6 +286,7 @@ envelope format "$ATTESTATION_SIGNED"
 | {
 |     "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
 |         'isA': 'attestation'
+|         'date': "2025-10-18T19:27-10:00"
 |         'source': XID(5f1c3d9e)
 |         'target': XID(5f1c3d9e)
 |         'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
@@ -337,75 +342,102 @@ However, there is still a gap: Ben can't prove that BRadvoc8, the controller of 
 
 > :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
 
+At this point, Ben can once more lay out what he knows:
+
+| What Ben Can Verify | What Remains Unproven |
+|---------------------|----------------------|
+| ✅ BRadvoc8 made this claim | ❓ Claim is actually true |
+| ✅ Claim wasn't modified (signature valid) | 
+| ✅ Evidence URL exists | ❓ Quality of the contribution<br>❓ BRadvoc8 = PR author |
+| ✅ Attestation date recorded | ❓ Date is actually corect |
+| ✅ BRadvoc8 is more detailed |❓ Who BRadvoc8 is |
+
 ## Part V: Managing the Attestation Lifecycle
 
-Attestations aren't permanent. Claims become stale, projects end, skills evolve. Amira's Galaxy Project contribution from 2024 is factual forever, but her "currently working on" claims need updates.
+Attestations aren't permanent. Claims become stale, projects end, skills evolve. Amira's Galaxy Project contribution from 2024 is factual forever, but if she added more PRs over time, she might want that to be recorded in her attestation.
 
-### Updating vs. Superseding
+However, you cannever actually change an existing attestation: once a claim is signed, it's immutable. Instead, you have three possibilities: you can create new attestations, supersede attestations, or retract attestations.
 
 | Situation | Approach |
 |-----------|----------|
-| Claim is still true, adding detail | Create new attestation with more info |
+| Claim is still true | Create new attestation with more info |
 | Claim is outdated | Create superseding attestation |
 | Claim was wrong | Create retraction attestation |
 
-Attestations are immutable once signed—you can't edit one. Instead, you create a new attestation that references and supersedes the old one.
+Creating a totally new attestation follows the same procedure as above. Our suggested best practices for superseding involve creating totally new attestations that clearly denote their relationship to the previous ones.
 
-### Step 7: Supersede an Attestation
+### Step 11: Supersede an Attestation
 
-Two years later, Amira's Galaxy Project work has expanded:
+Two years later, Amira's Galaxy Project work has expanded. This means the old claim is outdated, requiring a new one that supersedes it.
 
 ```
-# Create superseding attestation
-UPDATED_CLAIM=$(envelope subject type string \
-  "I contributed mass spec visualization and data pipeline code to galaxyproject/galaxy (PRs #12847, #14201, #15892, 2024-2026)")
+S_ATTESTATION=$(envelope subject type string \
+  "Contributed mass spec visualization and data pipeline code to galaxyproject/galaxy (PRs #12847, #14201, #15892, 2024-2026)")
+S_ATTESTATION=$(envelope assertion add pred-obj known isA known 'attestation' "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known source ur $XID_ID "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known target ur $XID_ID "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri "https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8" "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$S_ATTESTATION")
+```
 
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj known isA string "SelfAttestation" "$UPDATED_CLAIM")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "attestedBy" string "$XID_ID" "$UPDATED_ATTESTATION")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "attestedOn" date "2028-01-15T00:00:00Z" "$UPDATED_ATTESTATION")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "verifiableAt" string "https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8" "$UPDATED_ATTESTATION")
-
-# Reference the original attestation being superseded
+It's also helpful to reference the original attestation being superseded, which can be done by referencing its digest (hash):
+```
 ORIGINAL_DIGEST=$(envelope digest "$ATTESTATION_SIGNED")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "supersedes" string "$ORIGINAL_DIGEST" "$UPDATED_ATTESTATION")
-
-# Sign
-UPDATED_ATTESTATION=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$UPDATED_ATTESTATION")
-
-echo "Updated attestation (supersedes original):"
-envelope format "$UPDATED_ATTESTATION" | head -12
-
-│ {
-│     "I contributed mass spec visualization and data pipeline code to galaxyproject/galaxy (PRs #12847, #14201, #15892, 2024-2026)" [
-│         'isA': "SelfAttestation"
-│         "attestedBy": "c7e764b7"
-│         "attestedOn": 2028-01-15T00:00:00Z
-│         "supersedes": "ur:digest/hdcx..."
-│         "verifiableAt": "https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8"
-│     ]
-│ } [
-│     'signed': Signature
-│ ]
+S_ATTESTATION=$(envelope assertion add pred-obj string "supersedes" digest "$ORIGINAL_DIGEST" "$S_ATTESTATION")
 ```
 
-The `supersedes` field links to the original attestation's digest. Verifiers who encounter both can see the relationship: the newer one extends and replaces the older one.
-
-> :book: **Superseding Pattern**: Create a new attestation with a `supersedes` assertion pointing to the original's digest. The original remains valid (the 2024 claim was true then) but the newer attestation reflects current state.
-
-### Retractions
-
-If a claim was incorrect, create a retraction:
-
+You would now wrap & sign the attestation as usual:
 ```
-# Retract an incorrect claim
+S_WRAPPED_ATTESTATION=$(envelope subject type wrapped $S_ATTESTATION)
+S_SIGNED_ATTESTATION=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$S_WRAPPED_ATTESTATION")
+
+echo "✅ Updated attestation (supersedes original):"
+envelope format "$S_SIGNED_ATTESTATION" | head -12
+
+| ✅ Updated attestation (supersedes original):
+| {
+|     "Contributed mass spec visualization and data pipeline code to galaxyproject/galaxy (PRs #12847, #14201, #15892, 2024-2026)" [
+|         'isA': 'attestation'
+|         "supersedes": Digest(40993e58)
+|         'date': "2026-02-18T13:14-10:00"
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e)
+|         'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+```
+
+> :book: **What is a Superseding Attestation**: A superseding attestation is a new attestation with a `supersedes` assertion that points to a previous attestation's digest. The original remains valid, but the newer attestation reflects the current state.
+
+### Step 12: Retract an Attestation
+
+If an attestation instead needed to be retracted, it would follow a pattern as follows:
+```
 RETRACTION=$(envelope subject type string "RETRACTED: [original claim text]")
-RETRACTION=$(envelope assertion add pred-obj known isA string "Retraction" "$RETRACTION")
-RETRACTION=$(envelope assertion add pred-obj string "retracts" string "$ORIGINAL_DIGEST" "$RETRACTION")
+RETRACTION=$(envelope assertion add pred-obj known isA string "retraction" "$RETRACTION")
+RETRACTION=$(envelope assertion add pred-obj string "retracts" digest "$ORIGINAL_DIGEST" "$RETRACTION")
 RETRACTION=$(envelope assertion add pred-obj string "reason" string "Claim was overstated" "$RETRACTION")
+RETRACTION=$(envelope subject type wrapped "$RETRACTION")
 RETRACTION=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$RETRACTION")
 ```
+The result would look like this:
+```
+envelope format $RETRACTION
 
-Retractions are serious—they indicate an error in judgment. Use sparingly. Most updates are supersessions (extending or refining), not retractions (correcting errors).
+| {
+|     "RETRACTED: [original claim text]" [
+|         'isA': "retraction"
+|         "reason": "Claim was overstated"
+|         "retracts": Digest(40993e58)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+
+
+Retractions are serious: they indicate an error in judgment. Use them sparingly. Most updates are supersessions (extending or refining), not retractions (correcting errors). Amira definteily won't be retracting anything at this point!
 
 ---
 
@@ -435,12 +467,6 @@ You created a fair witness attestation: a specific, factual claim that points to
 
 **Trust Assessment**:
 
-| What Ben Can Verify | What Remains Unproven |
-|---------------------|----------------------|
-| ✅ BRadvoc8 made this claim | ❓ Claim is actually true |
-| ✅ Claim wasn't modified (signature valid) | ❓ BRadvoc8 = PR author |
-| ✅ Evidence URL exists | ❓ Quality of the contribution |
-| ✅ Attestation date recorded | ❓ Real-world identity |
 
 You learned the difference between detached and embedded attestations, and why detached works better for skill claims. And you understand that signatures prove you made the claim, not that the claim is true. The evidence link is what makes verification possible.
 
