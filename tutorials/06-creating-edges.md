@@ -533,3 +533,41 @@ Add this in:
 | SSH signing key | Signs Git commits | GitHub's registry | T03 |
 | Attestation key | Signs detached attestations | XID key list | T05 (now) |
 
+--
+
+THIS IS MY WORKING EDGES EXAMPLES:
+
+--
+
+NEW CODING
+
+ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
+
+
+AT_XID=$(envelope generate keypairs --signing ed25519 | \
+    envelope xid new --nickname "BRadvoc8" --generator include --sign inception) 
+
+XID=$(cat BRadvoc8-xid-public-seq0.envelope)
+PASSWORD=$(cat BRadvoc8-xid.password)
+
+CLAIM=$(envelope subject \
+  type string \
+  "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)")
+CLAIM=$(envelope assertion add pred-obj \
+  known 'verifiableAt' \
+  uri "https://github.com/galaxyproject/galaxy/pull/12847" "$CLAIM")
+
+  XID_ID=$(envelope xid id $XID)
+TARGET=$(envelope subject type ur "$XID_ID")
+TARGET=$(envelope assertion add pred-obj known 'attestation' envelope $CLAIM $TARGET)
+
+EDGE=$(envelope subject type string "coding-experience-1")
+EDGE=$(envelope assertion add pred-obj known isA string "foaf:pastProject" "$EDGE")
+EDGE=$(envelope assertion add pred-obj known source ur "$XID_ID" "$EDGE")
+EDGE=$(envelope assertion add pred-obj known target envelope "$TARGET" "$EDGE")
+WRAPPED_EDGE=$(envelope subject type wrapped $EDGE)
+SIGNED_EDGE=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$WRAPPED_EDGE")
+
+
+XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)      
