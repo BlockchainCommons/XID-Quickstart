@@ -1,34 +1,16 @@
-Some notes for next time:
-I think for relatively unstructured, natural language assertions, the `"attestation"` and `"verifiableAt"` predicates work fine. Did you want me to assign known values to those?
-
-
-I would remove the pronoun "I" from the attestation: "contributed mass spec..". This is because the "I" can already be inferred from the fact that it is an assertion about the target, by the source. That way the claim could be extracted and replicated by someone else who corroborates the claim without confusion as to who "I" is.
-Edited
-11m
-
-
-That way the same claim could be made by a different source about the same target just by cloning the claim.
-10m
-
-
-I would also use the URI type for the object of `'verifiableAt'`.
-
-
-===
-
 # Tutorial 03: Creating Self Attestations
 
 Build credibility through specific, factual claims that invite verification rather than demand belief.
 
 **Time to complete**: ~15-20 minutes
 **Difficulty**: Intermediate
-**Builds on**: Tutorials 01-04
+**Builds on**: Tutorials 01-02
 
 > **Related Concepts**: After completing this tutorial, explore [Progressive Trust](../concepts/progressive-trust.md) and [Self-Attestation](../concepts/self-attestation.md) to deepen your understanding.
 
 ## Prerequisites
 
-- Completed Tutorial 04 (Cross-Verification)
+- Completed Tutorial 02 (Making Your XID Verifiable)
 - The `envelope` CLI tool installed
 - Your XID artifacts from previous tutorials
 
@@ -36,24 +18,15 @@ Build credibility through specific, factual claims that invite verification rath
 
 - The **fair witness methodology** for making credible claims
 - The difference between **detached** and **embedded** attestations
+- How to use edges to embed attestations in a XID
 - How to register **attestation keys** in your XID for signature verification
 - How to create attestations that are **publicly verifiable**
 
-## Building on Tutorial 04
-
-| Tutorial 04 | Tutorial 05 |
-|-------------|-------------|
-| Cross-verified GitHub account | Make broader capability claims |
-| Proved control of external accounts | Create signed attestations |
-| Ben verified account connections | Ben can verify skill claims |
-
-**The Bridge**: Ben verified your GitHub account connection. But controlling an account doesn't prove competence. Now you'll claim what you can actually do.
-
----
-
 ## The Problem: Claims Without Proof
 
-After Tutorial 04, Ben knows BRadvoc8 is a real identity connected to a GitHub account. What he doesn't know is whether BRadvoc8 can write good code, understand security, or deliver quality work. Amira needs to make claims about her capabilities—but vague claims like "Security expert. 8 years experience." are worthless. Anyone can type them.
+After Tutorial 02, Ben has a verified copy of BRadvoc8's XID. But it's just a collection of keys attached to a nickname. Can BRadvoc8 write good code, understand security, and deliver quality work? These are the questions that Ben needs answered before he decides to bring BRadvoc8 into the SisterSpace project.
+
+To fulfill this need, Amira can add attestations to her XID, which she can do with "edges." Since Amira is bootstrapping the BRadvoc8 on her own, they need to be self-attestations: things that she says about herself (or her identity) that reveal her capabilities. The problem is that a vague claim like "Security expert. 8 years experience." is worthless. Anyone can type that.
 
 Amira needs a different approach: specific claims that point to verifiable evidence.
 
@@ -482,14 +455,14 @@ PASSWORD=$(cat BRadvoc8-xid.password)
 
 CLAIM=$(envelope subject \
   type string \
-  "I contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)")
+  "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)")
 CLAIM=$(envelope assertion add pred-obj \
-  string "verifiableAt" \
-  string "https://github.com/galaxyproject/galaxy/pull/12847" "$CLAIM")
+  known 'verifiableAt' \
+  uri "https://github.com/galaxyproject/galaxy/pull/12847" "$CLAIM")
 
   XID_ID=$(envelope xid id $XID)
 TARGET=$(envelope subject type ur "$XID_ID")
-TARGET=$(envelope assertion add pred-obj string "attestation" envelope $CLAIM $TARGET)
+TARGET=$(envelope assertion add pred-obj known 'attestation' envelope $CLAIM $TARGET)
 
 EDGE=$(envelope subject type string "coding-experience-1")
 EDGE=$(envelope assertion add pred-obj known isA string "foaf:pastProject" "$EDGE")
@@ -500,17 +473,4 @@ SIGNED_EDGE=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$WRAPPED_EDGE")
 
 
 XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)                 
-
-==
-
-STILL WORKING
-
-SIGNED_EDGE=(envelope sign --signer "$ATTESTATION_PRVKEYS" "$EDGE")
-
-NOPE:
-
-  WRAPPED_CLAIM=$(envelope subject type wrapped $CLAIM) 
-SIGNED_CLAIM=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$WRAPPED_CLAIM")
-
-
 
