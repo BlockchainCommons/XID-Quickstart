@@ -471,13 +471,11 @@ Try these to solidify your understanding:
 
 ## What's Next
 
-**Tutorial 03: Offering Self-Attestation** adds verifiable claims. Amira will link her GitHub account and SSH signing key as attestations about her real-world activities.
+BRadvoc8 has gone beyond being just a package of data. It's now a package of data that is very likely up-to-date. But there's Still the question of what it means!
 
-**Tutorial 04: Cross-Verification** shows Ben's perspective. He'll verify Amira's attestations against external sources like GitHub's API and signed commits.
+**Tutorial 03: Creating Self-Attestation** introduces attestations. Amira will make a (somewhat) verifiable claim about her skills and loosely link it to her XID.
 
-Together with this tutorial's proof that a XID is current, the next two additions will build meaningful trust: enough for Ben to accept code contributions from BRadvoc8.
-
-[ **Next Tutorial:** [Offering Self-Attestation](03-creating-self-attestations.md) | **Previous Tutorial**: [Your First XID](01-your-first-xid.md) ]
+[ **Next Tutorial:** [Creating Self-Attestation](03-creating-self-attestations.md) | **Previous Tutorial**: [Your First XID](01-your-first-xid.md) ]
 
 
 ## Appendix I: Key Terminology

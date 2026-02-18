@@ -516,9 +516,7 @@ Try these to solidify your understanding:
 
 BRadvoc8 is now a basic, secure XID, but it has a problem: nobody can verify they have the current edition. If Amira sends her XID Document to Ben, then updates it, how would Ben know he has stale data?
 
-**Tutorial 02: Making Your XID Verifiable** shows how to solve this. Amira will add a `dereferenceVia` assertion pointing to where her XID is published. Ben can then fetch the latest edition and verify it's fresh.
-
-From there, Tutorial 03 adds attestations (GitHub account, SSH signing key), and Tutorial 04 shows Ben how to cross-verify those claims against external sources. Together, they enable the trust-building that comes in later tutorials.
+* **Tutorial 02: Making Your XID Verifiable** shows how to solve this. Amira will add a `dereferenceVia` assertion pointing to where her XID is published. Ben can then fetch the latest edition and verify it's fresh.
 
 **Next Tutorial**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) - Publish your XID and enable freshness verification.
 
