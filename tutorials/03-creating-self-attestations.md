@@ -28,6 +28,8 @@ After Tutorial 02, Ben has a verified copy of BRadvoc8's XID. But it's just a co
 
 To reveal more about her skill set, Amira must create attestations about them. Since Amira is bootstrapping the BRadvoc8 on her own, they need to be self-attestations: things that she says about herself (or rather, her identity) that reveal her capabilities. The problem is that a vague claim like "Security expert with 8 years experience" is worthless. Anyone can type that.
 
+> :book: **What is a Self Attestation?**: As the name suggestion, a self attestation is a claim that you make about yourself. It's contrasted with an *endorsement*, where someone else vouches for you. Self-attestations are starting points; endorsements carry more weight because they come from independent parties.
+
 Amira needs a different approach: specific claims that point to verifiable evidence.
 
 ## Part I: About Fair Witness Attestations
@@ -70,6 +72,7 @@ If not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#step-0-setting-u
 You'll also want to reload your XID. The following assumes use of the [`envelopes`](envelopes) directory we created in the last tutorial.
 ```
 XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID_ID=$(envelope xid id $XID)
 ```
 
 ### Step 1: Create an Attestation Key
@@ -210,129 +213,131 @@ echo "$UPDATED_XID" > envelopes/BRadvoc8-xid-private-03.envelope
 
 ## Part III: Creating a Detached Attestation
 
-> :book: **Detached Attestation**: A signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+With an attestation key in hand, and linked to your XID, you're now ready to create an attestation for Amira. But the question is whether to create an embedded attestation (which would be placed directly in Amira's XID) or a detached attestation (which would be available as a separate Gordian Envelope, but linked to Amira's XID by the use of the attestation signature key). 
 
-**Why detached?** Skill claims work better as separate documents. You can share specific attestations with specific people, revoke them independently, and keep your XIDDoc lean. The attestation references your XID identifier, so verifiers can confirm it came from you
+It's best to embed attestations if they're relatively permanent, widely applicable, and core to the definition of the identity.
 
-### Step 3: Create the Claim
+It's best to create detached attestations if they're ephemeral, if they're only relevant to specific people, and if they're not core to an identity.
 
-Start with the claim itself as the envelope subject:
+This isn't a question of privacy: you can always choose to elide attestations that you don't want to receive wide attention, even if they're in your XID. It's instead a question of keeping the XID lean enough that someone can reasonably look over it without being lost in irrelevent details.
+
+> :book: **What is a Detached Attestation?**: When an attestation is detached, it appears as a signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+
+In this case, a single PR is a pretty small detail, and not necessarily something that Amira will be talking about in a year or two when she (hopefully) has major design work on SisterSpaces to point to. So you'll create it as a detached attestation.
+
+### Step 6: Create the Claim
+
+Start with the claim itself as the envelope subject. Freeform attestation of this type are created with the standard `envelope` commands rather than the more constrained `envelope xid` commands. That's because they're either going to be separate from a XID (a detached attestation) or they're going to be attached to a XID at a specific, defined point, such as `attachment` or `edge` (which we'll meet in future chapters). 
 
 ```
 CLAIM=$(envelope subject type string \
-  "I contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)")
+  "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)")
 
 envelope format "$CLAIM"
 
-│ "I contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)"
+│ "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)"
 ```
 
 This is just a string. It's not signed, not attributed, not structured. Anyone could create this string.
 
-### Step 4: Add Attestation Metadata
+### Step 7: Add Attestation Metadata
 
-Now add metadata that structures this as a formal attestation:
+Now add metadata that structures this as a formal attestation. F
 
 ```
-ATTESTATION=$(envelope assertion add pred-obj known isA string "SelfAttestation" "$CLAIM")
-ATTESTATION=$(envelope assertion add pred-obj string "attestedBy" string "$XID_ID" "$ATTESTATION")
-ATTESTATION=$(envelope assertion add pred-obj string "attestedOn" date "2026-01-21T00:00:00Z" "$ATTESTATION")
-ATTESTATION=$(envelope assertion add pred-obj string "verifiableAt" string "https://github.com/galaxyproject/galaxy/pull/12847" "$ATTESTATION")
+ATTESTATION=$(envelope assertion add pred-obj known isA known 'attestation' "$CLAIM")
+ATTESTATION=$(envelope assertion add pred-obj known source ur $XID_ID "$ATTESTATION")
+ATTESTATION=$(envelope assertion add pred-obj known target ur $XID_ID "$ATTESTATION")
+ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri "https://github.com/galaxyproject/galaxy/pull/12847" "$ATTESTATION")
 
 envelope format "$ATTESTATION"
 
-│ "I contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
-│     isA: "SelfAttestation"
-│     "attestedBy": "c7e764b7"
-│     "attestedOn": 2026-01-21T00:00:00Z
-│     "verifiableAt": "https://github.com/galaxyproject/galaxy/pull/12847"
-│ ]
+| "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
+|     'isA': 'attestation'
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e)
+|     'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
+| ]
 ```
 
-Each assertion adds a specific piece of metadata:
+Each assertion within the claim is a standardize known value that reveals a specific piece of metadata:
 
-| Assertion | Predicate | Value | Purpose |
+| Assertion | Known Value | Value | Purpose |
 |-----------|-----------|-------|---------|
-| 1 | `isA` (known) | `"SelfAttestation"` | Declares this is a self-claim, not an endorsement |
-| 2 | `"attestedBy"` | XID identifier | Links claim to your identity |
-| 3 | `"attestedOn"` | ISO date | Records when you made the claim |
-| 4 | `"verifiableAt"` | URL | Points to evidence for independent verification |
+| 1 | `'isA'` | `'attestation'` | Declares this is an attestation |
+| 2 | `'source'` | XID ID | Says who is making the claim |
+| 3 | `'target'` | XID ID | Says who the claim is about |
+| 4 | `"verifiableAt"` | URI | Points to evidence for independent verification |
 
-The `isA` assertion marks this as a self-attestation (you claiming something about yourself, as opposed to someone else vouching for you). The `attestedBy` field links to your XID identifier so verifiers know who made the claim. The `attestedOn` timestamp records when you made it. And `verifiableAt` points to the actual evidence: the GitHub PR where anyone can check the code.
+### Step 8: Sign the Attestation
 
-> :book: **Self-Attestation**: A claim you make about yourself. Contrast with an *endorsement*, where someone else vouches for you. Self-attestations are starting points; endorsements carry more weight because they come from independent parties.
-
-### Step 5: Sign the Attestation
-
-The attestation is structured but not yet bound to your identity. Anyone could have created it. The signature proves YOU made this claim:
+You're now ready to wrap the attestation and sign it with the private key that you created specifically for this purpose. The signature proves that the signer made this claim:
 
 ```
-ATTESTATION_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$ATTESTATION")
+ATTESTATION_WRAPPED=$(envelope subject type wrapped $ATTESTATION)
+ATTESTATION_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$ATTESTATION_WRAPPED")
 
 envelope format "$ATTESTATION_SIGNED"
 
-│ {
-│     "I contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
-│         isA: "SelfAttestation"
-│         "attestedBy": "c7e764b7"
-│         "attestedOn": 2026-01-21T00:00:00Z
-│         "verifiableAt": "https://github.com/galaxyproject/galaxy/pull/12847"
-│     ]
-│ } [
-│     'signed': Signature
-│ ]
+| {
+|     "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
+|         'isA': 'attestation'
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e)
+|         'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
 ```
 
-The signature wraps the entire attestation. If anyone modifies any part (the claim, the date, the URL), the signature becomes invalid.
+The signature covers the entire attestation. If anyone modifies any part (the claim, the source, the target, ther verification location), the signature becomes invalid.
 
-### Step 6: Verify the Attestation
+## Part IV: Ben Again Verifies
 
-```
-envelope verify --verifier "$ATTESTATION_PUBKEYS" "$ATTESTATION_SIGNED"
+Switching once more to Ben's perspective, the updated XID now needs to be verified.
 
-│ Signature valid
-```
+### Step 9: Ben Checks the Signature
 
-But wait. You signed it. Does that prove the claim is true?
-
-No. Verification confirms that BRadvoc8's key signed this content and that nothing was modified. It says nothing about whether the claim is accurate. Anyone can claim "I contributed to Galaxy Project." The signature proves you MADE the claim, not that you made the contribution.
-
-This distinction matters. Self-attestations are starting points for building trust, not proof of competence. The `verifiableAt` field points to evidence that verifiers can check independently.
-
----
-
-## Part III: What Makes This Verifiable
-
-Amira created and signed her attestation. Now we switch to Ben's perspective: how does he verify what she claims?
-
-Ben receives Amira's attestation. His verification has two layers: cryptographic and evidential.
-
-**Cryptographic verification**: Ben fetches BRadvoc8's XID, extracts the attestation key, and verifies the signature:
+Amira might send Ben her updated XID, leading him to dereference it, or she might cut out the middle man by just telling him she has a new version of her XID online with a claim. She also sends him the attestation.
 
 ```
-# Ben fetches BRadvoc8's published XID
-BEN_FETCHED_XID="$PUBLIC_XID"  # In reality, fetched from dereferenceVia URL
+BEN_FETCHED_XID="$UPDATED_PUBLIC_XID"
+BEN_FETCHED_XID_ID=$(envelope xid id $BEN_FETCHED_XID)
+```
+Ben first needs to extract all of the pubkeys from BRadvoc8's XID using `xid key all`, as he doesn't know which was used for signing:
+```
+read -d '' -r -a PUBKEY <<< $(envelope xid key all "$BEN_FETCHED_XID")
+```
+This is somewhat arcane BASH-ing. If he preferred, he could just output `envelope xid key all` to his screen, and then copy each one to a variable by hand.
 
-# Extract the attestation public key from the XID
-ATTESTATION_KEY=$(envelope xid key all "$BEN_FETCHED_XID" | head -1)
-
-# Verify attestation was signed by that key
-envelope verify --verifier "$ATTESTATION_KEY" "$ATTESTATION_SIGNED"
-
-│ Signature valid
+But by having them in an array, he can do a quick check to see if any of the signatures verified (throwing out failures, because they're totally OK: only one key needs to be matched):
+```
+for i in "${PUBKEY[@]}"
+  do
+    if envelope verify -v $i $ATTESTATION_SIGNED >/dev/null 2>&1; then
+      echo "✅ One of the signatures verified! "
+      echo $i
+    fi
+done
+```
+The result:
+```
+| ✅ One of the signatures verified! 
+| ur:envelope/lrtpsotansgylftanshflfaohdcxuydpdtjntyecmogmvdeydyksttleeeeerdptrtjyzcmoaoimtokigreonltshnoltansgrhdcxjzptmodkhtsgzmkbdpdweesngdeeoxktwncfehmndegtamswplclpfbsptroaagaoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdhdcxwewljefsbzmklsvasbgakpbdbkcfmohhynjzkksrtdhhsktkfepfbezmhlbsjlntessabskb
 ```
 
-This proves the attestation wasn't tampered with AND came from a key registered in BRadvoc8's XID.
+So now Ben knows the claim was signed by BRadvoc8's XID. But, this says nothing about whether the claim is accurate. Anyone can claim "I contributed to Galaxy Project." The signature proves you MADE the claim, not that you made the contribution. This distinction matters. Self attestations are starting points for building trust, not proof of competence. The `verifiableAt` field points to evidence that verifiers can check independently.
 
-**Evidence verification**: Ben follows the `verifiableAt` URL to GitHub and checks if PR #12847 exists, was merged, and adds mass spec visualization. The attestation points to observable evidence that anyone can independently verify.
+### Step 10: Ben Checks the Claim
 
-Here's the gap: Ben can't prove BRadvoc8 IS the PR author from this attestation alone. What he can see is that BRadvoc8 points to real evidence and invites investigation. Combined with other attestations and eventual peer endorsements, a picture of credibility builds over time.
+Ben follows the `verifiableAt` URL to GitHub and verifies that PR #12847 exists, was merged, and adds mass spec visualization. He also sees that it was created by a GitHub account with the name of "BRadvoc8". This is all very suggestive and provides some verification for Amira's claim.
+
+However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.
 
 > :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
 
----
-
-## Part IV: Attestation Lifecycle
+## Part V: Managing the Attestation Lifecycle
 
 Attestations aren't permanent. Claims become stale, projects end, skills evolve. Amira's Galaxy Project contribution from 2024 is factual forever, but her "currently working on" claims need updates.
 
