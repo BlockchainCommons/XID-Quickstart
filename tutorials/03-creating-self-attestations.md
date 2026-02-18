@@ -17,24 +17,24 @@ Build credibility through specific, factual claims that invite verification rath
 ## What You'll Learn
 
 - The **fair witness methodology** for making credible claims
-- The difference between **detached** and **embedded** attestations
-- How to use edges to embed attestations in a XID
 - How to register **attestation keys** in your XID for signature verification
 - How to create attestations that are **publicly verifiable**
+- The difference between **detached** and **embedded** attestations
+- How to use edges to embed attestations in a XID
 
 ## The Problem: Claims Without Proof
 
 After Tutorial 02, Ben has a verified copy of BRadvoc8's XID. But it's just a collection of keys attached to a nickname. Can BRadvoc8 write good code, understand security, and deliver quality work? These are the questions that Ben needs answered before he decides to bring BRadvoc8 into the SisterSpace project.
 
-To fulfill this need, Amira can add attestations to her XID, which she can do with "edges." Since Amira is bootstrapping the BRadvoc8 on her own, they need to be self-attestations: things that she says about herself (or her identity) that reveal her capabilities. The problem is that a vague claim like "Security expert. 8 years experience." is worthless. Anyone can type that.
+To reveal more about her skill set, Amira must add attestations to her XID, which she can do with "edges." Since Amira is bootstrapping the BRadvoc8 on her own, they need to be self-attestations: things that she says about herself (or rather, her identity) that reveal her capabilities. The problem is that a vague claim like "Security expert with 8 years experience" is worthless. Anyone can type that.
 
 Amira needs a different approach: specific claims that point to verifiable evidence.
 
 ## Part I: About Fair Witness Attestations
 
-*This section explains the concepts behind attestations. If you're ready to start creating one, skip to [Part II](#part-ii-creating-a-detached-attestation).*
+*This section explains the concepts behind attestations. If you're ready to start creating one, skip to [Part II](#part-iii-creating-a-detached-attestation).*
 
-Amira has to make a self-attestation. But, not all attestations are created equal. Some are vague and hard to pin down, while others are so specific that they can be proved with other references. Compare these two attestations:
+Amira has to make a self-attestation. But, not all attestations are created equal. Some are vague and hard to pin down, while others are so specific that they can be proven with other references. Compare these two attestations:
 
 | Claim | Quality | Support |
 |-------|------|-----|
@@ -45,14 +45,9 @@ The strong claim invites validation rather than demanding belief. For pseudonymo
 
 When Amira is making self-attestations, she will therefore do her best to both create attestations that are verifiable and then provide the methodology for verifying.
 
-[put in Fair Witness stuff here.]
+To be more precise, Amira will make ["fair witness claims."](../concepts/fair-witness.md). She will report without interpretation, assumption, or bias, as best she can. Saying someone was good at security would be an interpretation, so that would fail the fair witness test, but instead reporting a contribution is a simple statement of fact, as long as she doesn't adorn it by saying something like, "I made a crucial contribution to the Galaxy Project."
 
-> :book: **Fair Witness Methodology**: State only what you can personally verify: specific, factual claims that point to observable evidence rather than opinions or vague assertions.
-
-
-> :brain: **Learn more**: The [Self-Attestation](../concepts/self-attestation.md) concept doc explains the relationship between self-claims and endorsements.
-
----
+> :book: **What is the Fair Witness Methodology?**: The Fair Witness methodology is derived from Robert E. Heinlein's _Stranger in a Strange Land_ (1961). A Fair Witness makes a claim of what they directly observed, avoiding interpretation, assumption, or (as much as possible) bias. If it's meaningful, a fair witness claim also should include context describing the methodology of the observation, its limitations, and any bias built into.
 
 ## Part II: Creating a Detached Attestation
 
