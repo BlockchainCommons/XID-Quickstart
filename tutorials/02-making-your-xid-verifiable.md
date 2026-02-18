@@ -208,11 +208,11 @@ You should now save the public view to a file.
 
 ```
 mkdir envelopes
-echo "$PUBLIC_XID" > envelopes/tutorial-public-02.envelope
+echo "$PUBLIC_XID" > envelopes/BRadvoc8-xid-public-02.envelope
 
-echo "✅ Public XID saved to envelopes/tutorial-public-02.envelope"
+echo "✅ Public XID saved to envelopes/BRadvoc8-xid-public-02.envelope"
 echo "Contents:"
-cat envelopes/tutorial-public-02.envelope
+cat BRadvoc8-xid-public-02.envelope
 ```
 
 To upload this file to GitHub, create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern, `https://github.com/USERNAME/REPO/raw/main/xid.txt`, which should be what you recorded in `dereferenceVia`.
@@ -225,14 +225,14 @@ Obviously, you should make a copy of your private XID informationt too, only for
 
 ```
 mkdir envelopes
-echo "$XID_WITH_URL" > envelopes/tutorial-private-02.envelope
+echo "$XID_WITH_URL" > BRadvoc8-xid-private-02.envelope
 
-echo "✅ PRIVATE XID saved to envelopes/tutorial-private-02.envelope"
+echo "✅ PRIVATE XID saved to BRadvoc8-xid-private-02.envelope
 echo "Contents:"
-cat envelopes/tutorial-private-02.envelope
+cat envelopes/BRadvoc8-xid-private-02.envelope
 ```
 
-(With this tutorial, we've now created a separate directory for the results of each tutorial. This will allow you to step back to any version of the XID, and also to look at versions [available online](envelopes).)
+> :note: **STORING FOR THE TUTORIAL.** In the previous tutorial, we showed how a user would typically store files by using a `xid-20251117` directory. With this lesson we've completed the creation of our first published XID. To commemorate that, we've created a new [`envelopes`](envelopes) directory that is solely for the use of this tutorial. We'll save a copy at the end of each tutorial, so that you can always reload old envelopes for perusal, or to use in a future tutorial. 
 
 ## Ben's Story: A Perspective Shift
 
