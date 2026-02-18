@@ -32,7 +32,7 @@ Amira needs a different approach: specific claims that point to verifiable evide
 
 ## Part I: About Fair Witness Attestations
 
-*This section explains the concepts behind attestations. If you're ready to start creating one, skip to [Part II](#part-iii-creating-a-detached-attestation).*
+*This section explains the concepts behind attestations. If you're ready to start creating one, skip to [Part II](#part-ii-adding-an-attestation-key).*
 
 Amira has to make a self-attestation. But, not all attestations are created equal. Some are vague and hard to pin down, while others are so specific that they can be proven with other references. Compare these two attestations:
 
@@ -49,17 +49,13 @@ To be more precise, Amira will make ["fair witness claims."](../concepts/fair-wi
 
 > :book: **What is the Fair Witness Methodology?**: The Fair Witness methodology is derived from Robert E. Heinlein's _Stranger in a Strange Land_ (1961). A Fair Witness makes a claim of what they directly observed, avoiding interpretation, assumption, or (as much as possible) bias. If it's meaningful, a fair witness claim also should include context describing the methodology of the observation, its limitations, and any bias built into.
 
-## Part II: Creating a Detached Attestation
+## Part II: Adding an Attestation Key
 
 Amira contributed to Galaxy Project, an open source bioinformatics platform. Her pull request added mass spectrometry visualization features. This is the kind of specific, verifiable claim that builds real credibility.
 
-> :book: **Detached Attestation**: A signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+**Why detached?** Skill claims work better as separate documents. You can share specific attestations with specific people, revoke them independently, and keep your XIDDoc lean. The attestation references your XID identifier, so verifiers can confirm it came from you
 
-**Why detached?** Skill claims work better as separate documents. You can share specific attestations with specific people, revoke them independently, and keep your XIDDoc lean. The attestation references your XID identifier, so verifiers can confirm it came from you.
-
-
-
-### Step 0: Verify Dependencies
+### Step 0: Verify Dependencies & Reload XID
 
 Ensure you have the required tools installed:
 
@@ -67,8 +63,8 @@ Ensure you have the required tools installed:
 envelope --version
 provenance --version
 
-│ bc-envelope-cli 0.32.0
-│ provenance-mark-cli 0.6.0
+│ bc-envelope-cli 0.34.1
+│ provenance-mark-cli 0.7.0
 ```
 
 If not installed, see Tutorial 01 Step 0 for installation instructions.
@@ -160,6 +156,10 @@ envelope format "$PUBLIC_XID" | grep -A1 "attestation-key"
 ```
 
 Amira would publish this updated XID at her `dereferenceVia` URL so Ben can fetch it and verify her attestation signatures.
+
+## Part III: Creating a Detached Attestation
+
+> :book: **Detached Attestation**: A signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
 
 ### Step 3: Create the Claim
 
