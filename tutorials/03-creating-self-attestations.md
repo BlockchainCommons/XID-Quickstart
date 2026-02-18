@@ -109,6 +109,17 @@ The CLI derives the public key from the private key automatically. With the `--p
 
 1. `--allow sign` is a permission statement indicates this key can only sign, it cannot modify the XID itself. (That requires the inception key.)
 
+#### Key Type Comparison
+
+It is a best practice to have different keys for different purposes. This improves privacy and decreases the repercussions of key loss or compromise. The traditional threat has been figuring out how to handle a "bag of keys." XIDs offer the answer: they can be used to manage a whole set of keys, and the keys can be encrypted with a password for protection on your own storage and elided for near-total protection when a XID is shared.
+
+So far, Amira has two keys:
+
+| Key Type | Purpose | Verified Against | Added In |
+|----------|---------|------------------|----------|
+| XID inception key | Signs XID document updates | XID itself | T01 |
+| Attestation key | Signs detached attestations | XID key list | T03 |
+
 ### Step 3: Advance Your Provenance Mark
 
 You're going to need to publish this XID so that Ben can check Amira's self-attestation against her new signature. Whenever you publish a new edition of a XID (meaning that you've changed the underlying content, not just changing the view by eliding existing data differently), you should also advance the provenance mark. This will allow viewers who have multiple copies of a XID to determine which one is newest.
@@ -435,79 +446,32 @@ envelope format $RETRACTION
 | } [
 |     'signed': Signature(Ed25519)
 | ]
-
+```
 
 Retractions are serious: they indicate an error in judgment. Use them sparingly. Most updates are supersessions (extending or refining), not retractions (correcting errors). Amira definteily won't be retracting anything at this point!
 
----
+## Summary: The World of Attestations
 
-## Part V: Wrap-Up
+This tutorial revealed a lot about claims, or attestations, including revealing many sorts:
 
-Amira has created a fair witness attestation signed with a dedicated attestation key registered in her XID. Ben can verify signatures against her XIDDoc and check evidence at the `verifiableAt` URL.
+* **Detached Attestation.** Creating an attestation separted from your XID, but linked by a signature.
+* **Embedded Attestation.** Incorporating an attestation into a XID.
+* **Endorsement.** Making a claim about someone else.
+* **Fair Witness Attestation.** Reporting without interpretation or known bias.
+* **Revoking Attestation.** Invalidating a prior attestation
+* **Self Attestation.** Making a claim about yourself.
+* **Superseding Attestation.** Updating a prior attestation.
 
-### Save Your Work
+This tutorial focused on a detached fair-witness self attestation. Embedded attestations and endorsements will follow in future tutorials.
 
-```
-echo "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/attestation-galaxy.envelope"
-echo "$XID" > "$OUTPUT_DIR/BRadvoc8-xid.envelope"
+Crucially, this tutorial also showed how to create a _validated attestation_: the Galaxy Project attestation isn't just a claim, it's a claim with a URL where anyone can check the actual code. But could it have been stronger? That's also a topic for the future.
 
-echo "Saved to $OUTPUT_DIR"
-ls "$OUTPUT_DIR"
-
-│ Saved to output/xid-tutorial05-20260121120000
-│ attestation-galaxy.envelope
-│ BRadvoc8-xid.envelope
-```
-
-> :brain: **Key Storage**: Your attestation private key is embedded in the XID document, encrypted with your password (just like the inception key). You don't need a separate key file—when you need to sign attestations, you extract the key from your XID using your password.
-
-### What You Built
-
-You created a fair witness attestation: a specific, factual claim that points to verifiable evidence. The Galaxy Project attestation isn't just a claim; it's a claim with a URL where anyone can check the actual code.
-
-**Trust Assessment**:
-
-
-You learned the difference between detached and embedded attestations, and why detached works better for skill claims. And you understand that signatures prove you made the claim, not that the claim is true. The evidence link is what makes verification possible.
-
-### The Limitation
-
-> :warning: **Self-Attestations Have Limited Weight**: Anyone can claim anything. A signed attestation proves you made the claim, not that it's true. Real credibility comes from peer endorsements and verified collaboration history.
-
-Self-attestations are cheap to create. Anyone can claim anything. What's missing is external validation: when peers vouch for you, your claims gain weight. But not all claims should be published publicly—some credentials could reveal your identity if combined with other public information.
-
----
-
-## Appendix: Key Terminology
-
-> **Attestation Key**: A dedicated signing key for creating detached attestations, registered in your XID. Verified against the XID key list, not an external service.
->
-> **Detached Attestation**: A signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
->
-> **Embedded Attestation**: An assertion inside your XIDDoc, tightly coupled to your identity.
->
-> **Fair Witness Methodology**: Making only factual, specific, verifiable claims rather than opinions or vague assertions.
->
-> **Self-Attestation**: A claim you make about yourself, as opposed to an endorsement where someone else vouches for you.
->
-> **Superseding**: Creating a new attestation that replaces an older one, linked via the `supersedes` assertion. The original remains valid for its time; the new one reflects current state.
-
-### Key Type Comparison
-
-| Key Type | Purpose | Verified Against | Added In |
-|----------|---------|------------------|----------|
-| XID inception key | Signs XID document updates | XID itself | T01 |
-| SSH signing key | Signs Git commits | GitHub's registry | T03 |
-| Attestation key | Signs detached attestations | XID key list | T05 (now) |
-
----
-
-## Exercises
+### Exercises
 
 **Building exercises (Amira's perspective):**
 
 - Create a fair witness attestation for one of your own verifiable contributions (GitHub PR, package, blog post).
-- Register a dedicated attestation key in your XID (not your inception key).
+- Register a new dedicated attestation key in your XID.
 
 **Verification exercises (Ben's perspective):**
 
@@ -518,43 +482,22 @@ Self-attestations are cheap to create. Anyone can claim anything. What's missing
 
 - Compare a fair witness claim to a vague claim about the same skill: what makes the fair witness version stronger?
 - Identify 2-3 public contributions you could attest to with verifiable evidence.
+  
+## Appendix I: Key Terminology
 
----
+> **Attestation Key**: A dedicated signing key for creating detached attestations, registered in your XID. Verified against the XID key list, not an external service.
+>
+> **Fair Witness Methodology**: Making only factual, specific, verifiable claims rather than opinions or vague assertions.
 
-**Previous**: [Cross-Verification](04-cross-verification.md) | **Next**: [Managing Sensitive Claims](06-managing-sensitive-claims.md)
+Also see the various attestation definitions in the **Summary**.
 
---
+## What's Next
 
-NEW CODING
+BRadvoc8 is not an identity with a first claim about skills, but that's opened a bit of a Pandora's box. The next three tutorials will seek to close it.
 
-ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
-ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
+* **Tutorial 04: Managing Sensitive Claims with Elision** will discuss how claims can quickly become sensitive, and how elision can protect them.
+* **Tutorial 05: Managing Sensitive Claims with Encrypt** will reveal encryption as an alternative form of protection.
+* **Tutorial 06: Creating Edges** will finally address the problem of the GitHub account ownership and show how to attach claims directly to your XID.
 
-
-AT_XID=$(envelope generate keypairs --signing ed25519 | \
-    envelope xid new --nickname "BRadvoc8" --generator include --sign inception) 
-
-XID=$(cat BRadvoc8-xid-public-seq0.envelope)
-PASSWORD=$(cat BRadvoc8-xid.password)
-
-CLAIM=$(envelope subject \
-  type string \
-  "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)")
-CLAIM=$(envelope assertion add pred-obj \
-  known 'verifiableAt' \
-  uri "https://github.com/galaxyproject/galaxy/pull/12847" "$CLAIM")
-
-  XID_ID=$(envelope xid id $XID)
-TARGET=$(envelope subject type ur "$XID_ID")
-TARGET=$(envelope assertion add pred-obj known 'attestation' envelope $CLAIM $TARGET)
-
-EDGE=$(envelope subject type string "coding-experience-1")
-EDGE=$(envelope assertion add pred-obj known isA string "foaf:pastProject" "$EDGE")
-EDGE=$(envelope assertion add pred-obj known source ur "$XID_ID" "$EDGE")
-EDGE=$(envelope assertion add pred-obj known target envelope "$TARGET" "$EDGE")
-WRAPPED_EDGE=$(envelope subject type wrapped $EDGE)
-SIGNED_EDGE=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$WRAPPED_EDGE")
-
-
-XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)                 
+**Previous**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) | **Next**: [Managing Sensitive Claims with Elision](04-managing-claims-elision.md)           
 
