@@ -19,14 +19,14 @@ Build credibility through specific, factual claims that invite verification rath
 - The **fair witness methodology** for making credible claims
 - How to register **attestation keys** in your XID for signature verification
 - How to create attestations that are **publicly verifiable**
+- How to advance your provenance mark
 - The difference between **detached** and **embedded** attestations
-- How to use edges to embed attestations in a XID
 
 ## The Problem: Claims Without Proof
 
 After Tutorial 02, Ben has a verified copy of BRadvoc8's XID. But it's just a collection of keys attached to a nickname. Can BRadvoc8 write good code, understand security, and deliver quality work? These are the questions that Ben needs answered before he decides to bring BRadvoc8 into the SisterSpace project.
 
-To reveal more about her skill set, Amira must add attestations to her XID, which she can do with "edges." Since Amira is bootstrapping the BRadvoc8 on her own, they need to be self-attestations: things that she says about herself (or rather, her identity) that reveal her capabilities. The problem is that a vague claim like "Security expert with 8 years experience" is worthless. Anyone can type that.
+To reveal more about her skill set, Amira must create attestations about them. Since Amira is bootstrapping the BRadvoc8 on her own, they need to be self-attestations: things that she says about herself (or rather, her identity) that reveal her capabilities. The problem is that a vague claim like "Security expert with 8 years experience" is worthless. Anyone can type that.
 
 Amira needs a different approach: specific claims that point to verifiable evidence.
 
@@ -51,9 +51,7 @@ To be more precise, Amira will make ["fair witness claims."](../concepts/fair-wi
 
 ## Part II: Adding an Attestation Key
 
-Amira contributed to Galaxy Project, an open source bioinformatics platform. Her pull request added mass spectrometry visualization features. This is the kind of specific, verifiable claim that builds real credibility.
-
-**Why detached?** Skill claims work better as separate documents. You can share specific attestations with specific people, revoke them independently, and keep your XIDDoc lean. The attestation references your XID identifier, so verifiers can confirm it came from you
+Amira contributed to Galaxy Project, an open source bioinformatics platform. Her pull request added mass spectrometry visualization features. This is the kind of specific, verifiable claim that builds real credibility. You're going to build an attestation about that claim, but first you need to create a secure way to make attestations.
 
 ### Step 0: Verify Dependencies & Reload XID
 
@@ -67,99 +65,154 @@ provenance --version
 │ provenance-mark-cli 0.7.0
 ```
 
-If not installed, see Tutorial 01 Step 0 for installation instructions.
+If not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#step-0-setting-up-your-workspace) for installation instructions.
 
-### Step 1: Set Up Environment
-
+You'll also want to reload your XID. The following assumes use of the [`envelopes`](envelopes) directory we created in the last tutorial.
 ```
-OUTPUT_DIR="output/xid-tutorial05-$(date +%Y%m%d%H%M%S)"
-mkdir -p "$OUTPUT_DIR"
+XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+```
 
-# Create a fresh XID with provenance tracking
-XID=$(envelope generate keypairs --signing ed25519 | \
-    envelope xid new --nickname "BRadvoc8" --generator include --sign inception)
+### Step 1: Create an Attestation Key
 
-UNWRAPPED_XID=$(envelope extract wrapped "$XID")
-XID_ID=$(envelope xid id "$UNWRAPPED_XID")
-
-# Generate separate attestation signing keys
-# Best practice: use dedicated keys for attestations, not your XID inception key
+Every attestation, even a self-attestation should be signed. Viewers have to know who is behind a claim and that the claim hasn't been changed since that person agreed to it. You could sign attestations with the signing key of your XID. However, that's your XID inception key, and it's powerful: it can modify your identity. Using it for routine signing increases exposure risk. For that reason you want to create new attestation keys that can be rotated or revoked without affecting your core identity. 
+```
 ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
-
-echo "Created XID: $XID_ID"
-
-│ Created XID: c7e764b7
 ```
 
-Why separate attestation keys? Your XID inception key is powerful: it can modify your identity. Using it for routine signing increases exposure risk. Attestation keys can be rotated or revoked without affecting your core identity.
-
-> :warning: **Key Separation**: Never use your XID inception key for routine operations. If an attestation key is compromised, you revoke and replace it. If your inception key is compromised, your entire identity is at risk.
-
-> :book: **Attestation Key**: A dedicated signing key for detached attestations, registered in your XID. Ben verifies attestation signatures by checking if the signing key is in BRadvoc8's XIDDoc (see Appendix for key type comparison).
+> :book: **What Are Attestation Key?**: Attestation keys are dedicated signing key for making attestations that are registered in your XID to link them to your core identity.
 
 ### Step 2: Register Attestation Key in XID
 
-For Ben to verify attestations came from BRadvoc8, the attestation public key must be in the XID. We also embed the private key (encrypted) so Amira can sign attestations without managing separate key files:
+For Ben to verify attestations came from BRadvoc8, the attestation public key must be in the XID. You also should embed the private key (encrypted) so Amira can sign attestations without managing separate key files. This is done with the `xid key add`, which is very similar yo the `xid resolution add` function that you used in the last tutorial.
+
+> :warning: **XID FUNCTIONS ONLY!** If you're familiar with Gordian Envelope, you'll know that you can freely add assertions to the envelope. Though XID is built on envelope, it's intended to be a much more structured format, with all content always in carefully structured places such as `derferenceVia`, `key`, `provenance`, and other subjects that you'll meet in future tutorials. You should always expect to use `envelope xid` commands when working with the core XID structure (though you may place less structured content under certain subjects, such as the `edge` that we'll meet in the next chapter).
 
 ```
-# Add attestation keypair to XID (private key encrypted like inception key)
 PASSWORD="your-password-from-previous-tutorials"
-
-XID=$(envelope xid key add \
+UPDATED_XID=$(envelope xid key add \
     --nickname "attestation-key" \
     --allow sign \
+    --password "$PASSWORD" \
     --private encrypt \
     --encrypt-password "$PASSWORD" \
     "$ATTESTATION_PRVKEYS" \
     "$XID")
 
 echo "Added attestation key to XID"
-envelope format "$XID" | grep -A4 "attestation-key"
-
-│ Added attestation key to XID
-│             'nickname': "attestation-key"
-│             'allow': 'Sign'
-│             'privateKey': ENCRYPTED
 ```
 
-The CLI derives the public key from the private key automatically. The `--private encrypt` embeds the private key encrypted with your password. The `--allow sign` permission indicates this key can only sign—it cannot modify the XID itself (that requires the inception key).
+The CLI derives the public key from the private key automatically. With the `--private encrypt`, `--password`, and `--encrypt-password` commands, the private XID is first decrypted, then re-encrypted. You add a new `nickname` to clarify what the key is for, and there's also one new argument:
 
-Now advance provenance to record this change:
+1. `--allow sign` is a permission statement indicates this key can only sign, it cannot modify the XID itself. (That requires the inception key.)
 
+### Step 3: Advance Your Provenance Mark
+
+You're going to need to publish this XID so that Ben can check Amira's self-attestation against her new signature. Whenever you publish a new edition of a XID (meaning that you've changed the underlying content, not just changing the view by eliding existing data differently), you should also advance the provenance mark. This will allow viewers who have multiple copies of a XID to determine which one is newest.
+
+Advancing the provenance mark is done with the simple `provenance next` command, which as usual must decrypt and recrypt your content:
 ```
-# Advance provenance to record the key addition
-XID=$(envelope xid provenance next "$XID")
+UPDATED_XID=$(envelope xid provenance next \
+    --password "$PASSWORD" \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password "$PASSWORD" \
+    "$UPDATED_XID")
+echo "✅ Provenance advanced"
 
-echo "Provenance advanced"
-PROV_MARK=$(envelope xid provenance get "$XID")
-provenance validate --format json-compact "$PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
+| ✅ Provenance advanced
+```
 
-│ Provenance advanced
+You can see what your XID looks like after all that work:
+```
+envelope format $UPDATED_XID
+
+| XID(5f1c3d9e) [
+|     'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+|     'key': PublicKeys(21914050, SigningPublicKey(04c9adb6, Ed25519PublicKey(09f7c306)), EncapsulationPublicKey(1b076286, X25519PublicKey(1b076286))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Sign'
+|         'nickname': "attestation-key"
+|     ]
+|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'All'
+|         'nickname': "BRadvoc8"
+|     ]
+|     'provenance': ProvenanceMark(f6baa8c6) [
+|         {
+|             'provenanceGenerator': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|     ]
+| ]
+```
+
+### Step 4: Check Your Provenance Mark
+
+You can again check your provenance mark by extracting it and using the `provenance` CLI:
+```
+UPDATED_PROV_MARK=$(envelope xid provenance get "$UPDATED_XID")
+provenance validate --format json-compact "$UPDATED_PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
+
 │ "end_seq":1
 ```
 
-The XID is now at sequence 1: genesis (seq 0) created the identity, this update (seq 1) added the attestation key. Ben can fetch the XID and find the attestation public key to verify signatures.
+The XID is now at sequence 1: genesis (seq 0) created the identity, this update (seq 1) added the attestation key.
 
-Export the public version for publication:
-
+You can also compare to the provenance mark for the unchanged XID.
 ```
-# Export public XID (elide private keys and generator)
-PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID")
+PROV_MARK=$(envelope xid provenance get "$XID")
+provenance validate --format json-compact "$PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
+```
+By running these commands on each XID, a viewer can determine their precise sequence.
 
-echo "Public XID ready for publication"
-envelope format "$PUBLIC_XID" | grep -A1 "attestation-key"
+Finally, validating both provenance marks together verifies they're part of the same chain, and that there aren't other problems:
+```
+provenance validate $PROV_MARK $UPDATED_PROV_MARK
 
-│ Public XID ready for publication
-│             'nickname': "attestation-key"
-│             'allow': 'Sign'
+│ ✅ (silent success - part of the same chain)
+```
+
+### Step 5: Export & Save Your XID
+
+Finally, you can follow the usual procedure to create a public version of the XID and store it.
+```
+UPDATED_PUBLIC_XID=$(envelope xid export --private elide --generator elide "$UPDATED_XID")
+
+echo "✅ Public XID ready for publication"
+
+│ ✅ Public XID ready for publication
 ```
 
 Amira would publish this updated XID at her `dereferenceVia` URL so Ben can fetch it and verify her attestation signatures.
 
+You'll store it alongside your previous iteration (with the genesis provenance mark):
+```
+echo "$UPDATED_PUBLIC_XID" > envelopes/BRadvoc8-xid-public-03.envelope
+echo "$UPDATED_XID" > envelopes/BRadvoc8-xid-private-03.envelope
+```
+
 ## Part III: Creating a Detached Attestation
 
 > :book: **Detached Attestation**: A signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+
+**Why detached?** Skill claims work better as separate documents. You can share specific attestations with specific people, revoke them independently, and keep your XIDDoc lean. The attestation references your XID identifier, so verifiers can confirm it came from you
 
 ### Step 3: Create the Claim
 
