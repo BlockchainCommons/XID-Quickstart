@@ -520,3 +520,16 @@ fi
 Higher sequence number means newer version. Ben should always fetch from `dereferenceVia` to ensure he has the current XIDDoc, especially before making trust decisions.
 
 > :brain: **Learn more**: The [Provenance Marks](../concepts/provenance-marks.md) concept doc explains the cryptographic chain structure and how it prevents history falsification.
+>
+---
+
+Add this in:
+
+### Key Type Comparison
+
+| Key Type | Purpose | Verified Against | Added In |
+|----------|---------|------------------|----------|
+| XID inception key | Signs XID document updates | XID itself | T01 |
+| SSH signing key | Signs Git commits | GitHub's registry | T03 |
+| Attestation key | Signs detached attestations | XID key list | T05 (now) |
+
