@@ -212,7 +212,7 @@ echo "$PUBLIC_XID" > envelopes/BRadvoc8-xid-public-02.envelope
 
 echo "✅ Public XID saved to envelopes/BRadvoc8-xid-public-02.envelope"
 echo "Contents:"
-cat BRadvoc8-xid-public-02.envelope
+cat envelopes/BRadvoc8-xid-public-02.envelope
 ```
 
 To upload this file to GitHub, create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern, `https://github.com/USERNAME/REPO/raw/main/xid.txt`, which should be what you recorded in `dereferenceVia`.
@@ -225,9 +225,9 @@ Obviously, you should make a copy of your private XID informationt too, only for
 
 ```
 mkdir envelopes
-echo "$XID_WITH_URL" > BRadvoc8-xid-private-02.envelope
+echo "$XID_WITH_URL" > envelopes/BRadvoc8-xid-private-02.envelope
 
-echo "✅ PRIVATE XID saved to BRadvoc8-xid-private-02.envelope
+echo "✅ PRIVATE XID saved to envelopes/BRadvoc8-xid-private-02.envelope
 echo "Contents:"
 cat envelopes/BRadvoc8-xid-private-02.envelope
 ```
