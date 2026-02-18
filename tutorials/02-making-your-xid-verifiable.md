@@ -45,8 +45,8 @@ Before you start, ensure that you have the required CLI tools from Tutorial 01:
 envelope --version
 provenance --version
 
-│ bc-envelope-cli 0.33.0
-│ provenance-mark-cli 0.6.0
+│ bc-envelope-cli 0.34.1
+| provenance-mark-cli 0.7.0
 ```
 
 If either tool is not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#step-0-setting-up-your-workspace) for installation instructions.
@@ -207,12 +207,12 @@ As usual, this removes the content you want to hide, but maintains the hashes, s
 You should now save the public view to a file.
 
 ```
-# Save the public XID to a file
-echo "$PUBLIC_XID" > /tmp/xid-public.txt
+mkdir envelopes
+echo "$PUBLIC_XID" > envelopes/tutorial-public-02.envelope
 
-echo "✅ Public XID saved to /tmp/xid-public.txt"
+echo "✅ Public XID saved to envelopes/tutorial-public-02.envelope"
 echo "Contents:"
-cat /tmp/xid-public.txt
+cat envelopes/tutorial-public-02.envelope
 ```
 
 To upload this file to GitHub, create a repository named after your XID (e.g., `BRadvoc8/BRadvoc8`), add a file named `xid.txt`, and commit your public XID content. The raw URL follows a predictable pattern, `https://github.com/USERNAME/REPO/raw/main/xid.txt`, which should be what you recorded in `dereferenceVia`.
@@ -220,6 +220,18 @@ To upload this file to GitHub, create a repository named after your XID (e.g., `
 Publish literally means "to make public", so this is (at last) the publication of your XID. You've locked down the content as shown in this XIDDoc as the first edition. If you make changes (as you do starting in Tutorial 03), at that point you will update the provenance mark before you republish, so that recipients can figure out which edition is the newest. 
 
 Note that publication doesn't only mean uploading something to a public-facing website. Just emailing a XIDDoc to someone is publication, because bits are infinitely copyable: you have no idea how far that single emailed edition will spread.
+
+Obviously, you should make a copy of your private XID informationt too, only for your own storage:
+
+```
+mkdir envelopes
+echo "$XID_WITH_URL" > envelopes/tutorial-private-02.envelope
+
+echo "✅ PRIVATE XID saved to envelopes/tutorial-private-02.envelope"
+echo "Contents:"
+cat envelopes/tutorial-private-02.envelope
+```
+
 
 ## Ben's Story: A Perspective Shift
 
@@ -464,7 +476,7 @@ Try these to solidify your understanding:
 
 Together with this tutorial's proof that a XID is current, the next two additions will build meaningful trust: enough for Ben to accept code contributions from BRadvoc8.
 
-[ **Next Tutorial:** [Offering Self-Attestation](03-offering-self-attestation.md) | **Previous Tutorial**: [Your First XID](01-your-first-xid.md) ]
+[ **Next Tutorial:** [Offering Self-Attestation](03-creating-self-attestations.md) | **Previous Tutorial**: [Your First XID](01-your-first-xid.md) ]
 
 
 ## Appendix I: Key Terminology
