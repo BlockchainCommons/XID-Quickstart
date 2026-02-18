@@ -232,7 +232,7 @@ echo "Contents:"
 cat envelopes/tutorial-private-02.envelope
 ```
 
-(With this tutorial, we've now created a separate directory for the results of each tutorial. This will allow you to step back to any version of the XID, and also to look at versions [available online](envelopes).
+(With this tutorial, we've now created a separate directory for the results of each tutorial. This will allow you to step back to any version of the XID, and also to look at versions [available online](envelopes).)
 
 ## Ben's Story: A Perspective Shift
 
