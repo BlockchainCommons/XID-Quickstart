@@ -1,4 +1,4 @@
-# Tutorial 06: Managing Sensitive Claims
+# Tutorial 04: Managing Sensitive Claims with Elision
 
 Handle credentials that are too risky to publish publicly using commitment patterns and selective disclosure.
 
@@ -10,38 +10,23 @@ Handle credentials that are too risky to publish publicly using commitment patte
 
 ## Prerequisites
 
-- Completed Tutorial 05 (Fair Witness Attestations)
-- The `envelope` CLI tool installed
-- Understanding of detached attestations from Tutorial 05
+- Completed [Tutorial 03](03-creating-self-attestations.md) (Fair Witness Attestations)
+- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool (already installed in Tutorial 01)
 
 ## What You'll Learn
 
 - How **correlation risk** compounds with each public claim
 - Three approaches for handling sensitive information
-- **Inclusion proofs**: commit now, reveal later
+- How **Inclusion proofs** allow you to commit now and reveal later
 - The verifier's workflow for checking revealed claims
-
-## Building on Tutorial 05
-
-| Tutorial 05 | Tutorial 06 |
-|-------------|-------------|
-| Created public attestations | Handle sensitive ones |
-| Galaxy contribution (safe to share) | Crypto audit (risky to share) |
-| Fair witness methodology | Disclosure strategy |
-
-**The Bridge**: Your Galaxy Project attestation is safe to share publicly—it's already on GitHub for anyone to see. But not all your skills pass the newspaper test. What about credentials that could identify you if published?
-
----
 
 ## The Problem: Every Claim Narrows the Field
 
-Amira did cryptographic audit work for a fintech startup in 2023-2024. She reviewed authentication implementations, found vulnerabilities, and helped fix them. It's valuable experience that would strengthen her credibility for security work.
-
-But "crypto auditor" is a rare skill. How many people worldwide have done professional cryptographic audits? Maybe a few thousand. Combine that with her other public claims—Galaxy Project contributor, privacy-focused, speaks Portuguese—and the intersection might describe only a handful of people.
+Amira did cryptographic audit work for a fintech startup in 2023-2024. She reviewed authentication implementations, found vulnerabilities, and helped to fix them. It's valuable experience that would strengthen her credibility for security work. But "crypto auditor" is a rare skill. How many people worldwide have done professional cryptographic audits? Maybe a few thousand. Combine that with other public claims, which might include that she's a Galaxy Project contributor, is privacy-focused, and speaks Portuguese, and the intersection might describe only a handful of people.
 
 This is correlation risk. Each claim by itself might be safe. Combined, they create a fingerprint.
 
-> :book: **Correlation Risk**: The potential for combining public information to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match.
+> :book: **What is a Correlation Risk?**: Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.
 
 ### How Claims Compound
 
@@ -58,35 +43,15 @@ Watch how Amira's anonymity set shrinks:
 
 That last combination might describe three people in the world. If an adversary knows those facts and sees BRadvoc8's public profile, correlation becomes trivial.
 
-### The Quick Heuristic
+> :warning: **Consider the Correlation Risks Before Making Claims. Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
 
-> :warning: **Before Publishing**: Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
+## Part I: About Protecting Your Sensitive Information
 
----
+Amira has three options for handling the correlation risk of her crypto audit experience.
 
-## Part I: Three Approaches to Sensitive Information
-
-Amira has three options for her crypto audit experience:
-
-### Option 1: Omit Entirely
-
-Don't mention it at all. If she never needs to prove this experience, keeping it private is the safest choice. Zero correlation risk from information that isn't published.
-
-The downside: she loses the reputation benefit. If crypto audit experience would help her get accepted onto a security project, omitting it means she can't use it.
-
-### Option 2: Commit Elided
-
-Create the attestation, sign it, but publish only an opaque commitment (the digest). The commitment proves she had some claim at a specific time, without revealing what the claim says. Later, she can reveal the full attestation to specific people who can verify it matches the public commitment.
-
-This is the "prove I had it all along" pattern. Useful when you might need to demonstrate timing or existence without revealing content.
-
-### Option 3: Encrypt for Recipient
-
-Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all.
-
-This is covered in Tutorial 07. It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.
-
-### When to Use Each
+* **Option 1: Omit Entirely.** Don't mention it at all. If Amira never needs to prove this experience, keeping it private is the safest choice. There's zero correlation risk from information that isn't published. The downside is that she loses the reputation benefit. If crypto audit experience would help her get accepted onto a security project, omitting it means she can't use it.
+* **Option 2: Commit Elided.** Create the attestation and sign it, but publish only an opaque commitment (the digest). The commitment proves that Amira had some claim at a specific time, without revealing what the claim says. Later, she can reveal the full attestation to specific people who can verify it matches the public commitment. This is the "prove I had it all along" pattern. It's useful when you might need to demonstrate timing or existence without revealing content. This is what we'll cover in this Tutorial.
+* **Option 3: Encrypt for Recipient.** Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all. This is covered in [Tutorial 05](3-creating-self-attestations.md). It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.
 
 | Situation | Approach |
 |-----------|----------|
@@ -98,175 +63,142 @@ Amira decides her crypto audit experience fits the middle category. She might ne
 
 > :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](../concepts/selective-disclosure.md)—the ability to reveal different information to different parties from the same underlying data structure.
 
----
-
 ## Part II: Creating the Commitment
 
-### Step 0: Verify Dependencies
+### Step 0: Verify Dependencies & Reload XID
 
-Ensure you have the required tools installed:
-
+As usual, check your `envelope-cli` version:
 ```
 envelope --version
 
-│ bc-envelope-cli 0.32.0
+│ bc-envelope-cli 0.34.1
 ```
-
-If not installed, see Tutorial 01 Step 0 for installation instructions.
-
-### Step 1: Set Up Environment
-
+Then, reload your XID, primarily to have easy access to your XID ID:
 ```
-OUTPUT_DIR="output/xid-tutorial06-$(date +%Y%m%d%H%M%S)"
-mkdir -p "$OUTPUT_DIR"
-
-# Create XID
-XID=$(envelope generate keypairs --signing ed25519 | \
-    envelope xid new --nickname "BRadvoc8" --generator include --sign inception)
-
-UNWRAPPED_XID=$(envelope extract wrapped "$XID")
-XID_ID=$(envelope xid id "$UNWRAPPED_XID")
-
-# Attestation keys
-ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
-ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
-
-echo "Created XID: $XID_ID"
-
-│ Created XID: c7e764b7
+XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID_ID=$(envelope xid id $XID)
 ```
+You should then reload your Attestation keys from the last tutorial:
+```
+ATTESTATION_PRVKEYS=$(cat envelopes/attestation-private-03.ur)
+ATTESTATION_PUBKEYS=$(cat envelopes/attestation-public-03.ur)
+```
+If you instead need to create new ones, see [Tutorial 03](03-creating-self-attestations.md#step-1-create-an-attestation-key) for how to do so, then register your keys in your XID.
 
-### Step 2: Create the Sensitive Attestation
+### Step 1: Create the Sensitive Attestation
 
 Amira creates her crypto audit attestation with fair witness precision:
 
 ```
 AUDIT_CLAIM=$(envelope subject type string \
-  "I audited cryptographic implementations for authentication systems (2023-2024)")
-
-AUDIT_CLAIM=$(envelope assertion add pred-obj known isA string "SelfAttestation" "$AUDIT_CLAIM")
-AUDIT_CLAIM=$(envelope assertion add pred-obj string "attestedBy" string "$XID_ID" "$AUDIT_CLAIM")
-AUDIT_CLAIM=$(envelope assertion add pred-obj string "attestedOn" date "2026-01-21T00:00:00Z" "$AUDIT_CLAIM")
+  "Audited cryptographic implementations for authentication systems (2023-2024)")
+AUDIT_CLAIM=$(envelope assertion add pred-obj known isA known 'attestation' "$AUDIT_CLAIM")
+AUDIT_CLAIM=$(envelope assertion add pred-obj known source ur $XID_ID "$AUDIT_CLAIM")
+AUDIT_CLAIM=$(envelope assertion add pred-obj known target ur $XID_ID "$AUDIT_CLAIM")
+AUDIT_CLAIM=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$AUDIT_CLAIM")
 AUDIT_CLAIM=$(envelope assertion add pred-obj string "skillCategory" string "Security" "$AUDIT_CLAIM")
 
 envelope format "$AUDIT_CLAIM"
 
-│ "I audited cryptographic implementations for authentication systems (2023-2024)" [
-│     isA: "SelfAttestation"
-│     "attestedBy": "c7e764b7"
-│     "attestedOn": 2026-01-21T00:00:00Z
-│     "skillCategory": "Security"
-│ ]
+| "Audited cryptographic implementations for authentication systems (2023-2024)" [
+|     'isA': 'attestation'
+|     "skillCategory": "Security"
+|     'date': "2026-02-18T15:08-10:00"
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e)
+| ]
 ```
 
 Notice she doesn't include the company name or specific details that would make correlation easier. The claim is specific enough to be meaningful but not so detailed that it uniquely identifies her.
 
-### Step 3: Sign the Full Attestation
+### Step 2: Sign the Full Attestation
 
 ```
-AUDIT_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$AUDIT_CLAIM")
+AUDIT_WRAPPED=$(envelope subject type wrapped "$AUDIT_CLAIM")
+AUDIT_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$AUDIT_WRAPPED")
 
-echo "Full attestation created and signed"
+echo "✅ Full attestation created and signed"
 envelope format "$AUDIT_SIGNED"
 
-│ Full attestation created and signed
-│ {
-│     "I audited cryptographic implementations for authentication systems (2023-2024)" [
-│         isA: "SelfAttestation"
-│         "attestedBy": "c7e764b7"
-│         "attestedOn": 2026-01-21T00:00:00Z
-│         "skillCategory": "Security"
-│     ]
-│ } [
-│     'signed': Signature
-│ ]
+| ✅ Full attestation created and signed
+| {
+|     "Audited cryptographic implementations for authentication systems (2023-2024)" [
+|         'isA': 'attestation'
+|         "skillCategory": "Security"
+|         'date': "2026-02-18T15:08-10:00"
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
 ```
 
-This is the full attestation. Amira keeps this secure—it's the version she'll reveal selectively.
+This is the full attestation. Amira keeps this secure and private. She'll need to create an elided view before she can share it publicly.
 
 ### Step 4: Create the Elided Commitment
 
-Now she creates a version with the content removed but the cryptographic structure preserved:
+You now creates a view of the attestations with the content removed but the cryptographic structure preserved:
 
 ```
 AUDIT_DIGEST=$(envelope digest "$AUDIT_SIGNED")
 AUDIT_ELIDED=$(envelope elide removing "$AUDIT_DIGEST" "$AUDIT_SIGNED")
 
-echo "Elided commitment created"
+echo "✅ Elided commitment created"
 echo "Digest: $AUDIT_DIGEST"
 envelope format "$AUDIT_ELIDED"
 
-│ Elided commitment created
-│ Digest: ur:digest/hdcxzmwnbnrt...
+│ ✅ Elided commitment created
+│ Digest: ur:digest/hdcxlgahgagmckdrveclotpeaerfynndksjpsphhoywtfeotlgdtwkwdwpmhgsylndlyrndscaah
 │ ELIDED
 ```
 
-The elided version shows nothing—just `ELIDED`. But here's the key property:
+The elided version shows nothing, just the word `ELIDED`. But here's the key property: the hash (digest) fo the elided envelope will be identical to the hash of the original envelope, offering proof that their content is identical, even though it can not longer be seen in the elided envelope.
 
-```
-FULL_DIGEST=$(envelope digest "$AUDIT_SIGNED")
-ELIDED_DIGEST=$(envelope digest "$AUDIT_ELIDED")
+> :brain: **How Do Digests Remain the Same Through Elision?** Gordian Envelope uses Merkle tree-like hashing. Each leaf and each node contributes to the root hash. Eliding content preserves the cryptographic identity because of those hashes. See the [Gordian Envelope specification](https://developer.blockchaincommons.com/envelope/) for technical details.
 
-echo "Full attestation digest:  $FULL_DIGEST"
-echo "Elided version digest:    $ELIDED_DIGEST"
+## Part III: Revealing a Commitment
 
-if [ "$FULL_DIGEST" = "$ELIDED_DIGEST" ]; then
-    echo "Digests match!"
-fi
-
-│ Full attestation digest:  ur:digest/hdcxzmwn...
-│ Elided version digest:    ur:digest/hdcxzmwn...
-│ Digests match!
-```
-
-The digests are identical. This is the foundation of the inclusion proof: the elided version has the same cryptographic identity as the full version, even though the content is hidden.
-
-> :brain: **How this works**: Gordian Envelope uses Merkle tree hashing—each part contributes to the root hash, so eliding content preserves the cryptographic identity. See the [Gordian Envelope specification](https://developer.blockchaincommons.com/envelope/) for technical details.
-
----
-
-## Part III: The Reveal
-
-Six months later, DevReviewer is evaluating Amira for a security collaboration. They've seen her public attestation (Galaxy Project) but want to know about her security audit experience. Amira mentioned she has relevant experience but couldn't share details publicly.
+Six months later, DevReviewer is evaluating Amira for a security collaboration. They've seen her public attestation (about the Galaxy Project) but want to know about her security audit experience. Amira mentions that she has relevant experience but couldn't share details publicly.
 
 ### Step 5: Amira Reveals to DevReviewer
 
-Amira sends DevReviewer the full attestation:
-
-```
-# Amira sends AUDIT_SIGNED to DevReviewer
-echo "Amira sends full attestation to DevReviewer"
-
-│ Amira sends full attestation to DevReviewer
-```
+Amira sends DevReviewer the full attestation (`$AUDIT_SIGNED`).
 
 DevReviewer already has the elided commitment (from Amira's public profile or an earlier conversation). Now they have the full version too.
 
 ### Step 6: DevReviewer Verifies the Inclusion Proof
 
-DevReviewer's verification has two parts: checking that this is the same document as the commitment, and verifying the signature.
+DevReviewer's verification has two parts: checking that this is the same document as the commitment and verifying the signature.
+
+DevReviewer computes the digest of what they received:
 
 ```
-# DevReviewer computes the digest of what they received
 RECEIVED_DIGEST=$(envelope digest "$AUDIT_SIGNED")
+```
 
-# Compare to the known commitment digest
+They then compare that to the known commitment digest:
+```
 echo "Commitment digest: $ELIDED_DIGEST"
 echo "Received digest:   $RECEIVED_DIGEST"
 
 if [ "$RECEIVED_DIGEST" = "$ELIDED_DIGEST" ]; then
-    echo "Inclusion proof valid: this matches the public commitment"
+    echo "✅ Inclusion proof valid: this matches the public commitment"
 else
-    echo "WARNING: Does not match commitment!"
+    echo "❌ WARNING: Does not match commitment"
 fi
 
-│ Commitment digest: ur:digest/hdcxzmwn...
-│ Received digest:   ur:digest/hdcxzmwn...
-│ Inclusion proof valid: this matches the public commitment
+│ Commitment digest: ur:digest/hdcxlgahgagmckdrveclotpeaerfynndksjpsphhoywtfeotlgdtwkwdwpmhgsylndlyrndscaah
+│ Received digest:   ur:digest/hdcxlgahgagmckdrveclotpeaerfynndksjpsphhoywtfeotlgdtwkwdwpmhgsylndlyrndscaah
+│ ✅ Inclusion proof valid: this matches the public commitment
+
 ```
 
-The digests match. This proves the full attestation Amira revealed is the same document she committed to earlier—not something she fabricated after the fact.
+The digests match. This proves the full attestation Amira revealed is the same document she committed to earlier, not something she fabricated after the fact.
 
+> :book: **Why Is It Important Amira Committed in Advance?** Amira committing (and presumably publishing) her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
+
+[EDITED TO HERE]
 ### Step 7: DevReviewer Verifies the Signature
 
 ```
