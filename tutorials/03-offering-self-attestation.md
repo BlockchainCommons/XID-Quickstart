@@ -4,7 +4,9 @@ In Tutorial 02, Amira made her BRadvoc8 XIDDoc verifiable by publishing it at a 
 
 This tutorial shows how Amira adds attestations to her XID—verifiable claims about her activities. She'll link her GitHub account and SSH signing key, creating evidence that Ben can later verify against external sources.
 
-**Time to complete: 15-20 minutes**
+**Time to complete**: ~15-20 minutes
+**Difficulty**: Beginner
+**Builds on**: Tutorials 01-02
 
 > **Related Concepts**: This tutorial covers self-attestation. For deeper understanding, see [Attestation & Endorsement Model](../concepts/attestation-endorsement-model.md) for the framework of claims and verification, [Fair Witness](../concepts/fair-witness.md) for making trustworthy assertions, and [Pseudonymous Trust Building](../concepts/pseudonymous-trust-building.md) for building reputation while maintaining privacy.
 
@@ -32,9 +34,9 @@ This is the difference between saying "I'm a developer" and showing a commit his
 
 ---
 
-## Part I: Understanding Attachments
+## About Attachments
 
-Before adding attestations, you need to understand how XIDs handle structured data.
+*If you're ready to start adding attestations, skip to Part II. Otherwise, read on to understand how XIDs handle structured data.*
 
 ### Attachments vs Raw Assertions
 
@@ -60,7 +62,7 @@ envelope xid attachment add \
 
 The `--vendor` qualifier indicates who defined this attachment format. Using `"self"` means Amira defined it for her own use. Organizations might use domain names (`"com.example"`) for their custom formats.
 
-### Why Attachments?
+### :book: Why Attachments?
 
 Attachments solve several problems. They namespace custom data so different applications don't collide. They keep the XID core clean—your identity isn't cluttered with application-specific details. And they're explicitly optional: tools that don't understand an attachment can safely ignore it while still processing the XID.
 
@@ -68,13 +70,29 @@ Most importantly, attachments allow **arbitrary predicates**. The XID core has a
 
 Think of attachments as labeled boxes you attach to your identity. The labels tell others what's inside and who packed it. Ben might understand `vendor: "self"` GitHub attachments but ignore `vendor: "com.example"` attachments he doesn't recognize.
 
+> :brain: **Learn more**: The [Attestation & Endorsement Model](../concepts/attestation-endorsement-model.md) concept doc explains the full framework for claims, evidence, and verification in XIDs.
+
 ---
 
 ## Part II: Amira Adds Her GitHub Account
 
-Now let's add Amira's GitHub account as an attachment.
+Now for the hands-on work. You'll generate an SSH signing key, create a proof that you control it, bundle everything into a GitHub account attachment, and publish the updated XID. By the end, your XID will contain verifiable claims that Ben can check against external sources.
 
-> ⚠️ **Important: Your Output Will Differ**
+### Step 0: Verify Dependencies
+
+Ensure you have the required tools:
+
+```
+envelope --version
+provenance --version
+
+│ bc-envelope-cli 0.32.0
+│ provenance-mark-cli 0.6.0
+```
+
+If not installed, see Tutorial 01 Step 0 for installation instructions.
+
+> :warning: **Important: Your Output Will Differ**
 >
 > From this point forward, tutorial examples show output from the **real published BRadvoc8 XID** at `github.com/BRadvoc8/BRadvoc8`. When you follow along with your own XID:
 >
@@ -84,7 +102,7 @@ Now let's add Amira's GitHub account as an attachment.
 >
 > **This is expected.** The structure and workflow remain the same—only the specific values change. Focus on understanding what each step accomplishes, not matching exact output.
 
-### Step 1: Set Up Your Environment
+### Step 1: Load Your XID
 
 Load your XID from Tutorial 02:
 
@@ -102,7 +120,7 @@ envelope xid id "$XID"
 │ ur:xid/hdcxltkttdhsjztodsfygmfzdmvajocftohtrltabzbazmkbsalnhfhywfneaohycfynbejokkda
 ```
 
-### Step 2: Generate an SSH Signing Key
+### Step 2: Generate SSH Signing Key
 
 Amira needs an SSH key specifically for signing Git commits. This is different from SSH authentication keys—GitHub maintains them separately.
 
@@ -121,7 +139,7 @@ echo "$SSH_EXPORT"
 │ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
 ```
 
-> **SSH Signing vs Authentication**:
+> :book: **SSH Signing vs Authentication**:
 >
 > GitHub has two separate SSH key registries. Authentication keys (`/users/{user}/keys`) control access to repositories. Signing keys (`/users/{user}/ssh_signing_keys`) verify commit signatures. Amira is adding a signing key—it proves her commits are authentic, not that she can push to repos.
 
@@ -139,7 +157,7 @@ The `envelope generate prvkeys --signing ssh-ed25519` command creates keys in SS
 >
 > The real BRadvoc8 XID uses an existing key that was registered on GitHub in May 2025.
 
-> **Key Separation**:
+> :warning: **Key Separation**:
 >
 > Amira now has multiple keys serving different purposes:
 >
@@ -153,7 +171,7 @@ The `envelope generate prvkeys --signing ssh-ed25519` command creates keys in SS
 >
 > Even the XID signing key can be rotated if compromised—you can add a new signing key and revoke the old one while keeping the same XID identifier. Your identity persists across key changes.
 
-### Step 3: Create a Proof-of-Control
+### Step 3: Create Proof-of-Control
 
 Before adding the key to her XID, Amira creates a proof that she controls it. This is a signed statement declaring ownership at a specific point in time:
 
@@ -176,11 +194,45 @@ envelope format "$PROOF"
 
 This proof demonstrates that whoever holds the SSH private key signed a statement claiming association with BRadvoc8 on this date.
 
-> **Temporal Limitation**:
+#### Verifying the Proof
+
+Ben can later verify this proof using the public key embedded in the XID:
+
+```
+# Verify the proof signature
+if envelope verify -v "$SSH_PUBKEYS" "$PROOF" >/dev/null 2>&1; then
+    echo "✅ Proof signature verified - key holder signed this statement"
+else
+    echo "❌ Proof signature FAILED"
+fi
+
+│ ✅ Proof signature verified - key holder signed this statement
+```
+
+This confirms the statement was signed by whoever controls the SSH private key. It doesn't prove *who* that is—just that they could sign.
+
+#### What If the Proof Was Tampered?
+
+```
+# Simulate tampering - an attacker changes the date
+TAMPERED_PROOF=$(echo "$PROOF" | sed 's/2026-01-21/2025-01-01/')
+
+if envelope verify -v "$SSH_PUBKEYS" "$TAMPERED_PROOF" >/dev/null 2>&1; then
+    echo "✅ Signature verified"
+else
+    echo "❌ Signature FAILED - tampering detected!"
+fi
+
+│ ❌ Signature FAILED - tampering detected!
+```
+
+Any modification invalidates the signature. Ben can trust that the proof content matches exactly what was signed.
+
+> :book: **Temporal Limitation**:
 >
 > This proof is a snapshot, not an ongoing guarantee. It proves Amira controlled the key when she signed—it doesn't prove she controls it now, or that she'll control it tomorrow. Keys can be compromised. Ben will need to check external sources (GitHub's current registry, recent signed commits) for stronger assurance. Tutorial 04 covers this verification.
 
-### Step 4: Build the GitHub Account Payload
+### Step 4: Build GitHub Account Payload
 
 Now assemble the attachment payload—all the information about Amira's GitHub presence:
 
@@ -215,7 +267,23 @@ envelope format "$GITHUB_ACCOUNT"
 │ ]
 ```
 
-> **Why This Structure?**
+This builds the payload step by step. Each `envelope assertion add` command adds one predicate-object pair:
+
+| Command | Predicate Type | Purpose |
+|---------|---------------|---------|
+| `subject type string "$XID_NAME"` | (creates subject) | Sets "BRadvoc8" as the envelope subject |
+| `known isA string "GitHubAccount"` | Known (`'isA'`) | Declares what this envelope represents |
+| `known dereferenceVia uri "..."` | Known (`'dereferenceVia'`) | Points to authoritative source |
+| `string "sshSigningKeysURL" uri "..."` | Custom (`"sshSigningKeysURL"`) | Where to verify the key is registered |
+| `string "sshSigningKey" ur "$SSH_PUBKEYS"` | Custom (`"sshSigningKey"`) | The key in structured UR format |
+| `string "sshSigningKeyText" string "..."` | Custom (`"sshSigningKeyText"`) | The key in human-readable format |
+| `string "sshSigningKeyProof" envelope "$PROOF"` | Custom (`"sshSigningKeyProof"`) | Embeds the signed proof-of-control |
+| `string "createdAt" date "..."` | Custom (`"createdAt"`) | When this attestation was created |
+| `string "updatedAt" date "..."` | Custom (`"updatedAt"`) | When this attestation was last modified |
+
+Notice the pattern: `known` predicates use envelope-standard semantics (single quotes in output), while `string` predicates are domain-specific (double quotes in output).
+
+> :book: **Why This Structure?**
 >
 > The `dereferenceVia` URL points to the GitHub account itself (not the signing keys) because `isA` declares this is a "GitHubAccount". In envelope design, `dereferenceVia` must point to the authoritative source of whatever the subject claims to be—the type and the dereference target must match semantically. If someone fetches the `dereferenceVia` URL expecting a GitHub account, they should get account information, not a list of SSH keys.
 >
@@ -227,7 +295,7 @@ Notice what we included: the account name as subject, a type marker (`isA: "GitH
 
 The `dereferenceVia` URI is particularly important—it tells Ben exactly where to check whether this key is actually registered on GitHub. That verification happens in Tutorial 04.
 
-### Step 5: Add the Attachment to Your XID
+### Step 5: Add Attachment to XID
 
 Now add this payload as an attachment to your XID:
 
@@ -275,7 +343,7 @@ The flags mirror what you used in previous tutorials: `--verify inception` check
 
 Notice the attachment appears with `'vendor': "self"` marking who defined this payload format.
 
-### Step 6: Advance Provenance
+### Step 6: Advance Provenance Mark
 
 When you modify a published XID, you advance the provenance sequence to signal a new version:
 
@@ -306,9 +374,11 @@ This mirrors a realistic workflow. You publish your basic XID first (establishin
 
 The sequence number tells Ben which version he has. If Ben fetches seq 0 but the URL now shows seq 1, he knows an update happened and can re-fetch. Tutorial 04 covers how Ben verifies the provenance sequence he receives.
 
-> **Provenance = Ordering, Not Timestamps**:
+> :book: **Provenance = Ordering, Not Timestamps**:
 >
 > The provenance mark establishes position in a chain starting from genesis. It doesn't prove *when* this happened—just the order. Temporal information comes from external sources: GitHub's server timestamps, signed commits, Ben's own fetch time. Tutorial 04 explores these temporal anchors.
+
+> :brain: **Learn more**: The [Provenance Marks](../concepts/provenance-marks.md) concept doc explains the cryptographic chain structure and how sequence numbers provide ordering guarantees.
 
 ### Step 7: Export and Verify
 
@@ -351,7 +421,7 @@ fi
 
 The attachment survives export—it's part of the public XID that Ben will fetch.
 
-### Step 8: Publish the Updated XID
+### Step 8: Publish Updated XID
 
 Update your publication location with the new version. If you're using a GitHub repository (as BRadvoc8 does), this means committing and pushing:
 
@@ -371,6 +441,10 @@ git push
 
 The signed commit (`-S`) creates another temporal anchor: GitHub will record when this commit was pushed and verify its signature against your registered signing key. This connects your XID publication to your GitHub identity.
 
+> :warning: **Signed Commits Matter**:
+>
+> The `-S` flag signs the commit with your SSH signing key. This creates verifiable evidence that the same key in your XID attestation was used to publish the XID itself. If Ben sees your SSH key in the XID *and* sees that key signing commits to the XID repository, that's stronger evidence than either alone. Without `-S`, you're just claiming to own a key without demonstrating you can use it.
+
 After pushing, the XID is live at your `dereferenceVia` URL. Anyone who fetches it can verify the attestation independently—which is exactly what Ben does in Tutorial 04.
 
 ---
@@ -384,11 +458,32 @@ BRadvoc8 now has verifiable attestations:
 - **Verification pointer** (`dereferenceVia`) to GitHub's API
 - **Signed commit** creating a temporal anchor on GitHub
 
-This is a *self-attestation*—Amira claiming she controls a GitHub account and SSH key. It's not yet *verified*. Ben has the information he needs to check these claims, but the checking happens in Tutorial 04.
+### Trust Assessment
+
+What can be verified now (without external checks):
+
+| Check | Status | What It Proves |
+|-------|--------|----------------|
+| XID signature | ✅ Verifiable | Document integrity, self-consistency |
+| Provenance chain | ✅ Verifiable | Update ordering, version history |
+| Proof-of-control signature | ✅ Verifiable | Key holder signed the claim |
+| Attachment structure | ✅ Verifiable | Data is well-formed |
+
+What requires external verification (Tutorial 04):
+
+| Check | Status | What It Would Prove |
+|-------|--------|---------------------|
+| SSH key on GitHub | ⏳ Not yet checked | Key is actually registered |
+| Signed commits | ⏳ Not yet checked | Key is actively used |
+| GitHub account exists | ⏳ Not yet checked | Account is real |
+
+This is a *self-attestation*—Amira claiming she controls a GitHub account and SSH key. Ben has the information he needs to check these claims, but the checking happens in Tutorial 04.
 
 The trust model is now richer: Tutorial 01 established that BRadvoc8 exists, Tutorial 02 made that existence verifiable and fresh, and now Tutorial 03 offers attestations that connect BRadvoc8 to real-world systems.
 
-## Key Terminology
+> :brain: **Making Stronger Claims**: This tutorial covers *account linkage*—proving you control a GitHub account. For making *skill and capability claims* that are more credible, see [Tutorial 05: Fair Witness Attestations](05-fair-witness-attestations.md), which teaches the methodology of specific, verifiable, evidence-backed claims.
+
+## Appendix: Key Terminology
 
 > **Attachment** - A vendor-qualified container for application-specific data in an XID. Uses `--vendor` to indicate who defined the format.
 >
@@ -404,10 +499,19 @@ The trust model is now richer: Tutorial 01 established that BRadvoc8 exists, Tut
 
 Try these to solidify your understanding:
 
+**Building exercises (Amira's perspective):**
+
 - Generate a new SSH signing key and create a proof-of-control for it.
-- Build an attachment payload with different assertion types (try adding a website or email).
-- Register your SSH signing key on GitHub and verify it appears in the API.
+- Build an attachment payload with different assertion types (try adding a website or email claim).
+- Register your SSH signing key on GitHub and verify it appears in the API at `https://api.github.com/users/YOUR_USERNAME/ssh_signing_keys`.
 - Practice the full workflow: add attachment, advance provenance, export public version.
+
+**Verification exercises (Ben's perspective):**
+
+- Extract the proof-of-control from an attachment and verify its signature.
+- Tamper with a proof (change one character) and confirm verification fails.
+- Compare two versions of an XID with different provenance sequences.
+- Extract the SSH signing key text from an attachment and compare it to GitHub's API response.
 
 ## Example Scripts
 
@@ -433,37 +537,3 @@ Amira has *offered* her attestations. But claims without verification are just a
 ---
 
 **Previous**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) | **Next**: [Cross-Verification](04-cross-verification.md)
-
-===
-
-This was in 02, but this is the first tutorial where we actually have a second edition XID, so something like it should go here instead
-
-#### Detecting Stale Copies
-
-What if someone gave Ben an old copy of the XID instead of the current one? He can compare provenance marks to detect this:
-
-```
-# Ben has two versions - one from a friend, one freshly fetched
-# Compare their sequence numbers
-
-# Simulate: OLD_MARK from friend's copy (sequence 0)
-# Simulate: NEW_MARK from fresh fetch (sequence 1 after an update)
-
-OLD_SEQ=0   # From stale copy
-NEW_SEQ=1   # From fresh fetch
-
-echo "Copy from friend:  sequence $OLD_SEQ"
-echo "Fresh from URL:    sequence $NEW_SEQ"
-
-if [ "$NEW_SEQ" -gt "$OLD_SEQ" ]; then
-    echo "⚠️  Friend's copy is STALE - use the fresh version!"
-fi
-
-│ Copy from friend:  sequence 0
-│ Fresh from URL:    sequence 1
-│ ⚠️  Friend's copy is STALE - use the fresh version!
-```
-
-Higher sequence number means newer version. Ben should always fetch from `dereferenceVia` to ensure he has the current XIDDoc, especially before making trust decisions.
-
-> :brain: **Learn more**: The [Provenance Marks](../concepts/provenance-marks.md) concept doc explains the cryptographic chain structure and how it prevents history falsification.
