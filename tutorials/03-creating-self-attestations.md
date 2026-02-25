@@ -101,7 +101,7 @@ UPDATED_XID=$(envelope xid key add \
     "$ATTESTATION_PRVKEYS" \
     "$XID")
 
-echo "Added attestation key to XID"
+echo "✅ Added attestation key to XID"
 ```
 
 The `envelope-cli` programs derives the public key from the private key automatically. With the `--private encrypt`, `--password`, and `--encrypt-password` commands, the private XID is first decrypted, then re-encrypted. You also add a new `nickname` to clarify what the key is for, and tthen here's one new argument:
@@ -226,8 +226,8 @@ echo "$UPDATED_XID" > envelopes/BRadvoc8-xid-private-03.envelope
 ```
 You should also store standalone copies of your new keys to make it easier to access them in the future:
 ```
-echo $ATTESTATION_PRVKEYS > attestation-private-03.ur
-echo $ATTESTATION_PUBKEYS > attestation-public-03.ur
+echo $ATTESTATION_PRVKEYS > envelopes/attestation-private-03.ur
+echo $ATTESTATION_PUBKEYS > envelopes/attestation-public-03.ur
 ``` 
 
 #### XID Version Comparison
@@ -498,14 +498,6 @@ Crucially, this tutorial also showed how to create a _validated attestation_: th
 
 - Compare a fair witness claim to a vague claim about the same skill: what makes the fair witness version stronger?
 - Identify 2-3 public contributions you could attest to with verifiable evidence.
-  
-## Appendix I: Key Terminology
-
-> **Attestation Key**: A dedicated signing key for creating detached attestations, registered in your XID. Verified against the XID key list, not an external service.
->
-> **Fair Witness Methodology**: Making only factual, specific, verifiable claims rather than opinions or vague assertions.
-
-Also see the various attestation definitions in the **Summary**.
 
 ## What's Next
 
@@ -517,3 +509,10 @@ BRadvoc8 is now an identity with an initial claim about skills, but that's opene
 
 **Previous**: [Making Your XID Verifiable](02-making-your-xid-verifiable.md) | **Next**: [Managing Sensitive Claims with Elision](04-managing-claims-elision.md)           
 
+## Appendix I: Key Terminology
+
+> **Attestation Key**: A dedicated signing key for creating detached attestations, registered in your XID. Verified against the XID key list, not an external service.
+>
+> **Fair Witness Methodology**: Making only factual, specific, verifiable claims rather than opinions or vague assertions.
+
+Also see the various attestation definitions in the **Summary**.
