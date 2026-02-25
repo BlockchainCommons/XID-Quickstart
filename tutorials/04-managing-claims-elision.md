@@ -156,7 +156,7 @@ envelope format "$AUDIT_ELIDED"
 
 The elided version shows nothing, just the word `ELIDED`. But here's the key property: the hash (digest) fo the elided envelope will be identical to the hash of the original envelope, offering proof that their content is identical, even though it can not longer be seen in the elided envelope.
 
-> :brain: **How Do Digests Remain the Same Through Elision?** Gordian Envelope uses Merkle tree-like hashing. Each leaf and each node contributes to the root hash. Eliding content preserves the cryptographic identity because of those hashes. See the [Gordian Envelope specification](https://developer.blockchaincommons.com/envelope/) for technical details.
+> :bulb: **Public commitment lists.** You might maintain a list of digests in your public profile with category hints (e.g., "Security", "Privacy Engineering"). This tells collaborators you have additional credentials without revealing what they are.
 
 ## Part III: Revealing a Commitment
 
@@ -240,6 +240,10 @@ envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_ELIDED"
 
 The elided version is just a digest placeholder: it proves something with its digest, but you can't verify its authenticity without the full version. This is by design. The commitment pattern separates timing from content: in the commit phase, you publish the elided version to prove when you made the claim; in the reveal phase, you share the full version with specific people to prove what you claimed; then the recipient verifies the revealed version matches the public commitment.
 
+### Step 7: Amira Supersedes a Commitment
+
+This doesn't have to be the end of the life cycle of a commitment. If Amira's skills evolve, of if she joins other projects, she can create new commitments, just as she managed the [lifecycle](03-creating-self-attestations.md#part-v-managing-the-attestation-lifecycle) of her visible attestations. Old commitments remain valid but can be retired.
+
 ## Summary: From Correlation to Elision
 
 This tutorial introduced the problem of correlation risk: how claims compound to narrow anonymity sets. The three disclosure approaches (omit, commit, encrypt) give you options for different situations. Commit means creating a sensitive attestation and committed to it publicly without revealing the content. This inclusion proof pattern lets Amira prove she had this credential all along when she chooses to reveal it: she can't be accused of fabricating it after the fact.
@@ -250,34 +254,20 @@ This tutorial introduced the problem of correlation risk: how claims compound to
 2. Create an elided commitment for a hypothetical sensitive attestation.
 3. Walk through the verification steps as if you were DevReviewer receiving a revealed attestation
 
-[need to finish]
+## What's Next
 
-### The Remaining Gap
+The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? Amira's CivilTrust work falls into this category: she can't even suggest she has human rights technology experience. 
 
-The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? Amira's CivilTrust work falls into this category—she can't even suggest she has human rights technology experience. That requires direct encrypted sharing with specific trusted people.
+**Tutorial 05: Managing Sensitive Claims with Encryption** discusses how to share even more sensitive information by encrypting it, then sharing that content with specific trusted people.
 
----
+[ Next Tutorial: [Managing Sensitive Claims with Encryption](05-managing-claims-encryption.md) | Previous Tutorial: [Creating Self Attestations](03-creating-self-attestations.md) ]
 
-## Appendix: Key Terminology
+## Appendix I: Key Terminology
 
+> **Commitment**: A digest that commits to certain content that is being elided or otherwise withheld.
+> 
 > **Correlation Risk**: The potential for combining public information to identify a pseudonym. Claims compound: each one narrows the anonymity set.
 >
-> **Inclusion Proof**: Demonstrating that a revealed document matches a previously published commitment (same digest).
->
 > **Elided Envelope**: An envelope with content removed but cryptographic identity (digest) preserved. Proves existence without revealing content.
-
-### Practical Notes
-
-**When to use commit-reveal**: The pattern makes sense when a claim is too sensitive to publish broadly but you might need to prove timing later. For claims only specific people will ever see, direct encrypted sharing (Tutorial 07) is simpler.
-
-**Public commitment lists**: You might maintain a list of digests in your public profile with category hints (e.g., "Security", "Privacy Engineering"). This tells collaborators you have additional credentials without revealing what they are.
-
-**Refreshing commitments**: If your skills evolve, create new attestations. Old commitments remain valid but can be retired.
-
----
-
-
-
----
-
-**Previous**: [Fair Witness Attestations](05-fair-witness-attestations.md) | **Next**: [Encrypted Sharing](07-encrypted-sharing.md)
+>
+> **Inclusion Proof**: Demonstrating that a revealed document matches a previously published commitment (same digest).
