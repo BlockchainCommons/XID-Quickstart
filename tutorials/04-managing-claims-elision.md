@@ -2,9 +2,9 @@
 
 Handle credentials that are too risky to publish publicly using commitment patterns and selective disclosure.
 
-**Time to complete**: ~20-25 minutes
-**Difficulty**: Intermediate
-**Builds on**: Tutorials 01-03
+* **Time to complete**: ~20-25 minutes
+* **Difficulty**: Intermediate
+* **Builds on**: Tutorials 01-03
 
 > **Related Concepts**: After completing this tutorial, explore [Progressive Trust](../concepts/progressive-trust.md) and [Self-Attestation](../concepts/self-attestation.md) to deepen your understanding.
 
@@ -50,7 +50,7 @@ That last combination might describe three people in the world. If an adversary 
 Amira has three options for handling the correlation risk of her crypto audit experience.
 
 * **Option 1: Omit Entirely.** Don't mention it at all. If Amira never needs to prove this experience, keeping it private is the safest choice. There's zero correlation risk from information that isn't published. The downside is that she loses the reputation benefit. If crypto audit experience would help her get accepted onto a security project, omitting it means she can't use it.
-* **Option 2: Commit Elided.** Create the attestation and sign it, but publish only an opaque commitment (the digest). The commitment proves that Amira had some claim at a specific time, without revealing what the claim says. Later, she can reveal the full attestation to specific people who can verify it matches the public commitment. This is the "prove I had it all along" pattern. It's useful when you might need to demonstrate timing without revealing content, but also tends to give weight to a claim because it didn't come out of nowhere. This is what we'll cover in this Tutorial.
+* **Option 2: Commit Elided.** Create the attestation and sign it, but publish only an opaque commitment (the digest). The commitment proves that Amira had some claim at a specific time, without revealing what the claim says. Later, she can reveal the full attestation to specific people who can verify that it matches the public commitment. This is the "prove I had it all along" pattern. It's useful when you might need to demonstrate timing without revealing content and also tends to give weight to a claim because it didn't come out of nowhere. This is what we'll cover in this Tutorial.
 * **Option 3: Encrypt for Recipient.** Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all. This is covered in [Tutorial 05](3-creating-self-attestations.md). It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.
 
 | Situation | Approach |
@@ -87,7 +87,7 @@ If you instead need to create new ones, see [Tutorial 03](03-creating-self-attes
 
 ### Step 1: Create the Sensitive Attestation
 
-You should create Amira's crypto audit attestation with fair witness precision:
+You should create Amira's crypto audit attestation with [fair witness](../concepts/fair-witness.md) precision:
 
 ```
 AUDIT_CLAIM=$(envelope subject type string \
@@ -109,7 +109,7 @@ envelope format "$AUDIT_CLAIM"
 | ]
 ```
 
-Notice she doesn't include the company name or specific details that would make correlation easier. The claim is specific enough to be meaningful but not so detailed that it uniquely identifies her.
+Notice that you don't include the company name that Amira worked for or specific details that would make correlation easier. The claim is specific enough to be meaningful but not so detailed that it uniquely identifies her.
 
 ### Step 2: Sign the Full Attestation
 
@@ -135,7 +135,7 @@ envelope format "$AUDIT_SIGNED"
 | ]
 ```
 
-This is the full attestation. Amira keeps this secure and private. She'll need to create an elided view before she can share it publicly.
+This is the full attestation that Amira will keep secure and private. But she wants to publicly share the fact that she made this claim, while not revealing exactly what it is; that requires the creation of an elided view.
 
 ### Step 3: Create the Elided Commitment
 
@@ -198,15 +198,15 @@ fi
 
 The digests match. This proves the full attestation Amira revealed is the same document she committed to earlier, not something she fabricated after the fact.
 
-> :book: **Why Is It Important Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
+> :book: **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
 
-### Step 7: DevReviewer Verifies the Signature
+### Step 6: DevReviewer Verifies the Signature
 
 Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [tutorial 03](03-creating-self-attestations.md#part-iv-ben-again-verifies) for a more complex methodology to check a signature against every public key in a XID.)
 ```
 envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED"
 
-│ Signature valid
+│ (no response means signature is valid.)
 ```
 
 The signature is valid. Combined with the inclusion proof, DevReviewer has three pieces of information: 
@@ -214,8 +214,9 @@ The signature is valid. Combined with the inclusion proof, DevReviewer has three
 | What DevReviewer Can Verify | What Remains Unproven |
 |---------------------|----------------------|
 | ✅ Claim matches a public commitment | ❓ Claim is actually true |
-| ✅ BRadvoc8 signed the claim | ❓ What other unsigned claims say |
-| ✅ Claim not modified | ❓ Who BRadvoc8 is |
+| ✅ Claim was published at a previous date | ❓ What other hidden claims say |
+| ✅ Claim was not modified | ❓ Whether claim modifies a different hidden claim |
+| ✅ BRadvoc8 signed the claim | ❓ Who BRadvoc8 is |
 
 DevReviewer can now read the claim and factor it into their trust decision.
 
@@ -241,7 +242,7 @@ The elided version is just a digest placeholder: it proves something with its di
 
 ## Summary: From Correlation to Elision
 
-This tutorial introduced the problem correlation risk: how claims compound to narrow anonymity sets. The three disclosure approaches (omit, commit, encrypt) give you options for different situations. Commit means creating a sensitive attestation and committed to it publicly without revealing the content. This inclusion proof pattern lets Amira prove she had this credential all along when she chooses to reveal it: she can't be accused of fabricating it after the fact.
+This tutorial introduced the problem of correlation risk: how claims compound to narrow anonymity sets. The three disclosure approaches (omit, commit, encrypt) give you options for different situations. Commit means creating a sensitive attestation and committed to it publicly without revealing the content. This inclusion proof pattern lets Amira prove she had this credential all along when she chooses to reveal it: she can't be accused of fabricating it after the fact.
 
 ### Exercises
 
