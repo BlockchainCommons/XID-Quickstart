@@ -138,7 +138,7 @@ If you don't have `cargo` installed, see [_The Cargo
 Book_](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 for easy installation instructions.
 
-> :warning: **Your Output Will Differ.** Tutorial examples show output
+> ⚠️ **Your Output Will Differ.** Tutorial examples show output
 from the **real published BRadvoc8 XID** at
 `github.com/BRadvoc8/BRadvoc8`. When you follow along, your output
 will differ. You will have different XID identifiers, different key
@@ -212,7 +212,7 @@ produced:
 3. `--nickname` adds an identity label to the XID structure.
 4. `--sign inception` wraps and signs the entire XID, allowing others to verify its authenticity.
 
-> :warning: **Private Keys on Board**: Your XID contains your private
+> ⚠️ **Private Keys on Board**: Your XID contains your private
 keys (encrypted with your password). Though they are encrypted, you
 should still be wary of distributing a XID that contains those private
 keys. Fortunately, you can elide (remove) that data, as described
@@ -295,7 +295,7 @@ while the private halves are encrypted with your password. This
 mirrors how SSH works with `id_rsa` and `id_rsa.pub`, except your XID
 bundles both into a single document.
 
-> :warning: **The Signing Key Defines the Identity.** The same keypairs always produce the same XID identifier because the identifier is derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
+> ⚠️ **The Signing Key Defines the Identity.** The same keypairs always produce the same XID identifier because the identifier is derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.
 
 #### A Review of Envelope Structure
 
@@ -560,7 +560,7 @@ The above example shows a new elision, of the secret within the provenance mark 
 
 ```
 
-> :warning: **The Root Hash is Not the ID Identifier.** The root hash
+> ⚠️ **The Root Hash is Not the ID Identifier.** The root hash
 is composed from the hashes of _all_ the data within an envelope. It
 changes if you change the document. It's an identifier for all _views_
 of a specific _edition_ of your XID Document. In contrast, the XID
