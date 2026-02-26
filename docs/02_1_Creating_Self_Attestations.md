@@ -5,7 +5,7 @@ factual claims that invite verification rather than demand belief.
 
 > **🧠 Related Concepts.** After completing this tutorial, explore
 [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) and
-[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/self-attestation.md) to deepen your
+[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/attestation-endorsement-model.md) to deepen your
 understanding.
 
 ## Objectives for this Section
