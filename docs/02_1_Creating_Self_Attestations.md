@@ -446,11 +446,11 @@ matters. Self attestations are starting points for building trust, not
 proof of competence. The `verifiableAt` field points to evidence that
 verifiers can check independently.
 
-### Step 12: Ben Checks the Claim
+### Step 12: Check the Claim
 
 Ben follows the `verifiableAt` URL to GitHub and verifies that PR #12847 exists, was merged, and adds mass spec visualization. He also sees that it was created by a GitHub account with the name of "BRadvoc8". This is all very suggestive and provides some verification for Amira's claim.
 
-However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. We'll get back to that in [Tutorial 06](06-creating-edges.md). For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.
+However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. We'll get back to that in chapter 3. For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.
 
 > :brain: **Learn more**: The [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
 
