@@ -64,7 +64,7 @@ separation between her pseudonymous contributions and her legal
 identity, protecting herself from adversaries who might target her or
 her family for her work.
 
-> :book: **What is a Pseudonymous Identity?** A pseudoynmous identity
+> 📖 **What is a Pseudonymous Identity?** A pseudoynmous identity
 is an ongoing identity that's intended for continuous usage, but which
 links to a name or identifier that doesn't match your real-world name.
 
@@ -159,7 +159,7 @@ structures.
 The first step in creating Amira's "BRadvoc8" pseudonymous identity is
 creating a XID as an anchor. 
 
-> :book: **What is a XID?** A XID is an eXtensible IDentifier. It's a
+> 📖 **What is a XID?** A XID is an eXtensible IDentifier. It's a
 Blockchain Commons technology built on Gordian Envelope, which is a
 smart document system that provides abilities such as elision and
 encryption, as well as other technologies such as Provenance
@@ -199,7 +199,7 @@ This command runs the `envelope` CLI twice:
 1. `envelope generate keypairs` creates an Ed25519 keypair (the same algorithm SSH, git, and Signal use). This generates two URs, containing the private and public keys, respectively.
 2. `envelope xid new` creates a XID based on that Ed25519 keypair. This generates a XID Document (XIDDoc), which can be read as a Gordian Envelope. We'll usually refer to it just as XID.
 
-> :book: **What is a UR?** A UR is a Uniform Resource, another
+> 📖 **What is a UR?** A UR is a Uniform Resource, another
 Blockchain Commons technology. It provides a standardized,
 self-describing way to pass around data such as keys, envelopes, and
 XIDs.
@@ -218,7 +218,7 @@ should still be wary of distributing a XID that contains those private
 keys. Fortunately, you can elide (remove) that data, as described
 below. Obviously, you must also be careful to protect your password.
 
-> :book: **What is a Wrapped Envelope?** A Gordian Envelope is a
+> 📖 **What is a Wrapped Envelope?** A Gordian Envelope is a
 package of informational triplets in the form of
 subject-predicate-object. An assertion (the predicate and the object)
 always applies to a specific subject. To make an assertion apply to
@@ -280,7 +280,7 @@ Here's what the individual parts of that "formatting" mean:
 - The `ProvenanceMark(...)` is a "genesis" mark: the first in a chain that tracks this identity's evolution.
    - The encrypted `provenanceGenerator` is the secret that created this mark and will create all future marks when Amira publishes new editions of her XID Document.
 
-> :book: **What is a Provenance Mark?** A provenance mark is a
+> 📖 **What is a Provenance Mark?** A provenance mark is a
 forward-commitment hash chain. It will be used to record the evolution
 of this identity, showing that each edition is linked to the previous
 one (and also, which is the newest edition of the set).
@@ -401,7 +401,7 @@ you find the right hash, you simply tell the Envelope CLI to remove
 the data represented by that particular data. So to remove the private
 key you need to first find its hash in your envelope.
 
-> :book: **What is a View?** A view is a version of a XID that has
+> 📖 **What is a View?** A view is a version of a XID that has
 been elided in a specific way. The XID itself isn't changed: every
 view of the same XID has the same root hash. However, what's visible
 will be different from one view to another.
