@@ -63,7 +63,7 @@ Amira has three options for handling the correlation risk of her crypto audit ex
 
 Amira decides her crypto audit experience fits the middle category. She might need to prove this capability to future collaborators, but she doesn't want to publish it broadly. She'll commit an elided version publicly and reveal the full attestation selectively.
 
-> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md), which is the ability to reveal different information to different parties from the same underlying data structure.
+> 🧠 **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md), which is the ability to reveal different information to different parties from the same underlying data structure.
 
 ## Part I: Creating a Commitment
 
