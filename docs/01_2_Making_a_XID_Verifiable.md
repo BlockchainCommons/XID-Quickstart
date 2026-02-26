@@ -149,7 +149,7 @@ Note that you didn't have to repeat commands like `--nickname`. That's
 because the whole previous XID was read in. You just had to redo the
 encryption and signing at the end.
 
-> :book: **What is an Edition?** An edition is a new version of a XID
+> 📖 **What is an Edition?** An edition is a new version of a XID
 that contains new content (or has removed old content). It will have a
 different root hash, but the XID identifier always stays the
 same. This is different from a new view, which is a new way to look at
