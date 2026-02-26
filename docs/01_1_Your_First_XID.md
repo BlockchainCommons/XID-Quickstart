@@ -97,7 +97,7 @@ rotate your keys. If something goes wrong, recovery mechanisms let you
 restore access to your identity (and so your reputation, attestation,
 and endorsement history).
 
-> :fire: ***What is the Power of XIDs?** The powers of XIDs include
+> 🔥 ***What is the Power of XIDs?** The powers of XIDs include
 true self-sovereignty, rich metadata support, holder-based elision,
 and ongoing key management.
 
