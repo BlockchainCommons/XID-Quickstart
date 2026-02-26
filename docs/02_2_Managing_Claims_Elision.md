@@ -45,7 +45,7 @@ Watch how Amira's anonymity set shrinks:
 
 That last combination might describe three people in the world. If an adversary knows those facts and sees BRadvoc8's public profile, correlation becomes trivial.
 
-> :warning: **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
+> ⚠️ **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
 
 ## The Possibilities of Protecting Sensitive Data
 
