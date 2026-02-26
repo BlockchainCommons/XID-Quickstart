@@ -805,27 +805,7 @@ This script will create all the files shown in the File Organization section (be
 
 ---
 
-## Appendix I: Common Questions
-
-### Q: What if I lose my XID file?
-
-**A:** If you lose your `BRadvoc8-xid.envelope` file without a backup, **you lose your identity**. This is just like losing your SSH `id_rsa` file. There's no recovery mechanism without a backup, so make sure to store encrypted copies in multiple secure locations.
-
-### Q: Can I use this XID on multiple devices?
-
-**A:** Yes! Copy your `BRadvoc8-xid.envelope` file to other devices. Since the private keys are encrypted, the file is reasonably safe to sync via cloud storage (as long as you have a strong password!). The XID identifier stays the same regardless of which device you're using. 
-
-You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity. More on this in future tutorials.
-
-### Q: What if I need to revoke my keys?
-
-**A:** Unlike with SSH keys, you can revoke a key pair while keeping your XID persistent.
-
-### Q: Why is signing done with Ed25519 instead of Schnorr or other algorithms?
-
-**A:** Ed25519 is the industry standard (SSH, git, Signal) with wide compatibility and excellent security. Advanced users can use other algorithms (`--signing schnorr`, `--signing ecdsa`, `--signing mldsa44`), but Ed25519 is recommended for beginners.
-
-## Appendix II: Key Terminology
+## Appendix I: Key Terminology
 
 > **Assertion** - A predicate-object pair in an envelope, making a claim about the subject (e.g., `'key': PublicKeys(...)`).
 >
@@ -858,3 +838,24 @@ You can also create device-specific keys and delegate permissions, allowing each
 > **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document editions because it's bound to that original key.
 >
 > **XIDDoc (XID Document)** - The envelope document containing an XID and its assertions (keys, provenance, metadata). This is what you create, update, and share.
+
+## Appendix II: Common Questions
+
+### Q: What if I lose my XID file?
+
+**A:** If you lose your `BRadvoc8-xid.envelope` file without a backup, **you lose your identity**. This is just like losing your SSH `id_rsa` file. There's no recovery mechanism without a backup, so make sure to store encrypted copies in multiple secure locations.
+
+### Q: Can I use this XID on multiple devices?
+
+**A:** Yes! Copy your `BRadvoc8-xid.envelope` file to other devices. Since the private keys are encrypted, the file is reasonably safe to sync via cloud storage (as long as you have a strong password!). The XID identifier stays the same regardless of which device you're using. 
+
+You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity. More on this in future tutorials.
+
+### Q: What if I need to revoke my keys?
+
+**A:** Unlike with SSH keys, you can revoke a key pair while keeping your XID persistent.
+
+### Q: Why is signing done with Ed25519 instead of Schnorr or other algorithms?
+
+**A:** Ed25519 is the industry standard (SSH, git, Signal) with wide compatibility and excellent security. Advanced users can use other algorithms (`--signing schnorr`, `--signing ecdsa`, `--signing mldsa44`), but Ed25519 is recommended for beginners.
+
