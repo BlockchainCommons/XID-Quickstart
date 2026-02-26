@@ -110,7 +110,7 @@ If not installed, see
 [§1.1](01_1_Your_First_XID.md#step-0-setting-up-your-workspace) for
 installation instructions.
 
-You'll also want to reload your XID. The following assumes use of the [`envelopes`](envelopes) directory that was described in the last tutorial.
+You'll also want to reload your XID. The following assumes use of the [`envelopes`](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes) directory that was described in the last tutorial.
 ```
 XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
 XID_ID=$(envelope xid id $XID)
