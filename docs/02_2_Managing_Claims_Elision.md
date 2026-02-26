@@ -1,32 +1,34 @@
-# Tutorial 04: Managing Sensitive Claims with Elision
+# 2.2: Managing Sensitive Claims with Elision
 
-Handle credentials that are too risky to publish publicly using commitment patterns and selective disclosure.
+This sections describes how to handle credentials that are too risky
+to publish publicly using commitment patterns and selective
+disclosure.
 
-* **Time to complete**: ~20-25 minutes
-* **Difficulty**: Intermediate
-* **Builds on**: Tutorials 01-03
+> **Related Concepts.** After completing this tutorial, explore
+[Progressive Trust](../concepts/progressive-trust.md) and
+[Self-Attestation](../concepts/self-attestation.md) to deepen your
+understanding.
 
-> **Related Concepts**: After completing this tutorial, explore [Progressive Trust](../concepts/progressive-trust.md) and [Self-Attestation](../concepts/self-attestation.md) to deepen your understanding.
+## Objectives for this Section
 
-## Prerequisites
+After working through this section, a developer will be able to:
 
-- Completed [Tutorial 03](03-creating-self-attestations.md) (Fair Witness Attestations)
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool (already installed in Tutorial 01)
+- Make a commitment.
+- Verify a commitment against a revealed claim.
 
-## What You'll Learn
+Supporting objectives include the ability to:
 
-- How **correlation risk** compounds with each public claim
-- Three approaches for handling sensitive information
-- How **Inclusion proofs** allow you to commit now and reveal later
-- The verifier's workflow for checking revealed claims
+- Understand how correlation risk compounds with each public claim.
+- Differentiate between three approaches for handling sensitive information.
+- Undestand how inclusion proofs allow you to commit now and reveal later.
 
-## The Problem: Every Claim Narrows the Field
+## Amira's Story: Every Claim Narrows the Field
 
 Amira did cryptographic audit work for a fintech startup in 2023-2024. She reviewed authentication implementations, found vulnerabilities, and helped to fix them. It's valuable experience that would strengthen her credibility for security work. But "crypto auditor" is a rare skill. How many people worldwide have done professional cryptographic audits? Maybe a few thousand. Combine that with other public claims, which might include that she's a Galaxy Project contributor, is privacy-focused, and speaks Portuguese, and the intersection might describe only a handful of people.
 
 This is correlation risk. Each claim by itself might be safe. Combined, they create a fingerprint.
 
-> :book: **What is a Correlation Risk?**: Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.
+> :book: **What is a Correlation Risk?** Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.
 
 ### How Claims Compound
 
@@ -43,9 +45,9 @@ Watch how Amira's anonymity set shrinks:
 
 That last combination might describe three people in the world. If an adversary knows those facts and sees BRadvoc8's public profile, correlation becomes trivial.
 
-> :warning: **Consider the Correlation Risks Before Making Claims**. Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
+> :warning: **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
 
-## Part I: About Protecting Your Sensitive Information
+## The Possibilities of Protecting Sensitive Data
 
 Amira has three options for handling the correlation risk of her crypto audit experience.
 
@@ -63,7 +65,7 @@ Amira decides her crypto audit experience fits the middle category. She might ne
 
 > :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](../concepts/selective-disclosure.md), which is the ability to reveal different information to different parties from the same underlying data structure.
 
-## Part II: Creating the Commitment
+## Part I: Creating a Commitment
 
 ### Step 0: Verify Dependencies & Reload XID
 
@@ -83,7 +85,7 @@ You should then reload your Attestation keys from the last tutorial:
 ATTESTATION_PRVKEYS=$(cat envelopes/attestation-private-03.ur)
 ATTESTATION_PUBKEYS=$(cat envelopes/attestation-public-03.ur)
 ```
-If you instead need to create new ones, see [Tutorial 03](03-creating-self-attestations.md#step-1-create-an-attestation-key) for how to do so, then register your keys in your XID.
+If you instead need to create new ones, see [§2.2](02_1_Creating_Self_Attestations.md#step-1-create-an-attestation-key) for how to do so, then register your keys in your XID.
 
 ### Step 1: Create the Sensitive Attestation
 
@@ -154,32 +156,76 @@ envelope format "$AUDIT_ELIDED"
 │ ELIDED
 ```
 
-The elided version shows nothing, just the word `ELIDED`. But here's the key property: the hash (digest) fo the elided envelope will be identical to the hash of the original envelope, offering proof that their content is identical, even though it can not longer be seen in the elided envelope.
+The elided version shows nothing, just the word `ELIDED`. But here's the key property: the hash (digest) of the elided envelope will be identical to the hash of the original envelope, offering proof that their content is identical, even though it can not longer be seen in the elided envelope.
 
-> :bulb: **Public commitment lists.** You might maintain a list of digests in your public profile with category hints (e.g., "Security", "Privacy Engineering"). This tells collaborators you have additional credentials without revealing what they are.
+This commitment could be published in a variety of ways. Amira might
+have a set of self-attestations available on her GitHub, some of which
+are elided and some of which are not. Or, she might maintain a public
+commitment list. This is typically a list of digests in a public
+profile with category hints (e.g., "Security", "Privacy
+Engineering"). This tells collaborators that she has additional
+credentials without revealing what they are.
 
-## Part III: Revealing a Commitment
+> :book: **What is a Commitment?** A commitment is literally a
+promise. Cryptographically, a commitment is a promise that you have
+recorded a certain value. All you reveal is a hash of that value,
+which is the cryptographic commitment. Since (probabalistically) each
+recorded value only leads to one hash, when you reveal the original
+value and it hashes correctly, your commitment has been fulfilled.
 
-Six months later, DevReviewer is evaluating Amira for a security collaboration. They've seen her public attestation (about the Galaxy Project) but want to know about her security audit experience. Amira mentions that she has relevant experience but couldn't share details publicly.
+## Part II: Revealing a Commitment
 
-### Step 4: Amira Reveals to DevReviewer
+Amira set up her audit commitment when she created her BRadvoc8
+identity, so that she could work with Ben. But the whole point of
+commitments is that they sit around, gaining trust as they do, and
+tend to be revealed later. That's the case here.  Six months later,
+Amira has approached DevReviewer for a security collaboration.
 
-Amira sends DevReviewer the full attestation (`$AUDIT_SIGNED`).
+### Step 4: Highlight the Commitment
 
-DevReviewer already has the elided commitment (from Amira's public profile or an earlier conversation). Now they have the full version too.
+DevReviewer has seen Amir'as public attestation (about the Galaxy
+Project) but want to know about her security audit experience. Amira
+mentions that she has relevant experience but couldn't share details
+publicly. She points to the commitment.
 
-DevReviewer's verification of the full attestation will come in two parts: checking that this is the same document as the commitment and verifying the signature.
+DevReviewer looks at the commitment, which is stored on GitHub, and
+uses its (more trustworthy) datestamping to verify it was commited to
+GitHub about six months ago, and it's one of just a few public
+commitments of that sort.
 
-### Step 5: DevReviewer Verifies the Inclusion Proof
+### Step 5: Reveal the Unelided Claim
+
+Amira next sends DevReviewer the full attestation (`$AUDIT_SIGNED`)
+via a secure message system. DevReviewer now has both versions.
+
+## Part III: Verifying the Commitment
+
+We now switch to DevReviewer's point of view. Their verification of
+the full attestation will come in two parts: checking that this is the
+same document as the commitment (which is very similar to the process
+of checking an inclusion proof) and verifying the signature.
+
+> :book: **What is an Inclusion Proof?** An inclusion proof typically
+reveals that a piece of data is part of a larger data set without
+revealing the entirety of the larger data set. For example, you could
+a claim was in a partially elided Gordian Envelope just by knowing a
+hash of the claim that was still visible in the envelope. Verifying a
+commitment of this sort isn't quite the same thing since here we're
+checking that a piece of data matches another piece of data that isn't
+entirely revealed. But the theory and the procedure are largely the
+same.
+
+### Step 6: Test the Commitment
 
 DevReviewer computes the digest of what they received:
 
 ```
-ELIDED_DIGEST=$(envelope digest "$AUDIT_ELIDED")
-RECEIVED_DIGEST=$(envelope digest "$AUDIT_SIGNED")
+ELIDED_DIGEST=$(envelope digest "$AUDIT_ELIDED") # Downloaded from GitHub
+RECEIVED_DIGEST=$(envelope digest "$AUDIT_SIGNED") # Received from Amira
 ```
-
-They then compare that to the known commitment digest:
+They then compare these two digests, the commited digest (downloaded
+from GitHub) and the digest on the fully visible claim (received from
+Amira).
 ```
 echo "Commitment digest: $ELIDED_DIGEST"
 echo "Received digest:   $RECEIVED_DIGEST"
@@ -200,27 +246,32 @@ The digests match. This proves the full attestation Amira revealed is the same d
 
 > :book: **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
 
-### Step 6: DevReviewer Verifies the Signature
+### Step 7: Verify the Signature
 
-Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [tutorial 03](03-creating-self-attestations.md#part-iv-ben-again-verifies) for a more complex methodology to check a signature against every public key in a XID.)
+Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [§2.1](02_1_Creating_Self_Attestations.md#part-iv-ben-again-verifies) for a more complex methodology to check a signature against every public key in a XID.)
 ```
 envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED"
 
 │ (no response means signature is valid.)
 ```
 
-The signature is valid. Combined with the inclusion proof, DevReviewer has three pieces of information: 
+The signature is valid.
+
+### Step 8: Assess Your Level of Trust
+
+Combining the valid signature with the verified commitment,
+DevReviewer has three pieces of information:
 
 | What DevReviewer Can Verify | What Remains Unproven |
 |---------------------|----------------------|
 | ✅ Claim matches a public commitment | ❓ Claim is actually true |
 | ✅ Claim was published at a previous date | ❓ What other hidden claims say |
-| ✅ Claim was not modified | ❓ Whether claim modifies a different hidden claim |
+| ✅ Claim was not modified | ❓ Whether claim varies a different hidden claim |
 | ✅ BRadvoc8 signed the claim | ❓ Who BRadvoc8 is |
 
 DevReviewer can now read the claim and factor it into their trust decision.
 
-#### A Review of Elision
+#### A Review of Envelope Elision
 
 There's an important limitation to understand for elision. A fully `ELIDED` envelope has no content, no metadata, and no signature visible.
 
@@ -240,9 +291,17 @@ envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_ELIDED"
 
 The elided version is just a digest placeholder: it proves something with its digest, but you can't verify its authenticity without the full version. This is by design. The commitment pattern separates timing from content: in the commit phase, you publish the elided version to prove when you made the claim; in the reveal phase, you share the full version with specific people to prove what you claimed; then the recipient verifies the revealed version matches the public commitment.
 
-### Step 7: Amira Supersedes a Commitment
+## Part IV: Managing the Commitment Lifecycle
 
-This doesn't have to be the end of the life cycle of a commitment. If Amira's skills evolve, of if she joins other projects, she can create new commitments, just as she managed the [lifecycle](03-creating-self-attestations.md#part-v-managing-the-attestation-lifecycle) of her visible attestations. Old commitments remain valid but can be retired.
+This doesn't have to be the end of the life cycle of a commitment.
+
+### Step 9: Supersede a Commitment
+
+If Amira's skills evolve, of if she joins other projects, she can
+create new commitments, just as she managed the
+[lifecycle](02_1_Creating_Self_Assertions.md#part-v-managing-the-attestation-lifecycle)
+of her visible attestations. Old commitments remain valid but can be
+retired.
 
 ## Summary: From Correlation to Elision
 
@@ -256,11 +315,9 @@ This tutorial introduced the problem of correlation risk: how claims compound to
 
 ## What's Next
 
-The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? Amira's CivilTrust work falls into this category: she can't even suggest she has human rights technology experience. 
+The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? That's the topic [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md).
 
-**Tutorial 05: Managing Sensitive Claims with Encryption** discusses how to share even more sensitive information by encrypting it, then sharing that content with specific trusted people.
-
-[ Next Tutorial: [Managing Sensitive Claims with Encryption](05-managing-claims-encryption.md) | Previous Tutorial: [Creating Self Attestations](03-creating-self-attestations.md) ]
+--
 
 ## Appendix I: Key Terminology
 
@@ -270,4 +327,4 @@ The commit-reveal pattern works for proving timing and existence. But what about
 >
 > **Elided Envelope**: An envelope with content removed but cryptographic identity (digest) preserved. Proves existence without revealing content.
 >
-> **Inclusion Proof**: Demonstrating that a revealed document matches a previously published commitment (same digest).
+> **Inclusion Proof**: A demonstration that a revealed document is found in a larger document that has not been entirely revealed.
