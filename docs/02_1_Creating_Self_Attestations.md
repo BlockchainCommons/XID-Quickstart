@@ -602,7 +602,7 @@ BRadvoc8 is now an identity with an initial claim about skills, but that's opene
 
 A complete working script implementing this tutorial is available at `../tests/03-creating-self-attestations.sh`.
 
---
+---
 
 ## Appendix I: Key Terminology
 
