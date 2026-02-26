@@ -3,7 +3,7 @@
 This section demonstrates how to maintain a XID's freshness without
 direct communication through the use of a publication URL.
 
-> 🧠 **Related concepts.** This tutorial introduces verification and freshness. To understand the underlying principles, see [Progressive Trust](../concepts/progressive-trust.md) for how trust builds incrementally, and [Data Minimization](../concepts/data-minimization.md) for controlling what you disclose when publishing.
+> 🧠 **Related concepts.** This tutorial introduces verification and freshness. To understand the underlying principles, see [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) for how trust builds incrementally, and [Data Minimization](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md) for controlling what you disclose when publishing.
 
 ## Objectives for this Section
 
@@ -484,7 +484,7 @@ fi
 This is why signature verification is an important check: it catches any tampering that occurred after Amira signed the document.
 
 > 🧠 **Learn More.** The [Signing and
-Verification](../concepts/signing-verification.md) concept doc
+Verification](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/signing-verification.md) concept doc
 explains how envelope signatures work and why elision preserves
 signature validity.
 
@@ -516,7 +516,7 @@ But a few other things are just assumed, without proof:
 Future tutorials will concentrate on showing how a XID can better
 support these assumptions.
 
-> 🧠 **Learn More.** The [Progressive Trust](../concepts/progressive-trust.md) concept doc explores the full trust hierarchy and how verification layers combine.
+> 🧠 **Learn More.** The [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) concept doc explores the full trust hierarchy and how verification layers combine.
 
 | What Ben Can Verify | What Remains Unproven |
 |---------------------|----------------------|
