@@ -165,7 +165,7 @@ encryption, as well as other technologies such as Provenance
 Marks. XIDs are built to be autonomous cryptographic objects, which
 means that they can be used without depending on a central server or
 even a reliable communication network. More details are available in
-the [XID concepts file](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid) and the [envelope concepts
+the [XID concepts file](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid.md) and the [envelope concepts
 file](../ceoncepts/gordian-envelope.md).
 
 A single `envelope` operation creates a complete XID that contains
