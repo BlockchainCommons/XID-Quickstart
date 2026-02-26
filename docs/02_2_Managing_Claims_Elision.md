@@ -5,8 +5,8 @@ to publish publicly using commitment patterns and selective
 disclosure.
 
 > **🧠 Related Concepts.** After completing this tutorial, explore
-[Progressive Trust](../concepts/progressive-trust.md) and
-[Self-Attestation](../concepts/self-attestation.md) to deepen your
+[Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) and
+[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/self-attestation.md) to deepen your
 understanding.
 
 ## Objectives for this Section
@@ -63,7 +63,7 @@ Amira has three options for handling the correlation risk of her crypto audit ex
 
 Amira decides her crypto audit experience fits the middle category. She might need to prove this capability to future collaborators, but she doesn't want to publish it broadly. She'll commit an elided version publicly and reveal the full attestation selectively.
 
-> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](../concepts/selective-disclosure.md), which is the ability to reveal different information to different parties from the same underlying data structure.
+> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/selective-disclosure.md), which is the ability to reveal different information to different parties from the same underlying data structure.
 
 ## Part I: Creating a Commitment
 
@@ -89,7 +89,7 @@ If you instead need to create new ones, see [§2.2](02_1_Creating_Self_Attestati
 
 ### Step 1: Create the Sensitive Attestation
 
-You should create Amira's crypto audit attestation with [fair witness](../concepts/fair-witness.md) precision:
+You should create Amira's crypto audit attestation with [fair witness](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/fair-witness.md) precision:
 
 ```
 AUDIT_CLAIM=$(envelope subject type string \
