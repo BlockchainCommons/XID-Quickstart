@@ -6,7 +6,7 @@ disclosure.
 
 > **🧠 Related Concepts.** After completing this tutorial, explore
 [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) and
-[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/self-attestation.md) to deepen your
+[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/attestation-endorsement-model.md) to deepen your
 understanding.
 
 ## Objectives for this Section
@@ -53,7 +53,7 @@ Amira has three options for handling the correlation risk of her crypto audit ex
 
 * **Option 1: Omit Entirely.** Don't mention it at all. If Amira never needs to prove this experience, keeping it private is the safest choice. There's zero correlation risk from information that isn't published. The downside is that she loses the reputation benefit. If crypto audit experience would help her get accepted onto a security project, omitting it means she can't use it.
 * **Option 2: Commit Elided.** Create the attestation and sign it, but publish only an opaque commitment (the digest). The commitment proves that Amira had some claim at a specific time, without revealing what the claim says. Later, she can reveal the full attestation to specific people who can verify that it matches the public commitment. This is the "prove I had it all along" pattern. It's useful when you might need to demonstrate timing without revealing content and also tends to give weight to a claim because it didn't come out of nowhere. This is what we'll cover in this Tutorial.
-* **Option 3: Encrypt for Recipient.** Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all. This is covered in [Tutorial 05](3-creating-self-attestations.md). It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.
+* **Option 3: Encrypt for Recipient.** Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all. This is covered in [Tutorial §2.3](02_3_Managing_Claims_Encryption.md). It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.
 
 | Situation | Approach |
 |-----------|----------|
@@ -63,7 +63,7 @@ Amira has three options for handling the correlation risk of her crypto audit ex
 
 Amira decides her crypto audit experience fits the middle category. She might need to prove this capability to future collaborators, but she doesn't want to publish it broadly. She'll commit an elided version publicly and reveal the full attestation selectively.
 
-> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/selective-disclosure.md), which is the ability to reveal different information to different parties from the same underlying data structure.
+> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md), which is the ability to reveal different information to different parties from the same underlying data structure.
 
 ## Part I: Creating a Commitment
 
