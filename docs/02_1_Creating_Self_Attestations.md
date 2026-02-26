@@ -3,7 +3,7 @@
 This section demonstrates how to build credibility through specific,
 factual claims that invite verification rather than demand belief.
 
-> **Related Concepts.** After completing this tutorial, explore
+> **🧠 Related Concepts.** After completing this tutorial, explore
 [Progressive Trust](../concepts/progressive-trust.md) and
 [Self-Attestation](../concepts/self-attestation.md) to deepen your
 understanding.
