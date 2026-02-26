@@ -4,8 +4,8 @@ This section demonstrates how to build credibility through specific,
 factual claims that invite verification rather than demand belief.
 
 > **🧠 Related Concepts.** After completing this tutorial, explore
-[Progressive Trust](../concepts/progressive-trust.md) and
-[Self-Attestation](../concepts/self-attestation.md) to deepen your
+[Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) and
+[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/self-attestation.md) to deepen your
 understanding.
 
 ## Objectives for this Section
@@ -62,7 +62,7 @@ attestations ARE your credentials.  When you are making
 self-attestations, it is therefore best to both create attestations
 that are verifiable and then provide the methodology for verifying.
 
-["Fair witness claims"](../concepts/fair-witness.md) are a
+["Fair witness claims"](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/fair-witness.md) are a
 particularly strong type of attestation. The person making the
 attestation does their best to report without interpretation,
 assumption, or bias (as best they can!).
@@ -452,7 +452,7 @@ Ben follows the `verifiableAt` URL to GitHub and verifies that PR #12847 exists,
 
 However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. We'll get back to that in [Tutorial 06](06-creating-edges.md). For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.
 
-> :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
+> :brain: **Learn more**: The [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
 
 ### Step 13: Assess Your Level of Trust
 
