@@ -406,7 +406,7 @@ been elided in a specific way. The XID itself isn't changed: every
 view of the same XID has the same root hash. However, what's visible
 will be different from one view to another.
 
-#### Find the Private Key Digest
+**Find the Private Key Digest:**
 
 In a graphical UI, this whole process might be as simple as clicking
 on the private-key assertion in the envelope and hitting the DELETE
@@ -464,7 +464,7 @@ fi
 │ ✅ Found private key digest
 ```
 
-#### Elide Your XID
+**Elide Your XID:**
 
 Eliding your private key from your XID to create a public view simply
 requires using the `elide` command to remove the data represented by
@@ -596,7 +596,7 @@ One of the powers of a XID is that it can be verified in various ways
 (though that doesn't necessarily mean someone is who they say they
 are, as is described in "What We Proved" in future sections).
 
-## Step 4: Verify the XID
+### Step 4: Verify the XID
 
 You also want to test out the verification of your XID, as that'll be
 crucial when you actually publish it. There are two ways to do so:
@@ -636,7 +636,7 @@ demonstrate that updates of this XID Document continue to be signed by
 this original (inception) key or by a new key that has been authorized
 by the inception key, possibly through a chain of authorizations.
 
-## Step 5: Verify the Provenance Mark
+### Step 5: Verify the Provenance Mark
 
 The provenance mark can also be verified. To do this, extract the Provenance Mark with the `xid provenance` command:
 
