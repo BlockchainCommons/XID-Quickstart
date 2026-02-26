@@ -36,7 +36,7 @@ herself (or rather, about her identity) that reveal her
 capabilities. The problem is that a vague claim like "Security expert
 with 8 years experience" is worthless. Anyone can type that.
 
-> :book: **What is a self attestation?**: As the name suggestion, a
+> 📖 **What is a self attestation?**: As the name suggestion, a
 self attestation is a claim that you make about yourself. It's
 contrasted with an *endorsement*, where someone else vouches for
 you. Self-attestations are starting points; endorsements carry more
@@ -67,7 +67,7 @@ particularly strong type of attestation. The person making the
 attestation does their best to report without interpretation,
 assumption, or bias (as best they can!).
 
-> :book: **What is the Fair Witness Methodology?**: The Fair Witness
+> 📖 **What is the Fair Witness Methodology?**: The Fair Witness
 methodology is derived from Robert E. Heinlein's _Stranger in a
 Strange Land_ (1961). A Fair Witness makes a claim of what they
 directly observed, avoiding interpretation, assumption, or (as much as
@@ -132,7 +132,7 @@ ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
 ```
 
-> :book: **What are Attestation Keys?**: Attestation keys are
+> 📖 **What are Attestation Keys?**: Attestation keys are
   dedicated signing key for making attestations.
 
 ### Step 2: Register Attestation Key in XID
@@ -280,7 +280,7 @@ With an attestation key in hand, and linked to Amira's XID, you're now ready to 
 
 This isn't a question of privacy: you can always choose to elide and encrypt attestations that you don't want to receive wide attention, even if they're in your XID. (In fact that's the topic of the next two tutorials.) It's instead a question of keeping the XID lean enough that someone can reasonably look over it without being lost in irrelevent details.
 
-> :book: **What is a Detached Attestation?**: When an attestation is detached, it appears as a signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+> 📖 **What is a Detached Attestation?**: When an attestation is detached, it appears as a signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
 
 In this case, a single PR is a pretty small detail, and not necessarily something that Amira will be talking about in a year or two when she (hopefully) has major design work on SisterSpaces to point to. So you'll create it as a detached attestation.
 
@@ -528,7 +528,7 @@ envelope format "$S_SIGNED_ATTESTATION" | head -12
 | ]
 ```
 
-> :book: **What is a Superseding Attestation?**: A superseding attestation is a new attestation with a `supersedes` assertion that points to a previous attestation's digest. The original remains valid, but the newer attestation reflects the current state.
+> 📖 **What is a Superseding Attestation?**: A superseding attestation is a new attestation with a `supersedes` assertion that points to a previous attestation's digest. The original remains valid, but the newer attestation reflects the current state.
 
 ### Step 15: Retract an Attestation
 
@@ -558,7 +558,7 @@ envelope format $RETRACTION
 
 Retractions are serious: they indicate an error in judgment. Use them sparingly. Most updates are supersessions (extending or refining), not retractions (correcting errors). Amira definteily won't be retracting anything at this point!
 
-> :book: **What is a Retracting Attestation?**: A superseding attestation is a Gordian Envelope that references a previous attestation and states both that it's been retracted and why.
+> 📖 **What is a Retracting Attestation?**: A superseding attestation is a Gordian Envelope that references a previous attestation and states both that it's been retracted and why.
 
 ## Summary: The World of Attestations
 
