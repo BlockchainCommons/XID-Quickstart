@@ -81,7 +81,7 @@ contribution is a simple statement of fact, as long as you don't adorn
 it by saying something like, "I made a _crucial_ contribution to the
 Galaxy Project."
 
-> :fire: **What is the Power of Fair Witness Attestations?** Fair
+> 🔥 **What is the Power of Fair Witness Attestations?** Fair
 witness attestations do their best to report without bias. This makes
 them more verifiable, and verifiability is what's important in the
 world of pseudonymous claims.
