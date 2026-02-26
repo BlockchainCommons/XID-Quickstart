@@ -4,7 +4,7 @@ This sections describes how to handle credentials that are too risky
 to publish publicly using commitment patterns and selective
 disclosure.
 
-> **Related Concepts.** After completing this tutorial, explore
+> **🧠 Related Concepts.** After completing this tutorial, explore
 [Progressive Trust](../concepts/progressive-trust.md) and
 [Self-Attestation](../concepts/self-attestation.md) to deepen your
 understanding.
