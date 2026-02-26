@@ -106,7 +106,7 @@ it's self-sovereign (meaning that it's controlled by you).
 PUBLISH_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 ```
 
-> :warning: **Raw Content Required.** Your URL must point to raw
+> ⚠️ **Raw Content Required.** Your URL must point to raw
 content, not an HTML page.  If verifiers fetch an HTML page instead of
 the actual XID data, verification will fail. For GitHub repositories,
 use the `/raw/` URL path for web access or the
@@ -321,7 +321,7 @@ CURL_URL=`echo $RECEIVED_URL | sed 's/\/\/github.com\//\/\/raw.githubusercontent
 FETCHED_XID=$(curl -H 'Accept: application/vnd.github.v3.raw' $CURL_URL | head -1)
 ```
 
-> :warning: **Variable URLs.** The `dereferenceVia` indicated that Ben
+> ⚠️ **Variable URLs.** The `dereferenceVia` indicated that Ben
 should retrieve the current XIDDoc from
 `https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt`. That's a
 standard GitHub URL for retrieving raw files using a browser. However,
