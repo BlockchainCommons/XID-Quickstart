@@ -227,7 +227,7 @@ to the wrapped envelope. Signatures are assertions, so for a signature
 to apply to an entire envelope (in this case, all of the XID
 information), the envelope must be wrapped prior to signing.
 
-> :brain: **Learn More.** The [Signing and Verification](../concepts/signing.md) concept doc explains the cryptographic details of many of these elements.
+> 🧠 **Learn More.** The [Signing and Verification](../concepts/signing.md) concept doc explains the cryptographic details of many of these elements.
 
 ### Step 2: View Your XID Structure
 
