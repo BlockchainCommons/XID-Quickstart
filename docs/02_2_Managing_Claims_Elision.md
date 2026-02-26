@@ -28,7 +28,7 @@ Amira did cryptographic audit work for a fintech startup in 2023-2024. She revie
 
 This is correlation risk. Each claim by itself might be safe. Combined, they create a fingerprint.
 
-> :book: **What is a Correlation Risk?** Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.
+> 📖 **What is a Correlation Risk?** Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.
 
 ### How Claims Compound
 
@@ -166,7 +166,7 @@ profile with category hints (e.g., "Security", "Privacy
 Engineering"). This tells collaborators that she has additional
 credentials without revealing what they are.
 
-> :book: **What is a Commitment?** A commitment is literally a
+> 📖 **What is a Commitment?** A commitment is literally a
 promise. Cryptographically, a commitment is a promise that you have
 recorded a certain value. All you reveal is a hash of that value,
 which is the cryptographic commitment. Since (probabalistically) each
@@ -205,7 +205,7 @@ the full attestation will come in two parts: checking that this is the
 same document as the commitment (which is very similar to the process
 of checking an inclusion proof) and verifying the signature.
 
-> :book: **What is an Inclusion Proof?** An inclusion proof typically
+> 📖 **What is an Inclusion Proof?** An inclusion proof typically
 reveals that a piece of data is part of a larger data set without
 revealing the entirety of the larger data set. For example, you could
 a claim was in a partially elided Gordian Envelope just by knowing a
@@ -244,7 +244,7 @@ fi
 
 The digests match. This proves the full attestation Amira revealed is the same document she committed to earlier, not something she fabricated after the fact.
 
-> :book: **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
+> 📖 **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
 
 ### Step 7: Verify the Signature
 
