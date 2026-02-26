@@ -317,7 +317,7 @@ This tutorial introduced the problem of correlation risk: how claims compound to
 
 The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? That's the topic [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md).
 
---
+---
 
 ## Appendix I: Key Terminology
 
