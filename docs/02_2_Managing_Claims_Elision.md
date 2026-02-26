@@ -248,7 +248,7 @@ The digests match. This proves the full attestation Amira revealed is the same d
 
 ### Step 7: Verify the Signature
 
-Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [§2.1](02_1_Creating_Self_Attestations.md#part-iv-ben-again-verifies) for a more complex methodology to check a signature against every public key in a XID.)
+Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [§2.1](02_1_Creating_Self_Attestations.md#step-11-check-the-claims-signature) for a more complex methodology to check a signature against every public key in a XID.)
 ```
 envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED"
 
