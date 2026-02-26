@@ -54,13 +54,7 @@ The guide includes a visual concept map and multiple learning paths.
 
 ### Hands-on Tutorials
 
-The tutorials provide practical experience with XIDs:
-
-1. [Creating Your First XID](tutorials/01-your-first-xid.md) - Create a pseudonymous identity
-2. [Understanding XID Structure](tutorials/02-making-your-xid-verifiable.md) - Internal structure and components
-3. [Self-Attestation with XIDs](tutorials/03-self-attestation-with-xids.md) - Make verifiable claims about yourself
-4. [Peer Endorsement with XIDs](tutorials/04-peer-endorsement-with-xids.md) - Third-party verification methods
-5. [Key Management with XIDs](tutorials/05-key-management-with-xids.md) - Key rotation and recovery strategies
+Tutorials are now available in [docs](/docs/index.md).
 
 See also the [concept map](concepts/README.md#concept-map) and [Learning Path](LEARNING_PATH.md) for alternative ways to navigate these materials.
 
