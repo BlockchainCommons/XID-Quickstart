@@ -268,6 +268,7 @@ So far, Amira has two keys:
 Here's a look at our two XID versions created to date:
 
 | XID Version | New Content | Created In |
+|-------------|-------------|------------|
 | seq 0 | 👤 Identity | §1.1+§1.2 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 
