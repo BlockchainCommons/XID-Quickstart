@@ -157,7 +157,7 @@ The `envelope-cli` programs derives the public key from the private key automati
 
 1. `--allow sign` is a permission statement indicates this key can only sign, it cannot modify the XID itself. (That requires the inception key.)
 
-> :warning: **XID Functions Only!** If you're familiar with Gordian Envelope, you'll know that you can freely add assertions to an envelope. Though XID is built on envelope, it's intended to be a much more structured format, with all content always in carefully structured places such as `derferenceVia`, `key`, `provenance`, and other subjects that you'll meet in future tutorials. You should always expect to use `envelope xid` commands when working with the core XID structure (though you may place less structured content under certain key words, such as in the `edge` that we'll meet in the Tutorial 06).
+> ⚠️ **XID Functions Only!** If you're familiar with Gordian Envelope, you'll know that you can freely add assertions to an envelope. Though XID is built on envelope, it's intended to be a much more structured format, with all content always in carefully structured places such as `derferenceVia`, `key`, `provenance`, and other subjects that you'll meet in future tutorials. You should always expect to use `envelope xid` commands when working with the core XID structure (though you may place less structured content under certain key words, such as in the `edge` that we'll meet in the Tutorial 06).
 
 ### Step 3: Advance Your Provenance Mark
 
@@ -330,7 +330,7 @@ Each assertion within the claim is a standardized known value that reveals a spe
 | 4 | `'target'` | XID ID | Says who the attestation is about |
 | 5 | `"verifiableAt"` | URI | Points to evidence for independent verification |
 
-> :warning: **Dates are Unreliable!**  The date is actually another unverifiable claim: it could be set to whatever the attestation creator wants to. Nonetheless, it has use because a good faith creator will date claims correctly, making it see easy to which claims are newer in case of a superseding claim being issued.
+> ⚠️ **Dates are Unreliable!**  The date is actually another unverifiable claim: it could be set to whatever the attestation creator wants to. Nonetheless, it has use because a good faith creator will date claims correctly, making it see easy to which claims are newer in case of a superseding claim being issued.
   
 ### Step 8: Sign the Attestation
 
