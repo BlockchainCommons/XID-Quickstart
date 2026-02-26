@@ -6,8 +6,8 @@ security.
 
 > 🧠 **Related Concepts.** Before or after completing this
 tutorial, you may want to read about [XID
-Fundamentals](../concepts/xid.md) and [Gordian Envelope
-Basics](../concepts/gordian-envelope.md) to understand the
+Fundamentals](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid.md) and [Gordian Envelope
+Basics](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/gordian-envelope.md) to understand the
 theoretical foundations.
 
 ## Objectives for this Section
@@ -53,7 +53,7 @@ presence that can evolve over time.
 On the advice of her friend Charlene, Amira investigates RISK, a
 network that connects developers with social-impact projects and
 protects participants' privacy. It uses a Blockchain Commons
-technology called [XIDs](../concepts/xid.md): these "eXtensible
+technology called [XIDs](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid.md): these "eXtensible
 IDentifiers" enable pseudonymous identity with progressive trust
 development. Amira will use RISK to create the "BRadvoc8" (Basic
 Rights Advocate) identity. Through RISK, Amira can then connect with
@@ -100,7 +100,6 @@ and endorsement history).
 > 🔥 ***What is the Power of XIDs?** The powers of XIDs include
 true self-sovereignty, rich metadata support, holder-based elision,
 and ongoing key management.
-
 
 ## Part I: Preparing to Work
 
@@ -166,7 +165,7 @@ encryption, as well as other technologies such as Provenance
 Marks. XIDs are built to be autonomous cryptographic objects, which
 means that they can be used without depending on a central server or
 even a reliable communication network. More details are available in
-the [XID concepts file](../concepts/xid) and the [envelope concepts
+the [XID concepts file](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid) and the [envelope concepts
 file](../ceoncepts/gordian-envelope.md).
 
 A single `envelope` operation creates a complete XID that contains
@@ -227,7 +226,7 @@ to the wrapped envelope. Signatures are assertions, so for a signature
 to apply to an entire envelope (in this case, all of the XID
 information), the envelope must be wrapped prior to signing.
 
-> 🧠 **Learn More.** The [Signing and Verification](../concepts/signing.md) concept doc explains the cryptographic details of many of these elements.
+> 🧠 **Learn More.** The [Signing and Verification](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/signing.md) concept doc explains the cryptographic details of many of these elements.
 
 ### Step 2: View Your XID Structure
 
@@ -275,7 +274,7 @@ Here's what the individual parts of that "formatting" mean:
    - The `privateKey` section has been `ENCRYPTED`, indicating that the private keys are protected.
       - The `'hasSecret': EncryptedKey(Argon2id)` notation notes that the private keys are encrypted with Argon2id, a modern algorithm designed to resist brute-force attacks.
       - `salt` is a random value that further obscures its subject.
-   - The `allow` statement determines what access these keys have to this identity, as described in [key management](../concepts/key-management.md). By default, keys have total access (`All`).
+   - The `allow` statement determines what access these keys have to this identity, as described in [key management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md). By default, keys have total access (`All`).
    - The `nickname` is inside the `PublicKeys` section, not at the top level. That's because a nickname labels a key, not the XID Document. Later keys could have different nicknames while maintaining the same XID identity.
 - The `ProvenanceMark(...)` is a "genesis" mark: the first in a chain that tracks this identity's evolution.
    - The encrypted `provenanceGenerator` is the secret that created this mark and will create all future marks when Amira publishes new editions of her XID Document.
@@ -385,7 +384,7 @@ that, you're going to go over the crical step that _would_ be required
 to publish a XID: creating a public view.
 
 When you create a shareable public view of a XID, you are engaging in
-[data minimization](../concepts/data-minimization.md). You're creating
+[data minimization](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md). You're creating
 a new way to look at the current edition of your XID that only
 includes the data that your recipient needs to see. This is "selective
 disclosure." Now, there's not a lot of information yet in Amira's XID,
