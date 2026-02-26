@@ -4,7 +4,7 @@ This section demonstrates how to create a basic XID (eXtensible
 IDentifier) that enables pseudonymous contributions while maintaining
 security. 
 
-> :brain: **Related Concepts.** Before or after completing this
+> 🧠 **Related Concepts.** Before or after completing this
 tutorial, you may want to read about [XID
 Fundamentals](../concepts/xid.md) and [Gordian Envelope
 Basics](../concepts/gordian-envelope.md) to understand the
