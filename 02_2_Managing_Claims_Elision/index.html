@@ -1,0 +1,1468 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/02_2_Managing_Claims_Elision/">
+      
+      
+        <link rel="prev" href="../02_1_Creating_Self_Attestations/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>2.2: Managing Sensitive Claims with Elision - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#22-managing-sensitive-claims-with-elision" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2.2: Managing Sensitive Claims with Elision
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-every-claim-narrows-the-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Every Claim Narrows the Field
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: Every Claim Narrows the Field">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-claims-compound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Claims Compound
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-possibilities-of-protecting-sensitive-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Possibilities of Protecting Sensitive Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-creating-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Creating a Commitment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Creating a Commitment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-verify-dependencies-reload-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Verify Dependencies &amp; Reload XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-the-sensitive-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create the Sensitive Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-sign-the-full-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Sign the Full Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-the-elided-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create the Elided Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-revealing-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Revealing a Commitment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Revealing a Commitment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-highlight-the-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Highlight the Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-reveal-the-unelided-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Reveal the Unelided Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-verifying-the-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Verifying the Commitment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Verifying the Commitment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-test-the-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Test the Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-the-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify the Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Assess Your Level of Trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Elision
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-managing-the-commitment-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Managing the Commitment Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Managing the Commitment Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-9-supersede-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Supersede a Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-from-correlation-to-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: From Correlation to Elision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: From Correlation to Elision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-every-claim-narrows-the-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Every Claim Narrows the Field
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: Every Claim Narrows the Field">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-claims-compound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Claims Compound
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-possibilities-of-protecting-sensitive-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Possibilities of Protecting Sensitive Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-creating-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Creating a Commitment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Creating a Commitment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-verify-dependencies-reload-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Verify Dependencies &amp; Reload XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-the-sensitive-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create the Sensitive Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-sign-the-full-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Sign the Full Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-the-elided-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create the Elided Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-revealing-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Revealing a Commitment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Revealing a Commitment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-highlight-the-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Highlight the Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-reveal-the-unelided-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Reveal the Unelided Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-verifying-the-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Verifying the Commitment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Verifying the Commitment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-test-the-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Test the Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-the-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify the Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Assess Your Level of Trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Elision
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-managing-the-commitment-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Managing the Commitment Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Managing the Commitment Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-9-supersede-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Supersede a Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-from-correlation-to-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: From Correlation to Elision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: From Correlation to Elision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="22-managing-sensitive-claims-with-elision">2.2: Managing Sensitive Claims with Elision</h1>
+<p>This sections describes how to handle credentials that are too risky
+to publish publicly using commitment patterns and selective
+disclosure.</p>
+<blockquote>
+<p><strong>🧠 Related Concepts.</strong> After completing this tutorial, explore
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md">Progressive Trust</a> and
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/attestation-endorsement-model.md">Self-Attestation</a> to deepen your
+understanding.</p>
+</blockquote>
+<h2 id="objectives-for-this-section">Objectives for this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Make a commitment.</li>
+<li>Verify a commitment against a revealed claim.</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand how correlation risk compounds with each public claim.</li>
+<li>Differentiate between three approaches for handling sensitive information.</li>
+<li>Undestand how inclusion proofs allow you to commit now and reveal later.</li>
+</ul>
+<h2 id="amiras-story-every-claim-narrows-the-field">Amira's Story: Every Claim Narrows the Field</h2>
+<p>Amira did cryptographic audit work for a fintech startup in 2023-2024. She reviewed authentication implementations, found vulnerabilities, and helped to fix them. It's valuable experience that would strengthen her credibility for security work. But "crypto auditor" is a rare skill. How many people worldwide have done professional cryptographic audits? Maybe a few thousand. Combine that with other public claims, which might include that she's a Galaxy Project contributor, is privacy-focused, and speaks Portuguese, and the intersection might describe only a handful of people.</p>
+<p>This is correlation risk. Each claim by itself might be safe. Combined, they create a fingerprint.</p>
+<blockquote>
+<p>📖 <strong>What is a Correlation Risk?</strong> Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.</p>
+</blockquote>
+<h3 id="how-claims-compound">How Claims Compound</h3>
+<p>Watch how Amira's anonymity set shrinks:</p>
+<table>
+<thead>
+<tr>
+<th>Claims Combined</th>
+<th>Approximate Population</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Security professional"</td>
+<td>Hundreds of thousands</td>
+</tr>
+<tr>
+<td>+ "8 years experience"</td>
+<td>Tens of thousands</td>
+</tr>
+<tr>
+<td>+ "Privacy focus"</td>
+<td>Thousands</td>
+</tr>
+<tr>
+<td>+ "Crypto audit experience"</td>
+<td>Hundreds</td>
+</tr>
+<tr>
+<td>+ "Galaxy Project contributor"</td>
+<td>Maybe dozens</td>
+</tr>
+<tr>
+<td>+ "Based in South America"</td>
+<td>Single digits</td>
+</tr>
+</tbody>
+</table>
+<p>That last combination might describe three people in the world. If an adversary knows those facts and sees BRadvoc8's public profile, correlation becomes trivial.</p>
+<blockquote>
+<p>⚠️ <strong>Consider the Correlation Risks Before Making Claims.</strong> Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.</p>
+</blockquote>
+<h2 id="the-possibilities-of-protecting-sensitive-data">The Possibilities of Protecting Sensitive Data</h2>
+<p>Amira has three options for handling the correlation risk of her crypto audit experience.</p>
+<ul>
+<li><strong>Option 1: Omit Entirely.</strong> Don't mention it at all. If Amira never needs to prove this experience, keeping it private is the safest choice. There's zero correlation risk from information that isn't published. The downside is that she loses the reputation benefit. If crypto audit experience would help her get accepted onto a security project, omitting it means she can't use it.</li>
+<li><strong>Option 2: Commit Elided.</strong> Create the attestation and sign it, but publish only an opaque commitment (the digest). The commitment proves that Amira had some claim at a specific time, without revealing what the claim says. Later, she can reveal the full attestation to specific people who can verify that it matches the public commitment. This is the "prove I had it all along" pattern. It's useful when you might need to demonstrate timing without revealing content and also tends to give weight to a claim because it didn't come out of nowhere. This is what we'll cover in this Tutorial.</li>
+<li><strong>Option 3: Encrypt for Recipient.</strong> Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all. This is covered in <a href="02_3_Managing_Claims_Encryption.md">Tutorial §2.3</a>. It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Never need to prove this</td>
+<td>Omit entirely</td>
+</tr>
+<tr>
+<td>Might need to prove later</td>
+<td>Commit elided</td>
+</tr>
+<tr>
+<td>Specific person needs it now</td>
+<td>Encrypt for them</td>
+</tr>
+</tbody>
+</table>
+<p>Amira decides her crypto audit experience fits the middle category. She might need to prove this capability to future collaborators, but she doesn't want to publish it broadly. She'll commit an elided version publicly and reveal the full attestation selectively.</p>
+<blockquote>
+<p>🧠 <strong>Learn more</strong>: These three approaches are part of the broader concept of <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md">Selective Disclosure</a>, which is the ability to reveal different information to different parties from the same underlying data structure.</p>
+</blockquote>
+<h2 id="part-i-creating-a-commitment">Part I: Creating a Commitment</h2>
+<h3 id="step-0-verify-dependencies-reload-xid">Step 0: Verify Dependencies &amp; Reload XID</h3>
+<p>As usual, check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID, primarily to have easy access to your XID ID:</p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID_ID=$(envelope xid id $XID)
+</code></pre>
+<p>You should then reload your Attestation keys from the last tutorial:</p>
+<pre><code>ATTESTATION_PRVKEYS=$(cat envelopes/attestation-private-03.ur)
+ATTESTATION_PUBKEYS=$(cat envelopes/attestation-public-03.ur)
+</code></pre>
+<p>If you instead need to create new ones, see <a href="../02_1_Creating_Self_Attestations/#step-1-create-an-attestation-key">§2.2</a> for how to do so, then register your keys in your XID.</p>
+<h3 id="step-1-create-the-sensitive-attestation">Step 1: Create the Sensitive Attestation</h3>
+<p>You should create Amira's crypto audit attestation with <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/fair-witness.md">fair witness</a> precision:</p>
+<pre><code>AUDIT_CLAIM=$(envelope subject type string \
+  &quot;Audited cryptographic implementations for authentication systems (2023-2024)&quot;)
+AUDIT_CLAIM=$(envelope assertion add pred-obj known isA known 'attestation' &quot;$AUDIT_CLAIM&quot;)
+AUDIT_CLAIM=$(envelope assertion add pred-obj known source ur $XID_ID &quot;$AUDIT_CLAIM&quot;)
+AUDIT_CLAIM=$(envelope assertion add pred-obj known target ur $XID_ID &quot;$AUDIT_CLAIM&quot;)
+AUDIT_CLAIM=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$AUDIT_CLAIM&quot;)
+AUDIT_CLAIM=$(envelope assertion add pred-obj string &quot;skillCategory&quot; string &quot;Security&quot; &quot;$AUDIT_CLAIM&quot;)
+
+envelope format &quot;$AUDIT_CLAIM&quot;
+
+| &quot;Audited cryptographic implementations for authentication systems (2023-2024)&quot; [
+|     'isA': 'attestation'
+|     &quot;skillCategory&quot;: &quot;Security&quot;
+|     'date': &quot;2026-02-18T15:08-10:00&quot;
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e)
+| ]
+</code></pre>
+<p>Notice that you don't include the company name that Amira worked for or specific details that would make correlation easier. The claim is specific enough to be meaningful but not so detailed that it uniquely identifies her.</p>
+<h3 id="step-2-sign-the-full-attestation">Step 2: Sign the Full Attestation</h3>
+<p>Next, you follow the normal procedure to wrap and sign the attestation:</p>
+<pre><code>AUDIT_WRAPPED=$(envelope subject type wrapped &quot;$AUDIT_CLAIM&quot;)
+AUDIT_SIGNED=$(envelope sign --signer &quot;$ATTESTATION_PRVKEYS&quot; &quot;$AUDIT_WRAPPED&quot;)
+
+echo &quot;✅ Full attestation created and signed&quot;
+envelope format &quot;$AUDIT_SIGNED&quot;
+
+| ✅ Full attestation created and signed
+| {
+|     &quot;Audited cryptographic implementations for authentication systems (2023-2024)&quot; [
+|         'isA': 'attestation'
+|         &quot;skillCategory&quot;: &quot;Security&quot;
+|         'date': &quot;2026-02-18T15:08-10:00&quot;
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+</code></pre>
+<p>This is the full attestation that Amira will keep secure and private. But she wants to publicly share the fact that she made this claim, while not revealing exactly what it is; that requires the creation of an elided view.</p>
+<h3 id="step-3-create-the-elided-commitment">Step 3: Create the Elided Commitment</h3>
+<p>You can now create a view of the attestation with the content removed but the cryptographic structure preserved:</p>
+<pre><code>AUDIT_DIGEST=$(envelope digest &quot;$AUDIT_SIGNED&quot;)
+AUDIT_ELIDED=$(envelope elide removing &quot;$AUDIT_DIGEST&quot; &quot;$AUDIT_SIGNED&quot;)
+
+echo &quot;✅ Elided commitment created&quot;
+echo &quot;Digest: $AUDIT_DIGEST&quot;
+envelope format &quot;$AUDIT_ELIDED&quot;
+
+│ ✅ Elided commitment created
+│ Digest: ur:digest/hdcxlgahgagmckdrveclotpeaerfynndksjpsphhoywtfeotlgdtwkwdwpmhgsylndlyrndscaah
+│ ELIDED
+</code></pre>
+<p>The elided version shows nothing, just the word <code>ELIDED</code>. But here's the key property: the hash (digest) of the elided envelope will be identical to the hash of the original envelope, offering proof that their content is identical, even though it can not longer be seen in the elided envelope.</p>
+<p>This commitment could be published in a variety of ways. Amira might
+have a set of self-attestations available on her GitHub, some of which
+are elided and some of which are not. Or, she might maintain a public
+commitment list. This is typically a list of digests in a public
+profile with category hints (e.g., "Security", "Privacy
+Engineering"). This tells collaborators that she has additional
+credentials without revealing what they are.</p>
+<blockquote>
+<p>📖 <strong>What is a Commitment?</strong> A commitment is literally a
+promise. Cryptographically, a commitment is a promise that you have
+recorded a certain value. All you reveal is a hash of that value,
+which is the cryptographic commitment. Since (probabalistically) each
+recorded value only leads to one hash, when you reveal the original
+value and it hashes correctly, your commitment has been fulfilled.</p>
+</blockquote>
+<h2 id="part-ii-revealing-a-commitment">Part II: Revealing a Commitment</h2>
+<p>Amira set up her audit commitment when she created her BRadvoc8
+identity, so that she could work with Ben. But the whole point of
+commitments is that they sit around, gaining trust as they do, and
+tend to be revealed later. That's the case here.  Six months later,
+Amira has approached DevReviewer for a security collaboration.</p>
+<h3 id="step-4-highlight-the-commitment">Step 4: Highlight the Commitment</h3>
+<p>DevReviewer has seen Amir'as public attestation (about the Galaxy
+Project) but want to know about her security audit experience. Amira
+mentions that she has relevant experience but couldn't share details
+publicly. She points to the commitment.</p>
+<p>DevReviewer looks at the commitment, which is stored on GitHub, and
+uses its (more trustworthy) datestamping to verify it was commited to
+GitHub about six months ago, and it's one of just a few public
+commitments of that sort.</p>
+<h3 id="step-5-reveal-the-unelided-claim">Step 5: Reveal the Unelided Claim</h3>
+<p>Amira next sends DevReviewer the full attestation (<code>$AUDIT_SIGNED</code>)
+via a secure message system. DevReviewer now has both versions.</p>
+<h2 id="part-iii-verifying-the-commitment">Part III: Verifying the Commitment</h2>
+<p>We now switch to DevReviewer's point of view. Their verification of
+the full attestation will come in two parts: checking that this is the
+same document as the commitment (which is very similar to the process
+of checking an inclusion proof) and verifying the signature.</p>
+<blockquote>
+<p>📖 <strong>What is an Inclusion Proof?</strong> An inclusion proof typically
+reveals that a piece of data is part of a larger data set without
+revealing the entirety of the larger data set. For example, you could
+a claim was in a partially elided Gordian Envelope just by knowing a
+hash of the claim that was still visible in the envelope. Verifying a
+commitment of this sort isn't quite the same thing since here we're
+checking that a piece of data matches another piece of data that isn't
+entirely revealed. But the theory and the procedure are largely the
+same.</p>
+</blockquote>
+<h3 id="step-6-test-the-commitment">Step 6: Test the Commitment</h3>
+<p>DevReviewer computes the digest of what they received:</p>
+<pre><code>ELIDED_DIGEST=$(envelope digest &quot;$AUDIT_ELIDED&quot;) # Downloaded from GitHub
+RECEIVED_DIGEST=$(envelope digest &quot;$AUDIT_SIGNED&quot;) # Received from Amira
+</code></pre>
+<p>They then compare these two digests, the commited digest (downloaded
+from GitHub) and the digest on the fully visible claim (received from
+Amira).</p>
+<pre><code>echo &quot;Commitment digest: $ELIDED_DIGEST&quot;
+echo &quot;Received digest:   $RECEIVED_DIGEST&quot;
+
+if [ &quot;$RECEIVED_DIGEST&quot; = &quot;$ELIDED_DIGEST&quot; ]; then
+    echo &quot;✅ Inclusion proof valid: this matches the public commitment&quot;
+else
+    echo &quot;❌ WARNING: Does not match commitment&quot;
+fi
+
+│ Commitment digest: ur:digest/hdcxlgahgagmckdrveclotpeaerfynndksjpsphhoywtfeotlgdtwkwdwpmhgsylndlyrndscaah
+│ Received digest:   ur:digest/hdcxlgahgagmckdrveclotpeaerfynndksjpsphhoywtfeotlgdtwkwdwpmhgsylndlyrndscaah
+│ ✅ Inclusion proof valid: this matches the public commitment
+
+</code></pre>
+<p>The digests match. This proves the full attestation Amira revealed is the same document she committed to earlier, not something she fabricated after the fact.</p>
+<blockquote>
+<p>📖 <strong>Why Is It Important that Amira Committed in Advance?</strong> Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. </p>
+</blockquote>
+<h3 id="step-7-verify-the-signature">Step 7: Verify the Signature</h3>
+<p>Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See <a href="../02_1_Creating_Self_Attestations/#step-11-check-the-claims-signature">§2.1</a> for a more complex methodology to check a signature against every public key in a XID.)</p>
+<pre><code>envelope verify -s --verifier &quot;$ATTESTATION_PUBKEYS&quot; &quot;$AUDIT_SIGNED&quot;
+
+│ (no response means signature is valid.)
+</code></pre>
+<p>The signature is valid.</p>
+<h3 id="step-8-assess-your-level-of-trust">Step 8: Assess Your Level of Trust</h3>
+<p>Combining the valid signature with the verified commitment,
+DevReviewer has three pieces of information:</p>
+<table>
+<thead>
+<tr>
+<th>What DevReviewer Can Verify</th>
+<th>What Remains Unproven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ Claim matches a public commitment</td>
+<td>❓ Claim is actually true</td>
+</tr>
+<tr>
+<td>✅ Claim was published at a previous date</td>
+<td>❓ What other hidden claims say</td>
+</tr>
+<tr>
+<td>✅ Claim was not modified</td>
+<td>❓ Whether claim varies a different hidden claim</td>
+</tr>
+<tr>
+<td>✅ BRadvoc8 signed the claim</td>
+<td>❓ Who BRadvoc8 is</td>
+</tr>
+</tbody>
+</table>
+<p>DevReviewer can now read the claim and factor it into their trust decision.</p>
+<h4 id="a-review-of-envelope-elision">A Review of Envelope Elision</h4>
+<p>There's an important limitation to understand for elision. A fully <code>ELIDED</code> envelope has no content, no metadata, and no signature visible.</p>
+<pre><code>envelope format &quot;$AUDIT_ELIDED&quot;
+
+│ ELIDED
+</code></pre>
+<p>That means that the envelope's signature can't be verified while it's elided:</p>
+<pre><code>envelope verify -s --verifier &quot;$ATTESTATION_PUBKEYS&quot; &quot;$AUDIT_ELIDED&quot;
+
+│ Error: could not verify a signature
+</code></pre>
+<p>The elided version is just a digest placeholder: it proves something with its digest, but you can't verify its authenticity without the full version. This is by design. The commitment pattern separates timing from content: in the commit phase, you publish the elided version to prove when you made the claim; in the reveal phase, you share the full version with specific people to prove what you claimed; then the recipient verifies the revealed version matches the public commitment.</p>
+<h2 id="part-iv-managing-the-commitment-lifecycle">Part IV: Managing the Commitment Lifecycle</h2>
+<p>This doesn't have to be the end of the life cycle of a commitment.</p>
+<h3 id="step-9-supersede-a-commitment">Step 9: Supersede a Commitment</h3>
+<p>If Amira's skills evolve, of if she joins other projects, she can
+create new commitments, just as she managed the
+<a href="02_1_Creating_Self_Assertions.md#part-v-managing-the-attestation-lifecycle">lifecycle</a>
+of her visible attestations. Old commitments remain valid but can be
+retired.</p>
+<h2 id="summary-from-correlation-to-elision">Summary: From Correlation to Elision</h2>
+<p>This tutorial introduced the problem of correlation risk: how claims compound to narrow anonymity sets. The three disclosure approaches (omit, commit, encrypt) give you options for different situations. Commit means creating a sensitive attestation and committed to it publicly without revealing the content. This inclusion proof pattern lets Amira prove she had this credential all along when she chooses to reveal it: she can't be accused of fabricating it after the fact.</p>
+<h3 id="exercises">Exercises</h3>
+<ol>
+<li>Identify a skill you have that would be risky to publish publicly. What makes it identifying?</li>
+<li>Create an elided commitment for a hypothetical sensitive attestation.</li>
+<li>Walk through the verification steps as if you were DevReviewer receiving a revealed attestation</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? That's the topic <a href="02_3_Managing_Claims_Encryption.md">§2.3: Managing Sensitive Claims with Encryption</a>.</p>
+<hr />
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Commitment</strong>: A digest that commits to certain content that is being elided or otherwise withheld.</p>
+<p><strong>Correlation Risk</strong>: The potential for combining public information to identify a pseudonym. Claims compound: each one narrows the anonymity set.</p>
+<p><strong>Elided Envelope</strong>: An envelope with content removed but cryptographic identity (digest) preserved. Proves existence without revealing content.</p>
+<p><strong>Inclusion Proof</strong>: A demonstration that a revealed document is found in a larger document that has not been entirely revealed.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

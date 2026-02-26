@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://learningxids.blockchaincommons.com/</loc>
+         <lastmod>2026-02-26</lastmod>
+    </url>
+    <url>
+         <loc>https://learningxids.blockchaincommons.com/01_0_Introduction/</loc>
+         <lastmod>2026-02-26</lastmod>
+    </url>
+    <url>
+         <loc>https://learningxids.blockchaincommons.com/01_1_Your_First_XID/</loc>
+         <lastmod>2026-02-26</lastmod>
+    </url>
+    <url>
+         <loc>https://learningxids.blockchaincommons.com/01_2_Making_a_XID_Verifiable/</loc>
+         <lastmod>2026-02-26</lastmod>
+    </url>
+    <url>
+         <loc>https://learningxids.blockchaincommons.com/02_0_Claims/</loc>
+         <lastmod>2026-02-26</lastmod>
+    </url>
+    <url>
+         <loc>https://learningxids.blockchaincommons.com/02_1_Creating_Self_Attestations/</loc>
+         <lastmod>2026-02-26</lastmod>
+    </url>
+    <url>
+         <loc>https://learningxids.blockchaincommons.com/02_2_Managing_Claims_Elision/</loc>
+         <lastmod>2026-02-26</lastmod>
+    </url>
+</urlset>

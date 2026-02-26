@@ -1,0 +1,1920 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/02_1_Creating_Self_Attestations/">
+      
+      
+        <link rel="prev" href="../02_0_Claims/">
+      
+      
+        <link rel="next" href="../02_2_Managing_Claims_Elision/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>2.1: Creating Self Attestations - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#21-creating-self-attestations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2.1: Creating Self Attestations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-claims-without-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Claims Without Proof
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-fair-witness-attestations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Fair Witness Attestations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-adding-an-attestation-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Adding an Attestation Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Adding an Attestation Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-verify-dependencies-reload-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Verify Dependencies &amp; Reload XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-an-attestation-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create an Attestation Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-attestation-key-in-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register Attestation Key in XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-advance-your-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Advance Your Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-export-save-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Export &amp; Save Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-review-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Review Your Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Review Your Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-creating-a-detached-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Creating a Detached Attestation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Creating a Detached Attestation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-create-the-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Create the Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-add-attestation-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Add Attestation Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-sign-the-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Sign the Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-verifying-a-new-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Verifying a New Claim
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Verifying a New Claim">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-9-check-the-new-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Check the New XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-check-the-new-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Check the New Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-11-check-the-claims-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Check the Claim's Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-12-check-the-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Check the Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 13: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-managing-the-attestation-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: Managing the Attestation Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: Managing the Attestation Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-14-supersede-an-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 14: Supersede an Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-15-retract-an-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 15: Retract an Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-the-world-of-attestations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: The World of Attestations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: The World of Attestations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-claims-without-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Claims Without Proof
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-fair-witness-attestations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Fair Witness Attestations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-adding-an-attestation-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Adding an Attestation Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Adding an Attestation Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-verify-dependencies-reload-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Verify Dependencies &amp; Reload XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-an-attestation-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create an Attestation Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-attestation-key-in-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register Attestation Key in XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-advance-your-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Advance Your Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-export-save-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Export &amp; Save Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-review-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Review Your Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Review Your Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-creating-a-detached-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Creating a Detached Attestation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Creating a Detached Attestation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-create-the-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Create the Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-add-attestation-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Add Attestation Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-sign-the-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Sign the Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-verifying-a-new-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Verifying a New Claim
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Verifying a New Claim">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-9-check-the-new-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Check the New XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-check-the-new-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Check the New Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-11-check-the-claims-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Check the Claim's Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-12-check-the-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Check the Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 13: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-managing-the-attestation-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: Managing the Attestation Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: Managing the Attestation Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-14-supersede-an-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 14: Supersede an Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-15-retract-an-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 15: Retract an Attestation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-the-world-of-attestations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: The World of Attestations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: The World of Attestations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="21-creating-self-attestations">2.1: Creating Self Attestations</h1>
+<p>This section demonstrates how to build credibility through specific,
+factual claims that invite verification rather than demand belief.</p>
+<blockquote>
+<p><strong>🧠 Related Concepts.</strong> After completing this tutorial, explore
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md">Progressive Trust</a> and
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/attestation-endorsement-model.md">Self-Attestation</a> to deepen your
+understanding.</p>
+</blockquote>
+<h2 id="objectives-for-this-section">Objectives for this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Register attestation keys in a XID for signature verification</li>
+<li>Create attestations that are publicly verifiable.</li>
+<li>Advance a provenance mark.</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand how to use <strong>fair witness methodology</strong> to make credible claims</li>
+<li>Know the difference between <strong>detached</strong> and <strong>embedded</strong> attestations.</li>
+</ul>
+<h2 id="amiras-story-claims-without-proof">Amira's Story: Claims Without Proof</h2>
+<p>Following Chapter 1, Ben has a verified copy of BRadvoc8's XID. But
+it's just a collection of keys attached to a nickname. Can BRadvoc8
+write good code, understand security, and deliver quality work? These
+are the questions that Ben needs answered before he decides to bring
+BRadvoc8 into the SisterSpace project.</p>
+<p>To reveal more about her skill set, Amira must create attestations
+about them. Since Amira is bootstrapping the BRadvoc8 identity on her
+own, they need to be self-attestations: things that she says about
+herself (or rather, about her identity) that reveal her
+capabilities. The problem is that a vague claim like "Security expert
+with 8 years experience" is worthless. Anyone can type that.</p>
+<blockquote>
+<p>📖 <strong>What is a self attestation?</strong>: As the name suggestion, a
+self attestation is a claim that you make about yourself. It's
+contrasted with an <em>endorsement</em>, where someone else vouches for
+you. Self-attestations are starting points; endorsements carry more
+weight because they come from independent parties.</p>
+</blockquote>
+<p>Amira needs a different approach: specific claims that point to
+verifiable evidence.</p>
+<h2 id="the-power-of-fair-witness-attestations">The Power of Fair Witness Attestations</h2>
+<p>Not all attestations are created equal. Some are vague and hard to pin
+down, while others are so specific that they can be proven with
+appropriate references. Compare these two attestations:</p>
+<table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Quality</th>
+<th>Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"I'm good at security"</td>
+<td>Weak</td>
+<td>Opinion, nothing to check</td>
+</tr>
+<tr>
+<td>"I contributed to Galaxy Project (PR #12847)"</td>
+<td>Strong</td>
+<td>Verifiable on GitHub</td>
+</tr>
+</tbody>
+</table>
+<p>The strong claim invites validation rather than demanding belief. For
+pseudonymous contributors who can't flash a diploma, evidence-backed
+attestations ARE your credentials.  When you are making
+self-attestations, it is therefore best to both create attestations
+that are verifiable and then provide the methodology for verifying.</p>
+<p><a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/fair-witness.md">"Fair witness claims"</a> are a
+particularly strong type of attestation. The person making the
+attestation does their best to report without interpretation,
+assumption, or bias (as best they can!).</p>
+<blockquote>
+<p>📖 <strong>What is the Fair Witness Methodology?</strong>: The Fair Witness
+methodology is derived from Robert E. Heinlein's <em>Stranger in a
+Strange Land</em> (1961). A Fair Witness makes a claim of what they
+directly observed, avoiding interpretation, assumption, or (as much as
+possible) bias. If it's meaningful, a fair witness claim also should
+include context describing the methodology of the observation, its
+limitations, and any bias built into.</p>
+</blockquote>
+<p>Saying someone was good at security would be an interpretation, so
+that would fail the fair witness test, but instead reporting a
+contribution is a simple statement of fact, as long as you don't adorn
+it by saying something like, "I made a <em>crucial</em> contribution to the
+Galaxy Project."</p>
+<blockquote>
+<p>🔥 <strong>What is the Power of Fair Witness Attestations?</strong> Fair
+witness attestations do their best to report without bias. This makes
+them more verifiable, and verifiability is what's important in the
+world of pseudonymous claims.</p>
+</blockquote>
+<h2 id="part-i-adding-an-attestation-key">Part I: Adding an Attestation Key</h2>
+<p>Amira contributed to Galaxy Project, an open source bioinformatics
+platform. Her pull request added mass spectrometry visualization
+features. This is the kind of specific, verifiable claim that builds
+real credibility. You're going to build an attestation about that
+claim, but first you need to create a secure way to make attestations.</p>
+<h3 id="step-0-verify-dependencies-reload-xid">Step 0: Verify Dependencies &amp; Reload XID</h3>
+<p>Before you get started, ensure you have the required tools installed:</p>
+<pre><code>envelope --version
+provenance --version
+
+│ bc-envelope-cli 0.34.1
+│ provenance-mark-cli 0.7.0
+</code></pre>
+<p>If not installed, see
+<a href="../01_1_Your_First_XID/#step-0-setting-up-your-workspace">§1.1</a> for
+installation instructions.</p>
+<p>You'll also want to reload your XID. The following assumes use of the <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes"><code>envelopes</code></a> directory that was described in the last tutorial.</p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID_ID=$(envelope xid id $XID)
+</code></pre>
+<h3 id="step-1-create-an-attestation-key">Step 1: Create an Attestation Key</h3>
+<p>Every attestation, even a self-attestation should be signed. Viewers
+have to know who is behind a claim and that the claim hasn't been
+changed since that person agreed to it. You could sign attestations
+with the signing key of your XID. However, that's your XID inception
+key, and it's powerful: it can modify your identity. Using it for
+routine signing increases exposure risk. For that reason, you want to
+create new attestation keys that can be rotated or revoked without
+affecting your core identity.</p>
+<pre><code>ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+ATTESTATION_PUBKEYS=$(envelope generate pubkeys &quot;$ATTESTATION_PRVKEYS&quot;)
+</code></pre>
+<blockquote>
+<p>📖 <strong>What are Attestation Keys?</strong>: Attestation keys are
+  dedicated signing key for making attestations.</p>
+</blockquote>
+<h3 id="step-2-register-attestation-key-in-xid">Step 2: Register Attestation Key in XID</h3>
+<p>For Ben to verify attestations came from BRadvoc8, the attestation public key must be in the XID. You also should embed the private key (encrypted) so that Amira can sign attestations without managing separate key files. This is done with the <code>xid key add</code> command, which is very similar yo the <code>xid resolution add</code> function that you used in the last tutorial.</p>
+<pre><code>PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+UPDATED_XID=$(envelope xid key add \
+    --nickname &quot;attestation-key&quot; \
+    --allow sign \
+    --password &quot;$PASSWORD&quot; \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$ATTESTATION_PRVKEYS&quot; \
+    &quot;$XID&quot;)
+
+echo &quot;✅ Added attestation key to XID&quot;
+</code></pre>
+<p>The <code>envelope-cli</code> programs derives the public key from the private key automatically. With the <code>--private encrypt</code>, <code>--password</code>, and <code>--encrypt-password</code> commands, the private XID is first decrypted, then re-encrypted. You also add a new <code>nickname</code> to clarify what the key is for, and tthen here's one new argument:</p>
+<ol>
+<li><code>--allow sign</code> is a permission statement indicates this key can only sign, it cannot modify the XID itself. (That requires the inception key.)</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>XID Functions Only!</strong> If you're familiar with Gordian Envelope, you'll know that you can freely add assertions to an envelope. Though XID is built on envelope, it's intended to be a much more structured format, with all content always in carefully structured places such as <code>derferenceVia</code>, <code>key</code>, <code>provenance</code>, and other subjects that you'll meet in future tutorials. You should always expect to use <code>envelope xid</code> commands when working with the core XID structure (though you may place less structured content under certain key words, such as in the <code>edge</code> that we'll meet in the chapter 3).</p>
+</blockquote>
+<h3 id="step-3-advance-your-provenance-mark">Step 3: Advance Your Provenance Mark</h3>
+<p>You're going to need to publish this XID so that Ben can check Amira's self-attestation against her new signature. Whenever you publish a new edition of a XID (meaning that you've changed the underlying content, not just changing the view by eliding existing data differently), you should also advance the provenance mark. This will allow viewers who have multiple copies of a XID to determine which one is newest.</p>
+<p>Advancing the provenance mark is done with the simple <code>provenance next</code> command, which as usual must decrypt and reencrypt your content:</p>
+<pre><code>UPDATED_XID=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$UPDATED_XID&quot;)
+echo &quot;✅ Provenance advanced&quot;
+
+| ✅ Provenance advanced
+</code></pre>
+<p>You can see what your XID looks like after all that work:</p>
+<pre><code>envelope format $UPDATED_XID
+
+| XID(5f1c3d9e) [
+|     'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+|     'key': PublicKeys(21914050, SigningPublicKey(04c9adb6, Ed25519PublicKey(09f7c306)), EncapsulationPublicKey(1b076286, X25519PublicKey(1b076286))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Sign'
+|         'nickname': &quot;attestation-key&quot;
+|     ]
+|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'All'
+|         'nickname': &quot;BRadvoc8&quot;
+|     ]
+|     'provenance': ProvenanceMark(f6baa8c6) [
+|         {
+|             'provenanceGenerator': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|     ]
+| ]
+</code></pre>
+<h3 id="step-4-export-save-your-xid">Step 4: Export &amp; Save Your XID</h3>
+<p>Afterward, you should follow the usual procedure to create a public version of the XID and store it.</p>
+<pre><code>UPDATED_PUBLIC_XID=$(envelope xid export --private elide --generator elide &quot;$UPDATED_XID&quot;)
+
+echo &quot;✅ Public XID ready for publication&quot;
+
+│ ✅ Public XID ready for publication
+</code></pre>
+<p>Amira would publish this updated XID at her <code>dereferenceVia</code> URL so Ben can fetch it and verify her attestation signatures.</p>
+<p>You'll store it alongside your previous iteration (with the genesis provenance mark):</p>
+<pre><code>echo &quot;$UPDATED_PUBLIC_XID&quot; &gt; envelopes/BRadvoc8-xid-public-03.envelope
+echo &quot;$UPDATED_XID&quot; &gt; envelopes/BRadvoc8-xid-private-03.envelope
+</code></pre>
+<p>You should also store standalone copies of your new keys to make it easier to access them in the future:</p>
+<pre><code>echo $ATTESTATION_PRVKEYS &gt; envelopes/attestation-private-03.ur
+echo $ATTESTATION_PUBKEYS &gt; envelopes/attestation-public-03.ur
+</code></pre>
+<h3 id="step-5-review-your-work">Step 5: Review Your Work</h3>
+<p>You now have multiple keys and multiple XIDs for Amira. Here's a look
+at each of them.</p>
+<h4 id="key-type-comparison">Key Type Comparison</h4>
+<p>It is a best practice to have different keys for different
+purposes. This improves privacy and decreases the repercussions of key
+loss or compromise. The traditional problem with this approach has
+been figuring out how to handle a "bag of keys." XIDs offer the
+answer: they can be used to manage a whole set of keys, and the keys
+can be encrypted with a password for protection on your own storage
+and elided for near-total protection when a XID is shared.</p>
+<p>So far, Amira has two keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Purpose</th>
+<th>Verified Against</th>
+<th>Added In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👤 XID inception key</td>
+<td>Signs XID document updates</td>
+<td>XID itself</td>
+<td>§1.1</td>
+</tr>
+<tr>
+<td>🔑 Attestation key</td>
+<td>Signs attestations</td>
+<td>XID key list</td>
+<td>§2.1</td>
+</tr>
+</tbody>
+</table>
+<h4 id="xid-version-comparison">XID Version Comparison</h4>
+<p>Here's a look at our two XID versions created to date:</p>
+<table>
+<thead>
+<tr>
+<th>XID Version</th>
+<th>New Content</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seq 0</td>
+<td>👤 Identity</td>
+<td>§1.1+§1.2</td>
+</tr>
+<tr>
+<td>seq 1</td>
+<td>🔑 Attestation Key</td>
+<td>§2.1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="part-ii-creating-a-detached-attestation">Part II: Creating a Detached Attestation</h2>
+<p>With an attestation key in hand, and linked to Amira's XID, you're now ready to create an attestation for Amira. But the question is whether to create an embedded attestation (which would be placed directly in Amira's XID) or a detached attestation (which would be available as a separate Gordian Envelope but linked to Amira's XID by the use of the attestation signature key). </p>
+<ul>
+<li>It's best to <strong>embed</strong> attestations if they're relatively permanent, widely applicable, and core to the definition of the identity.</li>
+<li>It's best to create <strong>detached</strong> attestations if they're ephemeral, if they're only relevant to specific people and if they're not core to an identity.</li>
+</ul>
+<p>This isn't a question of privacy: you can always choose to elide and encrypt attestations that you don't want to receive wide attention, even if they're in your XID. (In fact that's the topic of the next two tutorials.) It's instead a question of keeping the XID lean enough that someone can reasonably look over it without being lost in irrelevent details.</p>
+<blockquote>
+<p>📖 <strong>What is a Detached Attestation?</strong>: When an attestation is detached, it appears as a signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.</p>
+</blockquote>
+<p>In this case, a single PR is a pretty small detail, and not necessarily something that Amira will be talking about in a year or two when she (hopefully) has major design work on SisterSpaces to point to. So you'll create it as a detached attestation.</p>
+<h3 id="step-6-create-the-claim">Step 6: Create the Claim</h3>
+<p>Start with the claim itself as the envelope subject. Freeform attestation of this type are created with the standard <code>envelope</code> commands rather than the more constrained <code>envelope xid</code> commands. That's because they're either going to be separate from a XID (as a detached attestation) or they're going to be attached to a XID at a specific, defined point, such as <code>attachment</code> or <code>edge</code> (which we'll meet in chapter 3).</p>
+<pre><code>CLAIM=$(envelope subject type string \
+  &quot;Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)&quot;)
+
+envelope format &quot;$CLAIM&quot;
+
+│ &quot;Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)&quot;
+</code></pre>
+<p>This is just a string. It's not signed, attributed, or structured. Anyone could create this string.</p>
+<h3 id="step-7-add-attestation-metadata">Step 7: Add Attestation Metadata</h3>
+<p>Now add metadata that structures this as a formal attestation.</p>
+<pre><code>ATTESTATION=$(envelope assertion add pred-obj known isA known 'attestation' &quot;$CLAIM&quot;)
+ATTESTATION=$(envelope assertion add pred-obj known source ur $XID_ID &quot;$ATTESTATION&quot;)
+ATTESTATION=$(envelope assertion add pred-obj known target ur $XID_ID &quot;$ATTESTATION&quot;)
+ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri &quot;https://github.com/galaxyproject/galaxy/pull/12847&quot; &quot;$ATTESTATION&quot;)
+ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$ATTESTATION&quot;)
+envelope format &quot;$ATTESTATION&quot;
+
+&quot;Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)&quot; [
+    'isA': 'attestation'
+    'date': &quot;2025-10-18T19:27-10:00&quot;
+    'source': XID(5f1c3d9e)
+    'target': XID(5f1c3d9e)
+    'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
+]
+</code></pre>
+<p>Each assertion within the claim is a standardized known value that reveals a specific piece of metadata:</p>
+<table>
+<thead>
+<tr>
+<th>Assertion</th>
+<th>Known Value</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>'isA'</code></td>
+<td><code>'attestation'</code></td>
+<td>Declares this is an attestation</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>'date'</code></td>
+<td>ISO 8601</td>
+<td>Claims when attestation was constructed</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>'source'</code></td>
+<td>XID ID</td>
+<td>Says who is making the attestation</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>'target'</code></td>
+<td>XID ID</td>
+<td>Says who the attestation is about</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>"verifiableAt"</code></td>
+<td>URI</td>
+<td>Points to evidence for independent verification</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>Dates are Unreliable!</strong>  The date is actually another unverifiable claim: it could be set to whatever the attestation creator wants to. Nonetheless, it has use because a good faith creator will date claims correctly, making it see easy to which claims are newer in case of a superseding claim being issued.</p>
+</blockquote>
+<h3 id="step-8-sign-the-attestation">Step 8: Sign the Attestation</h3>
+<p>You're now ready to wrap the attestation and sign it with the private key that you created specifically for this purpose. The signature proves that the signer made this claim:</p>
+<pre><code>ATTESTATION_WRAPPED=$(envelope subject type wrapped $ATTESTATION)
+ATTESTATION_SIGNED=$(envelope sign --signer &quot;$ATTESTATION_PRVKEYS&quot; &quot;$ATTESTATION_WRAPPED&quot;)
+
+envelope format &quot;$ATTESTATION_SIGNED&quot;
+
+| {
+|     &quot;Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)&quot; [
+|         'isA': 'attestation'
+|         'date': &quot;2025-10-18T19:27-10:00&quot;
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e)
+|         'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+</code></pre>
+<p>The signature covers the entire attestation. If anyone modifies any part (the claim, the source, the target, the date, the verification location), the signature becomes invalid.</p>
+<h2 id="part-iii-verifying-a-new-claim">Part III: Verifying a New Claim</h2>
+<p>Switching once more to Ben's perspective, the updated XID and the claim now need to be verified</p>
+<h3 id="step-9-check-the-new-xid">Step 9: Check the New XID</h3>
+<p>Amira might send Ben her updated XID, leading him to dereference it, or she might cut out the middle man by just telling him she has a new version of her XID online with a claim. She also sends him the attestation.</p>
+<pre><code>BEN_FETCHED_XID=&quot;$UPDATED_PUBLIC_XID&quot; # Actually, he downloads it
+</code></pre>
+<p>At this point, Ben would check the XID to make sure that it has
+continuity with the previous version. One way to do so is to check
+that it's still signed with the same private key as before. Ben uses
+the same process as in th eprevious chapter to do so and know that
+that BRadvoc8 has likely created the new XID.</p>
+<h3 id="step-10-check-the-new-provenance-mark">Step 10: Check the New Provenance Mark</h3>
+<p>Ben can also look at the updated provenance mark, and this is where things get more interesting:</p>
+<pre><code>UPDATED_PROV_MARK=$(envelope xid provenance get &quot;$BEN_FETCHED_XID&quot;)
+provenance validate --format json-compact &quot;$UPDATED_PROV_MARK&quot; 2&gt;&amp;1 | grep -o '&quot;end_seq&quot;:[0-9]*'
+
+│ &quot;end_seq&quot;:1
+</code></pre>
+<p>The XID's provenance mark is now at sequence 1: genesis (seq 0)
+created the identity and this update (seq 1) added the attestation
+key.</p>
+<p>If Ben still has a copy of the original XID around, he can comparethat one's provenance mark:</p>
+<pre><code>PROV_MARK=$(envelope xid provenance get &quot;$XID&quot;)
+provenance validate --format json-compact &quot;$PROV_MARK&quot; 2&gt;&amp;1 | grep -o '&quot;end_seq&quot;:[0-9]*'
+
+| &quot;end_seq&quot;:0
+</code></pre>
+<p>He now knows that the XID he most recently received has a higher
+sequence number than the previous one, which means that it's newer
+... as long as their part of the same provenance mark chain.</p>
+<p>He can prove that last fact by validating both provenance marks together:</p>
+<pre><code>provenance validate $PROV_MARK $UPDATED_PROV_MARK
+
+│ ✅ (silent success - part of the same chain)
+</code></pre>
+<p>He now knows that they're both part of the same chain and there are no
+other problems.</p>
+<h3 id="step-11-check-the-claims-signature">Step 11: Check the Claim's Signature</h3>
+<p>The XID has been validated but what about the claim? Is it really
+related to Amira's XID? To determine that, Ben first needs to extract
+all of the pubkeys from BRadvoc8's XID using <code>xid key all</code>, as he
+doesn't know which was used for signing:</p>
+<pre><code>read -d '' -r -a PUBKEY &lt;&lt;&lt; $(envelope xid key all &quot;$BEN_FETCHED_XID&quot;)
+</code></pre>
+<p>This is somewhat arcane BASH-ing. If he preferred, Ben could just output <code>envelope xid key all</code> to his screen, and then copy each one to a variable by hand and check each of those by hand  with <code>envelope verify -v</code>.</p>
+<p>But by having them in an array, Ben can do a quick check to see if any of the signatures verified (tossing out failures, because they're totally OK: only one key needs to be matched):</p>
+<pre><code>for i in &quot;${PUBKEY[@]}&quot;
+  do
+    if envelope verify -v $i $ATTESTATION_SIGNED &gt;/dev/null 2&gt;&amp;1; then
+      echo &quot;✅ One of the signatures verified! &quot;
+      echo $i
+    fi
+done
+</code></pre>
+<p>The result:</p>
+<pre><code>| ✅ One of the signatures verified! 
+| ur:envelope/lrtpsotansgylftanshflfaohdcxuydpdtjntyecmogmvdeydyksttleeeeerdptrtjyzcmoaoimtokigreonltshnoltansgrhdcxjzptmodkhtsgzmkbdpdweesngdeeoxktwncfehmndegtamswplclpfbsptroaagaoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdhdcxwewljefsbzmklsvasbgakpbdbkcfmohhynjzkksrtdhhsktkfepfbezmhlbsjlntessabskb
+</code></pre>
+<p>Now Ben knows that the claim was signed by BRadvoc8's XID. But, this
+says nothing about whether the claim is accurate. Anyone can claim "I
+contributed to Galaxy Project." The signature proves you MADE the
+claim, not that you made the contribution. This distinction
+matters. Self attestations are starting points for building trust, not
+proof of competence. The <code>verifiableAt</code> field points to evidence that
+verifiers can check independently.</p>
+<h3 id="step-12-check-the-claim">Step 12: Check the Claim</h3>
+<p>Ben follows the <code>verifiableAt</code> URL to GitHub and verifies that PR #12847 exists, was merged, and adds mass spec visualization. He also sees that it was created by a GitHub account with the name of "BRadvoc8". This is all very suggestive and provides some verification for Amira's claim.</p>
+<p>However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. We'll get back to that in chapter 3. For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.</p>
+<blockquote>
+<p>:brain: <strong>Learn more</strong>: The <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md">Progressive Trust</a> concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.</p>
+</blockquote>
+<h3 id="step-13-assess-your-level-of-trust">Step 13: Assess Your Level of Trust</h3>
+<p>At this point, Ben can once more lay out what he knows:</p>
+<table>
+<thead>
+<tr>
+<th>What Ben Can Verify</th>
+<th>What Remains Unproven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ BRadvoc8 made this claim<br>✅ Claim wasn't modified (signature valid)</td>
+<td>❓ Claim is actually true</td>
+</tr>
+<tr>
+<td>✅ Attestation date recorded</td>
+<td>❓ Date is actually corect</td>
+</tr>
+<tr>
+<td>✅ Evidence URL exists</td>
+<td>❓ BRadvoc8 is PR author&lt;br❓ Quality of the contribution</td>
+</tr>
+<tr>
+<td>✅ BRadvoc8 is more detailed</td>
+<td>❓ Who BRadvoc8 is</td>
+</tr>
+</tbody>
+</table>
+<h2 id="part-v-managing-the-attestation-lifecycle">Part V: Managing the Attestation Lifecycle</h2>
+<p>Attestations aren't permanent. Claims become stale, projects end, and
+ultimately skills evolve. Amira's Galaxy Project contribution from
+2024 is factual forever, but if she added more PRs over time, she
+might want that to be recorded in her attestation. However, you can
+never actually change an existing attestation: once a claim is signed,
+it's immutable. Instead, you have three possibilities: you can create
+new attestations, supersede attestations, or retract attestations.</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claim is still true</td>
+<td>Create new attestation on related topic</td>
+</tr>
+<tr>
+<td>Claim is outdated</td>
+<td>Create superseding attestation</td>
+</tr>
+<tr>
+<td>Claim was wrong</td>
+<td>Create retraction attestation</td>
+</tr>
+</tbody>
+</table>
+<p>Creating a totally new attestation follows the same procedure as above. Our suggested best practices for superseding and revoking involve creating totally new attestations that clearly denote their relationship to the previous ones.</p>
+<h3 id="step-14-supersede-an-attestation">Step 14: Supersede an Attestation</h3>
+<p>Two years later, Amira's Galaxy Project work has expanded. This means the old claim is outdated, requiring a new one that supersedes it.</p>
+<pre><code>S_ATTESTATION=$(envelope subject type string \
+  &quot;Contributed mass spec visualization and data pipeline code to galaxyproject/galaxy (PRs #12847, #14201, #15892, 2024-2026)&quot;)
+S_ATTESTATION=$(envelope assertion add pred-obj known isA known 'attestation' &quot;$S_ATTESTATION&quot;)
+S_ATTESTATION=$(envelope assertion add pred-obj known source ur $XID_ID &quot;$S_ATTESTATION&quot;)
+S_ATTESTATION=$(envelope assertion add pred-obj known target ur $XID_ID &quot;$S_ATTESTATION&quot;)
+S_ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri &quot;https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8&quot; &quot;$S_ATTESTATION&quot;)
+S_ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$S_ATTESTATION&quot;)
+</code></pre>
+<p>But you don't want to just create a new attestation that expands on the first, you want to also reference the original attestation being superseded, which can be done by referencing its digest (hash):</p>
+<pre><code>ORIGINAL_DIGEST=$(envelope digest &quot;$ATTESTATION_SIGNED&quot;)
+S_ATTESTATION=$(envelope assertion add pred-obj string &quot;supersedes&quot; digest &quot;$ORIGINAL_DIGEST&quot; &quot;$S_ATTESTATION&quot;)
+</code></pre>
+<p>This ensures that viewers can understand the relationship between the two attestation.</p>
+<p>You would now wrap &amp; sign the attestation as usual:</p>
+<pre><code>S_WRAPPED_ATTESTATION=$(envelope subject type wrapped $S_ATTESTATION)
+S_SIGNED_ATTESTATION=$(envelope sign --signer &quot;$ATTESTATION_PRVKEYS&quot; &quot;$S_WRAPPED_ATTESTATION&quot;)
+
+echo &quot;✅ Updated attestation (supersedes original):&quot;
+envelope format &quot;$S_SIGNED_ATTESTATION&quot; | head -12
+
+| ✅ Updated attestation (supersedes original):
+| {
+|     &quot;Contributed mass spec visualization and data pipeline code to galaxyproject/galaxy (PRs #12847, #14201, #15892, 2024-2026)&quot; [
+|         'isA': 'attestation'
+|         &quot;supersedes&quot;: Digest(40993e58)
+|         'date': &quot;2026-02-18T13:14-10:00&quot;
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e)
+|         'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+</code></pre>
+<blockquote>
+<p>📖 <strong>What is a Superseding Attestation?</strong>: A superseding attestation is a new attestation with a <code>supersedes</code> assertion that points to a previous attestation's digest. The original remains valid, but the newer attestation reflects the current state.</p>
+</blockquote>
+<h3 id="step-15-retract-an-attestation">Step 15: Retract an Attestation</h3>
+<p>If an attestation instead needed to be retracted, our best practive suggests a pattern as follows:</p>
+<pre><code>RETRACTION=$(envelope subject type string &quot;RETRACTED: [original claim text]&quot;)
+RETRACTION=$(envelope assertion add pred-obj known isA string &quot;retraction&quot; &quot;$RETRACTION&quot;)
+RETRACTION=$(envelope assertion add pred-obj string &quot;retracts&quot; digest &quot;$ORIGINAL_DIGEST&quot; &quot;$RETRACTION&quot;)
+RETRACTION=$(envelope assertion add pred-obj string &quot;reason&quot; string &quot;Claim was overstated&quot; &quot;$RETRACTION&quot;)
+RETRACTION=$(envelope subject type wrapped &quot;$RETRACTION&quot;)
+RETRACTION=$(envelope sign --signer &quot;$ATTESTATION_PRVKEYS&quot; &quot;$RETRACTION&quot;)
+</code></pre>
+<p>The result would look like this:</p>
+<pre><code>envelope format $RETRACTION
+
+| {
+|     &quot;RETRACTED: [original claim text]&quot; [
+|         'isA': &quot;retraction&quot;
+|         &quot;reason&quot;: &quot;Claim was overstated&quot;
+|         &quot;retracts&quot;: Digest(40993e58)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+</code></pre>
+<p>Retractions are serious: they indicate an error in judgment. Use them sparingly. Most updates are supersessions (extending or refining), not retractions (correcting errors). Amira definteily won't be retracting anything at this point!</p>
+<blockquote>
+<p>📖 <strong>What is a Retracting Attestation?</strong>: A superseding attestation is a Gordian Envelope that references a previous attestation and states both that it's been retracted and why.</p>
+</blockquote>
+<h2 id="summary-the-world-of-attestations">Summary: The World of Attestations</h2>
+<p>This tutorial talked a lot about claims, or attestations, including revealing many sorts:</p>
+<ul>
+<li><strong>Detached Attestation.</strong> Creating an attestation separted from your XID, but linked by a signature.</li>
+<li><strong>Embedded Attestation.</strong> Incorporating an attestation into a XID.</li>
+<li><strong>Endorsement.</strong> Making a claim about someone else.</li>
+<li><strong>Fair Witness Attestation.</strong> Reporting without interpretation or known bias.</li>
+<li><strong>Retracting Attestation.</strong> Invalidating a prior attestation</li>
+<li><strong>Self Attestation.</strong> Making a claim about yourself.</li>
+<li><strong>Superseding Attestation.</strong> Updating a prior attestation.</li>
+</ul>
+<p>This tutorial focused on a detached fair-witness self attestation. Embedded attestations and endorsements will follow starting in <a href="06-creating-edges.md">Tutorial 06</a>.</p>
+<p>Crucially, this tutorial also showed how to create a <em>validated attestation</em>: the Galaxy Project attestation isn't just a claim, it's a claim with a URL where anyone can check the actual code. But could it have been stronger? That's also a topic for the future.</p>
+<h3 id="exercises">Exercises</h3>
+<p><strong>Building exercises (Amira's perspective):</strong></p>
+<ul>
+<li>Create a fair witness attestation for one of your own verifiable contributions (GitHub PR, package, blog post).</li>
+<li>Register a new dedicated attestation key in your XID.</li>
+</ul>
+<p><strong>Verification exercises (Ben's perspective):</strong></p>
+<ul>
+<li>Given an attestation envelope, extract the <code>verifiableAt</code> URL and check if the evidence exists.</li>
+<li>Verify the signature using the attestation key from the XID.</li>
+</ul>
+<p><strong>Analysis exercises:</strong></p>
+<ul>
+<li>Compare a fair witness claim to a vague claim about the same skill: what makes the fair witness version stronger?</li>
+<li>Identify 2-3 public contributions you could attest to with verifiable evidence.</li>
+</ul>
+<h2 id="whats-next">What's Next</h2>
+<p>BRadvoc8 is now an identity with an initial claim about skills, but that's opened a bit of a Pandora's box. The next two tutorials will seek to close by showing how to elide sensitive claims in <a href="../02_2_Managing_Claims_Elision/">§2.2: Managing Sensitive Claims with Elision</a> and <a href="02_3_Managing_Claims_Encryption.md">§2.3: Managing Sensitive Claims with Encryption</a>.</p>
+<h3 id="example-script">Example Script</h3>
+<p>A complete working script implementing this tutorial is available at <code>../tests/03-creating-self-attestations.sh</code>.</p>
+<hr />
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Attestation Key</strong>: A dedicated signing key for creating detached attestations, registered in your XID. Verified against the XID key list, not an external service.</p>
+<p><strong>Fair Witness Methodology</strong>: Making only factual, specific, verifiable claims rather than opinions or vague assertions.</p>
+</blockquote>
+<p>Also see the various attestation definitions in the <strong>Summary</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

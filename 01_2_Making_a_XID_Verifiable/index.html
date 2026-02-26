@@ -1,0 +1,1599 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/01_2_Making_a_XID_Verifiable/">
+      
+      
+        <link rel="prev" href="../01_1_Your_First_XID/">
+      
+      
+        <link rel="next" href="../02_0_Claims/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>1.2: Making a XID Verifiable - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#12-making-a-xid-verifiable" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1.2: Making a XID Verifiable
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-freshness-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Freshness Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-publishing-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Publishing a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Publishing a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-load-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Load Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-choose-your-publication-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Choose Your Publication URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-add-a-dereferencevia-assertion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add a dereferenceVia Assertion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-export-public-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Export Public View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-store-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Store Your Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-publish-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Publish Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bens-story-a-perspective-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ben's Story: A Perspective Shift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-verifying-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Verifying a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Verifying a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-7-fetch-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Fetch the XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-recheck-the-dereferencevia-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Recheck the dereferenceVia URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-verify-the-signature-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Verify the Signature &amp; Provenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Verify the Signature &amp; Provenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-the-xid-was-tampered-with" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If the XID Was Tampered with?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-a-stable-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: A Stable ID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: A Stable ID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-freshness-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Freshness Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-publishing-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Publishing a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Publishing a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-load-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Load Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-choose-your-publication-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Choose Your Publication URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-add-a-dereferencevia-assertion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add a dereferenceVia Assertion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-export-public-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Export Public View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-store-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Store Your Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-publish-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Publish Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bens-story-a-perspective-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ben's Story: A Perspective Shift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-verifying-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Verifying a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Verifying a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-7-fetch-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Fetch the XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-recheck-the-dereferencevia-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Recheck the dereferenceVia URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-verify-the-signature-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Verify the Signature &amp; Provenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Verify the Signature &amp; Provenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-the-xid-was-tampered-with" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If the XID Was Tampered with?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-a-stable-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: A Stable ID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: A Stable ID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="12-making-a-xid-verifiable">1.2: Making a XID Verifiable</h1>
+<p>This section demonstrates how to maintain a XID's freshness without
+direct communication through the use of a publication URL.</p>
+<blockquote>
+<p>🧠 <strong>Related concepts.</strong> This tutorial introduces verification and freshness. To understand the underlying principles, see <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md">Progressive Trust</a> for how trust builds incrementally, and <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md">Data Minimization</a> for controlling what you disclose when publishing.</p>
+</blockquote>
+<h2 id="objectives-for-this-section">Objectives for this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Create a <code>dereferenceVia</code> assertion pointing to a fresh version of a XID.</li>
+<li>Publish a XID.</li>
+<li>Check that a <code>dereferenceVia</code> assertion matches the fetch URL.</li>
+<li>Assess what has been proven and what trust level that supports.</li>
+</ul>
+<h2 id="amiras-story-the-freshness-problem">Amira's Story: The Freshness Problem</h2>
+<p>After §1.1, Amira could give Ben her public XID directly. She could
+email it, share it via Signal, or do whatever else works. But what
+happens when she updates her XID next month? Ben has no way to know
+his copy is stale. He might verify signatures against outdated
+information, not knowing that Amira added new attestations or rotated
+keys.</p>
+<p>One simple solution is to publish a XID a stable URL and embed that
+URL in the document itself. (We'll discuss other solutions in a future
+tutorial.) Now Ben can fetch the current version whenever he needs it
+and verify through the URL (andlater through provenance marks) that
+his copy is actually current, not an old snapshot someone gave him.</p>
+<p>This isn't about discovery (how Ben finds Amira's XID in the first
+place). It's about freshness (how Ben verifies he has the current
+version).</p>
+<h2 id="part-i-publishing-a-xid">Part I: Publishing a XID</h2>
+<p>You'll add a publication URL to Amira's XID and then publish a public
+view of that.</p>
+<h3 id="step-0-verify-dependencies">Step 0: Verify Dependencies</h3>
+<p>Before you start, ensure that you have the required CLI tools from Tutorial 01:</p>
+<pre><code>envelope --version
+provenance --version
+
+│ bc-envelope-cli 0.34.1
+| provenance-mark-cli 0.7.0
+</code></pre>
+<p>If either tool is not installed, see <a href="../01_1_Your_First_XID/#step-0-setting-up-your-workspace">Step 0 of
+§1.1</a> for
+installation instructions.</p>
+<h3 id="step-1-load-your-xid">Step 1: Load Your XID</h3>
+<p>To reload your XID, first be sure to recreate your environmental variables:</p>
+<pre><code>XID_NAME=&quot;BRadvoc8&quot;
+PASSWORD=&quot;Amira's strong password&quot;
+</code></pre>
+<p>If you saved your XID to a file, you can now load it:</p>
+<pre><code>XID=$(cat xid-*/BRadvoc8-xid.envelope)
+</code></pre>
+<p>Else, recreate it for this tutorial:</p>
+<pre><code>XID=$(envelope generate keypairs --signing ed25519 | \
+    envelope xid new \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    --nickname &quot;$XID_NAME&quot; \
+    --generator encrypt \
+    --sign inception)
+echo &quot;✅ Loaded XID: $XID_NAME&quot;
+</code></pre>
+<p>Afterward, you can check that it loaded correctly with <code>envelope format</code>:</p>
+<pre><code>envelope format &quot;$XID&quot; | head -10
+
+│ {
+│     XID(5f1c3d9e) [
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             {
+│                 'privateKey': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             } [
+│                 'salt': Salt
+│             ]
+│ ...
+</code></pre>
+<h3 id="step-2-choose-your-publication-url">Step 2: Choose Your Publication URL</h3>
+<p>You now must decide where to publish Amira's XID.  For this tutorial,
+we'll use a GitHub repository, but any stable URL website or IPFS
+gateway will work, just be sure that it's something that you
+personally control, since one of the advantages of your XID is that
+it's self-sovereign (meaning that it's controlled by you).</p>
+<pre><code>PUBLISH_URL=&quot;https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt&quot;
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Raw Content Required.</strong> Your URL must point to raw
+content, not an HTML page.  If verifiers fetch an HTML page instead of
+the actual XID data, verification will fail. For GitHub repositories,
+use the <code>/raw/</code> URL path for web access or the
+<code>raw.githubusercontent.com</code> site name for curl access (see below).</p>
+</blockquote>
+<h3 id="step-3-add-a-dereferencevia-assertion">Step 3: Add a <code>dereferenceVia</code> Assertion</h3>
+<p>You now need to link your publication URL to Amira's XID. This is done
+by adding a <code>dereferenceVia</code> URL, which says how to "resolve" the XID.
+Passing the original <code>$XID</code> to the <code>xid resolution add</code> command will
+do this:</p>
+<pre><code>XID_WITH_URL=$(envelope xid resolution add \
+    &quot;$PUBLISH_URL&quot; \
+    --verify inception \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$XID&quot;)
+</code></pre>
+<p>This command uses the following new arguments:</p>
+<ol>
+<li>The <code>$PUBLISH_URL</code> is of course required by <code>xid resolution add</code>.</li>
+<li><code>--verify inception</code> says to verify that the signature of the original <code>$XID</code> was made with its inception key.</li>
+<li><code>--password "$PASSWORD"</code> decrypts the previously encrypted information with the <code>$PASSWORD</code>.</li>
+</ol>
+<p>You want the new, updated XID to have the same protections as the
+original, so you also repeat the various encryption and signature
+commands as part of the creation for Amira's updated XID:</p>
+<ol>
+<li><code>--private encrypt</code> to encrypt the private key.</li>
+<li><code>--generate encrypt</code> to encrypt the provenance mark generate.</li>
+<li><code>--encrypt-password</code> to use the <code>$PASSWORD</code> in future decryption.</li>
+<li><code>--sign</code> to sign the new document.</li>
+</ol>
+<p>Note that you didn't have to repeat commands like <code>--nickname</code>. That's
+because the whole previous XID was read in. You just had to redo the
+encryption and signing at the end.</p>
+<blockquote>
+<p>📖 <strong>What is an Edition?</strong> An edition is a new version of a XID
+that contains new content (or has removed old content). It will have a
+different root hash, but the XID identifier always stays the
+same. This is different from a new view, which is a new way to look at
+an existing edition.</p>
+</blockquote>
+<p>Whenever you make one or more updates to a XID in preparation for
+publication of a new edition, you should ask: "Has the previous
+version of the XID been published?" If the answer is "yes" then you
+should update the provenance mark, to take advantage of its ability to
+order editions of a XID (and so tell recipients which one is the most
+up to date). In this case, you never published the previous version of
+the XIDDoc, so there's no need to update. When this one is published
+it'll be the first (sequence 0) edition.</p>
+<p>You can use <code>envelope format</code> to see what your updated XID looks like:</p>
+<pre><code>envelope format &quot;$XID_WITH_URL&quot;
+
+│ Added dereferenceVia
+│ {
+│     XID(5f1c3d9e) [
+│         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             {
+│                 'privateKey': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             } [
+│                 'salt': Salt
+│             ]
+│             'allow': 'All'
+│             'nickname': &quot;BRadvoc8&quot;
+│         ]
+│         'provenance': ProvenanceMark(1896ba49) [
+│             {
+│                 'provenanceGenerator': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             } [
+│                 'salt': Salt
+│             ]
+│         ]
+│     ]
+│ } [
+│     'signed': Signature(Ed25519)
+│ ]
+</code></pre>
+<p>The existing metadata of the new XID Document should be identical to
+the original. The signature was verified then refreshed, while private
+keys and the provenance mark generator were re-encrypted.</p>
+<p>Notice that <code>dereferenceVia</code> is a known value (single quotes) from the
+Known Values registry, and its object is a <code>URI</code> type rather than a
+plain string. This assertion tells anyone who receives your XID
+Document: "To get the current version, fetch from this URL." You can
+add multiple <code>dereferenceVia</code> assertions for redundancy by running the
+command again with a different URL. For example, you might point to
+both a GitHub raw URL and a personal domain, so if one source becomes
+unavailable, verifiers can still fetch your current XID Document from
+the other.</p>
+<h3 id="step-4-export-public-view">Step 4: Export Public View</h3>
+<p>You now want to elide the private keys in the XID, to create a view of
+this edition that is safe for publication. In
+<a href="../01_1_Your_First_XID/">§1.1</a>, you manually found digests and used
+<code>envelope elide removing</code> to create a public view. We used that method
+to show how elision works. However, there's a simpler command that
+optionally elides the private keys and/or the provenance mark
+generator: <code>xid export</code>. That's what you'll want to use most of the
+time (when you're not learning about elision!):</p>
+<pre><code>PUBLIC_XID=$(envelope xid export --private elide --generator elide &quot;$XID_WITH_URL&quot;)
+
+echo &quot;✅ Exported public version&quot;
+envelope format &quot;$PUBLIC_XID&quot;
+
+│ ✅ Exported public version
+│ {
+│     XID(5f1c3d9e) [
+│         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             'allow': 'All'
+│             'nickname': &quot;BRadvoc8&quot;
+│             ELIDED
+│         ]
+│         'provenance': ProvenanceMark(1896ba49) [
+│             ELIDED
+│         ]
+│     ]
+│ } [
+│     'signed': Signature(Ed25519)
+│ ]
+</code></pre>
+<p>As usual, this removes the content you want to hide, but maintains the hashes, so that the root hash and the signature remain the same.</p>
+<h3 id="step-5-store-your-work">Step 5: Store Your Work</h3>
+<p>You should now your XIDs to a local file.</p>
+<p>The following saves both versions of the XID to an <code>envelopes</code>
+directory that we'll be using in future tutorials. (Amira herself
+would save the file to that <code>xid-5f1c3d9e</code> directory that she created
+in the previous section.)</p>
+<pre><code>mkdir envelopes
+echo &quot;$PUBLIC_XID&quot; &gt; envelopes/BRadvoc8-xid-public-02.envelope
+echo &quot;✅ Public XID saved to envelopes/BRadvoc8-xid-public-02.envelope&quot;
+echo &quot;$XID_WITH_URL&quot; &gt; envelopes/BRadvoc8-xid-private-02.envelope
+echo &quot;✅ PRIVATE XID saved to envelopes/BRadvoc8-xid-private-02.envelope
+</code></pre>
+<h3 id="step-6-publish-your-xid">Step 6: Publish Your XID</h3>
+<p>To upload Amira's publix XID to GitHub, create a repository named
+after the XID (e.g., <code>BRadvoc8/BRadvoc8</code>), add a file named <code>xid.txt</code>,
+and commit the public XID content. The raw URL follows a predictable
+pattern, <code>https://github.com/USERNAME/REPO/raw/main/xid.txt</code>, which
+should be what you recorded in <code>dereferenceVia</code>.</p>
+<p>Publish literally means "to make public", so this is (at last) the
+publication of your XID. You've locked down the content as shown in
+this XID as the first edition. If you make changes (as you do starting
+in chapter 2), at that point you will update the provenance mark
+before you republish, so that recipients can figure out which edition
+is the newest.</p>
+<p>Note that publication doesn't only mean uploading something to a
+public-facing website. Just emailing a XID to someone is
+publication, because bits are infinitely copyable: you have no idea
+how far that single emailed edition will spread.</p>
+<h2 id="bens-story-a-perspective-shift">Ben's Story: A Perspective Shift</h2>
+<p>Though this is Amira's story, she is trying to join a larger ecosystem
+of socially conscious programmers and the organizations they
+support. That's where Ben comes into the story. He runs SisterSpaces,
+a womens' services nonprofit. Ben received a message from someone
+claiming to be "BRadvoc8":</p>
+<blockquote>
+<p>"Hey Ben, I'm interested in contributing to SisterSpaces. Here's my XID: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"</p>
+</blockquote>
+<p>Ben doesn't know if this is legitimate. He needs to verify. How does
+he do so? How does he know he has the current version of Amira's XID,
+not a stale copy? The verification workflow answers these questions
+without requiring direct contact with Amira.</p>
+<h2 id="part-ii-verifying-a-xid">Part II: Verifying a XID</h2>
+<p>Ben has been mailed the XID Document and will test it via a variety of
+means.</p>
+<h3 id="step-7-fetch-the-xid">Step 7: Fetch the XID</h3>
+<p>First, Ben fetches the current version of the XID from the
+<code>dereferenceVia</code> found in the version that he was mailed.</p>
+<p>He could just input the URL into his browser and then cut and paste
+the file, but the following instead allows him to retrieve the
+dereferenced XIDDoc using the command line.</p>
+<pre><code>RECEIVED_URL=&quot;https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt&quot;
+CURL_URL=`echo $RECEIVED_URL | sed 's/\/\/github.com\//\/\/raw.githubusercontent.com\//; s/\/raw\//\//'`
+FETCHED_XID=$(curl -H 'Accept: application/vnd.github.v3.raw' $CURL_URL | head -1)
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Variable URLs.</strong> The <code>dereferenceVia</code> indicated that Ben
+should retrieve the current XIDDoc from
+<code>https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt</code>. That's a
+standard GitHub URL for retrieving raw files using a browser. However,
+it doesn't work with <code>curl</code>, which instead requires an equivalent
+URL. Replace the <code>github.com</code> site name with
+<code>raw.githubusercontent.com</code> and drop the <code>/raw/</code> directory to instead
+retrieve from the command line.</p>
+</blockquote>
+<p>You may notice that the <code>FETCHED_URL</code> command only retrieves the first
+line of the dereference URL, with <code>head -1</code>. That is purposeful for
+this tutorial, but not general best practice, which would be to
+instead read the last line of the file, with <code>tail -1</code>. Here's the
+reason: a file can contain multiple copies of an envelope, each a UR
+stored on a seperate line. Optimally, these lines will be arranged in
+chronological order, with the oldest envelope at the top and the
+newest at the bottom. That's what we're depending on in this tutorial:
+that the first line of the file will contain the first edition of the
+envelope, which is the example we're discussing here.</p>
+<p>We can depend on this ordering in this tutorial because we're
+preparing the files for use. You can't depend on it when you're
+dereferencing an arbitrary XID that's been sent to you, but that's
+fine. XIDs have provenance marks, and the provenance marks will tell
+you which version is the newest. That's their whole purpose!</p>
+<p>Ben will of course want to review the XID that he retrieved:</p>
+<pre><code>envelope format &quot;$FETCHED_XID&quot; | head -15
+
+│ ✅ Fetched XIDDoc from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
+│ {
+│     XID(5f1c3d9e) [
+│         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             'allow': 'All'
+│             'nickname': &quot;BRadvoc8&quot;
+│             ELIDED
+│         ]
+│         'provenance': ProvenanceMark(1896ba49) [
+│             ELIDED
+│         ]
+│     ]
+│ } [
+│     'signed': Signature(Ed25519)
+│ ]
+</code></pre>
+<p>Retrieving a XID in this way is a crucial step because anyone could
+pass around a XID Document, and more so, anyone could pass around a
+very old XID Document that has old, inaccurate information. By
+including a <code>dereferenceVia</code> that refers to a URL that she controls,
+Amira has ensured that if someone receives her XID Document, they
+should then go to the URL to pick up a current version, which Ben
+does.</p>
+<p>Ben now suspects he has the current version of XID.</p>
+<h3 id="step-8-recheck-the-dereferencevia-url">Step 8: Recheck the dereferenceVia URL</h3>
+<p>Since Ben has dereferenced the XID that Amira mailed him, to access an
+up-to-date version of the document, he has the most up-to-date
+version, right? Not necessarily! It's possible that the URL is no
+longer Amira's primary publication location, and there's actually a
+newer version elsewhere! To verify that this isn't the case, Ben should
+check the <code>dereferenceVia</code> one more time, looking at the new document
+that he downloaded. He does this by extracting the <code>dereferenceVia</code>
+from this fetched and unwrapped XID, and comparing it to the URL that
+he used to lookup the XID.</p>
+<pre><code>UNWRAPPED=$(envelope extract wrapped &quot;$FETCHED_XID&quot;)
+DEREFERENCE_ASSERTION=$(envelope assertion find predicate known dereferenceVia &quot;$UNWRAPPED&quot;)
+DEREFERENCE_URL=$(envelope extract object &quot;$DEREFERENCE_ASSERTION&quot; | envelope format | sed 's/.*URI(\(.*\))/\1/')
+
+echo &quot;URL Ben fetched from:     $RECEIVED_URL&quot;
+echo &quot;dereferenceVia in XID:    $DEREFERENCE_URL&quot;
+
+if [ &quot;$RECEIVED_URL&quot; = &quot;$DEREFERENCE_URL&quot; ]; then
+    echo &quot;✅ URLs match - XID claims this is its canonical location&quot;
+else
+    echo &quot;⚠️  URLs don't match - XID may have been copied from elsewhere&quot;
+fi
+
+│ URL Ben fetched from:     https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
+│ dereferenceVia in XID:    URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+│ ✅ URLs match - XID claims this is its canonical location
+</code></pre>
+<p>If the URLs match, Ben is even more certain that he has the most
+up-to-date XID. If they don't, then Ben should look at the
+<code>dereferenceVia</code> in the new XID that he retrieved and follow it to the
+URL that <em>it</em> points to, repeating steps 6-7 until he actually gets a
+XID that matches its own <code>dereferenceVia</code>. (Usually these additional
+steps wont' be required at all, but they should definitely be part of
+a verifier checklist.)</p>
+<p>Barring some weird issue like a circular set of dereferences, or a
+dead URL, Ben should now have a XIDDoc that is the newest version. But
+can he trust it?</p>
+<h3 id="step-9-verify-the-signature-provenance">Step 9: Verify the Signature &amp; Provenance</h3>
+<p>Ben will now repeat the steps from
+<a href="../01_1_Your_First_XID/#part-iii-verifying-a-xid">§1.1</a>, verifying the
+signature and the provenance mark.</p>
+<pre><code>UNWRAPPED=$(envelope extract wrapped &quot;$FETCHED_XID&quot;)
+KEY_ASSERTION=$(envelope assertion find predicate known key &quot;$UNWRAPPED&quot;)
+KEY_OBJECT=$(envelope extract object &quot;$KEY_ASSERTION&quot;)
+PUBLIC_KEYS=$(envelope extract ur &quot;$KEY_OBJECT&quot;)
+
+if envelope verify -v &quot;$PUBLIC_KEYS&quot; &quot;$FETCHED_XID&quot; &gt;/dev/null 2&gt;&amp;1; then
+    echo &quot;✅ Signature verified - XID is self-consistent&quot;
+else
+    echo &quot;❌ Signature FAILED - XID may be tampered\!&quot;
+    exit 1
+fi
+
+PROVENANCE_MARK=$(envelope xid provenance get &quot;$FETCHED_XID&quot;)
+
+echo &quot;Checking provenance mark...&quot;
+provenance validate &quot;$PROVENANCE_MARK&quot; &amp;&amp; echo &quot;✅ Provenance chain intact&quot;
+
+│ ✅ Signature verified - XID is self-consistent
+| ✅ Provenance chain intact
+</code></pre>
+<p>He could also examine details of the provenance mark with <code>provenance
+validate --format json-pretty "$PROVENANCE_MARK"</code>, but since this is
+Amira's first edition, it'll look the same as it did in 1.1 The more
+interesting test would come if Ben had multiple, different copies of
+the XID and needed to determine which was stale and which fresh, but
+that's a topic for chapter 2</p>
+<h4 id="what-if-the-xid-was-tampered-with">What If the XID Was Tampered with?</h4>
+<p>What happens if an attacker intercepts and modifies the XID before Ben
+receives it? The following change simulates tampering by removing the
+last character from the $FETCHED_XID variable. A more sophisticated
+attacker would use a UR playground to change the content of the
+envelope, but the results would be the same.</p>
+<pre><code>TAMPERED_XID=${FETCHED_XID::-1}
+</code></pre>
+<p>In either case, the verification would fail because any modification, even a single character, invalidates the signature: the cryptographic hash of the tampered document no longer matches what was signed.</p>
+<pre><code>if envelope verify -v &quot;$PUBLIC_KEYS&quot; &quot;$TAMPERED_XID&quot; &gt;/dev/null 2&gt;&amp;1; then
+    echo &quot;✅ Signature verified&quot;
+else
+    echo &quot;❌ Signature FAILED - tampering detected\!&quot;
+fi
+
+│ ❌ Signature FAILED - tampering detected!
+</code></pre>
+<p>This is why signature verification is an important check: it catches any tampering that occurred after Amira signed the document.</p>
+<blockquote>
+<p>🧠 <strong>Learn More.</strong> The <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/signing-verification.md">Signing and
+Verification</a> concept doc
+explains how envelope signatures work and why elision preserves
+signature validity.</p>
+</blockquote>
+<h3 id="step-10-assess-your-level-of-trust">Step 10: Assess Your Level of Trust</h3>
+<p>Although Ben has run a few tests, he still has limited information about the BRadvoc8 identity. So what can he trust?</p>
+<p>Three things have been cryptographically verified:</p>
+<ul>
+<li>The XID was signed by someone holding the private signing key referenced in the XID.</li>
+<li><em>This means that the XID is self-consistent</em>.</li>
+<li>The XID hasn't been tampered with since it was signed.</li>
+<li><em>This means that the XID is what the signer signed-off on (but not that the content is necessarily true).</em></li>
+<li>The provenance mark verifies, without any errors highlighting gaps.</li>
+<li><em>This means that the provenance chain is complete; to be precise, detailed data shows that the XID is a first edition.</em></li>
+</ul>
+<p>One thing is very likely verified:</p>
+<ul>
+<li>The XID is the most up-to-date edition of the identifier.</li>
+<li><em>There still is the possibility that Amira made a newer XID without updating the <code>dereferenceVia</code> site, but Ben did enough due dilligence to demonstrate that it's unlikely that he has an out-of-date version of the XID.</em></li>
+</ul>
+<p>But a few other things are just assumed, without proof:</p>
+<ul>
+<li>Amira has control of the GitHub account.</li>
+<li><em>Though Amira's XID being on the GitHub account is suggestive, more would need to be done to prove she owned it.</em></li>
+<li>Amira is who she says she is.</li>
+<li><em>A pseudonymous identity can never provide absolute proof of who someone is, but attestations and cross-verifications can offer increasingly strong evidence.</em></li>
+</ul>
+<p>Future tutorials will concentrate on showing how a XID can better
+support these assumptions.</p>
+<blockquote>
+<p>🧠 <strong>Learn More.</strong> The <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md">Progressive Trust</a> concept doc explores the full trust hierarchy and how verification layers combine.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>What Ben Can Verify</th>
+<th>What Remains Unproven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ Signature is valid</td>
+<td>❓ XID owner controls GitHub account</td>
+</tr>
+<tr>
+<td>✅ derferenceVia matched fetch URL</td>
+<td>❓ Whether BRadvoc8 has skills</td>
+</tr>
+<tr>
+<td>✅ Valid genesis provenance mark</td>
+<td>❓ Who BRadvoc8 is</td>
+</tr>
+</tbody>
+</table>
+<h2 id="summary-a-stable-id">Summary: A Stable ID</h2>
+<p>The BRadvoc8 identify now has a stable publication URL, provenance
+tracking for edition verification, and cryptographic integrity through
+self-signing. The freshness problem is also solved: Ben can fetch
+current versions without waiting for Amira to send updates, verify
+that he has the latest copy, and detect if someone gives him stale
+data.</p>
+<h3 id="exercises">Exercises</h3>
+<p>Try these to solidify your understanding:</p>
+<p><strong>Publishing exercises (Amira's perspective):</strong></p>
+<ul>
+<li>Publish your XID for real: create a GitHub repository, add the URL with <code>xid resolution add</code>, export the public version, and commit it.</li>
+<li>Add multiple <code>dereferenceVia</code> assertions pointing to different mirrors (e.g., GitHub and a personal domain).</li>
+</ul>
+<p><strong>Verification exercises (Ben's perspective):</strong></p>
+<ul>
+<li>Download someone else's published XIDDoc and run the full verification workflow: signature, dereferenceVia match, and provenance check.</li>
+<li>Deliberately tamper with a copy (change a character) and verify that signature verification fails.</li>
+</ul>
+<h2 id="whats-next">What's Next</h2>
+<p>Ben's open question about skills is the biggest issue with Amira's
+BRadvoc8 at this point. Making claims, and figuring out how to hide sensitive ones, will be the topics of <a href="../02_0_Claims/">Chapter 2</a>.</p>
+<h3 id="example-script">Example Script</h3>
+<p>A complete working script implementing this tutorial is available at <code>../tests/02-making-xid-verifiable-TEST.sh</code>. Run it to see all steps in action:</p>
+<pre><code>bash tests/02-making-xid-verifiable-TEST.sh
+</code></pre>
+<p>This script tests both Amira's publication workflow and Ben's verification workflow.</p>
+<hr />
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong><code>dereferenceVia</code></strong> - A known predicate indicating where the canonical version of this XID can be fetched. Uses <code>URI</code> type for the object.</p>
+<p><strong>Freshness</strong> - The property of having the most current version of an XID, verified through publication URLs and provenance marks.</p>
+<p><strong>Provenance Chain</strong> - The sequence of provenance marks showing the history of XID updates. Each mark links to the previous.</p>
+<p><strong>Self-Consistency</strong> - An XID is self-consistent when its signature verifies against its own embedded public key. This proves the document wasn't tampered with after signing, but not that the claims inside are true.</p>
+<p><strong>Sequence Number</strong> - The position in the provenance chain (0 = genesis, 1 = first update, etc.).</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

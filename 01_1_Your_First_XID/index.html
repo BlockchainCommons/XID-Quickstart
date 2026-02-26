@@ -1,0 +1,1981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/01_1_Your_First_XID/">
+      
+      
+        <link rel="prev" href="../01_0_Introduction/">
+      
+      
+        <link rel="next" href="../01_2_Making_a_XID_Verifiable/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>1.1: Creating Your First XID - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#11-creating-your-first-xid" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1.1: Creating Your First XID
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-why-pseudonymous-identity-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Why Pseudonymous Identity Matters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: Why Pseudonymous Identity Matters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-xids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of XIDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-preparing-to-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Preparing to Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Preparing to Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-setting-up-your-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Setting Up Your Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-creating-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Creating the XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Creating the XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-view-your-xid-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: View Your XID Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: View Your XID Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-a-public-view-of-your-xid-with-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create a Public View of Your XID with Elision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Create a Public View of Your XID with Elision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-hashes-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Hashes &amp; Signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-verifying-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Verifying a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Verifying a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify the XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify-the-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify the Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-storing-your-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Storing Your Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Storing Your Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-organize-your-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Organize Your Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-the-bigger-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: The Bigger Picture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: The Bigger Picture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-lose-my-xid-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I lose my XID file?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-use-this-xid-on-multiple-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I use this XID on multiple devices?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-need-to-revoke-my-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I need to revoke my keys?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-why-is-signing-done-with-ed25519-instead-of-schnorr-or-other-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why is signing done with Ed25519 instead of Schnorr or other algorithms?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-for-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives for this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-why-pseudonymous-identity-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Why Pseudonymous Identity Matters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: Why Pseudonymous Identity Matters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-xids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of XIDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-preparing-to-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Preparing to Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Preparing to Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-0-setting-up-your-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Setting Up Your Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-creating-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Creating the XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Creating the XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-view-your-xid-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: View Your XID Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: View Your XID Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-a-public-view-of-your-xid-with-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create a Public View of Your XID with Elision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Create a Public View of Your XID with Elision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-review-of-envelope-hashes-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Review of Envelope Hashes &amp; Signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-verifying-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Verifying a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Verifying a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify the XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify-the-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify the Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-storing-your-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Storing Your Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Storing Your Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-organize-your-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Organize Your Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-the-bigger-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: The Bigger Picture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: The Bigger Picture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-lose-my-xid-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I lose my XID file?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-use-this-xid-on-multiple-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I use this XID on multiple devices?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-need-to-revoke-my-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I need to revoke my keys?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-why-is-signing-done-with-ed25519-instead-of-schnorr-or-other-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why is signing done with Ed25519 instead of Schnorr or other algorithms?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="11-creating-your-first-xid">1.1: Creating Your First XID</h1>
+<p>This section demonstrates how to create a basic XID (eXtensible
+IDentifier) that enables pseudonymous contributions while maintaining
+security. </p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> Before or after completing this
+tutorial, you may want to read about <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid.md">XID
+Fundamentals</a> and <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/gordian-envelope.md">Gordian Envelope
+Basics</a> to understand the
+theoretical foundations.</p>
+</blockquote>
+<h2 id="objectives-for-this-section">Objectives for this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Create a basic XID for pseudonymous identity</li>
+<li>Create public views of your XID using elision</li>
+<li>Maintain strong cryptographic integrity while sharing selectively</li>
+<li>Verify signature</li>
+<li>Examine provenance marks</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand what a XID is.</li>
+<li>Know what a pseudonymous identity is.</li>
+<li>Understand XID file organization using secure naming conventions</li>
+</ul>
+<h2 id="amiras-story-why-pseudonymous-identity-matters">Amira's Story: Why Pseudonymous Identity Matters</h2>
+<p>Amira is a successful software developer working at a prestigious
+multinational bank in Boston. With her expertise in distributed
+systems security, she earns a comfortable living, but she wants more
+purpose in her work. She is considering contributing to social-impact
+programs, but she can't do so under her real name. That's because
+Amira's position is somewhat vulnerable. She's a South American
+programmer working on an H-1B visa, and in modern America that could
+be revoked for any sort of activism. She also grew up in a politically
+tense region, and her work on social-impact projects could endanger
+family members back home. Yet she's deeply motivated to use her skills
+to help oppressed people globally. This tension between professional
+security and meaningful contribution creates a specific need.</p>
+<p>Anonymous submissions could resolve these issues. However, anonymous
+contributions lack credibility. Project maintainers need confidence in
+the quality and provenance of code, especially for socially important
+applications. Amira needs a better solution, one that protects her
+identity while allowing her to build a verifiable reputation for her
+skills. This would allow her to build trust through the quality of her
+work rather than existing credentials and so establish a consistent
+presence that can evolve over time.</p>
+<p>On the advice of her friend Charlene, Amira investigates RISK, a
+network that connects developers with social-impact projects and
+protects participants' privacy. It uses a Blockchain Commons
+technology called <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid.md">XIDs</a>: these "eXtensible
+IDentifiers" enable pseudonymous identity with progressive trust
+development. Amira will use RISK to create the "BRadvoc8" (Basic
+Rights Advocate) identity. Through RISK, Amira can then connect with
+project leaders such as Ben, who runs a women's services non-profit
+that Amira wishes to contribute to. This will allow her to safely
+collaborate on projects aligned with her values while maintaining
+separation between her pseudonymous contributions and her legal
+identity, protecting herself from adversaries who might target her or
+her family for her work.</p>
+<blockquote>
+<p>📖 <strong>What is a Pseudonymous Identity?</strong> A pseudoynmous identity
+is an ongoing identity that's intended for continuous usage, but which
+links to a name or identifier that doesn't match your real-world name.</p>
+</blockquote>
+<h3 id="the-power-of-xids">The Power of XIDs</h3>
+<p>XIDs have a number of advantages over how decentralized identifiers
+have evolved in the wider ecosystem, as more fully described in
+<a href="https://www.blockchaincommons.com/musings/XIDs-True-SSI/">"Musings of a Trust Architect: How XIDs Demonstrate a True
+Self-Sovereign
+Identity"</a>. Among those advantages are:</p>
+<ul>
+<li><strong>XIDs are Truly Self-Sovereign.</strong> A XID is autonomous. It's built
+on private keys that you control, described in a XID Document that you
+can update and elide as you see fit. There's no issuer (other than
+yourself), nor is there a central server that a XID might call home
+to.</li>
+<li><strong>XIDs Support Rich Metadata.</strong> They can include structured self
+attestations that describe your skills. Others can also make
+cryptographically verifiable claims about you through peer
+attestation.</li>
+<li><strong>XIDS Allow Elision.</strong> You can selectively share different
+information from your XID with different parties or use progressive
+trust to expand what you reveal to an individual over time, all while
+keeping other details private by eliding them. XIDs preserve the
+cryptographic integrity of the metadata even when portions are
+removed.</li>
+<li><strong>XIDs Maintain a Stable Identity.</strong> That identity remains stable
+even if you have multiple keys for different devices and even if you
+rotate your keys. If something goes wrong, recovery mechanisms let you
+restore access to your identity (and so your reputation, attestation,
+and endorsement history).</li>
+</ul>
+<blockquote>
+<p>🔥 <strong>*What is the Power of XIDs?</strong> The powers of XIDs include
+true self-sovereignty, rich metadata support, holder-based elision,
+and ongoing key management.</p>
+</blockquote>
+<h2 id="part-i-preparing-to-work">Part I: Preparing to Work</h2>
+<p>Like all of the "Learning from ..." courses, "Learning XIDs from the
+Command Line" is intended for hands-on work. By experimenting with
+XIDs, or even just following along using the envelope-cli app, you'll
+gain a more visceral understanding of the identifiers and how they can
+be used.</p>
+<p>As always, this requires setup: this section will lead you through the
+installation of a few core applications and later sections will
+demonstrate how to reload previous work to maintain consistent keys
+and XIDs throughout the course.</p>
+<h3 id="step-0-setting-up-your-workspace">Step 0: Setting Up Your Workspace</h3>
+<p>This tutorial depends on
+<a href="https://github.com/BlockchainCommons/bc-envelope-cli-rust"><code>bc-envelope-cli</code></a>,
+a Rust-based command-line interface. It can be easily installed using
+the <code>cargo</code> package management tool:</p>
+<pre><code>cargo install bc-envelope-cli
+</code></pre>
+<p>Though it's only used for a minor element here, you should also
+install the Provenance Mark CLI with <code>cargo</code>, as it'll also  be referenced
+throughout these tutorials:</p>
+<pre><code>cargo install provenance-mark-cli
+</code></pre>
+<p>If you don't have <code>cargo</code> installed, see <a href="https://doc.rust-lang.org/cargo/getting-started/installation.html"><em>The Cargo
+Book</em></a>
+for easy installation instructions.</p>
+<blockquote>
+<p>⚠️ <strong>Your Output Will Differ.</strong> Tutorial examples show output
+from the <strong>real published BRadvoc8 XID</strong> at
+<code>github.com/BRadvoc8/BRadvoc8</code>. When you follow along, your output
+will differ. You will have different XID identifiers, different key
+identifiers, different provenance marks, and different hashes in your
+envelope.<em>This is expected.</em> Focus on understanding what each step
+accomplishes, not matching exact output. Additional differences at
+this level will appear in future tutorials.</p>
+</blockquote>
+<h2 id="part-ii-creating-the-xid">Part II: Creating the XID</h2>
+<p>This first tutorial will take you through the basic steps to create a
+XID. It's deliberately simple. Subsequent tutorials, we'll explore
+more advanced features including the creation of rich persona
+structures.</p>
+<h3 id="step-1-create-your-xid">Step 1: Create Your XID</h3>
+<p>The first step in creating Amira's "BRadvoc8" pseudonymous identity is
+creating a XID as an anchor. </p>
+<blockquote>
+<p>📖 <strong>What is a XID?</strong> A XID is an eXtensible IDentifier. It's a
+Blockchain Commons technology built on Gordian Envelope, which is a
+smart document system that provides abilities such as elision and
+encryption, as well as other technologies such as Provenance
+Marks. XIDs are built to be autonomous cryptographic objects, which
+means that they can be used without depending on a central server or
+even a reliable communication network. More details are available in
+the <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/xid.md">XID concepts file</a> and the <a href="../ceoncepts/gordian-envelope.md">envelope concepts
+file</a>.</p>
+</blockquote>
+<p>A single <code>envelope</code> operation creates a complete XID that contains
+both private and public keys:</p>
+<pre><code>XID_NAME=BRadvoc8
+PASSWORD=&quot;Amira's strong password&quot;
+
+XID=$(envelope generate keypairs --signing ed25519 │ \
+    envelope xid new \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    --nickname &quot;$XID_NAME&quot; \
+    --generator encrypt \
+    --sign inception)
+
+if [ $XID ]
+then
+  echo &quot;✅ Created your XID: $XID_NAME&quot;
+else
+  echo &quot;❌ Error in XID creation&quot;
+fi
+
+│ ✅ Created your XID: BRadvoc8
+</code></pre>
+<p>This command runs the <code>envelope</code> CLI twice:</p>
+<ol>
+<li><code>envelope generate keypairs</code> creates an Ed25519 keypair (the same algorithm SSH, git, and Signal use). This generates two URs, containing the private and public keys, respectively.</li>
+<li><code>envelope xid new</code> creates a XID based on that Ed25519 keypair. This generates a XID Document (XIDDoc), which can be read as a Gordian Envelope. We'll usually refer to it just as XID.</li>
+</ol>
+<blockquote>
+<p>📖 <strong>What is a UR?</strong> A UR is a Uniform Resource, another
+Blockchain Commons technology. It provides a standardized,
+self-describing way to pass around data such as keys, envelopes, and
+XIDs.</p>
+</blockquote>
+<p>Several arguments to the second command affect how the XID is
+produced:</p>
+<ol>
+<li><code>--private encrypt</code> encrypts the private keys, which are stored in the XID Document, with <code>--encrypt-password</code> allowing decryption with a password.</li>
+<li><code>--generator encrypt</code> adds an provenance mark to the XID structure, with its secret also encrypted and decryptable with the password.</li>
+<li><code>--nickname</code> adds an identity label to the XID structure.</li>
+<li><code>--sign inception</code> wraps and signs the entire XID, allowing others to verify its authenticity.</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>Private Keys on Board</strong>: Your XID contains your private
+keys (encrypted with your password). Though they are encrypted, you
+should still be wary of distributing a XID that contains those private
+keys. Fortunately, you can elide (remove) that data, as described
+below. Obviously, you must also be careful to protect your password.</p>
+<p>📖 <strong>What is a Wrapped Envelope?</strong> A Gordian Envelope is a
+package of informational triplets in the form of
+subject-predicate-object. An assertion (the predicate and the object)
+always applies to a specific subject. To make an assertion apply to
+more information, you wrap the envelope and then apply the assertion
+to the wrapped envelope. Signatures are assertions, so for a signature
+to apply to an entire envelope (in this case, all of the XID
+information), the envelope must be wrapped prior to signing.</p>
+<p>🧠 <strong>Learn More.</strong> The <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/signing.md">Signing and Verification</a> concept doc explains the cryptographic details of many of these elements.</p>
+</blockquote>
+<h3 id="step-2-view-your-xid-structure">Step 2: View Your XID Structure</h3>
+<p>The <code>envelope format</code> command can always be used to display a
+human-readable version of any Gordian Envelope, including a XID
+Document. You can use it to look at Amira's foundational XID:</p>
+<pre><code>envelope format &quot;$XID&quot;
+
+│ {
+│    XID(5f1c3d9e) [
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             {
+│                 'privateKey': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             } [
+│                 'salt': Salt
+│             ]
+│             'allow': 'All'
+│             'nickname': &quot;BRadvoc8&quot;
+│         ]
+│         'provenance': ProvenanceMark(1896ba49) [
+│             {
+│                 'provenanceGenerator': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             } [
+│                 'salt': Salt
+│             ]
+│         ]
+│     ]
+│ } [
+│     'signed': Signature(Ed25519)
+│ ]
+</code></pre>
+<p>Here's what the individual parts of that "formatting" mean:</p>
+<ul>
+<li>The curly braces <code>{ }</code> indicate wrapping, which is required for signing.</li>
+<li>The signature occurs at the end under <code>signed</code>, with the <code>[ ]</code> indicating that it's an assertion on the <code>{ }</code> wrapped envelope. It confirms the entire document is cryptographically signed with the inception key.</li>
+<li><code>XID(5f1c3d9e)</code> is Amira's unique identifier, derived from her public key. This identifier never changes.</li>
+<li>The <code>PublicKeys(...)</code> section contains two public keys and is safe to share.</li>
+<li>The <code>privateKey</code> section has been <code>ENCRYPTED</code>, indicating that the private keys are protected.<ul>
+<li>The <code>'hasSecret': EncryptedKey(Argon2id)</code> notation notes that the private keys are encrypted with Argon2id, a modern algorithm designed to resist brute-force attacks.</li>
+<li><code>salt</code> is a random value that further obscures its subject.</li>
+</ul>
+</li>
+<li>The <code>allow</code> statement determines what access these keys have to this identity, as described in <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md">key management</a>. By default, keys have total access (<code>All</code>).</li>
+<li>The <code>nickname</code> is inside the <code>PublicKeys</code> section, not at the top level. That's because a nickname labels a key, not the XID Document. Later keys could have different nicknames while maintaining the same XID identity.</li>
+<li>The <code>ProvenanceMark(...)</code> is a "genesis" mark: the first in a chain that tracks this identity's evolution.</li>
+<li>The encrypted <code>provenanceGenerator</code> is the secret that created this mark and will create all future marks when Amira publishes new editions of her XID Document.</li>
+</ul>
+<blockquote>
+<p>📖 <strong>What is a Provenance Mark?</strong> A provenance mark is a
+forward-commitment hash chain. It will be used to record the evolution
+of this identity, showing that each edition is linked to the previous
+one (and also, which is the newest edition of the set).</p>
+</blockquote>
+<p>Note that a XID actually includes two keypairs that are bundled together:
+- a <code>Signing</code> keypair for creating and verifying signatures.
+   - Your <code>SigningPublicKey</code> is also called your "inception key" because your XID identifier (<code>XID(5f1c3d9e)</code>) is the SHA-256 hash of this signing key. Hence the name: it's the key that defines your XID. Your identifier never changes because it's permanently bound to this original key.
+- an <code>Encapsulation</code> keypair for encryption and decryption.</p>
+<p>As shown, the public halves of the keypairs are readable by anyone,
+while the private halves are encrypted with your password. This
+mirrors how SSH works with <code>id_rsa</code> and <code>id_rsa.pub</code>, except your XID
+bundles both into a single document.</p>
+<blockquote>
+<p>⚠️ <strong>The Signing Key Defines the Identity.</strong> The same keypairs always produce the same XID identifier because the identifier is derived from the public key. If you regenerate from the same keys, you get the same identity. If you lose the keys, you lose the identity, just as with SSH.</p>
+</blockquote>
+<h4 id="a-review-of-envelope-structure">A Review of Envelope Structure</h4>
+<p>If you are familiar with envelope structure (discussed here) and
+envelope format (discussed below), then you can skip ahead to Step 3
+and create a public view of Amira's XID. If, however, you are not that
+familiar with Gordian Envelope, then read on.</p>
+<p>As noted, every envelope has a <strong>subject</strong> (the main thing) and
+<strong>assertions</strong> (claims about that thing), which each include a
+<strong>predicate</strong> and an <strong>object</strong>. This usually means the subject
+predicates the object or the subject has a predicate of the object.</p>
+<p>Here's how that structure appears in the sample XID Document:</p>
+<pre><code>{
+   XID(5f1c3d9e) [                         ← SUBJECT
+    [
+        'key': PublicKeys(...)             ← ASSERTION (predicate: object)
+        'provenance': ProvenanceMark(...)  ← ASSERTION (predicate: object)
+    ]
+}
+</code></pre>
+<p>The XID identifier <code>XID(5f1c3d9e)</code> is the subject. The assertions make
+claims about it: "this XID has these public keys" and "this XID has
+this provenance history." Assertions can be added, removed, or hidden
+independently, no matter where they are in an envelope document. This
+is a key insight for their usage (and in fact you'll be hiding
+individual assertions momentarily).</p>
+<p>This pattern nests. Look inside the <code>'key'</code> assertion:</p>
+<pre><code>'key': PublicKeys(a9818011...) [   ← SUBJECT of this nested envelope
+    'allow': 'All'                 ← ASSERTION about the key
+    'privateKey': ENCRYPTED        ← Another ASSERTION
+]
+</code></pre>
+<p>The <code>PublicKeys</code> object is itself a subject with its own
+assertions. It <code>allow</code>s all access to the XID and it contains an
+<code>ENCRYPTED</code> <code>privateKey</code>. This recursive structure lets you build
+arbitrarily rich identity documents, constrained by the specific
+requirements of the XID format. In chapter 2, for example, you'll add
+new keys, and in chapter 3 you'll use the <code>edge</code> assertion to add peer
+endorsements.</p>
+<h4 id="a-review-of-envelope-format">A Review of Envelope Format</h4>
+<p>Envelope format (output with <code>envelope format</code>) displays abbreviated
+labels for some data such as <code>PublicKeys(32de0f2b)</code> and <code>ENCRYPTED</code>
+rather than raw cryptographic data. This is intentional: showing
+hundreds of bytes of base64 would obscure the structure. Envelope
+format also hides complexity: <code>PublicKeys</code> actually contains two
+separate keys (a signing key and an encapsulation key), <code>ENCRYPTED</code>
+contains the ciphertext plus Argon2id parameters, and <code>Salt</code> contains
+random bytes that make each XIDDoc's digest unique. You don't need to
+see this detail to work with XIDs, but knowing it's there helps when
+things go wrong.</p>
+<p>The hex codes in parentheses are digest fragments that let you quickly
+identify which key or encrypted blob you're looking at. Each one is a
+hash of the data in question. For example, the following shows all the
+keys in a XID, with their hashes. (Note that the hash of the
+<code>SigningPublicKey</code>, <code>5f1c3d9e</code>, is the same as your XID! That's
+correct: as discussed elsewhere, the XID is the hash of your signing
+key!)</p>
+<pre><code>         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+</code></pre>
+<p>The other thing of particular note is the quoted data. There are two
+styles of quotes:</p>
+<ul>
+<li><strong>Single quotes</strong> (<code>'key'</code>, <code>'nickname'</code>, <code>'All'</code>) designate <strong>Known Values</strong>. These are standardized terms from the <a href="https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2023-002-known-value.md#appendix-a-registry">Known Values registry</a>. They can be subjects, predicates (<code>'allow'</code>), or objects (<code>'All'</code>). These ensure different tools each understand your XID in the same way.</li>
+<li><strong>Double quotes</strong> (<code>"BRadvoc8"</code>, <code>"github"</code>) designate <strong>Strings</strong>. This is custom application data you define.</li>
+</ul>
+<h3 id="step-3-create-a-public-view-of-your-xid-with-elision">Step 3: Create a Public View of Your XID with Elision</h3>
+<p>Amira's XID is not ready for publication yet. You're going to add some
+more information in <a href="../01_2_Making_a_XID_Verifiable/">§1.2</a> before
+sending it to Amira's first contact, Ben. But to prepare yourself for
+that, you're going to go over the crical step that <em>would</em> be required
+to publish a XID: creating a public view.</p>
+<p>When you create a shareable public view of a XID, you are engaging in
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md">data minimization</a>. You're creating
+a new way to look at the current edition of your XID that only
+includes the data that your recipient needs to see. This is "selective
+disclosure." Now, there's not a lot of information yet in Amira's XID,
+but there's one thing that we don't need to send out: her private
+key. Sure, it's encrypted, but sending it out creates an attack
+surface and that could be avoided with use of envelope's elision
+(removal) feature.</p>
+<p>To remove content from a XID requires finding the hash for that
+data. Every thing in an envelope has a hash: it's how the envelope is
+built and how it maintains signatures (more on that momentarily). Once
+you find the right hash, you simply tell the Envelope CLI to remove
+the data represented by that particular data. So to remove the private
+key you need to first find its hash in your envelope.</p>
+<blockquote>
+<p>📖 <strong>What is a View?</strong> A view is a version of a XID that has
+been elided in a specific way. The XID itself isn't changed: every
+view of the same XID has the same root hash. However, what's visible
+will be different from one view to another.</p>
+</blockquote>
+<p><strong>Find the Private Key Digest:</strong></p>
+<p>In a graphical UI, this whole process might be as simple as clicking
+on the private-key assertion in the envelope and hitting the DELETE
+key. In the Envelope CLI, it takes digging down through the layers of
+the envelope by unwrapping wrapped envelopes and finding assertions
+within them.</p>
+<p>This requires knowing how the envelope is structured:</p>
+<pre><code>│ {
+│    XID(5f1c3d9e) [
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             {
+│                 'privateKey': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             }
+│ ...
+│   ]
+│ }
+</code></pre>
+<p>This shows that we need to unwrap the envelope (since it was wrapped
+and signed with <code>--sign inception</code>), then find the <code>'key'</code> assertion,
+and then find the <code>'privateKey'</code> assertion.</p>
+<p>Unwrapping is done with <code>extract wrapped</code>.</p>
+<pre><code>UNWRAPPED_XID=$(envelope extract wrapped &quot;$XID&quot;)
+</code></pre>
+<p>Then you find the <code>key</code> predicate, which is a <code>known</code> value, and
+extract its <code>PublicKeys</code> object:</p>
+<pre><code>KEY_ASSERTION=$(envelope assertion find predicate known key &quot;$UNWRAPPED_XID&quot;)
+KEY_OBJECT=$(envelope extract object &quot;$KEY_ASSERTION&quot;)
+</code></pre>
+<p>Finally, you find the known-value <code>privateKey</code> assertion in <em>that</em> and
+then record its digest:</p>
+<pre><code>PRIVATE_KEY_ASSERTION=$(envelope assertion find predicate known privateKey &quot;$KEY_OBJECT&quot;)
+PRIVATE_KEY_DIGEST=$(envelope digest &quot;$PRIVATE_KEY_ASSERTION&quot;)
+
+if [ $PRIVATE_KEY_DIGEST ]
+then
+  echo &quot;✅ Found private key digest&quot;
+else
+  echo &quot;❌ Error in private key retrieval&quot;
+fi
+
+│ ✅ Found private key digest
+</code></pre>
+<p><strong>Elide Your XID:</strong></p>
+<p>Eliding your private key from your XID to create a public view simply
+requires using the <code>elide</code> command to remove the data represented by
+that digest:</p>
+<pre><code>PUBLIC_XID=$(envelope elide removing &quot;$PRIVATE_KEY_DIGEST&quot; &quot;$XID&quot;)
+echo &quot;✅ Created public view by eliding private key&quot;
+
+│ ✅ Created public view by eliding private key
+</code></pre>
+<p>Afterward, you can examine this new public view of your XID:</p>
+<pre><code>envelope format &quot;$PUBLIC_XID&quot;
+
+│ {
+│     XID(5f1c3d9e) [
+│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+│             'allow': 'All'
+│             'nickname': &quot;BRadvoc8&quot;
+│             ELIDED
+│         ]
+│         'provenance': ProvenanceMark(1896ba49) [
+│             {
+│                 'provenanceGenerator': ENCRYPTED [
+│                     'hasSecret': EncryptedKey(Argon2id)
+│                 ]
+│             } [
+│                 'salt': Salt
+│             ]
+│         ]
+│     ]
+│ } [
+│     'signed': Signature(Ed25519)
+│ ]
+</code></pre>
+<p>It looks identical except the <code>privateKey</code> section is gone, replaced
+with <code>ELIDED</code>. Also of note is the fact that this formatting implies
+that the signature has been preserved, <em>despite</em> removing some of the
+data in the envelope. That's accurate: this is a purposeful feature of
+Gordian Envelope.</p>
+<h4 id="a-review-of-envelope-hashes-signatures">A Review of Envelope Hashes &amp; Signatures</h4>
+<p>If you are already comfortable with the structure of Gordian
+Envelopes, how they hash data, and how data is signed, skip down to
+Part II.  Otherwise, here's the skinny on how that signature is
+preserved even after you elided information:</p>
+<p>Gordian Envelope is built on hashes. Every subject, every predicate,
+every object, and every assertion has a hash. Leaves (such as subject,
+predicates, and objects) have hashes of the content of that leaf,
+while nodes (such as the top-level of your envelope, assertions,
+collections of a subject and assertions, and wrapped content) have
+hashes that are built from the hashes of the objects they contain. A
+signature is made not across the content of an envelope, but against
+the root (or top-level) hash of an envelope.</p>
+<p>Here's what a fragment of that looks like, generated with <code>envelope format --type tree $XID</code>, which shows abbreviations of all the hashes in an envelope:</p>
+<pre><code>1da62441 NODE                                                ← ROOT Hash (1da62441)
+    34446925 subj WRAPPED                                    ← Wrapped Envelope Hash (34446925)
+        bc6369ae cont NODE                                   ← Subject + Assertion(s) Node Hash (bc6369ae)
+            2b2d09ab subj XID(5f1c3d9e)                      ← XID Subject Hash (2b2d09ab)
+            e0c2825c ASSERTION                               ← Provenance Assertion Hash (e0c2825c)
+                c1736fc8 pred 'provenance'
+                c38203ae obj NODE
+                    53da07ce subj ProvenanceMark(1896ba49)
+                    9a0110e6 ELIDED
+    ...
+    d5625d76 ASSERTION                                        ← Signature Assertion Hash (d5625d76)
+        d0e39e78 pred 'signed'
+        91ccf7a3 obj Signature(Ed25519)
+</code></pre>
+<p>The root node has an (abbreviated) hash of <code>1da62441</code>, which is built from the wrapped subject hash of <code>34446925</code> and the signature assertion hash of <code>d5625d76</code>. The wrapped envelope's hash is built from the node hash of <code>bc6369ae</code>, which is built from the XID subject hash of <code>2b2d09ab</code> and a string of assertions attached to that subject, the first of which is provenance assertion, which has a hash of <code>e0c2825c</code>. Etc.</p>
+<p>When data is elided from an envelope, its content is removed, but the hash remains. That means that all of the node hashes above that leaf hash remain the same, including the root hash. Since it's the root hash that is signed, not the full envelope content, the signature remains valid.</p>
+<p>The above example shows a new elision, of the secret within the provenance mark assertion. Making a further elision of the entire provenance mark assertion demonstrates that the upper-level hashes remain in place:</p>
+<pre><code>1da62441 NODE                                                ← ROOT Hash (still 1da62441)
+    34446925 subj WRAPPED                                    ← Wrapped Envelope Hash (still 34446925)
+        bc6369ae cont NODE                                   ← Subject + Assertion(s) Node Hash (still bc6369ae)
+            2b2d09ab subj XID(5f1c3d9e)                      ← XID Subject Hash (2b2d09ab)
+            e0c2825c ELIDED                                  ← Elided (Provenance Assertion) Hash (still e0c2825c)
+    ...
+    d5625d76 ASSERTION                                        ← Signature Assertion Hash (d5625d76)
+        d0e39e78 pred 'signed'
+        91ccf7a3 obj Signature(Ed25519)
+
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>The Root Hash is Not the ID Identifier.</strong> The root hash
+is composed from the hashes of <em>all</em> the data within an envelope. It
+changes if you change the document. It's an identifier for all <em>views</em>
+of a specific <em>edition</em> of your XID Document. In contrast, the XID
+identifier is the hash of your inception public key. It never
+changes. It's an identifier for all <em>editions</em> of your XID Document
+(or if you prefer: it's the identifier for your identity).</p>
+</blockquote>
+<p>You can verify your root hash does not change after you elide data with the <code>envelope digest</code> command:</p>
+<pre><code>ORIGINAL_DIGEST=$(envelope digest &quot;$XID&quot;)
+PUBLIC_DIGEST=$(envelope digest &quot;$PUBLIC_XID&quot;)
+
+echo &quot;Original XID digest: $ORIGINAL_DIGEST&quot;
+echo &quot;Public XID digest:   $PUBLIC_DIGEST&quot;
+
+if [ &quot;$ORIGINAL_DIGEST&quot; = &quot;$PUBLIC_DIGEST&quot; ]; then
+    echo &quot;✅ VERIFIED: Digests are identical - elision preserved the root hash\!&quot;
+else
+    echo &quot;❌ ERROR: Digests differ&quot;
+fi
+
+│ Original XID digest: ur:digest/hdcxcaoldkfpisoesfoxdnatamwyytasdwsbuomnkicxlbaavehsfzksmdinrogachhnsolbpahg
+│ Public XID digest:   ur:digest/hdcxcaoldkfpisoesfoxdnatamwyytasdwsbuomnkicxlbaavehsfzksmdinrogachhnsolbpahg
+│ ✅ VERIFIED: Digests are identical - elision preserved the root hash!
+</code></pre>
+<p>The digests are identical. You removed the private key, yet the hash didn't change. </p>
+<h2 id="part-iii-verifying-a-xid">Part III: Verifying a XID</h2>
+<p>One of the powers of a XID is that it can be verified in various ways
+(though that doesn't necessarily mean someone is who they say they
+are, as is described in "What We Proved" in future sections).</p>
+<h3 id="step-4-verify-the-xid">Step 4: Verify the XID</h3>
+<p>You also want to test out the verification of your XID, as that'll be
+crucial when you actually publish it. There are two ways to do so:</p>
+<ul>
+<li>The signature can be verified.</li>
+<li>The provenance mark can be validated.</li>
+</ul>
+<p>A digital signature is verified against a public key. For a XID, that's the public signing key.</p>
+<p>After publication, a public key might also be retrieved from a PKI or
+other publication site. But for this tutorial, yyou have to dig down
+through the envelope to get to it:</p>
+<pre><code>UNWRAPPED_XID=$(envelope extract wrapped &quot;$XID&quot;)
+KEY_ASSERTION=$(envelope assertion find predicate known key &quot;$UNWRAPPED_XID&quot;)
+KEY_OBJECT=$(envelope extract object &quot;$KEY_ASSERTION&quot;)
+PUBLIC_KEYS=$(envelope extract ur &quot;$KEY_OBJECT&quot;)
+</code></pre>
+<p>You can then use envelope's <code>verify</code> command to verify the signature of the <code>PUBLIC_XID</code> against that public key:</p>
+<pre><code>envelope verify -v &quot;$PUBLIC_KEYS&quot; &quot;$PUBLIC_XID&quot; &gt;/dev/null &amp;&amp; echo &quot;✅ Signature verified\!&quot;
+
+│ ✅ Signature verified!
+</code></pre>
+<p>This confirms that this XID Document has been signed by the owner of
+the public key within the document (in other words, it verifies that
+the creator of the XID Document actually owns the key that is
+advertising in the document).</p>
+<p>If the public key was published, it would confirm that the document
+was signed by the owner of that published public key.</p>
+<p>When the XID is later published, this verification will also
+demonstrate that updates of this XID Document continue to be signed by
+this original (inception) key or by a new key that has been authorized
+by the inception key, possibly through a chain of authorizations.</p>
+<h3 id="step-5-verify-the-provenance-mark">Step 5: Verify the Provenance Mark</h3>
+<p>The provenance mark can also be verified. To do this, extract the Provenance Mark with the <code>xid provenance</code> command:</p>
+<pre><code>PROVENANCE_MARK=$(envelope xid provenance get &quot;$PUBLIC_XID&quot;)
+</code></pre>
+<p>Now you can validate the Provenance Mark with the provenance mark CLI:</p>
+<pre><code>provenance validate &quot;$PROVENANCE_MARK&quot;
+
+│ ✅ (silent success - provenance check passed!)
+</code></pre>
+<p>By default, <code>provenance validate</code> offers no response if the provenance mark is valid. But you can use <code>--format json-pretty</code> to get more information:</p>
+<pre><code>provenance validate --format json-pretty &quot;$PROVENANCE_MARK&quot;
+
+│ {
+│   &quot;marks&quot;: [
+│
+│ &quot;ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy&quot;
+│   ],
+│   &quot;chains&quot;: [
+│     {
+│       &quot;chain_id&quot;: &quot;61a8fa603b7ebe4bad7bb82fc5858b9d55fda26811e1070b44d80369486c6202&quot;,
+│       &quot;has_genesis&quot;: true,
+│       &quot;marks&quot;: [
+│
+│ &quot;ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy&quot;
+│       ],
+│       &quot;sequences&quot;: [
+│         {
+│           &quot;start_seq&quot;: 0,
+│           &quot;end_seq&quot;: 0,
+│           &quot;marks&quot;: [
+│             {
+│               &quot;mark&quot;:
+│ &quot;ur:provenance/lfaxhdimhspdzshnfrkbrngrpmkgrodlsklpluntgozcoeisbyvyatbdfytpaxinfdjzidaomdflcywmfewnuejnmugucmrkhdonvdbgwneejthecyuehnsnjphtuednttsfrptsidurgwfxldgelpecmecyjoetieytfrhkgtfdestnnlqzmoaheeemselpbdwnwnsbjnnertpmrdnnbdhtdkpdwfkihgwy&quot;,
+│               &quot;issues&quot;: []
+│             }
+│           ]
+│         }
+│       ]
+│     }
+│   ]
+│ }
+</code></pre>
+<p>This says very little so far, but that's to be expected: the power of
+provenance marks is in seeing that multiple published editions of
+documents are related—and you haven't even published a single version
+of Amira's XID yet! Nonethless, you can see from <code>has_genesis: true</code>,
+<code>start_seq: 0</code>, and <code>end_seq: 0</code> that this is the first edition in the
+provenance mark chain (the "genesis mark"), with no issues found. This
+will become more meaningful in chapter 2 when you produce a second
+edition of Amira's XID for publication, and advance the provenance
+mark as a result.</p>
+<p>Before you close out your verification it's worth noting that all
+verification was down with the public view of the XID; no secret
+information was needed. This asymmetry is common in cryptography:
+Amira creates information with her secrets, and only she can update
+that information. But after she distributes her public XID, anyone can
+check it.</p>
+<h2 id="part-iv-storing-your-files">Part IV: Storing Your Files</h2>
+<p>This course will frequently store copies of files for future
+usage. But, we're not quite there yet because we'll be finishing up
+the initial edition of Amira's XID in the next section.</p>
+<p>For now, we're instead going to talk about how Amira might organize
+her files for their real-world usage.</p>
+<h3 id="step-6-organize-your-files">Step 6: Organize Your Files</h3>
+<p>A XID can be output to a file just be echoing the XID into a file:</p>
+<pre><code>echo $XID &gt; BRadvoc8-xid.envelope
+echo $PUBLIC_XID &gt; BRadvoc8-xid-public.envelope
+</code></pre>
+<p>The complete <code>BRadvoc8-xid.envelope</code> file contains everything: private
+keys (encrypted), public keys, nickname, provenance, and signature. If
+you lose this file without a backup, you lose your identity, just like
+losing <code>id_rsa</code>. Unlike SSH keys, your XID also includes identity
+metadata (nickname, permissions, provenance history), making it a
+complete, self-contained identity document rather than just raw key
+material.</p>
+<p>There might be many different public views of your current XID, of
+which <code>BRadvoc8-xid-public.envelope</code> would be just one, with each view
+elided in different ways. Obviously, you'll want to keep your private
+key out of all of them, but you might also decide to reveal different
+information to different people, as part of selective disclosure.</p>
+<p>Formatted outputs can similarly be output:</p>
+<pre><code>envelope format $XID &gt; BRadvoc8-xid.format
+envelope format $PUBLIC_XID &gt; BRadvoc8-xid-public.format
+</code></pre>
+<p>For real-world usage, Amira will organize her files in a dedicated directory. The pattern mirrors SSH: <code>BRadvoc8-xid.envelope</code> is like <code>id_rsa</code> (keep secret), and <code>BRadvoc8-xid-public.envelope</code> is like <code>id_rsa.pub</code> (safe to share).</p>
+<pre><code>xid-5f1c3d9e/
+├── BRadvoc8-xid.envelope          # Complete XID with encrypted private keys
+├── BRadvoc8-xid.format            # Human-readable view
+├── BRadvoc8-xid-public.envelope   # Public XID (private keys elided)
+└── BRadvoc8-xid-public.format     # Human-readable view
+</code></pre>
+<p>Having offered this real-world example, we're going to move over to a
+more tutorial-specific format for storing files in the next
+tutorial. (For now, make sure you have either your full envelope file
+or that envelope still stored in a <code>$XID</code> variable as you continue
+into the next section.)</p>
+<h2 id="summary-the-bigger-picture">Summary: The Bigger Picture</h2>
+<p>What Amira created is more than a keypair. She created the BRadvoc8
+identity, which is fully under her control. No service provider issued
+it and no platform can suspend it. The encrypted XID depends on no
+centralized structure. Because it's a self-contained cryptographic
+object, the XID can live anywhere: on a USB drive, in email, in cloud
+storage, even printed as a QR code. The infrastructure is in the
+document itself, not in some external system. This is self-sovereign
+identity: Amira owns the keys and the resulting document.</p>
+<p>Amira's XID implements pseudonymity rather than anonymity, and that's
+exactly what she wants. Anonymous contributions lack credibility;
+project maintainers can't trust them. But BRadvoc8 can build
+reputation over time through verifiable contributions while protecting
+Amira's real-world identity. It's the same model authors use with pen
+names: Mark Twain built a reputation while Samuel Clemens stayed
+private.</p>
+<p>Though you experimented with elision and verification, you haven't
+actually published Amira's XID. More on that in the next tutorial!</p>
+<h3 id="exercises">Exercises</h3>
+<p>Try these to solidify your understanding:</p>
+<ul>
+<li>Create your own XID with a pseudonym of your choice.</li>
+<li>Experiment with different passwords.</li>
+<li>Practice creating public views by eliding private keys, then verify the signatures still work on the elided views.</li>
+<li>Save your XID to a file and reload it to confirm nothing was lost.</li>
+</ul>
+<h2 id="whats-next">What's Next</h2>
+<p>Since XIDs are autonomous, Amira needs a way to assure people that
+they have an up-to-date verison. Doing that (and publishing that XID) is the topic of <a href="../01_2_Making_a_XID_Verifiable/">§1.2: Making a XID Verifiable</a>.</p>
+<h3 id="example-script">Example Script</h3>
+<p>A complete working script implementing this tutorial is available at <code>../tests/01-your-first-xid-TEST.sh</code>. Run it to see all steps in action:</p>
+<pre><code>bash tests/01-your-first-xid-TEST.sh
+</code></pre>
+<p>This script will create all the files shown in the File Organization section (below) with proper naming conventions and directory structure.</p>
+<hr />
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Assertion</strong> - A predicate-object pair in an envelope, making a claim about the subject (e.g., <code>'key': PublicKeys(...)</code>).</p>
+<p><strong>Edition</strong> - A version of a XIDDoc (or other envelope) that is different from previous editions due to the addition, removal, or update of information. An edition may have many views, which selectively elide information from the master document. If an envelope contains a provenance mark, it is incremented when a new edition is created.</p>
+<p><strong>Elision</strong> - Removing data from an envelope while preserving the envelope's root hash, enabling selective disclosure while maintaining cryptographic integrity.</p>
+<p><strong>Envelope</strong> - Gordian Envelope, a smart-document system that supports the deterministic storage of data and its distribution in multiple selectively disclosed views to support data minimization. </p>
+<p><strong>Envelope Digest</strong> - The root hash of an envelope structure, preserved across elision, enabling signature verification on different views of the same document.</p>
+<p><strong>Inception Key</strong> - The signing public key that defines your XID from the beginning. Your XID identifier is the SHA-256 hash of this key's CBOR representation. The term "inception" emphasizes that this key establishes the identity at its origin.</p>
+<p><strong>Known Value</strong> - Standardized term from the Known Values registry, shown in single quotes. Can be a subject, a predicate, or an object.</p>
+<p><strong>Provenance Generator</strong> - The secret that creates provenance marks. It created your genesis mark and will create all future marks when you publish new XIDDoc editions. Separate from the inception key.</p>
+<p><strong>Provenance Mark</strong> - Cryptographic marker establishing the sequence position of a document edition, forming a verifiable chain of identity evolution. The genesis mark (sequence 0) is the first in the chain. Provides ordering, not timestamps.</p>
+<p><strong>Root Hash</strong> — The unique identifier for a specific edition of an envelope, calculated based on all the data in the envelope. Persistent across all views of an edition, but not across multiple editions of an envelope.</p>
+<p><strong>Selective Disclosure</strong> - Sharing only the information needed for a specific context. Sign once, create multiple views by eliding different parts, and every view verifies against the same signature.</p>
+<p><strong>String</strong> - Custom application data, shown in double quotes (<code>"BRadvoc8"</code>, <code>"github"</code>).</p>
+<p><strong>Subject</strong> - The main thing an envelope describes; in XIDDocs, this is the XID identifier.</p>
+<p><strong>View</strong> - A version of a specific edition of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure. Despite the elision, signatures remain valid, because they are made across the Root Hash.</p>
+<p><strong>XID (eXtensible IDentifier)</strong> - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document editions because it's bound to that original key.</p>
+<p><strong>XIDDoc (XID Document)</strong> - The envelope document containing an XID and its assertions (keys, provenance, metadata). This is what you create, update, and share.</p>
+</blockquote>
+<h2 id="appendix-ii-common-questions">Appendix II: Common Questions</h2>
+<h3 id="q-what-if-i-lose-my-xid-file">Q: What if I lose my XID file?</h3>
+<p><strong>A:</strong> If you lose your <code>BRadvoc8-xid.envelope</code> file without a backup, <strong>you lose your identity</strong>. This is just like losing your SSH <code>id_rsa</code> file. There's no recovery mechanism without a backup, so make sure to store encrypted copies in multiple secure locations.</p>
+<h3 id="q-can-i-use-this-xid-on-multiple-devices">Q: Can I use this XID on multiple devices?</h3>
+<p><strong>A:</strong> Yes! Copy your <code>BRadvoc8-xid.envelope</code> file to other devices. Since the private keys are encrypted, the file is reasonably safe to sync via cloud storage (as long as you have a strong password!). The XID identifier stays the same regardless of which device you're using. </p>
+<p>You can also create device-specific keys and delegate permissions, allowing each device to have its own key while maintaining a single XID identity. More on this in future tutorials.</p>
+<h3 id="q-what-if-i-need-to-revoke-my-keys">Q: What if I need to revoke my keys?</h3>
+<p><strong>A:</strong> Unlike with SSH keys, you can revoke a key pair while keeping your XID persistent.</p>
+<h3 id="q-why-is-signing-done-with-ed25519-instead-of-schnorr-or-other-algorithms">Q: Why is signing done with Ed25519 instead of Schnorr or other algorithms?</h3>
+<p><strong>A:</strong> Ed25519 is the industry standard (SSH, git, Signal) with wide compatibility and excellent security. Advanced users can use other algorithms (<code>--signing schnorr</code>, <code>--signing ecdsa</code>, <code>--signing mldsa44</code>), but Ed25519 is recommended for beginners.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
