@@ -1,4 +1,4 @@
-# 1.2: Making a XID Verifiable
+# 1.3: Making a XID Verifiable
 
 This section demonstrates how to maintain a XID's freshness without
 direct communication through the use of a publication URL.

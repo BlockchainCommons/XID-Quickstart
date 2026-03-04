@@ -1,4 +1,4 @@
-# 1.1: Creating Your First XID
+# 1.2: Creating Your First XID
 
 This section demonstrates how to create a basic XID (eXtensible
 IDentifier) that enables pseudonymous contributions while maintaining
