@@ -198,7 +198,7 @@ credentials with specific trusted individuals without any public
 trace. DevReviewer can decrypt and verify Amira's CivilTrust claim,
 but no one else can read the content or even know it exists.
 
-### Credential Approach Comparison
+#### Credential Approach Comparison
 
 Combined with the public attestation in §2.1 and commit-reveal pattern
 from §2.2, Amira has a complete toolkit for managing credentials of
@@ -210,7 +210,7 @@ various sensitivities.
 | Crypto audit | ✂️  Commit elided | Valuable but rare skill | §2.2 |
 | CivilTrust | 🔐 Encrypt for DevReviewer | Too dangerous for any public trace | §2.3 |
 
-### Store It
+#### Store It
 
 As usual, we're going to save everything for future reference.
 ```
