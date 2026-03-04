@@ -4,9 +4,9 @@ This sections describes how to handle credentials that are too risky
 to publish publicly using commitment patterns and selective
 disclosure.
 
-> **🧠 Related Concepts.** After completing this tutorial, explore
-[Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) and
-[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/attestation-endorsement-model.md) to deepen your
+> **Related Concepts.** After completing this tutorial, explore
+[Progressive Trust](../concepts/progressive-trust.md) and
+[Self-Attestation](../concepts/self-attestation.md) to deepen your
 understanding.
 
 ## Objectives for this Section
@@ -28,7 +28,7 @@ Amira did cryptographic audit work for a fintech startup in 2023-2024. She revie
 
 This is correlation risk. Each claim by itself might be safe. Combined, they create a fingerprint.
 
-> 📖 **What is a Correlation Risk?** Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.
+> :book: **What is a Correlation Risk?** Public information can be combined to narrow an anonymity set until it identifies a specific person. Each additional claim shrinks the pool of people who could match. This creates correlation risk.
 
 ### How Claims Compound
 
@@ -45,15 +45,16 @@ Watch how Amira's anonymity set shrinks:
 
 That last combination might describe three people in the world. If an adversary knows those facts and sees BRadvoc8's public profile, correlation becomes trivial.
 
-> ⚠️ **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
+> :warning: **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
 
 ## The Possibilities of Protecting Sensitive Data
+### Omission, Elision, and Encryption
 
 Amira has three options for handling the correlation risk of her crypto audit experience.
 
 * **Option 1: Omit Entirely.** Don't mention it at all. If Amira never needs to prove this experience, keeping it private is the safest choice. There's zero correlation risk from information that isn't published. The downside is that she loses the reputation benefit. If crypto audit experience would help her get accepted onto a security project, omitting it means she can't use it.
 * **Option 2: Commit Elided.** Create the attestation and sign it, but publish only an opaque commitment (the digest). The commitment proves that Amira had some claim at a specific time, without revealing what the claim says. Later, she can reveal the full attestation to specific people who can verify that it matches the public commitment. This is the "prove I had it all along" pattern. It's useful when you might need to demonstrate timing without revealing content and also tends to give weight to a claim because it didn't come out of nowhere. This is what we'll cover in this Tutorial.
-* **Option 3: Encrypt for Recipient.** Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all. This is covered in [Tutorial §2.3](02_3_Managing_Claims_Encryption.md). It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.
+* **Option 3: Encrypt for Recipient.** Create the attestation and encrypt it for a specific person's public key. Only that person can read it. No public trace at all. This is covered in [Tutorial 05](3-creating-self-attestations.md). It's the right choice when a specific trusted person needs to see the claim now, and you don't need to prove timing to anyone else.
 
 | Situation | Approach |
 |-----------|----------|
@@ -63,7 +64,7 @@ Amira has three options for handling the correlation risk of her crypto audit ex
 
 Amira decides her crypto audit experience fits the middle category. She might need to prove this capability to future collaborators, but she doesn't want to publish it broadly. She'll commit an elided version publicly and reveal the full attestation selectively.
 
-> 🧠 **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md), which is the ability to reveal different information to different parties from the same underlying data structure.
+> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](../concepts/selective-disclosure.md), which is the ability to reveal different information to different parties from the same underlying data structure.
 
 ## Part I: Creating a Commitment
 
@@ -77,19 +78,19 @@ envelope --version
 ```
 Then, reload your XID, primarily to have easy access to your XID ID:
 ```
-XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID=$(cat envelopes/BRadvoc8-xid-private-2-01.envelope)
 XID_ID=$(envelope xid id $XID)
 ```
 You should then reload your Attestation keys from the last tutorial:
 ```
-ATTESTATION_PRVKEYS=$(cat envelopes/attestation-private-03.ur)
-ATTESTATION_PUBKEYS=$(cat envelopes/attestation-public-03.ur)
+ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
+ATTESTATION_PUBKEYS=$(cat envelopes/key-attestation-public-2-01.ur)
 ```
 If you instead need to create new ones, see [§2.2](02_1_Creating_Self_Attestations.md#step-1-create-an-attestation-key) for how to do so, then register your keys in your XID.
 
 ### Step 1: Create the Sensitive Attestation
 
-You should create Amira's crypto audit attestation with [fair witness](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/fair-witness.md) precision:
+You should create Amira's crypto audit attestation with [fair witness](../concepts/fair-witness.md) precision:
 
 ```
 AUDIT_CLAIM=$(envelope subject type string \
@@ -166,12 +167,20 @@ profile with category hints (e.g., "Security", "Privacy
 Engineering"). This tells collaborators that she has additional
 credentials without revealing what they are.
 
-> 📖 **What is a Commitment?** A commitment is literally a
+> :book: **What is a Commitment?** A commitment is literally a
 promise. Cryptographically, a commitment is a promise that you have
 recorded a certain value. All you reveal is a hash of that value,
 which is the cryptographic commitment. Since (probabalistically) each
 recorded value only leads to one hash, when you reveal the original
 value and it hashes correctly, your commitment has been fulfilled.
+
+### Step 4: Store Your Work
+
+Again, we're going to store copies of our work for future reference.
+```
+echo $AUDIT_SIGNED > envelopes/claim-2-02.envelope
+echo $AUDIT_ELIDED > envelopes/claim-elided-2-02.envelope
+```
 
 ## Part II: Revealing a Commitment
 
@@ -181,7 +190,7 @@ commitments is that they sit around, gaining trust as they do, and
 tend to be revealed later. That's the case here.  Six months later,
 Amira has approached DevReviewer for a security collaboration.
 
-### Step 4: Highlight the Commitment
+### Step 5: Highlight the Commitment
 
 DevReviewer has seen Amir'as public attestation (about the Galaxy
 Project) but want to know about her security audit experience. Amira
@@ -193,7 +202,7 @@ uses its (more trustworthy) datestamping to verify it was commited to
 GitHub about six months ago, and it's one of just a few public
 commitments of that sort.
 
-### Step 5: Reveal the Unelided Claim
+### Step 6: Reveal the Unelided Claim
 
 Amira next sends DevReviewer the full attestation (`$AUDIT_SIGNED`)
 via a secure message system. DevReviewer now has both versions.
@@ -205,7 +214,7 @@ the full attestation will come in two parts: checking that this is the
 same document as the commitment (which is very similar to the process
 of checking an inclusion proof) and verifying the signature.
 
-> 📖 **What is an Inclusion Proof?** An inclusion proof typically
+> :book: **What is an Inclusion Proof?** An inclusion proof typically
 reveals that a piece of data is part of a larger data set without
 revealing the entirety of the larger data set. For example, you could
 a claim was in a partially elided Gordian Envelope just by knowing a
@@ -215,7 +224,7 @@ checking that a piece of data matches another piece of data that isn't
 entirely revealed. But the theory and the procedure are largely the
 same.
 
-### Step 6: Test the Commitment
+### Step 7: Test the Commitment
 
 DevReviewer computes the digest of what they received:
 
@@ -244,11 +253,11 @@ fi
 
 The digests match. This proves the full attestation Amira revealed is the same document she committed to earlier, not something she fabricated after the fact.
 
-> 📖 **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
+> :book: **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
 
-### Step 7: Verify the Signature
+### Step 8: Verify the Signature
 
-Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [§2.1](02_1_Creating_Self_Attestations.md#step-11-check-the-claims-signature) for a more complex methodology to check a signature against every public key in a XID.)
+Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [§2.1](02_1_Creating_Self_Attestations.md#part-iv-ben-again-verifies) for a more complex methodology to check a signature against every public key in a XID.)
 ```
 envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED"
 
@@ -257,7 +266,7 @@ envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED"
 
 The signature is valid.
 
-### Step 8: Assess Your Level of Trust
+### Step 9: Assess Your Level of Trust
 
 Combining the valid signature with the verified commitment,
 DevReviewer has three pieces of information:
@@ -295,7 +304,7 @@ The elided version is just a digest placeholder: it proves something with its di
 
 This doesn't have to be the end of the life cycle of a commitment.
 
-### Step 9: Supersede a Commitment
+### Step 10: Supersede a Commitment
 
 If Amira's skills evolve, of if she joins other projects, she can
 create new commitments, just as she managed the
@@ -316,8 +325,6 @@ This tutorial introduced the problem of correlation risk: how claims compound to
 ## What's Next
 
 The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? That's the topic [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md).
-
----
 
 ## Appendix I: Key Terminology
 

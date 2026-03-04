@@ -124,3 +124,25 @@ focused on the holder, not an issuer or verifier.
 You now know what a XID is and should be ready to create one, which
 you'll do in [§1.2: Creating Your First XID](01_2_Your_First_XID.md ).
 
+## Appendix I: Key Terminology
+
+> **Deterministic Encoding** - Encoding that is always the same for
+the same content, no matter what system the encoding occurs on.
+
+> **Progressive Trust** - Increasing the amount of trust between two
+peers by revealing more information over time.
+
+> **Radical Elision** - The ability to remove any part of a larger set
+of data, as determined by the holder of the data.
+
+> **Self-sovereign Identity** - An identity that is controlled by the
+holder, who can create, reform, and redact the identity as they see
+fit. It is built on the principles of existence, control, access,
+transparency, persistence, portability, interoperability, consent,
+minimization, and protection.
+
+> **XID (eXtensible IDentifier)** - The unique identifier for a
+self-sovereign identity, calculated as the SHA-256 hash of an
+inception siging public key. Persistent across all document editions
+because it's bound to that original key. Less formally, the metadata,
+keys, and provenance marks included in a XID Document.

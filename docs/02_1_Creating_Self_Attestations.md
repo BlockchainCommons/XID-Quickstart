@@ -112,7 +112,7 @@ installation instructions.
 
 You'll also want to reload your XID. The following assumes use of the [`envelopes`](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes) directory that was described in the last tutorial.
 ```
-XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID=$(cat envelopes/BRadvoc8-xid-private-1-03.envelope)
 XID_ID=$(envelope xid id $XID)
 ```
 
@@ -216,7 +216,7 @@ envelope format $UPDATED_XID
 | ]
 ```
 
-### Step 4: Export & Save Your XID
+### Step 4: Export & Store Your Work
 
 Afterward, you should follow the usual procedure to create a public version of the XID and store it.
 ```
@@ -231,13 +231,13 @@ Amira would publish this updated XID at her `dereferenceVia` URL so Ben can fetc
 
 You'll store it alongside your previous iteration (with the genesis provenance mark):
 ```
-echo "$UPDATED_PUBLIC_XID" > envelopes/BRadvoc8-xid-public-03.envelope
-echo "$UPDATED_XID" > envelopes/BRadvoc8-xid-private-03.envelope
+echo "$UPDATED_PUBLIC_XID" > envelopes/BRadvoc8-xid-public-2-01.envelope
+echo "$UPDATED_XID" > envelopes/BRadvoc8-xid-private-2-01.envelope
 ```
 You should also store standalone copies of your new keys to make it easier to access them in the future:
 ```
-echo $ATTESTATION_PRVKEYS > envelopes/attestation-private-03.ur
-echo $ATTESTATION_PUBKEYS > envelopes/attestation-public-03.ur
+echo $ATTESTATION_PRVKEYS > envelopes/key-attestation-private-2-01.ur
+echo $ATTESTATION_PUBKEYS > envelopes/key-attestation-public-2-01.ur
 ``` 
 
 ### Step 5: Review Your Work
@@ -312,13 +312,13 @@ ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri "https://
 ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$ATTESTATION")
 envelope format "$ATTESTATION"
 
-"Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
-    'isA': 'attestation'
-    'date': "2025-10-18T19:27-10:00"
-    'source': XID(5f1c3d9e)
-    'target': XID(5f1c3d9e)
-    'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
-]
+| "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
+|     'isA': 'attestation'
+|     'date': "2025-10-18T19:27-10:00"
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e)
+|     'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
+| ]
 ```
 
 Each assertion within the claim is a standardized known value that reveals a specific piece of metadata:
@@ -333,7 +333,7 @@ Each assertion within the claim is a standardized known value that reveals a spe
 
 > ⚠️ **Dates are Unreliable!**  The date is actually another unverifiable claim: it could be set to whatever the attestation creator wants to. Nonetheless, it has use because a good faith creator will date claims correctly, making it see easy to which claims are newer in case of a superseding claim being issued.
   
-### Step 8: Sign the Attestation
+### Step 8: Sign the Attestation & Store It
 
 You're now ready to wrap the attestation and sign it with the private key that you created specifically for this purpose. The signature proves that the signer made this claim:
 
@@ -356,7 +356,16 @@ envelope format "$ATTESTATION_SIGNED"
 | ]
 ```
 
-The signature covers the entire attestation. If anyone modifies any part (the claim, the source, the target, the date, the verification location), the signature becomes invalid.
+The signature covers the entire attestation. If anyone modifies any
+part (the claim, the source, the target, the date, the verification
+location), the signature becomes invalid.
+
+Although it would be pretty easy to rebuild this attestation (as long
+as you have your attestation keys), we're going to store a copy of it:
+
+```
+echo $ATTESTATION_SIGNED > envelopes/claim-2-01.envelope
+```
 
 ## Part III: Verifying a New Claim
 
@@ -453,7 +462,7 @@ Ben follows the `verifiableAt` URL to GitHub and verifies that PR #12847 exists,
 
 However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. We'll get back to that in chapter 3. For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.
 
-> :brain: **Learn more**: The [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
+> 🧠 **Learn More.** The [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
 
 ### Step 13: Assess Your Level of Trust
 
@@ -601,8 +610,6 @@ BRadvoc8 is now an identity with an initial claim about skills, but that's opene
 ### Example Script
 
 A complete working script implementing this tutorial is available at `../tests/03-creating-self-attestations.sh`.
-
----
 
 ## Appendix I: Key Terminology
 

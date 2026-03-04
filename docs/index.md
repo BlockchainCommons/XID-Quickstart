@@ -9,7 +9,7 @@
 
 * [§2.1: Creating Self Attestations](02_1_Creating_Self_Attestations.md)
 * [§2.2: Managing Sensitive Claims with Elision](02_2_Managing_Claims_Elision.md)
-* [§2.3: Managing Sensitive Claims with Encryption] (**IN PROCESS**)
+* [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md)
 
 ---
 

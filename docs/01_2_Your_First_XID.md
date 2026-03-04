@@ -803,8 +803,6 @@ bash tests/01-your-first-xid-TEST.sh
 This script will create all the files shown in the File Organization section (below) with proper naming conventions and directory structure.
 
 
----
-
 ## Appendix I: Key Terminology
 
 > **Assertion** - A predicate-object pair in an envelope, making a claim about the subject (e.g., `'key': PublicKeys(...)`).
@@ -834,9 +832,13 @@ This script will create all the files shown in the File Organization section (be
 > **Subject** - The main thing an envelope describes; in XIDDocs, this is the XID identifier.
 >
 > **View** - A version of a specific edition of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure. Despite the elision, signatures remain valid, because they are made across the Root Hash.
+
+> **XID (eXtensible IDentifier)** - The unique identifier for a
+self-sovereign identity, calculated as the SHA-256 hash of an
+inception siging public key. Persistent across all document editions
+because it's bound to that original key. Less formally, the metadata,
+keys, and provenance marks included in a XID Document.
 > 
-> **XID (eXtensible IDentifier)** - The unique identifier for your identity, calculated as the SHA-256 hash of your inception signing public key. Persistent across all document editions because it's bound to that original key.
->
 > **XIDDoc (XID Document)** - The envelope document containing an XID and its assertions (keys, provenance, metadata). This is what you create, update, and share.
 
 ## Appendix II: Common Questions

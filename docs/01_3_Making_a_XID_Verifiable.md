@@ -260,10 +260,10 @@ in the previous section.)
 
 ```
 mkdir envelopes
-echo "$PUBLIC_XID" > envelopes/BRadvoc8-xid-public-02.envelope
-echo "✅ Public XID saved to envelopes/BRadvoc8-xid-public-02.envelope"
-echo "$XID_WITH_URL" > envelopes/BRadvoc8-xid-private-02.envelope
-echo "✅ PRIVATE XID saved to envelopes/BRadvoc8-xid-private-02.envelope
+echo "$PUBLIC_XID" > envelopes/BRadvoc8-xid-public-1-03.envelope
+echo "✅ Public XID saved to envelopes/BRadvoc8-xid-public-1-03.envelope"
+echo "$XID_WITH_URL" > envelopes/BRadvoc8-xid-private-1-03.envelope
+echo "✅ PRIVATE XID saved to envelopes/BRadvoc8-xid-private-1-03.envelope
 ```
 
 ### Step 6: Publish Your XID
@@ -562,8 +562,6 @@ bash tests/02-making-xid-verifiable-TEST.sh
 
 This script tests both Amira's publication workflow and Ben's verification workflow.
 
-
----
 
 ## Appendix I: Key Terminology
 
