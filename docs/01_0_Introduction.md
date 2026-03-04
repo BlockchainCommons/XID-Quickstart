@@ -34,6 +34,7 @@ Supporting objectives include the ability to:
 
 ## Table of Contents
 
-* [Section One: Creating Your First XID](01_1_Your_First_XID.md)
-* [Section Two: Making a XID Verifiable](01_2_Making_a_XID_Verifiable.md)
+* [Section One: Getting Started with SSI & XIDs](01_1_Getting_Started_SSI_XIDs.md)
+* [Section Two: Creating Your First XID](01_2_Your_First_XID.md)
+* [Section Three: Making a XID Verifiable](01_3_Making_a_XID_Verifiable.md)
 
