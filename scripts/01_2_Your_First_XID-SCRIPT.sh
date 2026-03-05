@@ -2,10 +2,10 @@
 #
 # 01_2_Your_First_XID-SCRIPT.sh - Test all code examples from §1.2
 #
-# Validates that every command in Tutorial 01: Your First XID works correctly.
+# Validates that every command in §1.2: Creating Your First XID works correctly.
 # Tests XID creation, elision, signature verification, and provenance validation.
 #
-# Usage: ./01-your-first-xid-TEST.sh
+# Usage: ./01_2_Your_First_XID-SCRIPT.sh
 #
 # Dependencies: envelope (bc-envelope-cli-rust), provenance
 #
@@ -16,11 +16,10 @@
 
 set -e
 
-echo "=== LEARNING XIDS §1.2 CODE TEST ==="
+echo "=== LEARNING XIDS §1.2: Creating Your First XID CODE TEST ==="
 echo ""
 
-# Step 1: Create Your XID
-echo "STEP 1: Create Your XID"
+echo "Step 1: Create Your XID"
 echo "======================="
 
 XID_NAME=BRadvoc8
@@ -42,8 +41,7 @@ else
 fi
 echo ""
 
-# Step 2: View Your XID Structure
-echo "STEP 2: View Your XID Structure"
+echo "Step 2: View Your XID Structure"
 echo "==============================="
 
 # View XID structure
@@ -51,7 +49,6 @@ echo "Viewing XID structure:"
 envelope format "$XID"
 echo ""
 
-# Step 3: Create a Public View of Your XID with Elision
 echo "Step 3: Create a Public View of Your XID with Elision"
 echo "====================================================="
 
@@ -98,8 +95,7 @@ else
 fi
 echo ""
 
-# Step 4: Verify the XID
-echo "STEP 4: Verify the XID"
+echo "Step 4: Verify the XID"
 echo "======================"
 
 # Extract public keys from unwrapped XID
@@ -109,8 +105,7 @@ PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified!"
 echo ""
 
-# Step 5: Verify the Provenance Mark
-echo "STEP 5: Verify the Provenance Mark"
+echo "Step 5: Verify the Provenance Mark"
 echo "=================================="
 echo "Verifying provenance mark from public XID:"
 PROVENANCE_MARK=$(envelope xid provenance get "$PUBLIC_XID")

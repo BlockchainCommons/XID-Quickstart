@@ -79,7 +79,7 @@ echo "✅ Loaded XID: $XID_NAME"
 
 Afterward, you can check that it loaded correctly with `envelope format`:
 ```
-envelope format "$XID" | head -10
+envelope format "$XID"
 
 │ {
 │     XID(5f1c3d9e) [
@@ -532,6 +532,28 @@ self-signing. The freshness problem is also solved: Ben can fetch
 current versions without waiting for Amira to send updates, verify
 that he has the latest copy, and detect if someone gives him stale
 data.
+
+### Additional Files
+
+**Envelopes:** The
+[envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
+directory contains the
+[private](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-1-03.envelope)
+and
+[public](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-1-03.envelope)
+versions of the XID created in this section. They will be used as the foundation of later examples.
+
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[01_3_Making_a_XID_Verifiable-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/01_3_Making_a_XID_Verifiable-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/01_3_Making_a_XID_Verifiable-SCRIPT.sh` test it.
+
+### Exercises
 
 ### Exercises
 
