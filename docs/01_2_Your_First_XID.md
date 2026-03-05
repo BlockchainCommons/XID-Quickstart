@@ -175,8 +175,8 @@ both private and public keys:
 XID_NAME=BRadvoc8
 PASSWORD="Amira's strong password"
 
-XID=$(envelope generate keypairs --signing ed25519 │ \
-    envelope xid new \
+XID=$(envelope generate keypairs --signing ed25519 \
+    | envelope xid new \
     --private encrypt \
     --encrypt-password "$PASSWORD" \
     --nickname "$XID_NAME" \
