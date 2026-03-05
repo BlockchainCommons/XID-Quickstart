@@ -541,7 +541,7 @@ directory contains the
 [private](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-1-03.envelope)
 and
 [public](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-1-03.envelope)
-versions of the XID created in this section. They will be used as the foundation of later examples.
+versions of the XID created in this section.
 
 **Scripts:** The
 [scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
