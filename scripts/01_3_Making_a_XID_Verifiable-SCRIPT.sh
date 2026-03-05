@@ -46,6 +46,7 @@ then
   echo "✅ Created your XID: $XID_NAME"
 else
   echo "❌ Error in XID creation"
+  exit 1;
 fi
 echo ""
 
@@ -145,6 +146,7 @@ if [ "$RECEIVED_URL" = "$DEREFERENCE_URL" ]; then
     echo "✅ URLs match - XID claims this is its canonical location"
 else
     echo "⚠️  URLs don't match - XID may have been copied from elsewhere"
+    exit 1;
 fi
 echo ""
 
