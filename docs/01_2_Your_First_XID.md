@@ -778,6 +778,12 @@ private.
 Though you experimented with elision and verification, you haven't
 actually published Amira's XID. More on that in the next tutorial!
 
+### Additional Files
+
+**Envelopes:** The envelopes for this section are not stored as they'll be updated in §1.3 prior to publication.
+
+**Scripts:** The [scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts) directory contains [01_2_Your_First_XID-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/01_2_Your_First_XID-SCRIPT.sh), which runs through all the commands in this section. It may be run from the root of this repo as `bash scripts/01_2_Your_First_XID-SCRIPT.sh`.
+
 ### Exercises
 
 Try these to solidify your understanding:
@@ -791,17 +797,6 @@ Try these to solidify your understanding:
 
 Since XIDs are autonomous, Amira needs a way to assure people that
 they have an up-to-date verison. Doing that (and publishing that XID) is the topic of [§1.3: Making a XID Verifiable](01_3_Making_a_XID_Verifiable.md).
-
-### Example Script
-
-A complete working script implementing this tutorial is available at `../tests/01-your-first-xid-TEST.sh`. Run it to see all steps in action:
-
-```
-bash tests/01-your-first-xid-TEST.sh
-```
-
-This script will create all the files shown in the File Organization section (below) with proper naming conventions and directory structure.
-
 
 ## Appendix I: Key Terminology
 
