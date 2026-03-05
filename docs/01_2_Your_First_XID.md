@@ -577,7 +577,7 @@ echo "Original XID digest: $ORIGINAL_DIGEST"
 echo "Public XID digest:   $PUBLIC_DIGEST"
 
 if [ "$ORIGINAL_DIGEST" = "$PUBLIC_DIGEST" ]; then
-    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash\!"
+    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash!"
 else
     echo "❌ ERROR: Digests differ"
 fi
@@ -617,7 +617,7 @@ PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 You can then use envelope's `verify` command to verify the signature of the `PUBLIC_XID` against that public key:
 
 ```
-envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified\!"
+envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified!"
 
 │ ✅ Signature verified!
 ```
