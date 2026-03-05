@@ -26,8 +26,8 @@ echo "======================="
 XID_NAME=BRadvoc8
 PASSWORD="Amira's strong password"
 
-XID=$(envelope generate keypairs --signing ed25519 │ \
-    envelope xid new \
+XID=$(envelope generate keypairs --signing ed25519 \
+    | envelope xid new \
     --private encrypt \
     --encrypt-password "$PASSWORD" \
     --nickname "$XID_NAME" \
@@ -40,6 +40,7 @@ then
 else
   echo "❌ Error in XID creation"
 fi
+echo ""
 
 # Step 2: View Your XID Structure
 echo "STEP 2: View Your XID Structure"
@@ -91,7 +92,7 @@ echo "Original XID digest: $ORIGINAL_DIGEST"
 echo "Public XID digest:   $PUBLIC_DIGEST"
 
 if [ "$ORIGINAL_DIGEST" = "$PUBLIC_DIGEST" ]; then
-    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash\!"
+    echo "✅ VERIFIED: Digests are identical - elision preserved the root hash!"
 else
     echo "❌ ERROR: Digests differ"
 fi
@@ -105,12 +106,12 @@ echo "======================"
 PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 
 # Verify signature
-envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified\!"
+envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified!"
+echo ""
 
 # Step 5: Verify the Provenance Mark
 echo "STEP 5: Verify the Provenance Mark"
 echo "=================================="
-echo ""
 echo "Verifying provenance mark from public XID:"
 PROVENANCE_MARK=$(envelope xid provenance get "$PUBLIC_XID")
 
@@ -149,6 +150,7 @@ else
     echo "❌ Encrypted provenance generator NOT found"
     exit 1
 fi
+echo ""
 
 # Save files for Tutorial 02 to use
 echo "Saving Tutorial 01 artifacts..."
