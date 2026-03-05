@@ -67,8 +67,8 @@ XID=$(cat xid-*/BRadvoc8-xid.envelope)
 ```
 Else, recreate it for this tutorial:
 ```
-XID=$(envelope generate keypairs --signing ed25519 | \
-    envelope xid new \
+XID=$(envelope generate keypairs --signing ed25519 \
+    | envelope xid new \
     --private encrypt \
     --encrypt-password "$PASSWORD" \
     --nickname "$XID_NAME" \
