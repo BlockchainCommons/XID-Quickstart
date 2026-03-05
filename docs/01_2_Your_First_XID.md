@@ -606,8 +606,8 @@ crucial when you actually publish it. There are two ways to do so:
 A digital signature is verified against a public key. For a XID, that's the public signing key.
 
 After publication, a public key might also be retrieved from a PKI or
-other publication site. But for this tutorial, yyou have to dig down
-through the envelope to get to it:
+other publication site. But for this tutorial, you have to dig down
+through the envelope to get to it. The following demonstrates that (repeating the early steps for clarity):
 ```
 UNWRAPPED_XID=$(envelope extract wrapped "$XID")
 KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED_XID")
@@ -648,7 +648,7 @@ Now you can validate the Provenance Mark with the provenance mark CLI:
 ```
 provenance validate "$PROVENANCE_MARK"
 
-│ ✅ (silent success - provenance check passed!)
+│ ✅ Provenance mark verified from public XID (no secrets needed)
 ```
 
 By default, `provenance validate` offers no response if the provenance mark is valid. But you can use `--format json-pretty` to get more information:
