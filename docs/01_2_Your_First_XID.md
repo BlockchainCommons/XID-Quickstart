@@ -780,9 +780,9 @@ actually published Amira's XID. More on that in the next tutorial!
 
 ### Additional Files
 
-**Envelopes:** The envelopes for this section are not stored as they'll be updated in §1.3 prior to publication.
+**Envelopes:** The envelopes for this section are not stored in the Learning-XIDs repo as they'll be updated in §1.3 prior to publication.
 
-**Scripts:** The [scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts) directory contains [01_2_Your_First_XID-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/01_2_Your_First_XID-SCRIPT.sh), which runs through all the commands in this section. It may be run from the root of this repo as `bash scripts/01_2_Your_First_XID-SCRIPT.sh`.
+**Scripts:** The [scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts) directory contains [01_2_Your_First_XID-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/01_2_Your_First_XID-SCRIPT.sh), which runs through all the commands in this section. From the command line, `git clone https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd XID-Quickstart`, then `bash scripts/01_2_Your_First_XID-SCRIPT.sh` to test it.
 
 ### Exercises
 
