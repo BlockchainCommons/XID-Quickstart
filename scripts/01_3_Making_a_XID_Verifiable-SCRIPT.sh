@@ -6,7 +6,7 @@
 # works correctly. Tests dereferenceVia, XID export, signature verification,
 # provenance validation, and Ben's verification workflow.
 #
-# Usage: ./01_3_Making_a_XID_Verifiable-SCRIPT.sh
+# Usage: bash 01_3_Making_a_XID_Verifiable-SCRIPT.sh
 #
 # Dependencies: envelope (bc-envelope-cli-rust), provenance
 #
