@@ -555,8 +555,6 @@ scripts/01_3_Making_a_XID_Verifiable-SCRIPT.sh` test it.
 
 ### Exercises
 
-### Exercises
-
 Try these to solidify your understanding:
 
 **Publishing exercises (Amira's perspective):**
@@ -573,17 +571,6 @@ Try these to solidify your understanding:
 
 Ben's open question about skills is the biggest issue with Amira's
 BRadvoc8 at this point. Making claims, and figuring out how to hide sensitive ones, will be the topics of [Chapter 2](02_0_Claims.md).
-
-### Example Script
-
-A complete working script implementing this tutorial is available at `../tests/02-making-xid-verifiable-TEST.sh`. Run it to see all steps in action:
-
-```
-bash tests/02-making-xid-verifiable-TEST.sh
-```
-
-This script tests both Amira's publication workflow and Ben's verification workflow.
-
 
 ## Appendix I: Key Terminology
 
