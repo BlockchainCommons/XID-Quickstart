@@ -15,7 +15,7 @@
 #   1   Test failure
 #
 
-set -euo pipefail
+set -e
 
 echo "=== LEARNING XIDS §2.1: Creating Self Attestations CODE TEST ==="
 echo ""
