@@ -33,8 +33,6 @@ XID=$(envelope generate keypairs --signing ed25519 | \
 XID_ID=$(envelope xid id $XID)
 PASSWORD="test-password-for-tutorial"
 
-echo ""
-
 ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
 
@@ -125,6 +123,8 @@ echo "✅ Audit Attestation Saved to: $OUTPUT_DIR/01-claim-signed.envelope"
 echo "$AUDIT_ELIDED" > "$OUTPUT_DIR/01-claim-elided.envelope"
 envelope format "$AUDIT_ELIDED" > "$OUTPUT_DIR/01-claim-elided.format"
 echo "✅ Audit Elided Attestation Saved to: $OUTPUT_DIR/01-claim-elided.envelope"
+
+echo ""
 
 echo "Step 7: Test the Commitment"
 echo "==========================="
