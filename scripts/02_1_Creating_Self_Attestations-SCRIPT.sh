@@ -165,6 +165,8 @@ echo "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/02-claim-signed.envelope"
 envelope format "$XID" > "$OUTPUT_DIR/02-claim-signed.format"
 echo "✅ attestation Saved to: $OUTPUT_DIR/02-claim-signed.envelope"
 
+echo ""
+
 echo "Step 8: Sign the Attestation & Store It"
 echo "======================================="
 
@@ -180,11 +182,11 @@ echo "Step 10: Check the New Provenance Mark"
 echo "======================================="
 
 echo "Sequence of New Provenance Mark:"
-provenance validate --format json-compact "PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
+provenance validate "PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
 echo ""
 
 echo "Sequence of Original Provenance Mark:"
-provenance validate --format json-compact "O_PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
+provenance validate "O_PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
 echo ""
 
 # Verify provenance advanced
