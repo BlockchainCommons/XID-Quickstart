@@ -262,6 +262,7 @@ echo "$S_SIGNED_ATTESTATION" > "$OUTPUT_DIR/03-claim-superseded-signed.envelope"
 envelope format "$S_SIGNED_ATTESTATION" > "$OUTPUT_DIR/03-claim-superseded-signed.format"
 echo "✅ attestation Saved to: $OUTPUT_DIR/03-claim-superseded-signed.envelope"
 
+echo ""
 
 echo "Step 15: Retract an Attestation"
 echo "==============================="
@@ -300,6 +301,8 @@ echo ""
 echo "$RETRACTION" > "$OUTPUT_DIR/04-claim-retracted-signed.envelope"
 envelope format "$RETRACTION" > "$OUTPUT_DIR/04-claim-retracted-signed.format"
 echo "✅ attestation Saved to: $OUTPUT_DIR/04-claim-retracted-signed.envelope"
+
+echo ""
 
 echo "========================================"
 echo "All Tutorial §2.1 Tests Passed!"
