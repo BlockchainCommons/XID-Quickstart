@@ -1,87 +1,126 @@
 #!/bin/bash
 #
-# Tutorial 07: Encrypted Sharing - Test Script
+# 02_3_Managing_Claims_Encryption-SCRIPT.md - Test all code examples from §2.3
 #
-# Tests all commands from Tutorial 07, verifying:
+# Tests all commands from §2.3, verifying:
 # - Sensitive attestation creation (CivilTrust)
 # - Encryption for specific recipient (DevReviewer)
 # - Decryption and verification
 # - Failed decryption by unauthorized party
 #
-# Usage: bash tests/07-encrypted-sharing-TEST.sh
+# Usage: bash 02_3_Managing_Claims_Encryption-SCRIPT.md
 
-set -euo pipefail
+set -e
 
-echo "========================================"
-echo "Tutorial 07: Encrypted Sharing"
-echo "========================================"
+echo "=== LEARNING XIDS §2.3: Managing Sensitive Claims with Encryption CODE TEST ==="
 echo ""
+
 
 # Create output directory
-OUTPUT_DIR="output/xid-tutorial07-$(date +%Y%m%d%H%M%S)"
+OUTPUT_DIR="output/script-02-2-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$OUTPUT_DIR"
 
-echo "=== Part I: Setting Up for Encryption ==="
-echo ""
+echo "Step 0: Recreate XID & Keys"
+echo "==========================="
 
-echo "Step 1: Establish Amira's identity..."
-
-# Create Amira's XID
+# Create Amira's XID with provenance tracking
 XID=$(envelope generate keypairs --signing ed25519 | \
     envelope xid new --nickname "BRadvoc8" --generator include --sign inception)
+XID_ID=$(envelope xid id $XID)
+PASSWORD="test-password-for-tutorial"
 
-UNWRAPPED_XID=$(envelope extract wrapped "$XID")
-XID_ID=$(envelope xid id "$UNWRAPPED_XID")
-
-# Attestation signing keys
 ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
 
-echo "✅ Created Amira's XID: $XID_ID"
-echo ""
+if [ $XID ]
+then
+  echo "✅ Created your XID: $XID_ID"
+else
+  echo "❌ Error in XID creation"
+  exit 1;
+fi
 
-echo "Step 2: Create DevReviewer's keys (recipient)..."
+if [ $ATTESTATION_PRVKEYS ]
+then
+ echo "✅ Generated attestation keys (separate from XID inception key)"
+else
+  echo "❌ Error in attestation key creation"
+  exit 1;
+fi
 
-# DevReviewer generates keys for receiving encrypted data
+echo "Step 1: Create Keys for Receiving"
+echo "================================="
+
+# DevReviewer generates keypair for receiving encrypted content
 DEVREVIEWER_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 DEVREVIEWER_PUBKEYS=$(envelope generate pubkeys "$DEVREVIEWER_PRVKEYS")
 
-echo "✅ DevReviewer's keys created for receiving encrypted data"
-echo ""
+echo "✅ DevReviewer's public key ready to receive encrypted data"
 
-echo "=== Part II: Creating the Sensitive Attestation ==="
-echo ""
+if [ $DEVREVIEWER_PRVKEYS ]
+then
+  echo "✅ DevReviewer's keys created for receiving encrypted data"
+else
+  echo "❌ Error in DevReviewer key creation"
+  exit 1;
+fi
 
-echo "Step 3: Create CivilTrust attestation..."
+echo "Step 2 Create the CivilTrust Claim"
+echo "=================================="
 
 # The sensitive claim (too dangerous for any public trace)
 CIVILTRUST_CLAIM=$(envelope subject type string \
-  "I designed the authentication system for CivilTrust human rights documentation platform (2024)")
+  "Designed the authentication system for CivilTrust human rights documentation platform (2024)")
 
-# Add attestation metadata
-CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj known isA string "SelfAttestation" "$CIVILTRUST_CLAIM")
-CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj string "attestedBy" string "$XID_ID" "$CIVILTRUST_ATTESTATION")
-CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj string "attestedOn" date "2026-01-21T00:00:00Z" "$CIVILTRUST_ATTESTATION")
+CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj known isA known 'attestation' "$CIVILTRUST_CLAIM")
+CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj known source ur $XID_ID "$CIVILTRUST_ATTESTATION")
+CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj known target ur $XID_ID "$CIVILTRUST_ATTESTATION")
+CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$CIVILTRUST_ATTESTATION")
 CIVILTRUST_ATTESTATION=$(envelope assertion add pred-obj string "privacyRisk" string "Links to legal identity via contributor list" "$CIVILTRUST_ATTESTATION")
+CIVILTRUST_ATTESTATION_WRAPPED=$(envelope subject type wrapped $CIVILTRUST_ATTESTATION)
+CIVILTRUST_ATTESTATION_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$CIVILTRUST_ATTESTATION_WRAPPED")
 
-# Sign first (proves authenticity)
-CIVILTRUST_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$CIVILTRUST_ATTESTATION")
+if [ $CIVILTRUST_ATTESTATION ]
+then
+  echo "✅ Created CivilTrust attestation"
+else
+  echo "❌ Error in CivilTrust attestation creation"
+  exit 1;
+fi
 
-echo "✅ Created CivilTrust attestation (before encryption)"
 echo ""
-echo "Attestation structure:"
-envelope format "$CIVILTRUST_SIGNED" | head -10
+echo "Attestation structure  (before encryption):"
+envelope format "$CIVILTRUST_SIGNED"
 echo ""
 
-echo "Step 4: Encrypt for DevReviewer..."
+echo "Step 3: Encrypt for DevReviewer"
+echo "==============================="
 
-CIVILTRUST_ENCRYPTED=$(envelope encrypt --recipient "$DEVREVIEWER_PUBKEYS" "$CIVILTRUST_SIGNED")
+CIVILTRUST_ATTESTATION_ENCRYPTED=$(envelope encrypt --recipient "$DEVREVIEWER_PUBKEYS" "$CIVILTRUST_ATTESTATION_SIGNED")
 
-echo "✅ Encrypted attestation for DevReviewer"
-echo ""
+if [ envelope format $CIVILTRUST_ATTESTATION_ENCRYPTED | grep -q "ENCRYPTED" ]
+then
+  echo "✅ Encrypted attestation (only DevReviewer can decrypt):"
+else
+  echo "❌ Error in CivilTrust attestation encryption"
+  exit 1;
+fi
+
 echo "Encrypted format (content completely hidden):"
-envelope format "$CIVILTRUST_ENCRYPTED"
+envelope format "$CIVILTRUST_ATTESTATION_ENCRYPTED"
 echo ""
+
+echo "Step 4: Review Your Work & Store It"
+echo "==================================="
+
+echo "$CIVILTRUST_ATTESTATION" > "$OUTPUT_DIR/01-claim-signed.envelope"
+envelope format "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/01-claim-signed.format"
+echo "✅ Attestation Saved to: $OUTPUT_DIR/01-claim-signed.envelope"
+
+echo "$CIVILTRUST_ATTESTATION_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.envelope"
+envelope format "$ATTESTATION_SIGNED_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.format"
+echo "✅ Attestation Saved to: $OUTPUT_DIR/01-claim-signed-encrypted.envelope"
+
 
 echo "=== Part III: DevReviewer Receives and Verifies ==="
 echo ""
