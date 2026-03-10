@@ -102,8 +102,7 @@ echo "==============================="
 
 CIVILTRUST_ATTESTATION_ENCRYPTED=$(envelope encrypt --recipient "$DEVREVIEWER_PUBKEYS" "$CIVILTRUST_ATTESTATION_SIGNED")
 
-if [ envelope format $CIVILTRUST_ATTESTATION_ENCRYPTED | grep -q "ENCRYPTED" ]
-then
+if envelope format $CIVILTRUST_ATTESTATION_ENCRYPTED | grep -q "ENCRYPTED"; then
   echo "✅ Encrypted attestation (only DevReviewer can decrypt):"
 else
   echo "❌ Error in CivilTrust attestation encryption"
