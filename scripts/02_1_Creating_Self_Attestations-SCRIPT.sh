@@ -80,6 +80,7 @@ echo "===================================="
 # Advance provenance to record the key addition
 O_PROV_MARK=$(envelope xid provenance get "$XID")
 XID=$(envelope xid provenance next "$XID")
+PROV_MARK=$(envelope xid provenance get "$XID")
 
 # Verify key was added with encrypted private key
 if envelope format "$XID" | grep -q "attestation-key"; then
@@ -190,7 +191,6 @@ provenance validate "$O_PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
 echo ""
 
 # Verify provenance advanced
-PROV_MARK=$(envelope xid provenance get "$XID")
 if provenance validate "$O_PROV_MARK" "$PROV_MARK" >/dev/null 2>&1; then
     echo "✅ Provenance advanced and valid"
 else
