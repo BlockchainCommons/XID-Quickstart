@@ -27,7 +27,7 @@ Following Chapter 1, Ben has a verified copy of BRadvoc8's XID. But
 it's just a collection of keys attached to a nickname. Can BRadvoc8
 write good code, understand security, and deliver quality work? These
 are the questions that Ben needs answered before he decides to bring
-BRadvoc8 into the SisterSpace project.
+BRadvoc8 into the SisterSpaces project.
 
 To reveal more about her skill set, Amira must create attestations
 about them. Since Amira is bootstrapping the BRadvoc8 identity on her
