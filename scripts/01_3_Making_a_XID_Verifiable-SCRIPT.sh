@@ -26,7 +26,7 @@ PASSWORD="test-password-for-tutorial"
 PUBLISH_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
 # Create output directory
-OUTPUT_DIR="output/test-01-2-$(date +%Y%m%d-%H%M%S)"
+OUTPUT_DIR="output/script-01-3-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$OUTPUT_DIR"
 
 echo "Step 1: Load Your XID"
