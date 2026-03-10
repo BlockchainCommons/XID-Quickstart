@@ -117,7 +117,7 @@ their earlier interactions in [§2.2](02_2_Managing_Claims_Elision.md).
 You can now create a new claim for Amira and encrypt it using
 DevReviewer's public key.
 
-### Step 2: Amira Creates Her CivilTrust Claim
+### Step 2: Create the CivilTrust Claim
 
 The claim you're creating for Amira would reveal her legal identity if
 published. As usual, you must wrap and sign it after creation.
