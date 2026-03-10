@@ -20,7 +20,7 @@ After working through this section, a developer will be able to:
 
 Supporting objectives include the ability to:
 
-- Undestand the difference between elision and encryption.
+- Understand the difference between elision and encryption.
 - Know when encryption is the right choice over commitment.
 
 ## Amira's Story: Some Secrets Can't Even Be Hinted At
