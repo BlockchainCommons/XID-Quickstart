@@ -5,7 +5,7 @@
 # Validates that every command in §1.2: Creating Your First XID works correctly.
 # Tests XID creation, elision, signature verification, and provenance validation.
 #
-# Usage: ./01_2_Your_First_XID-SCRIPT.sh
+# Usage: bash 01_2_Your_First_XID-SCRIPT.sh
 #
 # Dependencies: envelope (bc-envelope-cli-rust), provenance
 #
