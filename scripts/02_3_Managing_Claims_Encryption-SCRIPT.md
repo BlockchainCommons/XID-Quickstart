@@ -122,20 +122,19 @@ envelope format "$ATTESTATION_SIGNED_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-e
 echo "✅ Attestation Saved to: $OUTPUT_DIR/01-claim-signed-encrypted.envelope"
 
 
-echo "=== Part III: DevReviewer Receives and Verifies ==="
-echo ""
+echo "Step 5: Decrypt the Envelope"
+echo "============================"
 
-echo "Step 5: DevReviewer decrypts..."
-
-CIVILTRUST_DECRYPTED=$(envelope decrypt --recipient "$DEVREVIEWER_PRVKEYS" "$CIVILTRUST_ENCRYPTED")
+CIVILTRUST_ATTESTATION_DECRYPTED=$(envelope decrypt --recipient "$DEVREVIEWER_PRVKEYS" "$CIVILTRUST_ATTESTATION_ENCRYPTED")
 
 echo "DevReviewer sees after decryption:"
-envelope format "$CIVILTRUST_DECRYPTED" | head -10
+envelope format "$CIVILTRUST_ATTESTATION_DECRYPTED"
 echo ""
 
-echo "Step 6: DevReviewer verifies the signature..."
+echo "Step 6: Verify the Signature"
+echo "============================"
 
-if envelope verify --verifier "$ATTESTATION_PUBKEYS" "$CIVILTRUST_DECRYPTED"; then
+if envelope verify --verifier "$ATTESTATION_PUBKEYS" "$CIVILTRUST_ATTESTATION_DECRYPTED"; then
     echo "✅ DevReviewer verified the decrypted attestation"
 else
     echo "❌ Verification failed"
@@ -143,13 +142,15 @@ else
 fi
 echo ""
 
-echo "Step 7: Test decryption failure (Charlie intercepts)..."
+echo "Step 6a: Test decryption failure (Charlie intercepts)"
+echo "====================================================="
 
 # Charlie generates his own keys
 CHARLIE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+envelope decrypt --recipient "$CHARLIE_PRVKEYS" "$CIVILTRUST_ATTESTATION_ENCRYPTED" 2>&1 || true
 
 # Charlie tries to decrypt - should fail
-if envelope decrypt --recipient "$CHARLIE_PRVKEYS" "$CIVILTRUST_ENCRYPTED" 2>/dev/null; then
+if envelope decrypt --recipient "$CHARLIE_PRVKEYS" "$CIVILTRUST_ATTESTATION_ENCRYPTED" 2>/dev/null; then
     echo "❌ Charlie should NOT have been able to decrypt"
     exit 1
 else
@@ -157,30 +158,9 @@ else
 fi
 echo ""
 
-echo "=== Part IV: Wrap-Up ==="
-echo ""
-
-# Save artifacts
-echo "$CIVILTRUST_ENCRYPTED" > "$OUTPUT_DIR/civiltrust-for-devreviewer.envelope"
-echo "$XID" > "$OUTPUT_DIR/BRadvoc8-xid.envelope"
-echo "$ATTESTATION_PRVKEYS" > "$OUTPUT_DIR/attestation-prvkeys.envelope"
-
-echo "Saved files to $OUTPUT_DIR:"
-ls -la "$OUTPUT_DIR"
-echo ""
-
 echo "========================================"
-echo "Tutorial 07 Test: ALL PASSED ✅"
+echo "All Tutorial §2.3 Tests Passed!"
 echo "========================================"
 echo ""
-echo "Summary:"
-echo "  - Created CivilTrust attestation (too sensitive for public trace)"
-echo "  - Encrypted for DevReviewer specifically"
-echo "  - DevReviewer successfully decrypted and verified"
-echo "  - Charlie's decryption correctly failed"
-echo ""
-echo "Disclosure Approaches Summary:"
-echo "  - T05: Public attestation (Galaxy Project - already public)"
-echo "  - T06: Commit elided (crypto audit - prove timing later)"
-echo "  - T07: Encrypt for recipient (CivilTrust - no public trace)"
-echo ""
+echo "Output files saved to: $OUTPUT_DIR/"
+ls -la "$OUTPUT_DIR/"
