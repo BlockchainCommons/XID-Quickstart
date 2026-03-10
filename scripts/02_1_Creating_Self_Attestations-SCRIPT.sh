@@ -8,7 +8,7 @@
 # - Attestation verification
 # - Attestation lifecycle (superseding and retraction patterns)
 #
-# Usage: ./02_1_Creating_Self_Attestations-SCRIPT.sh
+# Usage: bash 02_1_Creating_Self_Attestations-SCRIPT.sh
 #
 # Exit Codes:
 #   0   All tests passed
