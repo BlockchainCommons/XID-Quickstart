@@ -69,13 +69,13 @@ can be found.
 
 | Section | Command | Predicate | Description |
 |---------|---------|-----------|-------------|
-| | `attachment` | `attachment` | Third-party Metadata |
-| | `delegate` | `delegate` | Permission delegation | 
-| §3.1-§3.3 | `edge` | `edge` | Attestations |
-| §1.2, §2.1 | `key` | `'key'`<br>`'privateKey'` | Key pairs |
-| §1.3 | `method`<br>`resolution` | `'dereferencevia'` | Resolution method |
-| | `service` | `service` | Service delegation |
-| §1.2, §2.1 | `provenance` | `'provenance'` | Provenance mark |
+| | `attachment` | `attachment` | 📂 Third-party metadata |
+| | `delegate` | `delegate` | 👌🏽 Permission delegation | 
+| §3.1-§3.3 | `edge` | `edge` | 🗣️  Attestations |
+| §1.2, §2.1 | `key` | `'key'`<br>`'privateKey'` | 🔑 Key pairs |
+| §1.3 | `method`<br>`resolution` | `'dereferencevia'` | 🧶 Resolution method |
+| | `service` | `service` | ☁️  Service delegation |
+| §1.2, §2.1 | `provenance` | `'provenance'` | ⛓️  Provenance mark |
 
 Edges will be the topic of this chapter.
 
