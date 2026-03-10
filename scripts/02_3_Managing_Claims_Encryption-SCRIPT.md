@@ -48,6 +48,8 @@ else
   exit 1;
 fi
 
+echo ""
+
 echo "Step 1: Create Keys for Receiving"
 echo "================================="
 
@@ -64,6 +66,8 @@ else
   echo "❌ Error in DevReviewer key creation"
   exit 1;
 fi
+
+ECHO ""
 
 echo "Step 2 Create the CivilTrust Claim"
 echo "=================================="
@@ -90,7 +94,7 @@ fi
 
 echo ""
 echo "Attestation structure  (before encryption):"
-envelope format "$CIVILTRUST_SIGNED"
+envelope format "$CIVILTRUST_ATTESTATION_SIGNED"
 echo ""
 
 echo "Step 3: Encrypt for DevReviewer"
