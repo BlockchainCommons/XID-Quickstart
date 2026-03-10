@@ -122,7 +122,7 @@ envelope format "$CIVILTRUST_ATTESTATION_SIGNED" > "$OUTPUT_DIR/01-claim-signed.
 echo "✅ Attestation Saved to: $OUTPUT_DIR/01-claim-signed.envelope"
 
 echo "$CIVILTRUST_ATTESTATION_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.envelope"
-envelope format "$ATTESTATION_ATTESTATION_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.format"
+envelope format "$CIVILTRUST_ATTESTATION_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.format"
 echo "✅ Attestation Saved to: $OUTPUT_DIR/01-claim-signed-encrypted.envelope"
 
 
