@@ -83,11 +83,6 @@ echo "================================="
 AUDIT_WRAPPED=$(envelope subject type wrapped "$AUDIT_CLAIM")
 AUDIT_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$AUDIT_WRAPPED")
 
-echo "✅ Full attestation created and signed"
-envelope format "$AUDIT_SIGNED"
-
-AUDIT_SIGNED=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$AUDIT_CLAIM")
-
 if [ $AUDIT_SIGNED ]
 then
   echo "✅ Full attestation signed"
@@ -124,11 +119,11 @@ echo "Step 4: Store Your Work"
 echo "======================="
 
 echo "$AUDIT_SIGNED" > "$OUTPUT_DIR/01-claim-signed.envelope"
-envelope format "$AUDIST_SIGNED" > "$OUTPUT_DIR/01-claim-signed.format"
+envelope format "$AUDIT_SIGNED" > "$OUTPUT_DIR/01-claim-signed.format"
 echo "✅ Audit Attestation Saved to: $OUTPUT_DIR/01-claim-signed.envelope"
 
 echo "$AUDIT_ELIDED" > "$OUTPUT_DIR/01-claim-elided.envelope"
-envelope format "$AUDIST_ELIDED" > "$OUTPUT_DIR/01-claim-elided.format"
+envelope format "$AUDIT_ELIDED" > "$OUTPUT_DIR/01-claim-elided.format"
 echo "✅ Audit Elided Attestation Saved to: $OUTPUT_DIR/01-claim-elided.envelope"
 
 echo "Step 7: Test the Commitment"
