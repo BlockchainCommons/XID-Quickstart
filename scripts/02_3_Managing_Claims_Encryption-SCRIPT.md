@@ -103,12 +103,13 @@ echo "==============================="
 CIVILTRUST_ATTESTATION_ENCRYPTED=$(envelope encrypt --recipient "$DEVREVIEWER_PUBKEYS" "$CIVILTRUST_ATTESTATION_SIGNED")
 
 if envelope format $CIVILTRUST_ATTESTATION_ENCRYPTED | grep -q "ENCRYPTED"; then
-  echo "✅ Encrypted attestation (only DevReviewer can decrypt):"
+  echo "✅ Encrypted attestation (only DevReviewer can decrypt)"
 else
   echo "❌ Error in CivilTrust attestation encryption"
   exit 1;
 fi
 
+echo ""
 echo "Encrypted format (content completely hidden):"
 envelope format "$CIVILTRUST_ATTESTATION_ENCRYPTED"
 echo ""
@@ -116,12 +117,12 @@ echo ""
 echo "Step 4: Review Your Work & Store It"
 echo "==================================="
 
-echo "$CIVILTRUST_ATTESTATION" > "$OUTPUT_DIR/01-claim-signed.envelope"
-envelope format "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/01-claim-signed.format"
+echo "$CIVILTRUST_ATTESTATION_SIGNED" > "$OUTPUT_DIR/01-claim-signed.envelope"
+envelope format "$CIVILTRUST_ATTESTATION_SIGNED" > "$OUTPUT_DIR/01-claim-signed.format"
 echo "✅ Attestation Saved to: $OUTPUT_DIR/01-claim-signed.envelope"
 
 echo "$CIVILTRUST_ATTESTATION_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.envelope"
-envelope format "$ATTESTATION_SIGNED_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.format"
+envelope format "$ATTESTATION_ATTESTATION_ENCRYPTED" > "$OUTPUT_DIR/01-claim-signed-encrypted.format"
 echo "✅ Attestation Saved to: $OUTPUT_DIR/01-claim-signed-encrypted.envelope"
 
 
