@@ -175,7 +175,7 @@ provenance validate "$PROVENANCE_MARK" && echo "✅ Provenance chain intact"
 echo ""
 
 echo "========================================"
-echo "All Tutorial 02 Tests Passed!"
+echo "All Tutorial §1.3 Tests Passed!"
 echo "========================================"
 echo ""
 echo "Output files saved to: $OUTPUT_DIR/"
