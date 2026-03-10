@@ -183,11 +183,11 @@ echo "Step 10: Check the New Provenance Mark"
 echo "======================================="
 
 echo "Sequence of New Provenance Mark:"
-provenance validate "$PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
+provenance validate --format json_compact "$PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
 echo ""
 
 echo "Sequence of Original Provenance Mark:"
-provenance validate "$O_PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
+provenance validate --format json_compact "$O_PROV_MARK" 2>&1 | grep -o '"end_seq":[0-9]*'
 echo ""
 
 # Verify provenance advanced
