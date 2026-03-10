@@ -97,6 +97,8 @@ else
     exit 1
 fi
 
+echo ""
+
 echo "Step 4: Export & Store Your Work"
 echo "================================"
 
