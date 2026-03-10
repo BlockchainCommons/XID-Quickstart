@@ -248,7 +248,7 @@ then
 fi
 
 # Verify supersedes field is present
-if envelope format "$UPDATED_ATTESTATION" | grep -q "supersedes"; then
+if envelope format "$S_SIGNED_ATTESTATION" | grep -q "supersedes"; then
     echo "✅ Supersedes reference present (links to original digest)"
 else
     echo "❌ Supersedes reference missing"
