@@ -163,20 +163,9 @@ envelope format "$ATTESTATION_SIGNED"
 echo ""
 
 echo "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/02-claim-signed.envelope"
-envelope format "$XID" > "$OUTPUT_DIR/02-claim-signed.format"
+envelope format "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/02-claim-signed.format"
 echo "✅ attestation Saved to: $OUTPUT_DIR/02-claim-signed.envelope"
 
-echo ""
-
-echo "Step 8: Sign the Attestation & Store It"
-echo "======================================="
-
-if envelope verify --verifier "$ATTESTATION_PUBKEYS" "$ATTESTATION_SIGNED"; then
-    echo "✅ Signature verified"
-else
-    echo "❌ Signature verification failed"
-    exit 1
-fi
 echo ""
 
 echo "Step 10: Check the New Provenance Mark"
@@ -219,39 +208,42 @@ then
     exit 1
 fi
 
-
-echo "=== Part IV: Attestation Lifecycle ==="
-echo ""
-
-echo "Step 5: Supersede an attestation..."
+echo "Step 14: Supersede an Attestation"
+echo "================================="
 
 # Create an updated attestation (new accomplishments)
-UPDATED_CLAIM=$(envelope subject type string \
-  "I contributed mass spec visualization code to galaxyproject/galaxy (PRs #12847, #13102, #13445, merged 2024-2028)")
-
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj known isA string "SelfAttestation" "$UPDATED_CLAIM")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "attestedBy" string "$XID_ID" "$UPDATED_ATTESTATION")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "attestedOn" date "2028-01-15T00:00:00Z" "$UPDATED_ATTESTATION")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "verifiableAt" string "https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8" "$UPDATED_ATTESTATION")
+S_ATTESTATION=$(envelope subject type string \
+  "Contributed mass spec visualization and data pipeline code to galaxyproject/galaxy (PRs #12847, #14201, #15892, 2024-2026)")
+S_ATTESTATION=$(envelope assertion add pred-obj known isA known 'attestation' "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known source ur $XID_ID "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known target ur $XID_ID "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri "https://github.com/galaxyproject/galaxy/pulls?q=author:BRadvoc8" "$S_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$S_ATTESTATION")
 
 # Reference the original attestation being superseded
 ORIGINAL_DIGEST=$(envelope digest "$ATTESTATION_SIGNED")
-UPDATED_ATTESTATION=$(envelope assertion add pred-obj string "supersedes" string "$ORIGINAL_DIGEST" "$UPDATED_ATTESTATION")
+S_ATTESTATION=$(envelope assertion add pred-obj string "supersedes" digest "$ORIGINAL_DIGEST" "$S_ATTESTATION")
 
 # Sign
-UPDATED_ATTESTATION=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$UPDATED_ATTESTATION")
+S_WRAPPED_ATTESTATION=$(envelope subject type wrapped $S_ATTESTATION)
+S_SIGNED_ATTESTATION=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$S_WRAPPED_ATTESTATION")
 
-echo "✅ Created updated attestation that supersedes original"
-echo ""
-echo "Updated attestation structure:"
-envelope format "$UPDATED_ATTESTATION" | head -12
-echo ""
+echo "✅ Updated attestation (supersedes original):"
+envelope format "$S_SIGNED_ATTESTATION" | head -12
 
-# Verify updated attestation
-if envelope verify --verifier "$ATTESTATION_PUBKEYS" "$UPDATED_ATTESTATION"; then
-    echo "✅ Updated attestation signature verified"
-else
-    echo "❌ Updated attestation signature failed"
+# Verify superseded attestation
+for i in "${PUBKEY[@]}"
+  do
+    if envelope verify -v $i $S_SIGNED_ATTESTATION >/dev/null 2>&1; then
+      echo "✅ One of the signatures verified"
+      k=1
+      echo $i
+    fi
+done
+
+if [ -z $k ]
+then
+    echo "❌ No matching signature found"
     exit 1
 fi
 
@@ -264,12 +256,19 @@ else
 fi
 echo ""
 
-echo "Step 6: Create a retraction..."
+echo "$S_SIGNED_ATTESTATION" > "$OUTPUT_DIR/03-claim-superseded-signed.envelope"
+envelope format "$S_SIGNED_ATTESTATION" > "$OUTPUT_DIR/03-claim-superseded-signed.format"
+echo "✅ attestation Saved to: $OUTPUT_DIR/03-claim-superseded-signed.envelope"
+
+
+echo "Step 15: Retract an Attestation"
+echo "==============================="
 
 RETRACTION=$(envelope subject type string "RETRACTED: [original claim text]")
-RETRACTION=$(envelope assertion add pred-obj known isA string "Retraction" "$RETRACTION")
-RETRACTION=$(envelope assertion add pred-obj string "retracts" string "$ORIGINAL_DIGEST" "$RETRACTION")
+RETRACTION=$(envelope assertion add pred-obj known isA string "retraction" "$RETRACTION")
+RETRACTION=$(envelope assertion add pred-obj string "retracts" digest "$ORIGINAL_DIGEST" "$RETRACTION")
 RETRACTION=$(envelope assertion add pred-obj string "reason" string "Claim was overstated" "$RETRACTION")
+RETRACTION=$(envelope subject type wrapped "$RETRACTION")
 RETRACTION=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$RETRACTION")
 
 echo "✅ Created retraction attestation"
@@ -279,45 +278,30 @@ envelope format "$RETRACTION" | head -10
 echo ""
 
 # Verify retraction signature
-if envelope verify --verifier "$ATTESTATION_PUBKEYS" "$RETRACTION"; then
-    echo "✅ Retraction signature verified"
-else
-    echo "❌ Retraction signature failed"
+for i in "${PUBKEY[@]}"
+  do
+    if envelope verify -v $i $RETRACTION >/dev/null 2>&1; then
+      echo "✅ One of the signatures verified"
+      l=1
+      echo $i
+    fi
+done
+
+if [ -z $l ]
+then
+    echo "❌ No matching signature found"
     exit 1
 fi
+
 echo ""
 
-echo "=== Part V: Wrap-Up ==="
-echo ""
-
-# Save artifacts
-echo "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/attestation-galaxy.envelope"
-echo "$UPDATED_ATTESTATION" > "$OUTPUT_DIR/attestation-galaxy-updated.envelope"
-echo "$RETRACTION" > "$OUTPUT_DIR/attestation-retraction.envelope"
-echo "$XID" > "$OUTPUT_DIR/BRadvoc8-xid.envelope"
-
-echo "Saved files to $OUTPUT_DIR:"
-ls -la "$OUTPUT_DIR"
-echo ""
+echo "$RETRACTION" > "$OUTPUT_DIR/04-claim-retracted-signed.envelope"
+envelope format "$RETRACTION" > "$OUTPUT_DIR/04-claim-retracted-signed.format"
+echo "✅ attestation Saved to: $OUTPUT_DIR/04-claim-retracted-signed.envelope"
 
 echo "========================================"
-echo "Tutorial 05 Test: ALL PASSED ✅"
+echo "All Tutorial §2.1 Tests Passed!"
 echo "========================================"
 echo ""
-echo "Summary:"
-echo "  - Created fair witness attestation (specific, verifiable claim)"
-echo "  - Registered attestation key in XID (with encrypted private key)"
-echo "  - Used detached attestation pattern (separate from XIDDoc)"
-echo "  - Included verifiableAt URL for evidence checking"
-echo "  - Verified attestation signature"
-echo "  - Demonstrated superseding pattern (updated attestation)"
-echo "  - Demonstrated retraction pattern"
-echo ""
-echo "Fair Witness Principle:"
-echo "  Strong: 'I contributed to Galaxy Project (PR #12847)'"
-echo "  Weak:   'I have 8 years of security experience'"
-echo ""
-echo "Attestation Lifecycle:"
-echo "  - Supersede: Create new attestation with 'supersedes' field"
-echo "  - Retract: Create retraction with 'retracts' field + reason"
-echo ""
+echo "Output files saved to: $OUTPUT_DIR/"
+ls -la "$OUTPUT_DIR/"
