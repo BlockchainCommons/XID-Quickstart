@@ -207,7 +207,7 @@ read -d '' -r -a PUBKEY <<< $(envelope xid key all "$PUBLIC_XID")
 for i in "${PUBKEY[@]}"
   do
     if envelope verify -v $i $ATTESTATION_SIGNED >/dev/null 2>&1; then
-      echo "✅ One of the signatures verified! "
+      echo "✅ One of the signatures verified"
       j=1
       echo $i
     fi
