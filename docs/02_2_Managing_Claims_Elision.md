@@ -275,7 +275,7 @@ DevReviewer has three pieces of information:
 |---------------------|----------------------|
 | ✅ Claim matches a public commitment | ❓ Claim is actually true |
 | ✅ Claim was published at a previous date | ❓ What other hidden claims say |
-| ✅ Claim was not modified | ❓ Whether claim varies a different hidden claim |
+| ✅ Claim was not modified | ❓ Whether claim is contradicted by a different hidden claim |
 | ✅ BRadvoc8 signed the claim | ❓ Who BRadvoc8 is |
 
 DevReviewer can now read the claim and factor it into their trust decision.
