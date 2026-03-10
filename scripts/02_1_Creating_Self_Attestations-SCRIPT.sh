@@ -161,7 +161,7 @@ echo "Attestation structure:"
 envelope format "$ATTESTATION_SIGNED"
 echo ""
 
-echo "$ATTESTATIONS_SIGNED" > "$OUTPUT_DIR/02-claim-signed.envelope"
+echo "$ATTESTATION_SIGNED" > "$OUTPUT_DIR/02-claim-signed.envelope"
 envelope format "$XID" > "$OUTPUT_DIR/02-claim-signed.format"
 echo "✅ attestation Saved to: $OUTPUT_DIR/02-claim-signed.envelope"
 
