@@ -208,6 +208,8 @@ then
     exit 1
 fi
 
+echo ""
+
 echo "Step 14: Supersede an Attestation"
 echo "================================="
 
