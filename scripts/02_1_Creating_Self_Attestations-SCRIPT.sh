@@ -202,7 +202,7 @@ echo ""
 echo "Step 11: Check the Claim's Signature"
 echo "===================================="
 
-read -d '' -r -a PUBKEY <<< $(envelope xid key all "$PUBLIC_XID")
+read -a PUBKEY <<< $(envelope xid key all "$PUBLIC_XID")
 
 for i in "${PUBKEY[@]}"
   do
