@@ -586,6 +586,22 @@ This tutorial focused on a detached fair-witness self attestation. Embedded atte
 
 Crucially, this tutorial also showed how to create a _validated attestation_: the Galaxy Project attestation isn't just a claim, it's a claim with a URL where anyone can check the actual code. But could it have been stronger? That's also a topic for the future.
 
+### Additional Files
+
+**Envelopes:** The
+[envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
+directory contains [XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-2-01.envelope), [attestation keys](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/key-attestation-private-2-01.ur) and [main claim](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/claim-2-01.envelope) made in this section.
+
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[02_1_Creating_Self_Attestations-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/02_1_Creating_Self_Attestations-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/02_1_Creating_Self_Attestations-SCRIPT.sh` test it.
+
 ### Exercises
 
 **Building exercises (Amira's perspective):**
