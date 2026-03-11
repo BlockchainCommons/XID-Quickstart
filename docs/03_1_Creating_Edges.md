@@ -115,9 +115,24 @@ for GitHub.
 
 ```
 SSH_PRVKEYS=$(envelope generate prvkeys --signing ssh-ed25519)
+```
+
+If you instead have an ed25519 signing key that you've created from
+other means, you can instead import it (substituting the name of your
+file that contains the public key):
+```
+SSH_PRVKEYS=$(cat ~/.ssh/your_signing_key | envelope import)
+```
+
+In either case, you can then create your public keys from your private keys:
+```
 SSH_PUBKEYS=$(envelope generate pubkeys "$SSH_PRVKEYS")
 ```
-She can then `export` those keys to tranform that `UR` format used by envelope into an interoperable SSH format (_not_ raw Ed25519) that is recognized by GitHub:
+
+Finally, you can `export` your public keys to tranform th UR format
+used by envelope into an interoperable SSH format (_not_ raw Ed25519)
+that was recognized by GitHub:
+
 ```
 SSH_EXPORT=$(envelope export "$SSH_PUBKEYS")
 
@@ -128,94 +143,126 @@ echo "$SSH_EXPORT"
 │ ✅ Generated SSH signing key:
 │ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
 
-This is what you would then [upload to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) as an SSH signing key ... but you don't actually have to for these tutorials because we'll test against the [existing BRadvoc8 account](https://github.com/BRadvoc8/BRadvoc8) in the next tutorial when we discuss ["Cross Verification"](04-cross-verification.md).
+### Step 2: Upload Keys to GitHub
 
-> :book: **SSH Signing vs SSH Authentication**: GitHub has two separate SSH key registries. Authentication keys (`/users/{user}/keys`) control access to repositories. Signing keys (`/users/{user}/ssh_signing_keys`) verify commit signatures. Amira is adding a signing key. It proves that her commits are authentic, not that she can push to repos.
+This is what you would the exported version of the key [to
+GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+as an SSH signing key ... but you don't actually have to for these
+tutorials because we'll test against the [existing BRadvoc8
+account](https://github.com/BRadvoc8/BRadvoc8) in [§3.2: Supportig
+Cross Verification](03_2_Supporting_Cross_Verification.md).
 
-#### Optional Alternative: Use An Existing Key
+> :book: **SSH Signing vs SSH Authentication**: GitHub has two
+separate SSH key registries. Authentication keys
+(`/users/{user}/keys`) control access to repositories. Signing keys
+(`/users/{user}/ssh_signing_keys`) verify commit signatures. Amira is
+adding a signing key. It proves that her commits are authentic, not
+that she can push to repos.
 
-In the "story" of these tutorials, Amira created her SSH key at some time in the past, uploaded it to GitHub as a signing key on May 2025, and has been signing commits with it for projects that fall into a similar public-good space as the work that Amira might do for Ben at SisterSpaces. So she needs to access that key and make it available on the command-line for the XID work she's going to do.
+#### Key Type Comparison
 
-If you already have an SSH signing key registered on GitHub, you can import it from your local files instead of generating a new one. The following commands will fill your environmental variables from an existing key (with the file name changed as appropriate):
+In keeping with the best practice of
+[heterogeneity](https://developer.blockchaincommons.com/architecture/patterns/auth/),
+Amira now has three different keys serving different purposes:
 
-```
-SSH_PRVKEYS=$(cat ~/.ssh/your_signing_key | envelope import)
-SSH_PUBKEYS=$(cat ~/.ssh/your_signing_key.pub | envelope import)
-SSH_EXPORT=$(cat ~/.ssh/your_signing_key.pub)
-```
+| Key Type | Purpose | Verified Against | Added In |
+|----------|---------|------------------|----------|
+| 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
+| 🗣️  Attestation key | Signs attestations | XID key list | §2.1 |
+| 🖋️  SSH signing key | Signs Git Commits | GitHub account | §3.1 |
 
-#### A Review of Key Usage 
+As mentioned in
+[§2.1](2_1_Creating_Self_Attestations.md#key-type-comparison), having
+different keys for different purposes decreases the repercussions of
+key loss or compromise. Here's a look at how that's the case:
 
-Amira now has multiple keys serving different purposes:
+| Key Type | Location | Compromise Impact |
+|----------|---------|------------------|
+| 👤 XID inception key | XID (encrypted or elided) | Identity compromised |
+| 🗣️  Attestation key | XID (encrypted or elided) | Claims forged |
+| 🖋️  SSH signing key | Local files | Commits forged |
 
-| Key | Purpose | Compromise Impact | Location |
-|-----|---------|-------------------|----------|
-| XID signing key | Signs XID document updates | Identity compromised | XID |
-| XID key agreement key | Establishes shared secrets for encryption | Past messages exposed | XID |
-| SSH signing key | Signs Git commits | Code authorship forged | Local |
+This shows the containment enabled by key heterogeneity: if Amira's
+SSH key is stolen, an attacker can forge commits, but her XID identity
+remains intact. She could then revoke the compromised SSH key and add
+a new one without losing her identity or reputation history.
 
-Why separate keys? Compromise containment. Each key serves one purpose, limiting damage from any single compromise. For example, if Amira's SSH key is stolen, an attacker can forge commits, but her XID identity remains intact. She can revoke the compromised SSH key and add a new one without losing her identity or reputation history. 
+A new key can even be created to allow changes to the XID! Your
+identity persists across key changes.
 
-Even the XID signing key can be rotated if compromised. You can add a new XID signing key and revoke the old one while keeping the same XID identifier. Your identity persists across key changes.
+> 📖 **Why wasn't the SSH signing key added to Amira's XID?** This is
+a question of philosophy. You can choose to keep your XID neat and
+clean, and only use it to store the keys related to the control and
+use of that XID. Or, you could choose to use your XID to manage your
+whole "bag of keys", even keys securing other services (such as
+GitHub). We've chosen the "simple and clean" methodology for these
+tutorials, under the theory that you can choose to add from there if
+you wanted. If you decided to add the SSH keys to your XID, you would
+follow the methodology of
+[§2.1](2_1_Creating_Self_Attestations.md#step-2-register-attestation-key-in-xid)
+for registering a new key in your XID, and you would of course
+reencrypt all your keys afterward.
 
-### Step 3: Create Proof-of-Control
+## Part II: Creating an Ownership Claim
 
-You don't just want to add Amira's SSH signing key to her XID. That would not prove that Amira controls the signing key (and therefore the GitHub account where the key is used to sign commits). Amira can prove that she controls the GitHub SSH signing key by creating a signed statement declaring ownership at a declared point in time. This will be the next thing you'll create.
+You now need to create a claim that the XID BRadvoc8 owns the BRadvoc8
+GitHub account. This is largely done like the other claims created
+starting in [§2.1](02_1_Creating_Self_Attestations.md), except with
+two notable changes:
 
-```
-CURRENT_DATE=$(date -u +"%Y-%m-%d")
-PROOF_STATEMENT=$(envelope subject type string "$XID_NAME controls this SSH key on $CURRENT_DATE")
-PROOF=$(envelope sign --signer "$SSH_PRVKEYS" "$PROOF_STATEMENT")
+1. The structure of the claim will be slightly different to accomodate
+the fact that it will be _embedded_ instead of _detached_.
+2. The claim will be signed by the SSH signing key uploaded to the
+GitHub account.
 
-echo "✅ Created proof-of-control"
-envelope format "$PROOF"
+### Step 3: Understand the Edge
 
-│ Created proof-of-control
-│ "BRadvoc8 controls SSH signing key registered on GitHub as of 2026-01-21" [
-│     'signed': Signature(SshEd25519)
-│ ]
-```
+Amira's claim that the BRadvoc8 XID owns the BRadvoc8 GitHub account
+will be done as an edge, which is a specific XID assertion that
+enables the incorporation of an attestation directly into a XID.
 
-This proof is created as an envelope with a subject (the statement) and an assertion (the signature).  We'll be continuing to build out a larger envelope in the next step before attaching it to the XID. With this proof, Amira definitively demonstrates that she controls the SSH signing key. (She signed with it!) The date isn't verified, but it has been attested to by the holder of the SSH signing key. If you trust the signer, you trust the date; if you don't trust the signer, you don't.
+An edge has a subject that must be unique within a XID. It could be a
+UUID or credential number used for reference. It might also be
+something more descriptive, to make it easier to find a specific edge
+within a XID. However, it should not define the claim itself; that
+falls to its content.
 
-> :book: **How Could You Prove the Time?** The above simply shows that the witness (the signer) attests to a specific time. To actually prove a time requires a trusted third party. One method is to hash a document, put the hash on the blockchain, and then refer to the hash. Another is to use a Time Stamp Authority (TSA) as defined in [RFC 3161](https://www.ietf.org/rfc/rfc3161.txt).
+There are three predicates that must be used in an edge:
 
-#### Verifying the Proof
+1. **`isA`:** either a description of a relationship between the two
+XIDs or a description of the claim that the first XID is making about
+the second.
+2. **`source`:** The XID making the claim.
+3. **`target`:** The XID that the claim is about.
 
-Ben can later verify this proof using the public SSH signing key that we will embed in the XID.
+You'll note that `isA`, `source`, and `target` were all also used in
+the detached claims in [chapter 2](02_0_Claims.md). This was
+intentional. These three predicates are *required* for defining
+edges. Also including them in detached claims is optional, but helps
+those detached claims to be consistent with embedded claims, and so
+easier to understand.
 
-```
-# Verify the proof signature
-if envelope verify -v "$SSH_PUBKEYS" "$PROOF" >/dev/null 2>&1; then
-    echo "✅ Proof signature verified - key holder signed this statement"
-else
-    echo "❌ Proof signature FAILED"
-fi
+> 📖 **What is an edge?** An edge is a link between two XIDs intended
+to allow the creation of a claim. If both XIDs are the same, a
+self-attestation is create, and if both XIDs are different, a peer
+endorsement is created.
 
-│ ✅ Proof signature verified - key holder signed this statement
-```
+Those three assertions are the only ones allowed as descriptions of
+the edge subject, which might seem limiting. This is resolved by the
+fact that additional envelopes can be linked to each of these
+assertions. `target` assertions are where additional information on
+the claim is usually placed, while `source` assertions could provide
+some (self-reported) details on the person making the claim and `isA`
+assertions could better define the claim type.
 
-This confirms the statement was signed by whoever controls the SSH private key. It doesn't prove *who* that is, just that they held the key.
+### Step 4: Create Ownership Claim
 
-If the proof were tampered with, the signature would no longer verify:
+You can now assemble a complete envelope with all of the ownership
+information about Amira's GitHub account. These are the claim details
+that will later be added to the `target` of the edge.
 
-```
-TAMPERED_PROOF=$(echo "$PROOF" | sed 's/2026-01-21/2025-01-01/')
+[[ETH]]
 
-if envelope verify -v "$SSH_PUBKEYS" "$TAMPERED_PROOF" >/dev/null 2>&1; then
-    echo "✅ Signature verified"
-else
-    echo "❌ Signature FAILED - tampering detected\!"
-fi
-
-│ ❌ Signature FAILED - tampering detected!
-```
-
-> :warning: **Temporal Limitation**: Even if the date check were verified, the proof is a snapshot, not an ongoing guarantee. It proves Amira controlled the key when she signed, not that she controls it now or tomorrow. Keys can be compromised. Ben will need to check external sources (GitHub's current registry, recent signed commits) for stronger assurance. Tutorial 04 covers this verification.
-
-### Step 4: Build GitHub Account Payload
-
-You can now assemble a complete envelope with all of the information about Amira's GitHub account, including the `$PROOF` that you earlier created and another pair of self-claimed timestamps. If any of this use of envelope subjects and assertions is unfamiliar, you should consult the [Gordian Envelope concepts document](../concepts/gordian-envelope.md).
 
 ```
 GITHUB_ACCOUNT=$(envelope subject type string "$XID_NAME")
