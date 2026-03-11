@@ -48,6 +48,7 @@ That last combination might describe three people in the world. If an adversary 
 > :warning: **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
 
 ## The Possibilities of Protecting Sensitive Data
+### Omission, Elision, and Encryption
 
 Amira has three options for handling the correlation risk of her crypto audit experience.
 
@@ -77,13 +78,13 @@ envelope --version
 ```
 Then, reload your XID, primarily to have easy access to your XID ID:
 ```
-XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID=$(cat envelopes/BRadvoc8-xid-private-2-01.envelope)
 XID_ID=$(envelope xid id $XID)
 ```
 You should then reload your Attestation keys from the last tutorial:
 ```
-ATTESTATION_PRVKEYS=$(cat envelopes/attestation-private-03.ur)
-ATTESTATION_PUBKEYS=$(cat envelopes/attestation-public-03.ur)
+ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
+ATTESTATION_PUBKEYS=$(cat envelopes/key-attestation-public-2-01.ur)
 ```
 If you instead need to create new ones, see [§2.2](02_1_Creating_Self_Attestations.md#step-1-create-an-attestation-key) for how to do so, then register your keys in your XID.
 
@@ -173,6 +174,14 @@ which is the cryptographic commitment. Since (probabalistically) each
 recorded value only leads to one hash, when you reveal the original
 value and it hashes correctly, your commitment has been fulfilled.
 
+### Step 4: Store Your Work
+
+Again, we're going to store copies of our work for future reference.
+```
+echo $AUDIT_SIGNED > envelopes/claim-2-02.envelope
+echo $AUDIT_ELIDED > envelopes/claim-elided-2-02.envelope
+```
+
 ## Part II: Revealing a Commitment
 
 Amira set up her audit commitment when she created her BRadvoc8
@@ -181,7 +190,7 @@ commitments is that they sit around, gaining trust as they do, and
 tend to be revealed later. That's the case here.  Six months later,
 Amira has approached DevReviewer for a security collaboration.
 
-### Step 4: Highlight the Commitment
+### Step 5: Highlight the Commitment
 
 DevReviewer has seen Amir'as public attestation (about the Galaxy
 Project) but want to know about her security audit experience. Amira
@@ -193,7 +202,7 @@ uses its (more trustworthy) datestamping to verify it was commited to
 GitHub about six months ago, and it's one of just a few public
 commitments of that sort.
 
-### Step 5: Reveal the Unelided Claim
+### Step 6: Reveal the Unelided Claim
 
 Amira next sends DevReviewer the full attestation (`$AUDIT_SIGNED`)
 via a secure message system. DevReviewer now has both versions.
@@ -215,7 +224,7 @@ checking that a piece of data matches another piece of data that isn't
 entirely revealed. But the theory and the procedure are largely the
 same.
 
-### Step 6: Test the Commitment
+### Step 7: Test the Commitment
 
 DevReviewer computes the digest of what they received:
 
@@ -246,7 +255,7 @@ The digests match. This proves the full attestation Amira revealed is the same d
 
 > :book: **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
 
-### Step 7: Verify the Signature
+### Step 8: Verify the Signature
 
 Finally, DevReviewer uses Amira's public attestation key, previously extracted from her public XID, to verify that the attesetation was indeed made by Amira. (See [§2.1](02_1_Creating_Self_Attestations.md#part-iv-ben-again-verifies) for a more complex methodology to check a signature against every public key in a XID.)
 ```
@@ -257,7 +266,7 @@ envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED"
 
 The signature is valid.
 
-### Step 8: Assess Your Level of Trust
+### Step 9: Assess Your Level of Trust
 
 Combining the valid signature with the verified commitment,
 DevReviewer has three pieces of information:
@@ -266,7 +275,7 @@ DevReviewer has three pieces of information:
 |---------------------|----------------------|
 | ✅ Claim matches a public commitment | ❓ Claim is actually true |
 | ✅ Claim was published at a previous date | ❓ What other hidden claims say |
-| ✅ Claim was not modified | ❓ Whether claim varies a different hidden claim |
+| ✅ Claim was not modified | ❓ Whether claim is contradicted by a different hidden claim |
 | ✅ BRadvoc8 signed the claim | ❓ Who BRadvoc8 is |
 
 DevReviewer can now read the claim and factor it into their trust decision.
@@ -295,7 +304,7 @@ The elided version is just a digest placeholder: it proves something with its di
 
 This doesn't have to be the end of the life cycle of a commitment.
 
-### Step 9: Supersede a Commitment
+### Step 10: Supersede a Commitment
 
 If Amira's skills evolve, of if she joins other projects, she can
 create new commitments, just as she managed the
@@ -316,8 +325,6 @@ This tutorial introduced the problem of correlation risk: how claims compound to
 ## What's Next
 
 The commit-reveal pattern works for proving timing and existence. But what about claims so sensitive that even a hint of their existence is risky? That's the topic [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md).
-
---
 
 ## Appendix I: Key Terminology
 

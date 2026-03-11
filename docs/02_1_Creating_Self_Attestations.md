@@ -3,9 +3,9 @@
 This section demonstrates how to build credibility through specific,
 factual claims that invite verification rather than demand belief.
 
-> **Related Concepts.** After completing this tutorial, explore
-[Progressive Trust](../concepts/progressive-trust.md) and
-[Self-Attestation](../concepts/self-attestation.md) to deepen your
+> **🧠 Related Concepts.** After completing this tutorial, explore
+[Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) and
+[Self-Attestation](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/attestation-endorsement-model.md) to deepen your
 understanding.
 
 ## Objectives for this Section
@@ -36,7 +36,7 @@ herself (or rather, about her identity) that reveal her
 capabilities. The problem is that a vague claim like "Security expert
 with 8 years experience" is worthless. Anyone can type that.
 
-> :book: **What is a self attestation?**: As the name suggestion, a
+> 📖 **What is a self attestation?**: As the name suggestion, a
 self attestation is a claim that you make about yourself. It's
 contrasted with an *endorsement*, where someone else vouches for
 you. Self-attestations are starting points; endorsements carry more
@@ -62,12 +62,12 @@ attestations ARE your credentials.  When you are making
 self-attestations, it is therefore best to both create attestations
 that are verifiable and then provide the methodology for verifying.
 
-["Fair witness claims"](../concepts/fair-witness.md) are a
+["Fair witness claims"](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/fair-witness.md) are a
 particularly strong type of attestation. The person making the
 attestation does their best to report without interpretation,
 assumption, or bias (as best they can!).
 
-> :book: **What is the Fair Witness Methodology?**: The Fair Witness
+> 📖 **What is the Fair Witness Methodology?**: The Fair Witness
 methodology is derived from Robert E. Heinlein's _Stranger in a
 Strange Land_ (1961). A Fair Witness makes a claim of what they
 directly observed, avoiding interpretation, assumption, or (as much as
@@ -81,7 +81,7 @@ contribution is a simple statement of fact, as long as you don't adorn
 it by saying something like, "I made a _crucial_ contribution to the
 Galaxy Project."
 
-> :fire: **What is the Power of Fair Witness Attestations?** Fair
+> 🔥 **What is the Power of Fair Witness Attestations?** Fair
 witness attestations do their best to report without bias. This makes
 them more verifiable, and verifiability is what's important in the
 world of pseudonymous claims.
@@ -107,12 +107,12 @@ provenance --version
 ```
 
 If not installed, see
-[§1.1](01_1_Your_First_XID.md#step-0-setting-up-your-workspace) for
+[§1.2](01_2_Your_First_XID.md#step-0-setting-up-your-workspace) for
 installation instructions.
 
-You'll also want to reload your XID. The following assumes use of the [`envelopes`](envelopes) directory that was described in the last tutorial.
+You'll also want to reload your XID. The following assumes use of the [`envelopes`](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes) directory that was described in the last tutorial.
 ```
-XID=$(cat envelopes/BRadvoc8-xid-private-02.envelope)
+XID=$(cat envelopes/BRadvoc8-xid-private-1-03.envelope)
 XID_ID=$(envelope xid id $XID)
 ```
 
@@ -132,7 +132,7 @@ ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
 ```
 
-> :book: **What are Attestation Keys?**: Attestation keys are
+> 📖 **What are Attestation Keys?**: Attestation keys are
   dedicated signing key for making attestations.
 
 ### Step 2: Register Attestation Key in XID
@@ -157,7 +157,7 @@ The `envelope-cli` programs derives the public key from the private key automati
 
 1. `--allow sign` is a permission statement indicates this key can only sign, it cannot modify the XID itself. (That requires the inception key.)
 
-> :warning: **XID Functions Only!** If you're familiar with Gordian Envelope, you'll know that you can freely add assertions to an envelope. Though XID is built on envelope, it's intended to be a much more structured format, with all content always in carefully structured places such as `derferenceVia`, `key`, `provenance`, and other subjects that you'll meet in future tutorials. You should always expect to use `envelope xid` commands when working with the core XID structure (though you may place less structured content under certain key words, such as in the `edge` that we'll meet in the Tutorial 06).
+> ⚠️ **XID Functions Only!** If you're familiar with Gordian Envelope, you'll know that you can freely add assertions to an envelope. Though XID is built on envelope, it's intended to be a much more structured format, with all content always in carefully structured places such as `derferenceVia`, `key`, `provenance`, and other subjects that you'll meet in future tutorials. You should always expect to use `envelope xid` commands when working with the core XID structure (though you may place less structured content under certain key words, such as in the `edge` that we'll meet in the chapter 3).
 
 ### Step 3: Advance Your Provenance Mark
 
@@ -216,7 +216,7 @@ envelope format $UPDATED_XID
 | ]
 ```
 
-### Step 4: Export & Save Your XID
+### Step 4: Export & Store Your Work
 
 Afterward, you should follow the usual procedure to create a public version of the XID and store it.
 ```
@@ -231,13 +231,13 @@ Amira would publish this updated XID at her `dereferenceVia` URL so Ben can fetc
 
 You'll store it alongside your previous iteration (with the genesis provenance mark):
 ```
-echo "$UPDATED_PUBLIC_XID" > envelopes/BRadvoc8-xid-public-03.envelope
-echo "$UPDATED_XID" > envelopes/BRadvoc8-xid-private-03.envelope
+echo "$UPDATED_PUBLIC_XID" > envelopes/BRadvoc8-xid-public-2-01.envelope
+echo "$UPDATED_XID" > envelopes/BRadvoc8-xid-private-2-01.envelope
 ```
 You should also store standalone copies of your new keys to make it easier to access them in the future:
 ```
-echo $ATTESTATION_PRVKEYS > envelopes/attestation-private-03.ur
-echo $ATTESTATION_PUBKEYS > envelopes/attestation-public-03.ur
+echo $ATTESTATION_PRVKEYS > envelopes/key-attestation-private-2-01.ur
+echo $ATTESTATION_PUBKEYS > envelopes/key-attestation-public-2-01.ur
 ``` 
 
 ### Step 5: Review Your Work
@@ -259,7 +259,7 @@ So far, Amira has two keys:
 
 | Key Type | Purpose | Verified Against | Added In |
 |----------|---------|------------------|----------|
-| 👤 XID inception key | Signs XID document updates | XID itself | §1.1 |
+| 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
 | 🔑 Attestation key | Signs attestations | XID key list | §2.1 |
 
 
@@ -268,7 +268,8 @@ So far, Amira has two keys:
 Here's a look at our two XID versions created to date:
 
 | XID Version | New Content | Created In |
-| seq 0 | 👤 Identity | §1.1+§1.2 |
+|-------------|-------------|------------|
+| seq 0 | 👤 Identity | §1.2+§1.3 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 
 ## Part II: Creating a Detached Attestation
@@ -280,7 +281,7 @@ With an attestation key in hand, and linked to Amira's XID, you're now ready to 
 
 This isn't a question of privacy: you can always choose to elide and encrypt attestations that you don't want to receive wide attention, even if they're in your XID. (In fact that's the topic of the next two tutorials.) It's instead a question of keeping the XID lean enough that someone can reasonably look over it without being lost in irrelevent details.
 
-> :book: **What is a Detached Attestation?**: When an attestation is detached, it appears as a signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
+> 📖 **What is a Detached Attestation?**: When an attestation is detached, it appears as a signed statement that exists as a separate envelope, referencing your XID but not embedded in your XIDDoc.
 
 In this case, a single PR is a pretty small detail, and not necessarily something that Amira will be talking about in a year or two when she (hopefully) has major design work on SisterSpaces to point to. So you'll create it as a detached attestation.
 
@@ -311,13 +312,13 @@ ATTESTATION=$(envelope assertion add pred-obj known 'verifiableAt' uri "https://
 ATTESTATION=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$ATTESTATION")
 envelope format "$ATTESTATION"
 
-"Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
-    'isA': 'attestation'
-    'date': "2025-10-18T19:27-10:00"
-    'source': XID(5f1c3d9e)
-    'target': XID(5f1c3d9e)
-    'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
-]
+| "Contributed mass spec visualization code to galaxyproject/galaxy (PR #12847, merged 2024)" [
+|     'isA': 'attestation'
+|     'date': "2025-10-18T19:27-10:00"
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e)
+|     'verifiableAt': URI(https://github.com/galaxyproject/galaxy/pull/12847)
+| ]
 ```
 
 Each assertion within the claim is a standardized known value that reveals a specific piece of metadata:
@@ -330,9 +331,9 @@ Each assertion within the claim is a standardized known value that reveals a spe
 | 4 | `'target'` | XID ID | Says who the attestation is about |
 | 5 | `"verifiableAt"` | URI | Points to evidence for independent verification |
 
-> :warning: **Dates are Unreliable!**  The date is actually another unverifiable claim: it could be set to whatever the attestation creator wants to. Nonetheless, it has use because a good faith creator will date claims correctly, making it see easy to which claims are newer in case of a superseding claim being issued.
+> ⚠️ **Dates are Unreliable!**  The date is actually another unverifiable claim: it could be set to whatever the attestation creator wants to. Nonetheless, it has use because a good faith creator will date claims correctly, making it see easy to which claims are newer in case of a superseding claim being issued.
   
-### Step 8: Sign the Attestation
+### Step 8: Sign the Attestation & Store It
 
 You're now ready to wrap the attestation and sign it with the private key that you created specifically for this purpose. The signature proves that the signer made this claim:
 
@@ -355,7 +356,16 @@ envelope format "$ATTESTATION_SIGNED"
 | ]
 ```
 
-The signature covers the entire attestation. If anyone modifies any part (the claim, the source, the target, the date, the verification location), the signature becomes invalid.
+The signature covers the entire attestation. If anyone modifies any
+part (the claim, the source, the target, the date, the verification
+location), the signature becomes invalid.
+
+Although it would be pretty easy to rebuild this attestation (as long
+as you have your attestation keys), we're going to store a copy of it:
+
+```
+echo $ATTESTATION_SIGNED > envelopes/claim-2-01.envelope
+```
 
 ## Part III: Verifying a New Claim
 
@@ -446,13 +456,13 @@ matters. Self attestations are starting points for building trust, not
 proof of competence. The `verifiableAt` field points to evidence that
 verifiers can check independently.
 
-### Step 12: Ben Checks the Claim
+### Step 12: Check the Claim
 
 Ben follows the `verifiableAt` URL to GitHub and verifies that PR #12847 exists, was merged, and adds mass spec visualization. He also sees that it was created by a GitHub account with the name of "BRadvoc8". This is all very suggestive and provides some verification for Amira's claim.
 
-However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. We'll get back to that in [Tutorial 06](06-creating-edges.md). For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.
+However, there is still a gap: Ben can't prove that BRadvoc8, the controller of the XID, is the same person as BRadvoc8, the owner of the GitHub account. If the XID could show proof of control of the GitHub again, that would almost entirely verify the claim. We'll get back to that in chapter 3. For now, Ben has a medium level of trust. If this claim were combined with other attestations and eventual peer endorsements, a picture of credibility could build over time.
 
-> :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
+> 🧠 **Learn More.** The [Progressive Trust](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/progressive-trust.md) concept doc explains how self-attestations combine with cross-verification and peer endorsements to build meaningful trust over time.
 
 ### Step 13: Assess Your Level of Trust
 
@@ -528,7 +538,7 @@ envelope format "$S_SIGNED_ATTESTATION" | head -12
 | ]
 ```
 
-> :book: **What is a Superseding Attestation?**: A superseding attestation is a new attestation with a `supersedes` assertion that points to a previous attestation's digest. The original remains valid, but the newer attestation reflects the current state.
+> 📖 **What is a Superseding Attestation?**: A superseding attestation is a new attestation with a `supersedes` assertion that points to a previous attestation's digest. The original remains valid, but the newer attestation reflects the current state.
 
 ### Step 15: Retract an Attestation
 
@@ -558,7 +568,7 @@ envelope format $RETRACTION
 
 Retractions are serious: they indicate an error in judgment. Use them sparingly. Most updates are supersessions (extending or refining), not retractions (correcting errors). Amira definteily won't be retracting anything at this point!
 
-> :book: **What is a Retracting Attestation?**: A superseding attestation is a Gordian Envelope that references a previous attestation and states both that it's been retracted and why.
+> 📖 **What is a Retracting Attestation?**: A superseding attestation is a Gordian Envelope that references a previous attestation and states both that it's been retracted and why.
 
 ## Summary: The World of Attestations
 
@@ -575,6 +585,22 @@ This tutorial talked a lot about claims, or attestations, including revealing ma
 This tutorial focused on a detached fair-witness self attestation. Embedded attestations and endorsements will follow starting in [Tutorial 06](06-creating-edges.md).
 
 Crucially, this tutorial also showed how to create a _validated attestation_: the Galaxy Project attestation isn't just a claim, it's a claim with a URL where anyone can check the actual code. But could it have been stronger? That's also a topic for the future.
+
+### Additional Files
+
+**Envelopes:** The
+[envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
+directory contains [XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-2-01.envelope), [attestation keys](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/key-attestation-private-2-01.ur) and [main claim](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/claim-2-01.envelope) made in this section.
+
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[02_1_Creating_Self_Attestations-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/02_1_Creating_Self_Attestations-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/02_1_Creating_Self_Attestations-SCRIPT.sh` test it.
 
 ### Exercises
 
@@ -600,8 +626,6 @@ BRadvoc8 is now an identity with an initial claim about skills, but that's opene
 ### Example Script
 
 A complete working script implementing this tutorial is available at `../tests/03-creating-self-attestations.sh`.
-
---
 
 ## Appendix I: Key Terminology
 
