@@ -69,62 +69,49 @@ can be found.
 
 | Section | Command | Predicate | Description |
 |---------|---------|-----------|-------------|
-| | `attachment` | `attachment` | 📂 Third-party metadata |
-| | `delegate` | `delegate` | 👌🏽 Permission delegation | 
-| §3.1-§3.3 | `edge` | `edge` | 🗣️  Attestations |
+| | `attachment` | `'attachment'` | 📂 Third-party metadata |
+| | `delegate` | `'delegate'` | 👌🏽 Permission delegation | 
+| §3.1-§3.3 | `edge` | `'edge'` | 🗣️  Attestations |
 | §1.2, §2.1 | `key` | `'key'`<br>`'privateKey'` | 🔑 Key pairs |
 | §1.3 | `method`<br>`resolution` | `'dereferencevia'` | 🧶 Resolution method |
-| | `service` | `service` | ☁️  Service delegation |
+| | `service` | `'service'` | ☁️  Service delegation |
 | §1.2, §2.1 | `provenance` | `'provenance'` | ⛓️  Provenance mark |
 
 Edges will be the topic of this chapter.
 
-## Part I: Amira Adds Her GitHub Account
+## Part I: Setting Up a GitHub Account
 
-To link Amira's XID with her GitHub account, you will generate an SSH signing key, create a proof that you control it, bundle everything into a GitHub account envelope, link it as a service, and publish the updated XID with an updated provenance mark. When you're done, your XID will contain verifiable claims that Ben can check against external sources.
+The first step is one that Amira did a while ago: setting up her
+BRadvoc8 GitHub account. She created a signing key for it, uploaded
+it, and has since been using that to sign commits, including the
+Galaxy Project commit that she references in her claim from
+[§2.1](02_1_Creating_Self_Attestations.md).
+
+Here's a review of how all that was done.
 
 ### Step 0: Verify Dependencies
 
-Ensure you have the required tools:
-
+As usual, check your `envelope-cli` version:
 ```
 envelope --version
-provenance --version
 
-│ bc-envelope-cli 0.33.0
-│ provenance-mark-cli 0.6.0
+│ bc-envelope-cli 0.34.1
 ```
 
-If either tool is not installed, see [Tutorial 01 Step 0](01-your-first-xid.md#step-0-setting-up-your-workspace) for installation instructions.
-
-> :warning: **Important: Your Output Will Differ**
->
-> Your output will continue to differ, as discussed in Tutorial 01, because these examples use the **real published BRadvoc8 XID** at `github.com/BRadvoc8/BRadvoc8`. New differences that you will see in this Tutorial include:
->
-> - Your timestamps and cryptographic digests will differ.
-> - Your SSH key fingerprints will be unique.
-
-### Step 1: Load Your XID
-
-Load your XID from Tutorial 02:
-
+Then, reload your XID.
 ```
-XID_NAME="BRadvoc8"
-PASSWORD="your-password-from-previous-tutorials"
-
-# Load your XID (adjust path as needed)
-XID=$(cat xid-*/BRadvoc8-xid.envelope)
-
-echo "✅ Loaded XID: $XID_NAME"
-envelope xid id "$XID"
-
-│ ✅ Loaded XID: BRadvoc8
-│ ur:xid/hdcxltkttdhsjztodsfygmfzdmvajocftohtrltabzbazmkbsalnhfhywfneaohycfynbejokkda
+XID=$(cat envelopes/BRadvoc8-xid-private-2-01.envelope)
+XID_ID=$(envelope xid id $XID)
 ```
 
-### Step 2: Generate SSH Signing Key
+### Step 1: Generate SSH Signing Key
 
-Amira needs an SSH keys specifically for signing Git commits, which is different from her SSH authentication keys and maintained seperately by GitHub. She can generate them with `envelope`, requesting keys of the type `--signing ssh-ed25519`, which is the preferred type for GitHub.
+Amira needed SSH keys specifically for signing Git commits. These are
+different from her SSH authentication keys and maintained seperately
+by GitHub. Since she knew she'd eventually want to use them in
+conjunction with a XID, she generate them with `envelope`, requesting
+keys of the type `--signing ssh-ed25519`, which is the preferred type
+for GitHub.
 
 ```
 SSH_PRVKEYS=$(envelope generate prvkeys --signing ssh-ed25519)
