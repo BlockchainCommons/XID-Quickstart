@@ -83,7 +83,7 @@ envelope --version
 │ bc-envelope-cli 0.34.1
 ```
 
-Then, reload your XID and out Attestation keys:
+Then, reload your XID and your Attestation keys:
 ```
 XID=$(cat envelopes/BRadvoc8-xid-private-2-01.envelope)
 XID_ID=$(envelope xid id $XID)
