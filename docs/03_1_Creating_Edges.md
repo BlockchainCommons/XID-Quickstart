@@ -500,6 +500,16 @@ echo "$PUBLIC_XID_WITH_EDGE" > envelopes/BRadvoc8-xid-public-3-01.envelope
 echo "$XID_WITH_EDGE" > envelopes/BRadvoc8-xid-private-3-01.envelope
 ```
 
+#### XID Version Comparison
+
+You've now created a third XID version. You take a look at the provenance marks again in the next section, but here's an overview of what each versionc ontains
+
+| XID Version | New Content | Created In |
+|-------------|-------------|------------|
+| seq 0 | 👤 Identity | §1.2+§1.3 |
+| seq 1 | 🔑 Attestation Key | §2.1 |
+| seq 2 | 🗣️ GitHub Edge | §3.1 |
+=
 ## Summary: The World of Edges
 
 On the surface, the lesson of this tutorial was simple: you can create
