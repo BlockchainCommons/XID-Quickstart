@@ -260,7 +260,7 @@ So far, Amira has two keys:
 | Key Type | Purpose | Verified Against | Added In |
 |----------|---------|------------------|----------|
 | 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
-| 🔑 Attestation key | Signs attestations | XID key list | §2.1 |
+| 🗣️ Attestation key | Signs attestations | XID key list | §2.1 |
 
 
 #### XID Version Comparison
