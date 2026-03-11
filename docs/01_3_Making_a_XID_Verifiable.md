@@ -146,8 +146,7 @@ commands as part of the creation for Amira's updated XID:
 4. `--sign` to sign the new document.
 
 Note that you didn't have to repeat commands like `--nickname`. That's
-because the whole previous XID was read in. You just had to redo the
-encryption and signing at the end.
+because the whole previous XID was read in. (You also could have excluded the decryption and the re-encryption, as they're only entirely necessary when you're adjusting the keys or the generator, but we included everything in this example so that they'd be clear in later examples where they are required.)
 
 > 📖 **What is an Edition?** An edition is a new version of a XID
 that contains new content (or has removed old content). It will have a
