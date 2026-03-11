@@ -27,7 +27,7 @@ Following Chapter 1, Ben has a verified copy of BRadvoc8's XID. But
 it's just a collection of keys attached to a nickname. Can BRadvoc8
 write good code, understand security, and deliver quality work? These
 are the questions that Ben needs answered before he decides to bring
-BRadvoc8 into the SisterSpace project.
+BRadvoc8 into the SisterSpaces project.
 
 To reveal more about her skill set, Amira must create attestations
 about them. Since Amira is bootstrapping the BRadvoc8 identity on her
@@ -260,7 +260,7 @@ So far, Amira has two keys:
 | Key Type | Purpose | Verified Against | Added In |
 |----------|---------|------------------|----------|
 | 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
-| 🔑 Attestation key | Signs attestations | XID key list | §2.1 |
+| 🗣️ Attestation key | Signs attestations | XID key list | §2.1 |
 
 
 #### XID Version Comparison

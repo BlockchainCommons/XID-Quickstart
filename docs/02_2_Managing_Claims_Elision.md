@@ -24,6 +24,8 @@ Supporting objectives include the ability to:
 
 ## Amira's Story: Every Claim Narrows the Field
 
+Based on the revelation of Amira's work for the Galaxy Project, Ben feels good enough about BRadvoc8 that he puts her in contact with his volunteer security programmer, DevReviewer. However, DevReviewer wants more than just that single PR before putting Amira to work: can BRadvoc8 show that they have security experience?
+
 Amira did cryptographic audit work for a fintech startup in 2023-2024. She reviewed authentication implementations, found vulnerabilities, and helped to fix them. It's valuable experience that would strengthen her credibility for security work. But "crypto auditor" is a rare skill. How many people worldwide have done professional cryptographic audits? Maybe a few thousand. Combine that with other public claims, which might include that she's a Galaxy Project contributor, is privacy-focused, and speaks Portuguese, and the intersection might describe only a handful of people.
 
 This is correlation risk. Each claim by itself might be safe. Combined, they create a fingerprint.
@@ -185,15 +187,14 @@ echo $AUDIT_ELIDED > envelopes/claim-elided-2-02.envelope
 ## Part II: Revealing a Commitment
 
 Amira set up her audit commitment when she created her BRadvoc8
-identity, so that she could work with Ben. But the whole point of
+identity. But the whole point of
 commitments is that they sit around, gaining trust as they do, and
-tend to be revealed later. That's the case here.  Six months later,
-Amira has approached DevReviewer for a security collaboration.
+tend to be revealed later. That's the case here. Now, a bit after
+creating the BRadvoc8 identity, Amira is talking to DevReviewer about doing work for Ben on SisterSpaces.
 
 ### Step 5: Highlight the Commitment
 
-DevReviewer has seen Amir'as public attestation (about the Galaxy
-Project) but want to know about her security audit experience. Amira
+Ben has forward Amira's public attestations to DevReviewer, and they've checked their freshness and verified the Galaxy PR, just like Ben did. But now, DevReviewer needs additional credentials before setting Amira lose on security work for the project. Amira
 mentions that she has relevant experience but couldn't share details
 publicly. She points to the commitment.
 

@@ -20,26 +20,24 @@ After working through this section, a developer will be able to:
 
 Supporting objectives include the ability to:
 
-- Undestand the difference between elision and encryption.
+- Understand the difference between elision and encryption.
 - Know when encryption is the right choice over commitment.
 
 ## Amira's Story: Some Secrets Can't Even Be Hinted At
 
-Amira designed the authentication system for CivilTrust, a human
-rights documentation platform. This is exactly the kind of experience
+DevReviewer now has two credentials for BRadvoc8: a specific PR for the Galaxy Project and more general information about audit experience. The last speaks to Amira's security experience, but DevReviewer wants something more. Amira can provide that: she designed the authentication system for CivilTrust, a human
+rights documentation platform. It's exactly the kind of experience
 that would prove her security credentials sufficiently for
 DevReviewer. But there's a problem.
 
 CivilTrust maintains a contributor list. If anyone connects BRadvoc8
-to CivilTrust contributions, they can look up the legal names of
-contributors. In certain jurisdictions, being identified as having
-worked on human rights technology could endanger Amira.
+to CivilTrust contributions, they could link the BRadvoc8 identity to Amira's real name! That could endanger Amira and her family back home.
 
 The commit-reveal pattern from [§2.2](02_2_Managing_Claims_Elision.md)
 won't work here. Even an elided commitment is a publication: it proves
 she has *some* sensitive security credential. An adversary monitoring
 her profile might investigate what that commitment hides. For
-CivilTrust, she needs zero public trace.
+CivilTrust, Amira needs zero public trace.
 
 The solution is encrypted sharing: encrypt the attestation so only
 DevReviewer can read it. No public commitment, no hint of existence,
@@ -85,7 +83,7 @@ envelope --version
 │ bc-envelope-cli 0.34.1
 ```
 
-Then, reload your XID and out Attestation keys:
+Then, reload your XID and your Attestation keys:
 ```
 XID=$(cat envelopes/BRadvoc8-xid-private-2-01.envelope)
 XID_ID=$(envelope xid id $XID)
@@ -304,8 +302,7 @@ between BRadvoc8 and DevReviewer (because BRadvoc8 says they revealed
 sensitive information), the actual trust level of the data may be
 lower, because it wasn't something that BRadvoc8 committed to in
 advance. The verification level for the claim also remains
-intermediate: DevReviewer can look up the project, just like Ben could
-look up that Galaxy PR, but there isn't (yet) a specific link to the
+intermediate: DevReviewer can look up the project, just like they looked up that Galaxy PR, but there isn't (yet) a specific link to the
 BRadvoc8 account.
 
 That problem has been lingering, and it'll be the reason for Amira to
