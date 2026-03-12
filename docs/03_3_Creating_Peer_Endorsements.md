@@ -763,7 +763,7 @@ Her reputation is **portable** (follows her XID), **verifiable**
 directory contains the plethora of information created for this
 sections, mostly importantly included BRadvoc8's newest [private
 XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-3-01.envelope)
-and [ublic
+and [public
 XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-3-01.envelope).
 
 **Scripts:** Scripts demonstrating this section are forthcoming.
