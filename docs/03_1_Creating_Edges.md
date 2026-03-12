@@ -509,7 +509,7 @@ You've now created a third XID version. You take a look at the provenance marks 
 | seq 0 | 👤 Identity | §1.2+§1.3 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 | seq 2 | 🗣️ GitHub Edge | §3.1 |
-=
+
 ## Summary: The World of Edges
 
 On the surface, the lesson of this tutorial was simple: you can create
