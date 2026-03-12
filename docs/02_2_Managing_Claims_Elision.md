@@ -24,7 +24,7 @@ Supporting objectives include the ability to:
 
 ## Amira's Story: Every Claim Narrows the Field
 
-Based on the revelation of Amira's work for the Galaxy Project, Ben feels good enough about BRadvoc8 that he puts her in contact with his volunteer security programmer, DevReviewer. However, DevReviewer wants more than just that single PR before putting Amira to work: can BRadvoc8 show that they have security experience?
+Based on the revelation of Amira's work for the Galaxy Project, Ben feels good enough about BRadvoc8 that he puts her in contact with his Head Security Programmer, DevReviewer. However, DevReviewer wants more than just that single PR before putting Amira to work: can BRadvoc8 show that they have security experience?
 
 Amira did cryptographic audit work for a fintech startup in 2023-2024. She reviewed authentication implementations, found vulnerabilities, and helped to fix them. It's valuable experience that would strengthen her credibility for security work. But "crypto auditor" is a rare skill. How many people worldwide have done professional cryptographic audits? Maybe a few thousand. Combine that with other public claims, which might include that she's a Galaxy Project contributor, is privacy-focused, and speaks Portuguese, and the intersection might describe only a handful of people.
 

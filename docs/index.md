@@ -11,6 +11,12 @@
 * [§2.2: Managing Sensitive Claims with Elision](02_2_Managing_Claims_Elision.md)
 * [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md)
 
+[**Chapter Three: Working with Edges**](03_0_Edges.md)
+
+* [§3.1: Creating Edges](03_1_Creating_Edges.md)
+* [§3.2: Supporting Cross Verification] (**pending**)
+* [§3.3: Creatin Peer Endorsements](03_3_Creating_Peer_Endorsements.md)
+
 ---
 
 _This course is built from [GitHub](https://github.com/BlockchainCommons/XID-Quickstart/tree/shannona-editorial/docs). You can read there if you prefer._
