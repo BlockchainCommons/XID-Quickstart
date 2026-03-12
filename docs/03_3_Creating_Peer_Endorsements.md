@@ -196,7 +196,7 @@ transparency, even strong endorsements lose credibility. A stranger's
 "great work!" means nothing; a code reviewer's "I merged 8 of her PRs
 and they were all solid" means everything.
 
-## Step 3: Publish Endorsement
+### Step 3: Publish Endorsement
 
 Now Charlene can either publicly release her endorsement or pass it on
 to Amira to do with as she pleases.
@@ -207,7 +207,7 @@ Discovery Challenge, as there's not yet any methodology for finding
 XIDs (but having them reliable listed as `source` and `target` in
 edges and other endorsements is a great start).
 
-## Step 4: Store Charlene's Info
+### Step 4: Store Charlene's Info
 
 ```
 echo "$CHARLENE_PRVKEYS" > envelopes/key-charlene-private-3-03.envelope
@@ -385,7 +385,7 @@ identity ecosystem. Though you can't control what other people say
 about the identity, you control what is directly associated with the
 identity itself: you get to see it all and you get to control it.
 
-## Step 11: Store DevReviewer's Info
+### Step 11: Store DevReviewer's Info
 
 You should also store DevReviewer's info:
 ```
@@ -405,7 +405,7 @@ Once Amira has received DevReviewer's endorsement, they can decide
 whether to add it to their XID, maintain it as a detached endorsement
 that they give out separately, or drop it entirely.
 
-## Step 12: Embed DevReviewer's Peer Endorsement
+### Step 12: Embed DevReviewer's Peer Endorsement
 
 If DevReviewer had not given Amira a peer endorsement in the precise
 format for an edge, it could not be attached as an edge. But because
