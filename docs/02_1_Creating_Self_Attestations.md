@@ -86,15 +86,7 @@ witness attestations do their best to report without bias. This makes
 them more verifiable, and verifiability is what's important in the
 world of pseudonymous claims.
 
-## Part I: Adding an Attestation Key
-
-Amira contributed to Galaxy Project, an open source bioinformatics
-platform. Her pull request added mass spectrometry visualization
-features. This is the kind of specific, verifiable claim that builds
-real credibility. You're going to build an attestation about that
-claim, but first you need to create a secure way to make attestations.
-
-### Step 0: Verify Dependencies & Reload XID
+## Part 0: Verify Dependencies & Reload XID
 
 Before you get started, ensure you have the required tools installed:
 
@@ -115,6 +107,14 @@ You'll also want to reload your XID. The following assumes use of the [`envelope
 XID=$(cat envelopes/BRadvoc8-xid-private-1-03.envelope)
 XID_ID=$(envelope xid id $XID)
 ```
+
+## Part I: Adding an Attestation Key
+
+Amira contributed to Galaxy Project, an open source bioinformatics
+platform. Her pull request added mass spectrometry visualization
+features. This is the kind of specific, verifiable claim that builds
+real credibility. You're going to build an attestation about that
+claim, but first you need to create a secure way to make attestations.
 
 ### Step 1: Create an Attestation Key
 

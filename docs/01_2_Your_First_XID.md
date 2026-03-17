@@ -101,7 +101,7 @@ and endorsement history).
 true self-sovereignty, rich metadata support, holder-based elision,
 and ongoing key management.
 
-## Part I: Preparing to Work
+## Part 0: Preparing to Work
 
 Like all of the "Learning from ..." courses, "Learning XIDs from the
 Command Line" is intended for hands-on work. By experimenting with
@@ -146,7 +146,7 @@ envelope._This is expected._ Focus on understanding what each step
 accomplishes, not matching exact output. Additional differences at
 this level will appear in future tutorials.
 
-## Part II: Creating the XID
+## Part I: Creating the XID
 
 This first tutorial will take you through the basic steps to create a
 XID. It's deliberately simple. Subsequent tutorials, we'll explore
@@ -589,7 +589,7 @@ fi
 
 The digests are identical. You removed the private key, yet the hash didn't change. 
 
-## Part III: Verifying a XID
+## Part II: Verifying a XID
 
 One of the powers of a XID is that it can be verified in various ways
 (though that doesn't necessarily mean someone is who they say they
@@ -704,7 +704,7 @@ Amira creates information with her secrets, and only she can update
 that information. But after she distributes her public XID, anyone can
 check it.
 
-## Part IV: Storing Your Files
+## Part III: Storing Your Files
 
 This course will frequently store copies of files for future
 usage. But, we're not quite there yet because we'll be finishing up

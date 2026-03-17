@@ -33,12 +33,7 @@ This isn't about discovery (how Ben finds Amira's XID in the first
 place). It's about freshness (how Ben verifies he has the current
 version).
 
-## Part I: Publishing a XID
-
-You'll add a publication URL to Amira's XID and then publish a public
-view of that.
-
-### Step 0: Verify Dependencies
+## Part 0: Verify Dependencies
 
 Before you start, ensure that you have the required CLI tools from Tutorial 01:
 
@@ -53,6 +48,11 @@ provenance --version
 If either tool is not installed, see [Step 0 of
 §1.2](01_2_Your_First_XID.md#step-0-setting-up-your-workspace) for
 installation instructions.
+
+## Part I: Publishing a XID
+
+You'll add a publication URL to Amira's XID and then publish a public
+view of that.
 
 ### Step 1: Load Your XID
 

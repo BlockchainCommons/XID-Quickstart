@@ -69,12 +69,7 @@ sensitive. Amira's crypto audit experience could be committed publicly
 hinting she has human rights tech credentials could draw unwanted
 attention.
 
-## Part I: Setting Up for Encryption
-
-Setting up requires you making sure you have your variables in order
-and DevReviewer sharing a public key.
-
-### Step 0: Verify Dependencies
+## Part 0: Verify Dependencies
 
 As usual, check your `envelope-cli` version:
 ```
@@ -90,6 +85,11 @@ XID_ID=$(envelope xid id $XID)
 ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
 ATTESTATION_PUBKEYS=$(cat envelopes/key-attestation-public-2-01.ur)
 ```
+
+## Part I: Setting Up for Encryption
+
+Setting up requires you making sure you have your variables in order
+and DevReviewer sharing a public key.
 
 ### Step 1: Create Keys for Receiving
 

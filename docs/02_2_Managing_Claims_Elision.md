@@ -66,11 +66,10 @@ Amira has three options for handling the correlation risk of her crypto audit ex
 
 Amira decides her crypto audit experience fits the middle category. She might need to prove this capability to future collaborators, but she doesn't want to publish it broadly. She'll commit an elided version publicly and reveal the full attestation selectively.
 
-> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](../concepts/selective-disclosure.md), which is the ability to reveal different information to different parties from the same underlying data structure.
+> :brain: **Learn more**: These three approaches are part of the broader concept of [Selective Disclosure](../concepts/selective-disclosure.md), which is the ability to reveal different information to different parties from the same underlying data structure
+.
 
-## Part I: Creating a Commitment
-
-### Step 0: Verify Dependencies & Reload XID
+## Part 0: Verify Dependencies & Reload XID
 
 As usual, check your `envelope-cli` version:
 ```
@@ -89,6 +88,12 @@ ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
 ATTESTATION_PUBKEYS=$(cat envelopes/key-attestation-public-2-01.ur)
 ```
 If you instead need to create new ones, see [§2.2](02_1_Creating_Self_Attestations.md#step-1-create-an-attestation-key) for how to do so, then register your keys in your XID.
+
+
+## Part I: Creating a Commitment
+
+Creating a commitment means creating an attestation (or really, any
+data) and then boiling it down to just a digest by hasing the data.
 
 ### Step 1: Create the Sensitive Attestation
 

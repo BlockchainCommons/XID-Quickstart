@@ -80,17 +80,7 @@ information can be found.
 
 Edges will be the topic of this chapter.
 
-## Part I: Setting Up a GitHub Account
-
-The first step is one that Amira did a while ago: setting up her
-BRadvoc8 GitHub account. She created a signing key for it, uploaded
-it, and has since been using that to sign commits, including the
-Galaxy Project commit that she references in her claim from
-[§2.1](02_1_Creating_Self_Attestations.md).
-
-Here's a review of how all that was done.
-
-### Step 0: Verify Dependencies
+## Part 0: Verify Dependencies
 
 As usual, check your `envelope-cli` version:
 ```
@@ -105,6 +95,16 @@ XID=$(cat envelopes/BRadvoc8-xid-private-2-01.envelope)
 XID_ID=$(envelope xid id $XID)
 PASSWORD="your-password-from-previous-tutorials"
 ```
+
+## Part I: Setting Up a GitHub Account
+
+The first step is one that Amira did a while ago: setting up her
+BRadvoc8 GitHub account. She created a signing key for it, uploaded
+it, and has since been using that to sign commits, including the
+Galaxy Project commit that she references in her claim from
+[§2.1](02_1_Creating_Self_Attestations.md).
+
+Here's a review of how all that was done.
 
 ### Step 1: Generate SSH Signing Key
 
