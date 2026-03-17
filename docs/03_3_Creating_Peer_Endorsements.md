@@ -217,8 +217,8 @@ echo "$CHARLENE_SIGNED_ENDORSEMENT" > envelopes/claim-charlene-3-03.envelope
 The introduction of edges in [§3.1: Creating
 Edges](03_1_Creating_Edges.md) offers the possibility of attaching
 endorsements directly to a XID as a link between the two participants
-in the endorsement. This might be appropriate for technical
-endorsements, which validate actual skills, which will go to the heart
+in the endorsement. Though this didn't make sense for Charlene's character endorsement, it might be appropriate for technical
+endorsements that validate actual skills, since they will go to the heart
 of the work that Amira hopes to do in the RISK network.
 
 Just as Part I was from Charlene's point of view, Part II is from
@@ -235,11 +235,11 @@ endorsement. DevReviewer agreed.
 This requires also creating DevReviewer's identity.
 
 You could generate DevReviewer's identity from scratch, but the
-following instead uses the keys aren't generated for DevReviewer in
+following instead uses the keys already generated for DevReviewer in
 §2.3. (This is done for simplicity of the secondary characters in
 these tutorials; in real-life, Amira might have indeed grabbed the
 pubkeys from DevReviewer's XID to encrypt the material in §2.3, but
-she might have alternatively have used keys that DevReviewer
+she might have alternatively used keys that DevReviewer
 specifically published that were intended only for encryption of
 content sent to them.)
 
@@ -278,14 +278,13 @@ TARGET_XID_ID=$XID_ID
 Now an endorsement can be created with the `$TARGET_XID_ID` as the
 subject and all the details of the attestation under that. The basics are simple:
 
-
 ```
 REVIEWER_TARGET=$(envelope subject type ur $TARGET_XID_ID)
 REVIEWER_TARGET=$(envelope assertion add pred-obj string "peerEndorsement" string "Writes secure, well-tested code with clear attention to privacy-preserving patterns" $REVIEWER_TARGET)
 REVIEWER_TARGET=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$REVIEWER_TARGET")
 ```
 
-But once more, adding context including the relationship basis can add considerably to the value of the endorsement:
+But once more, including context, such as the relationship basis, can add considerably to the value of the endorsement:
 ```
 REVIEWER_TARGET=$(envelope assertion add pred-obj string "endorsementContext" string "Verfied previous security experience, worked together on short project for SisterSpaces" "$REVIEWER_TARGET")
 REVIEWER_TARGET=$(envelope assertion add pred-obj string "endorsementScope" string "Security architecture, cryptographic implementation, privacy patterns" "$REVIEWER_TARGET")
@@ -294,16 +293,10 @@ REVIEWER_TARGET=$(envelope assertion add pred-obj string "relationshipBasis" str
 
 ### Step 8: Enhance Endorser Information
 
-Assertions can always be added to any part of an envelope. That means
-that DevReviewer can choose to add more information on who _they_
-are. This is a self-attestation (since it'll ultimately be signed only
-by DevReviewer), but it can add credibility to a peer endorsement.
-
-To do so, requires creating an envelope with the subject of
-DevReviewers XID ID (since it'll ultimately be substituted for the
-`source` of the endorsement):
+Assertions can always be added to any part of an envelope. For an edge, that mainly means adding assertions to the `target`, which further define the attestation or credential being defined. However, you can also add content to the `source` about who the origin of the claim is. This is a self-attestation (since it'll ultimately be signed only
+by DevReviewer), but it can nonetheless add credibility to a peer endorsement (especially if it's verifiable).
 ```
-REVIEWER_SOURCE=$(envelope subject type ur $REVIEWER_XID_ID)
+REVIEWER_SOURCE=$(envelope subject type ur $SOURCE_XID_ID)
 ```
 They then can add whatever details they want:
 ```
@@ -312,7 +305,7 @@ REVIEWER_SOURCE=$(envelope assertion add pred-obj string "schema:employeeRole" s
 ```
 
 The [`schema`
-ontologies](https://github.com/BlockchainCommons/Research/blob/master/known-value-assignments/markdown/10000_schema_registry.md)
+ontologies](https://github.com/BlockchainCommons/Research/blob/master/known-value-assignments/markdown/10000_schema_registry.md) that DevReviewer uses to define their role
 are very rich and support deeply recursive descriptions, but DevReviewer keeps it simple.
 
 ### Step 9: Create Your Edge
@@ -322,7 +315,7 @@ With all of the puzzle pieces in place (an `$ISA`, an envelope for the
 create an edge. The only other thing needed is a subject which must be
 unique. Obviously, DevReviewer doesn't know what BRadvoc8 will have in
 their XID, but by adding an Apparently Random Identifier (ARID) on to
-a description, they can produce something that SHOULD be unique
+a description, they can produce something that _should_ be unique
 ```
 REVIEWER_ARID=$(envelope generate arid -x | cut -c 1-16)
 REVIEWER_SUBJECT=peer-endorsement-from-devreviewer-$REVIEWER_ARID
@@ -379,7 +372,7 @@ as you present it.
 identity means that you control everything within a membrane in your
 identity ecosystem. Though you can't control what other people say
 about the identity, you control what is directly associated with the
-identity itself: you get to see it all and you get to control it.
+identity itself: you get to see it all, and you get to control it.
 
 ### Step 11: Store DevReviewer's Info
 
@@ -391,7 +384,7 @@ echo "$REVIEWER_XID" > envelopes/DevReviewer-xid-private-3-03.envelope
 echo "$REVIEWER_SIGNED_EDGE" > envelopes/claim-devreviewer-3-03.envelope
 ```
 
-(We did make copies of the keys previously used in §2.3! They're just
+(We did make another copy of the keys created in §2.3! They're just
 the same, but we figure having them together will make verification of
 the endorsement easier.)
 
