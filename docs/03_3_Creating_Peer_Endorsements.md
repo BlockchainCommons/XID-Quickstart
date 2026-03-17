@@ -71,7 +71,7 @@ would this endorsement look foolish? If yes, Charlene should narrow the scope.
 
 As a result, Charlene's endorsement will be limited to character and values: that's what she can honestly attest to.
 
-## Step 0: Verify Dependencies
+## Part 0: Verify Dependencies
 
 Before you get started, you should (as usual) check your `envelope-cli` version:
 ```
