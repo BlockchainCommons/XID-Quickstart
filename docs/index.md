@@ -16,6 +16,8 @@
 * [§3.1: Creating Edges](03_1_Creating_Edges.md)
 * [§3.2: Supporting Cross Verification] (**pending**)
 * [§3.3: Creating Peer Endorsements](03_3_Creating_Peer_Endorsements.md)
+* [§3.4: Creating Binding Agreements] (**pending**)
+* [§3.5: Creating Views and Versions] (**pending**)
 
 ---
 
