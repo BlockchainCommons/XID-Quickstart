@@ -317,6 +317,26 @@ it. Encryption serves a very different use case, when you don't want
 to publicly commit to a fact, but you do want to selectively reveal
 it.
 
+### Additional Files
+
+**Envelopes:** The
+[envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
+directory contains the [new
+claims](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/envelopes/envelopes/claim-2-03.envelope)
+made in this seciton, plus the [encrypted
+version](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/claim-encrypted-2-03.envelope),
+as well as the keys for DevReviewer.
+
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[02_3_Managing_Claims_Encryption-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/02_3_Managing_Claims_Encryption-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/02_3_Managing_Claims_Encryption-SCRIPT.sh` to test it.
+
 ## Exercises
 
 1. Create a sensitive attestation and encrypt it for a fictional recipient

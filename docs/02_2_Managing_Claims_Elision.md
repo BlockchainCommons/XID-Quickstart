@@ -337,7 +337,28 @@ retired.
 
 ## Summary: From Correlation to Elision
 
-This tutorial introduced the problem of correlation risk: how claims compound to narrow anonymity sets. The three disclosure approaches (omit, commit, encrypt) give you options for different situations. Commit means creating a sensitive attestation and committed to it publicly without revealing the content. This inclusion proof pattern lets Amira prove she had this credential all along when she chooses to reveal it: she can't be accused of fabricating it after the fact.
+This tutorial introduced the problem of correlation risk: how claims compound to narrow anonymity sets. The three disclosure approaches (omit, commit, encrypt) give you options for different situations. Commit means creating a sensitive attestation and committed to it publicly without revealing the content. This inclusion proof pattern lets Amira prove she had this credential all alon
+g when she chooses to reveal it: she can't be accused of fabricating it after the fact.
+
+### Additional Files
+
+**Envelopes:** The
+[envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
+directory contains the [new
+claims](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/envelopes/claim-2-02.envelope)
+made in this seciton, plus the [elided
+view](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/claim-elided-2-02.envelope)
+
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[02_2_Managing_Claims_Elision-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/02_2_Managing_Claims_Elision-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/02_2_Managing_Claims_Elision-SCRIPT.sh` to test it.
+
 
 ### Exercises
 
