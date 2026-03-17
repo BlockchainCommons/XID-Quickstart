@@ -52,27 +52,8 @@ echo ""
 echo "Step 3: Create a Public View of Your XID with Elision"
 echo "====================================================="
 
-# Unwrap the signed XID
-UNWRAPPED_XID=$(envelope extract wrapped "$XID")
-echo "✅ Unwrapped signed XID"
 
-# Find the key assertion
-KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED_XID")
-KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
-
-# Find the private key assertion within the key object
-PRIVATE_KEY_ASSERTION=$(envelope assertion find predicate known privateKey "$KEY_OBJECT")
-PRIVATE_KEY_DIGEST=$(envelope digest "$PRIVATE_KEY_ASSERTION")
-
-if [ $PRIVATE_KEY_DIGEST ]
-then
-  echo "✅ Found private key digest"
-else
-  echo "❌ Error in private key retrieval"
-fi
-
-# Elide the private key
-PUBLIC_XID=$(envelope elide removing "$PRIVATE_KEY_DIGEST" "$XID")
+PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID")
 echo "✅ Created public view by eliding private key"
 echo ""
 

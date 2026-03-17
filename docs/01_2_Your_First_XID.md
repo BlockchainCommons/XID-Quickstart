@@ -378,105 +378,60 @@ styles of quotes:
 ### Step 3: Create a Public View of Your XID with Elision
 
 Amira's XID is not ready for publication yet. You're going to add some
-more information in [§1.2](01_2_Making_a_XID_Verifiable.md) before
+more information in [§1.3](01_3_Making_a_XID_Verifiable.md) before
 sending it to Amira's first contact, Ben. But to prepare yourself for
 that, you're going to go over the crical step that _would_ be required
 to publish a XID: creating a public view.
 
-When you create a shareable public view of a XID, you are engaging in
-[data minimization](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md). You're creating
-a new way to look at the current edition of your XID that only
-includes the data that your recipient needs to see. This is "selective
-disclosure." Now, there's not a lot of information yet in Amira's XID,
-but there's one thing that we don't need to send out: her private
-key. Sure, it's encrypted, but sending it out creates an attack
-surface and that could be avoided with use of envelope's elision
+When you create a shareable public view of a XID, you are creating a
+new way to look at the current edition of your XID that only includes
+the data that your recipient needs to see. This is "data
+minimization,." Now, there's not a lot of information yet in Amira's
+XID, but there are two secrets in the XID that you probably shouldn't
+give out: Amira's private key and the provenance mark generator.
+Sure, they're encrypted, but sending them out creates an attack
+surface, and that could be avoided with use of envelope's elision
 (removal) feature.
 
-To remove content from a XID requires finding the hash for that
-data. Every thing in an envelope has a hash: it's how the envelope is
-built and how it maintains signatures (more on that momentarily). Once
-you find the right hash, you simply tell the Envelope CLI to remove
-the data represented by that particular data. So to remove the private
-key you need to first find its hash in your envelope.
+> 📖 **What is Elision?** Elision (or redaction) is a crucial mechanic
+for Gordian Envelope, and one of its major technological advantages
+over other data-storage mechanisms. It allows you to remove part of
+the content of an envelope while maintaining any signatures on the
+envelope and also by retaining commitments (see
+[§2.2](02_2_Managing_Claims_Elision.md)) to the contents of the
+envelope. It supports [data
+minimization](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md),
+selective disclosure, and (generally) self-sovereign identity: you get
+to choose what you reveal!
 
 > 📖 **What is a View?** A view is a version of a XID that has
 been elided in a specific way. The XID itself isn't changed: every
 view of the same XID has the same root hash. However, what's visible
 will be different from one view to another.
 
-**Find the Private Key Digest:**
+Normally, removing content from a XID requires finding the hash for
+that data. Every thing in an envelope has a hash: it's how the
+envelope is built and how it maintains signatures (more on that
+momentarily). Once you find the right hash, you simply tell the
+Envelope CLI to remove the data represented by that particular
+hash. [§2.2](02_2_Managing_Claims_Elision.md) includes a mininimal
+look at the technique, then
+[§3.5](03_5_Creating_Views_and_Versions.md) examines it more
+extensively.
 
-In a graphical UI, this whole process might be as simple as clicking
-on the private-key assertion in the envelope and hitting the DELETE
-key. In the Envelope CLI, it takes digging down through the layers of
-the envelope by unwrapping wrapped envelopes and finding assertions
-within them.
+However, we don't need that to elide the secrets of the private key
+and the provenance mark generator. Because this is a frequent use
+case, there's a specific `envelope-cli` command to do that removal for
+you: `envelope xid export`, which can be given `--private elide` and
+`--generator elide` options.
 
-This requires knowing how the envelope is structured:
-```
-│ {
-│    XID(5f1c3d9e) [
-│         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
-│             {
-│                 'privateKey': ENCRYPTED [
-│                     'hasSecret': EncryptedKey(Argon2id)
-│                 ]
-│             }
-│ ...
-│   ]
-│ }
-```
-
-This shows that we need to unwrap the envelope (since it was wrapped
-and signed with `--sign inception`), then find the `'key'` assertion,
-and then find the `'privateKey'` assertion.
-
-Unwrapping is done with `extract wrapped`.
 
 ```
-UNWRAPPED_XID=$(envelope extract wrapped "$XID")
+PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID")
 ```
 
-Then you find the `key` predicate, which is a `known` value, and
-extract its `PublicKeys` object:
-
-```
-KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED_XID")
-KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
-```
-
-Finally, you find the known-value `privateKey` assertion in _that_ and
-then record its digest:
-
-```
-PRIVATE_KEY_ASSERTION=$(envelope assertion find predicate known privateKey "$KEY_OBJECT")
-PRIVATE_KEY_DIGEST=$(envelope digest "$PRIVATE_KEY_ASSERTION")
-
-if [ $PRIVATE_KEY_DIGEST ]
-then
-  echo "✅ Found private key digest"
-else
-  echo "❌ Error in private key retrieval"
-fi
-
-│ ✅ Found private key digest
-```
-
-**Elide Your XID:**
-
-Eliding your private key from your XID to create a public view simply
-requires using the `elide` command to remove the data represented by
-that digest:
-
-```
-PUBLIC_XID=$(envelope elide removing "$PRIVATE_KEY_DIGEST" "$XID")
-echo "✅ Created public view by eliding private key"
-
-│ ✅ Created public view by eliding private key
-```
-
-Afterward, you can examine this new public view of your XID:
+Afterward, you can examine this new public view of your
+XID:
 
 ```
 envelope format "$PUBLIC_XID"
@@ -489,13 +444,7 @@ envelope format "$PUBLIC_XID"
 │             ELIDED
 │         ]
 │         'provenance': ProvenanceMark(1896ba49) [
-│             {
-│                 'provenanceGenerator': ENCRYPTED [
-│                     'hasSecret': EncryptedKey(Argon2id)
-│                 ]
-│             } [
-│                 'salt': Salt
-│             ]
+│             ELIDED
 │         ]
 │     ]
 │ } [
@@ -503,11 +452,11 @@ envelope format "$PUBLIC_XID"
 │ ]
 ```
 
-It looks identical except the `privateKey` section is gone, replaced
-with `ELIDED`. Also of note is the fact that this formatting implies
-that the signature has been preserved, *despite* removing some of the
-data in the envelope. That's accurate: this is a purposeful feature of
-Gordian Envelope.
+It looks identical except the `privateKey` and `provenance` sections
+are gone, replaced with `ELIDED`. Also of note is the fact that this
+formatting implies that the signature has been preserved, *despite*
+removing some of the data in the envelope. That's accurate: this is a
+purposeful feature of Gordian Envelope.
 
 #### A Review of Envelope Hashes & Signatures
 
@@ -559,8 +508,8 @@ The above example shows a new elision, of the secret within the provenance mark 
 
 ```
 
-> ⚠️ **The Root Hash is Not the ID Identifier.** The root hash
-is composed from the hashes of _all_ the data within an envelope. It
+> ⚠️ **The Root Hash is Not the ID Identifier.** The root hash is
+composed from the hashes of _all_ the data within an envelope. It
 changes if you change the document. It's an identifier for all _views_
 of a specific _edition_ of your XID Document. In contrast, the XID
 identifier is the hash of your inception public key. It never

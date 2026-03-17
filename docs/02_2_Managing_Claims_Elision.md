@@ -149,7 +149,19 @@ This is the full attestation that Amira will keep secure and private. But she wa
 
 ### Step 3: Create the Elided Commitment
 
-You can now create a view of the attestation with the content removed but the cryptographic structure preserved:
+You can now create a view of the attestation with the content removed
+but the cryptographic structure preserved. In
+[§1.2](01_2_Your_First_XID.md), we mentioned the general technique for
+doing this when we used an automated method to elide private keys and
+provenance mark generators. Generally, you need to (1) find the digest
+(hash) of the node or leaf that you want to elide and then (2) use the
+`envelope elide` command to remove it.
+
+This is very simple when we're committing to a claim, because we can
+elide the entire envelope, leaving _nothing_ but that root hash. We
+just find the root hash with the `envelope digest` command, and then
+remove all of the contents associated with that digest using the
+`envelope elide` command:
 
 ```
 AUDIT_DIGEST=$(envelope digest "$AUDIT_SIGNED")
@@ -180,6 +192,11 @@ recorded a certain value. All you reveal is a hash of that value,
 which is the cryptographic commitment. Since (probabalistically) each
 recorded value only leads to one hash, when you reveal the original
 value and it hashes correctly, your commitment has been fulfilled.
+
+Elision becomes trickier when you want to create new views of your XID
+by removing individual elements of the XID's
+data. [§3.5](03_5_Creating_Views_and_Versions.md) demonstrates how to
+do so.
 
 ### Step 4: Store Your Work
 
