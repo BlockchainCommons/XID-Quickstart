@@ -496,7 +496,7 @@ envelope format $XID_WITH_EDGE
 
 ### Step 13: Export & Store Your Work
 
-As usual, yYou should create a public view of the new XID that elides all the
+As usual, you should create a public view of the new XID that elides all the
 sensitive keys:
 
 ```
@@ -513,7 +513,7 @@ echo "$XID_WITH_EDGE" > envelopes/BRadvoc8-xid-private-3-03.envelope
 
 #### XID Version Comparison
 
-You've now created a third XID version. You take a look at the provenance marks again in the next section, but here's an overview of what each versionc ontains
+You've now created a fourth XID version. You take a look at the provenance marks again in the next section, but here's an overview of what each version contains
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
@@ -564,7 +564,7 @@ doubtless noted that all of endorsements have rigidly used
 `endorsementContext`, `endorsementScope`, and
 `relationshipBasis`. Obviously, you can use whatever format you want
 when writing attestations. What we present here is simply a suggestion
-for best practice—and the best practice these specific predicates, but
+for best practice—and the best practice are not necessarily these specific predicates, but
 instead the practice of using a fair witness methodology to accurately
 and impartially report the context and potential bias of an endorsement.
 
@@ -705,8 +705,7 @@ A lot of this is from the point of view of the endorsee, but the
 endorser could also maintain signed lists of endorsements that they've
 made (or signed lists of commitments to those endorsements!).
 
-**The Bootstrapping Problem:** Finally, you must ask how you know that
-an endorser had creditability.  How does someone kknow that "Charlene"
+**The Bootstrapping Problem:** Finally, how does someone know that "Charlene"
 is actually Charlene? You can verify that their signature matches
 Charlene's public key, but how do you know that key belongs to a
 trustworthy person named Charlene?
@@ -723,25 +722,25 @@ January 2026. Like all attestations, peer endorsements can grow stale,
 and so their age should be considered: if BRadvoc8's behavior changes,
 the endorsement doesn't automatically update.
 
-Managing the attestation lifecycle, discussed in
-[§2.1](02_1_Creating_Self_Attestations/#part-v-managing-the-attestation-lifecycle)
+Managing the attestation lifecycle, as discussed in
+[§2.1](02_1_Creating_Self_Attestations/#part-v-managing-the-attestation-lifecycle),
 is at least as important for peer endorsements as it is for
 self-attestations.
 
 ## Summary: Progressive Trust Layers
 
-At this point, Amira has built a succession of progress trust layers:
+At this point, Amira has built a succession of progressive trust layers:
 
 1. [§1.2](01_2_Your_First_XID.md): Self-sovereign identity (XID exists)
 2. [§1.3](01_3_Making_a_XID_Verifiable.md): Self-consistent (signature verifies, fresh)
 3. [§2.1](02_1_Creating_Self_Attestations.md): Fair-witness claims (public, verifiable claims)
-4. [§2.2](02_2_Managing_Claims_Elision.md): Sensitive claims managed (commit elided, reveal later)
-5. [§2.3](02_3_Managing_Claims_Encryption.md) More sensitive claims managed (encrypted, sent to trusted parties)
+4. [§2.2](02_2_Managing_Claims_Elision.md): Medium sensitive claims managed (commit elided, reveal later)
+5. [§2.3](02_3_Managing_Claims_Encryption.md) High sensitive claims managed (encrypted, sent to trusted parties)
 6. [§3.1](03_1_Creating_Edges.md): Externally linked (GitHub, SSH key)
 7. [§3.2](03_2_Supporting_Cross_Verification.md) Cross-verified (external accounts confirmed)
 8. [§3.3](03_3_Creating_Peer_Endorsements.md): Peer validated (independent endorsements)
 
-Her reputation is **portable** (follows her XID), **verifiable**
+Amira's reputation is **portable** (follows her XID), **verifiable**
 (anyone can check), **privacy-preserving** (no legal identity), and
 **growing** (can continue building).
 
@@ -762,8 +761,7 @@ XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRa
 1. Design an endorsement request for a real collaborator. What would
 you ask them to endorse, and what context would you provide?
 2. Write an endorsement for a fictional peer using fair witness methodology (direct observation, specific scope, relationship disclosure, acknowledged limitations).
-3. Evaluate endorsement quality: compare "X is great!" vs "I reviewed
-X's code for 6 months and merged 12 PRs". What makes one better?
+3. Evaluate endorsement quality: compare "X is great!" vs "I reviewed X's code for 6 months and merged 12 PRs". What makes one better?
 4. Identify who could provide endorsements for different aspects of your work (technical, collaboration, character).
 5. Draft an endorsement you could honestly give someone today, being
 specific about what you've observed and what you can't speak to.
@@ -774,13 +772,17 @@ Future topics are being considered for this course, but at the moment this is th
 
 ## Appendix I: Key Terminology
 
-> **Endorsement Scope**: Explicit limitations on what an endorsement covers.
+> **Character Endorsement:** A general peer endorsement speaking to who someone is.
+> 
+> **Endorsement Scope:** Explicit limitations on what an endorsement covers.
 >
-> **Peer Endorsement**: A signed statement someone else makes about you, providing independent validation.
+> **Peer Endorsement:** A signed statement someone else makes about you, providing independent validation.
 >
-> **Relationship Transparency**: Explanation of how endorser knows the endorsed person.
+> **Relationship Transparency:** Explanation of how endorser knows the endorsed person.
 >
-> **Web of Trust**: Network of interconnected endorsements where trust propagates through relationships.
+> **Technical Endorsement:** A precise peer endorsement speaking to skills and expertise, often through fair-witnessed examples of work.
+> 
+> **Web of Trust:** Network of interconnected endorsements where trust propagates through relationships.
 
 ## Appendix II: Common Questions
 
@@ -809,7 +811,7 @@ strengthens your own reputation as a thoughtful evaluator.
 ### Q: Can I warn others about a bad actor?
 
 **A:** Yes: a signed statement with relationship context and specific
-evidence is a negative endorsement. Use carefully: false accusations
+evidence is a negative endorsement. But use this methodology carefully: false accusations
 damage your own reputation, and vague warnings ("X is bad") carry
 little weight. Specific, documented concerns ("I observed X claim
 credentials they didn't have") are more valuable.
@@ -817,20 +819,8 @@ credentials they didn't have") are more valuable.
 ### Q: What if I want to withdraw an endorsement?
 
 **A:** You can publish a revocation as described in
-[§2.1](02_1_Creating_Self_Attestations.md): a new signed statement
+[§2.1](02_1_Creating_Self_Attestations/#step-15-retract-an-attestation): a new signed statement
 that supersedes the original endorsement. Include a reference to the
 original's digest and explain why you're withdrawing it. The original
 endorsement doesn't disappear, but the revocation provides context for
 evaluators.
-
----
-
----
-
-**Previous**: [Encrypted Sharing](07-encrypted-sharing.md) | **Next**: [Binding Agreements](09-binding-agreements.md)
-
-DEFN
-
-Character endorsement
-
-Technical endorsement
