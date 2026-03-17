@@ -1,8 +1,7 @@
 # 3.3: Creating Peer Endorsements
 
 Self-attestations can go a long way, particularly if they can be
-verified. But the trust of a pseudonymous identity can truly be built
-through the endorsements of peers, who are effectively passing on some
+verified. But the trust of a pseudonymous identity ultimately requires the endorsements of peers, who are effectively passing on some
 of their own reputation when they attest to your skills or abilities.
 
 > **Related Concepts**: After completing this tutorial, explore the
@@ -14,7 +13,7 @@ Trust](../concepts/progressive-trust.md) to deepen your understanding.
 
 After working through this section, a developer will be able to:
 
-- Give endorsements using the fair witness methodology
+- Give peer endorsements using the fair witness methodology
 - Build a web of trust through multiple independent endorsers
 - Create peer endorsements using detached and embedded methodologies
 
@@ -23,17 +22,17 @@ Supporting objectives include the ability to:
 - Know the difference between attestations (your claims) and endorsements (others' validation)
 - Understand how relationship transparency makes endorsements more valuable
 
-## Amira's Challenge: Getting Validated
+## Amira's Challenge: Getting Endorsed
 
 Amira has made self attestations about her skills and done her best to
 support validation of those attestations through links to proof of
-work. But, there are limits to this: deeper trust requires
+her work. But, there are limits to this: deeper trust requires
 attestations from other members, to create a web of trust among its
 members.
 
 To accomplish this, Amira needs peer endorsements. Her friend
 Charlene, who introduced Amira to the RISK network in the first place
-is a great first endorsement. But now Amira has also done an initial
+is a great first endorsement. However, Amira has also now done an initial
 project with DevReviewer, and getting a peer endorsement from her
 would be even more valuable, because she's active on SisterSpaces and
 in other social-design categories that Amira is interested in.
@@ -56,7 +55,7 @@ interpretation.
 To create a proper fair-witness attestation for Amira, Charlene would ask herself five questions:
 
 1. **What have I actually observed?** She's seen BRadvoc8's commitment
-to privacy work over two years—that's endorsable. "Probably a great
+to privacy work over two years, and that's endorsable. But "probably a great
 coder" would be speculation.
 2. **What's the right scope?** "I endorse everything about BRadvoc8"
 isn't credible. "I endorse her character and values" is specific and
@@ -72,20 +71,9 @@ would this endorsement look foolish? If yes, Charlene should narrow the scope.
 
 As a result, Charlene's endorsement will be limited to character and values: that's what she can honestly attest to.
 
-## Part I: Creating Detached Peer Endorsements
+## Step 0: Verify Dependencies
 
-Because Charlene's peer endorsement is limited to character and value,
-it's a fairly light attestation that Amira expects she'll only need as
-she bootstraps up her pseudonymous BRadvoc8 identity. For that reason,
-she'll be creating it as a detached endorsement.
-
-As for the rest, that all falls on Charlene: this part is from her
-point of view, as she creates an endorsement for Amira (or rather for
-BRadvoc8).
-
-### Step 0: Verify Dependencies
-
-As usual, check your `envelope-cli` version:
+Before you get started, you should (as usual) check your `envelope-cli` version:
 ```
 envelope --version
 
@@ -98,6 +86,17 @@ XID=$(cat envelopes/BRadvoc8-xid-private-3-01.envelope)
 XID_ID=$(envelope xid id $XID)
 PASSWORD="your-password-from-previous-tutorials"
 ```
+
+## Part I: Creating Detached Peer Endorsements
+
+Because Charlene's peer endorsement is limited to character and value,
+it's a fairly light attestation that Amira expects she'll only need as
+she bootstraps up her pseudonymous BRadvoc8 identity. For that reason,
+she'll be creating it as a detached endorsement.
+
+As for actually creating the endorsement: that falls on Charlene. This part is from her
+point of view, as she creates an endorsement for Amira (or rather for
+BRadvoc8).
 
 ### Step 1: Create Charlene's Identity
 
@@ -136,13 +135,13 @@ CHARLENE_CLAIM=$(envelope subject type string "BRadvoc8 is a thoughtful and comm
 
 She then fills it in the same edge-inspired format used earlier for self-attestations:
 ```
-CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known isA known 'attestation' "$CHARLENE_CLAIM")
+CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known isA known attestation "$CHARLENE_CLAIM")
 CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known source ur $CHARLENE_XID_ID "$CHARLENE_ENDORSEMENT")
 CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known target ur $XID_ID "$CHARLENE_ENDORSEMENT")
 CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$CHARLENE_ENDORSEMENT")
 ```
 
-Charlene also adds some context to help set aside any bias possible in the claim by revealing its full context using fair witness methodologies::
+Charlene also adds some context to help set aside any bias possible in the claim by using fair witness methodologies:
 ```
 CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementContext" string "Personal friend, observed values and commitment over 2+ years" "$CHARLENE_ENDORSEMENT")
 CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj string "endorsementScope" string "Character and values alignment, not technical skills" "$CHARLENE_ENDORSEMENT")
@@ -201,14 +200,11 @@ and they were all solid" means everything.
 Now Charlene can either publicly release her endorsement or pass it on
 to Amira to do with as she pleases.
 
-When Amira distributes the endorsement herself, it'd be ideal for her
-to be able to just publish the endorsement, but that creates a
-Discovery Challenge, as there's not yet any methodology for finding
-XIDs (but having them reliable listed as `source` and `target` in
-edges and other endorsements is a great start).
+If Amira distributes the endorsement herself, it creates the challenge of how viewers will discover Charlene's XID. This is currently an open issue, though reliably listing XIDs in `source`s and `target`s is a great start. Distributing a view of Charlene's XID with the endorsement may be a good solution, particularly if it contains a [`dereferenceVia`](01_3_Making_a_XID_Verifiable/) that allows viewers to find the fresh original.
 
 ### Step 4: Store Charlene's Info
 
+You should store the new keys and XID you created for Charlene:
 ```
 echo "$CHARLENE_PRVKEYS" > envelopes/key-charlene-private-3-03.envelope
 echo "$CHARLENE_PUBKEYS" > envelopes/key-charlene-public-3-03.envelope
