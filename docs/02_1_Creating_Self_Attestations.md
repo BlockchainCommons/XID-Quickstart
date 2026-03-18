@@ -142,6 +142,7 @@ For Ben to verify attestations came from BRadvoc8, the attestation public key mu
 
 ```
 UPDATED_XID=$(envelope xid key add \
+    --verify inception \
     --nickname "attestation-key" \
     --allow sign \
     --private encrypt \
@@ -152,17 +153,31 @@ UPDATED_XID=$(envelope xid key add \
 echo "✅ Added attestation key to XID"
 ```
 
-The `envelope-cli` programs derives the public key from the private
-key automatically. Several commands are repeated from past
-examples. You use the `--private encrypt` and ``-encrypt-password`
-commands to make sure the new key is encrypted.  You also add a new
-`nickname` to clarify what the key is for
+There's just one new argument `--allow sign`, but here's what everything does:
 
-There's just one new argument:
+1. `xid key add ... $ATTESTATION_PRVKEYS` adds the private key to the XID and automatically derives a public key as well.
+2. `--verify inception` verifies the signature on the previous version of the XID against its inception key.
+3. `--nickname` provides a nickname specifically for the new keypair.
+4. `--allow sign` indicates this new key can only sign, not modify the
+XID itself. (That still requires the inception key.)
+5. `--private encrypt` encrypts the new key that you just added.
+6. `--encrypt-password` is the password used for that encryption, which should be the same as the older encryption password.
 
-1. `--allow sign` is a permission statement indicates this key can only sign, it cannot modify the XID itself. (That requires the inception key.)
+Note that we did **not** re-sign the XID with `--sign inception`. The
+old signature is now invalid because we adjusted the contents of the
+XID, so it's been removed, but there's no new one. That's because
+we're not done working on this edition of the XID. We'll create a new
+signature in the next step.
 
-> ⚠️ **XID Functions Only!** If you're familiar with Gordian Envelope, you'll know that you can freely add assertions to an envelope. Though XID is built on envelope, it's intended to be a much more structured format, with all content always in carefully structured places such as `derferenceVia`, `key`, `provenance`, and other subjects that you'll meet in future tutorials. You should always expect to use `envelope xid` commands when working with the core XID structure (though you may place less structured content under certain key words, such as in the `edge` that we'll meet in the chapter 3).
+> ⚠️ **XID Functions Only!** If you're familiar with Gordian Envelope,
+you'll know that you can freely add assertions to an envelope. Though
+XID is built on envelope, it's intended to be a much more structured
+format, with all content always in carefully structured places such as
+`derferenceVia`, `key`, `provenance`, and other subjects that you'll
+meet in future tutorials. You should always expect to use `envelope
+xid` commands when working with the core XID structure (though you may
+place less structured content under certain key words, such as in the
+`edge` that we'll meet in the chapter 3).
 
 ### Step 3: Advance Your Provenance Mark
 
@@ -172,6 +187,7 @@ Advancing the provenance mark is done with the simple `provenance next` command.
 ```
 UPDATED_XID=$(envelope xid provenance next \
     --password "$PASSWORD" \
+    --sign inception \
     --private encrypt \
     --generator encrypt \
     --encrypt-password "$PASSWORD" \
@@ -190,39 +206,43 @@ You can see what your XID looks like after all that work:
 ```
 envelope format $UPDATED_XID
 
-| XID(5f1c3d9e) [
-|     'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
-|     'key': PublicKeys(21914050, SigningPublicKey(04c9adb6, Ed25519PublicKey(09f7c306)), EncapsulationPublicKey(1b076286, X25519PublicKey(1b076286))) [
-|         {
-|             'privateKey': ENCRYPTED [
-|                 'hasSecret': EncryptedKey(Argon2id)
+| {
+|     XID(5f1c3d9e) [
+|         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+|         'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|             {
+|                 'privateKey': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
 |             ]
-|         } [
-|             'salt': Salt
+|             'allow': 'Sign'
+|             'nickname': "attestation-key"
 |         ]
-|         'allow': 'Sign'
-|         'nickname': "attestation-key"
-|     ]
-|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
-|         {
-|             'privateKey': ENCRYPTED [
-|                 'hasSecret': EncryptedKey(Argon2id)
+|         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|             {
+|                 'privateKey': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
 |             ]
-|         } [
-|             'salt': Salt
+|             'allow': 'All'
+|             'nickname': "BRadvoc8"
 |         ]
-|         'allow': 'All'
-|         'nickname': "BRadvoc8"
-|     ]
-|     'provenance': ProvenanceMark(f6baa8c6) [
-|         {
-|             'provenanceGenerator': ENCRYPTED [
-|                 'hasSecret': EncryptedKey(Argon2id)
+|         'provenance': ProvenanceMark(1d640bb3) [
+|             {
+|                 'provenanceGenerator': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
 |             ]
-|         } [
-|             'salt': Salt
 |         ]
 |     ]
+| } [
+|     'signed': Signature(Ed25519)
 | ]
 ```
 

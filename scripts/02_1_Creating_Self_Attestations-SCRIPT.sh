@@ -65,13 +65,13 @@ echo "======================================="
 
 # Add attestation keypair to XID (private key encrypted like inception key)
 XID=$(envelope xid key add \
+    --verify inception \
     --nickname "attestation-key" \
     --allow sign \
     --private encrypt \
     --encrypt-password "$PASSWORD" \
     "$ATTESTATION_PRVKEYS" \
     "$XID")
-
 echo ""
 
 echo "Step 3: Advance Your Provenance Mark"
@@ -79,7 +79,13 @@ echo "===================================="
 
 # Advance provenance to record the key addition
 O_PROV_MARK=$(envelope xid provenance get "$XID")
-XID=$(envelope xid provenance next "$XID")
+XID=$(envelope xid provenance next \
+    --password "$PASSWORD" \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password "$PASSWORD" \
+    "$nXID")
 PROV_MARK=$(envelope xid provenance get "$XID")
 
 # Verify key was added with encrypted private key

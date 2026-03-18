@@ -213,46 +213,6 @@ both a GitHub raw URL and a personal domain, so if one source becomes
 unavailable, verifiers can still fetch your current XID Document from
 the other.
 
-#### Update the Easy Way
-
-Our examples so far have signed each XID with its inception key. This
-allows viewers to verify that the owner of the XID stands behind this
-edition of the XID: it's not something that someone else made! Doing
-this is generally a best practice.
-
-However, it also creates a lot of additional rigamarole: you have to
-supply your password to decrypt the original, supply a new password to
-re-encrypt, and tell `envelope` to encrypt both the private key and
-the provenance mark generator.
-
-Here's what the command looks like without all of that complexity:
-
-```
-XID_WITH_URL=$(envelope xid resolution add \
-    "$PUBLISH_URL" \
-    --verify inception \
-    "$XID")
-```
-
-Or removing the old signature verification as well:
-
-```
-XID_WITH_URL=$(envelope xid resolution add \
-    "$PUBLISH_URL" \
-    "$XID")
-```
-
-The difference is that these versions of the XID won't be signed (and
-a new signature is needed every time a new edition is made, because
-changing an edition of a XID changes its root hash, which invalidates
-the old signature).
-
-Future examples will omit the signature of the XID overall to clarify
-the commands being used for updates. That doesn't meant they can't be
-signed: even after you've created a XID, you can always extract the
-inception key by hand, then wrap and sign it, which has the same
-effect as the `--sign` flag (though it's not as easy to use).
-
 ### Step 4: Export Public View
 
 You can now use `xid export` to create a public view by eliding your
