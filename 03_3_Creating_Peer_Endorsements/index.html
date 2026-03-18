@@ -1,0 +1,2490 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/03_3_Creating_Peer_Endorsements/">
+      
+      
+        <link rel="prev" href="../03_2_Supporting_Cross_Verification/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>3.3: Creating Peer Endorsements - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#33-creating-peer-endorsements" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3.3: Creating Peer Endorsements
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Working with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 06: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-challenge-getting-endorsed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Challenge: Getting Endorsed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-fair-witness-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Fair Witness Endorsements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-creating-detached-peer-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Creating Detached Peer Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Creating Detached Peer Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-charlenes-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Charlene's Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-charlene-creates-her-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Charlene Creates Her Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-relationship-transparency-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Relationship Transparency Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-publish-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Publish Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-store-charlenes-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Store Charlene's Info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-creating-embedded-peer-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Creating Embedded Peer Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Creating Embedded Peer Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-devreviewers-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create DevReviewer's Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-prepare-data-for-edge-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Prepare Data for Edge Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-create-technical-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Create Technical Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-enhance-endorser-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Enhance Endorser Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-create-your-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Create Your Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-transmit-your-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Transmit Your Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-11-store-devreviewers-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Store DevReviewer's Info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-embedding-peer-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Embedding Peer Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Embedding Peer Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-12-embed-devreviewers-peer-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Embed DevReviewer's Peer Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-export-store-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 13: Export &amp; Store Your Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 13: Export &amp; Store Your Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-creating-a-web-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Creating a Web of Trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Creating a Web of Trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-14-collect-more-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 14: Collect More Endorsements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-15-verify-all-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 15: Verify All Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 15: Verify All Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-someone-forges-an-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If Someone Forges an Endorsement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-16-develop-a-web-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 16: Develop a Web of Trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 16: Develop a Web of Trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problems-of-the-web-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problems of the Web of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-17-consider-the-endorsement-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 17: Consider the Endorsement Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-progressive-trust-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Progressive Trust Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Progressive Trust Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-how-many-endorsements-do-i-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How many endorsements do I need?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-an-endorser-becomes-disreputable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if an endorser becomes disreputable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-endorse-others" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I endorse others?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-warn-others-about-a-bad-actor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I warn others about a bad actor?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-want-to-withdraw-an-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I want to withdraw an endorsement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-challenge-getting-endorsed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Challenge: Getting Endorsed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-fair-witness-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Fair Witness Endorsements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-creating-detached-peer-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Creating Detached Peer Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Creating Detached Peer Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-charlenes-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Charlene's Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-charlene-creates-her-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Charlene Creates Her Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-relationship-transparency-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Relationship Transparency Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-publish-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Publish Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-store-charlenes-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Store Charlene's Info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-creating-embedded-peer-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Creating Embedded Peer Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Creating Embedded Peer Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-devreviewers-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create DevReviewer's Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-prepare-data-for-edge-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Prepare Data for Edge Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-create-technical-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Create Technical Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-enhance-endorser-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Enhance Endorser Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-create-your-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Create Your Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-transmit-your-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Transmit Your Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-11-store-devreviewers-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Store DevReviewer's Info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-embedding-peer-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Embedding Peer Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Embedding Peer Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-12-embed-devreviewers-peer-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Embed DevReviewer's Peer Endorsement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-export-store-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 13: Export &amp; Store Your Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 13: Export &amp; Store Your Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-creating-a-web-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Creating a Web of Trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Creating a Web of Trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-14-collect-more-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 14: Collect More Endorsements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-15-verify-all-endorsements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 15: Verify All Endorsements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 15: Verify All Endorsements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-someone-forges-an-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If Someone Forges an Endorsement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-16-develop-a-web-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 16: Develop a Web of Trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 16: Develop a Web of Trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problems-of-the-web-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problems of the Web of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-17-consider-the-endorsement-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 17: Consider the Endorsement Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-progressive-trust-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Progressive Trust Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Progressive Trust Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-how-many-endorsements-do-i-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How many endorsements do I need?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-an-endorser-becomes-disreputable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if an endorser becomes disreputable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-endorse-others" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I endorse others?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-warn-others-about-a-bad-actor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I warn others about a bad actor?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-want-to-withdraw-an-endorsement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I want to withdraw an endorsement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="33-creating-peer-endorsements">3.3: Creating Peer Endorsements</h1>
+<p>Self-attestations can go a long way, particularly if they can be
+verified. But the trust of a pseudonymous identity ultimately requires the endorsements of peers, who are effectively passing on some
+of their own reputation when they attest to your skills or abilities.</p>
+<blockquote>
+<p><strong>Related Concepts</strong>: After completing this tutorial, explore the
+<a href="../concepts/attestation-endorsement-model.md">Attestation &amp; Endorsement
+Model</a> and <a href="../concepts/progressive-trust.md">Progressive
+Trust</a> to deepen your understanding.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Give peer endorsements using the fair witness methodology</li>
+<li>Build a web of trust through multiple independent endorsers</li>
+<li>Create peer endorsements using detached and embedded methodologies</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Know the difference between attestations (your claims) and endorsements (others' validation)</li>
+<li>Understand how relationship transparency makes endorsements more valuable</li>
+</ul>
+<h2 id="amiras-challenge-getting-endorsed">Amira's Challenge: Getting Endorsed</h2>
+<p>Amira has made self attestations about her skills and done her best to
+support validation of those attestations through links to proof of
+her work. But, there are limits to this: deeper trust requires
+attestations from other members, to create a web of trust among its
+members.</p>
+<p>To accomplish this, Amira needs peer endorsements. Her friend
+Charlene, who introduced Amira to the RISK network in the first place
+is a great first endorsement. However, Amira has also now done an initial
+project with DevReviewer, and getting a peer endorsement from her
+would be even more valuable, because she's active on SisterSpaces and
+in other social-design categories that Amira is interested in.</p>
+<p>The key distinction between Amira's self attestations and Charlene and
+DevReviewer's peer endorsements is whose keys sign the
+statement. Attestations are signed with <em>your</em> keys: they prove you
+made the claim. Endorsements are signed with <em>their</em> keys: they stake
+their reputation on you. That's why endorsements carry more weight:
+the endorser has something to lose if you turn out to be a fraud.</p>
+<h2 id="the-power-of-fair-witness-endorsements">The Power of Fair Witness Endorsements</h2>
+<p>The best endorsements follow the same model as the best
+self-attestations. As described in
+<a href="02_1_Creating_Self_Attestations/#the-power-of-fair-witness-attestations">§2.1</a>,
+fair-witness attestations are made as much as possible without bias or
+interpretation.</p>
+<p>To create a proper fair-witness attestation for Amira, Charlene would ask herself five questions:</p>
+<ol>
+<li><strong>What have I actually observed?</strong> She's seen BRadvoc8's commitment
+to privacy work over two years, and that's endorsable. But "probably a great
+coder" would be speculation.</li>
+<li><strong>What's the right scope?</strong> "I endorse everything about BRadvoc8"
+isn't credible. "I endorse her character and values" is specific and
+honest.</li>
+<li><strong>How do I disclose the relationship?</strong> "Personal friend who
+introduced her to RISK network" lets evaluators calibrate for
+potential bias.</li>
+<li><strong>What can't I speak to?</strong> Charlene hasn't seen Amira's
+code. Acknowledging this makes the endorsement more credible, not
+less.</li>
+<li><strong>Would I be embarrassed if wrong?</strong> If BRadvoc8 turns out badly,
+would this endorsement look foolish? If yes, Charlene should narrow the scope.</li>
+</ol>
+<p>As a result, Charlene's endorsement will be limited to character and values: that's what she can honestly attest to.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID.</p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-3-01.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<h2 id="part-i-creating-detached-peer-endorsements">Part I: Creating Detached Peer Endorsements</h2>
+<p>Because Charlene's peer endorsement is limited to character and value,
+it's a fairly light attestation that Amira expects she'll only need as
+she bootstraps up her pseudonymous BRadvoc8 identity. For that reason,
+she'll be creating it as a detached endorsement.</p>
+<p>As for actually creating the endorsement: that falls on Charlene. This part is from her
+point of view, as she creates an endorsement for Amira (or rather for
+BRadvoc8).</p>
+<h3 id="step-1-create-charlenes-identity">Step 1: Create Charlene's Identity</h3>
+<p>Before Charlene can endorse BRadvoc8, she needs her own XID:</p>
+<pre><code>CHARLENE_PASSWORD=&quot;charlenes-own-password&quot;
+CHARLENE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+CHARLENE_PUBKEYS=$(envelope generate pubkeys &quot;$CHARLENE_PRVKEYS&quot;)
+CHARLENE_XID=$(echo $CHARLENE_PRVKEYS | \
+    envelope xid new \
+    --private encrypt \
+    --encrypt-password &quot;$CHARLENE_PASSWORD&quot; \
+    --nickname &quot;Charlene&quot; \
+    --generator encrypt \
+    --sign inception)
+CHARLENE_XID_ID=$(envelope xid id &quot;$CHARLENE_XID&quot;)
+
+echo &quot;✅ Charlene's XID created: $CHARLENE_XID_ID&quot;
+
+│ ✅ Charlene's XID created: ur:xid/hdcxincngsnehykswzsfwsrstocwproevwssuybnknhgryflswknwmfenlesrodsfewnmsroserl
+</code></pre>
+<p>Best practice at this point would be for Charlene to also great a
+seperate endorsement key and add that to her XID as described in
+<a href="02_1_Creating_Self_Attestations/#step-1-create-an-attestation-key">§2.1</a>,
+but we're going to keep it simple by not doing so.</p>
+<h3 id="step-2-charlene-creates-her-endorsement">Step 2: Charlene Creates Her Endorsement</h3>
+<p>Charlene applies fair witness principles to create a character endorsement:</p>
+<pre><code>CHARLENE_CLAIM=$(envelope subject type string &quot;BRadvoc8 is a thoughtful and committed contributor to privacy work that protects vulnerable communities&quot;)
+</code></pre>
+<p>She then fills it in the same edge-inspired format used earlier for self-attestations:</p>
+<pre><code>CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known isA known attestation &quot;$CHARLENE_CLAIM&quot;)
+CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known source ur $CHARLENE_XID_ID &quot;$CHARLENE_ENDORSEMENT&quot;)
+CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known target ur $XID_ID &quot;$CHARLENE_ENDORSEMENT&quot;)
+CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$CHARLENE_ENDORSEMENT&quot;)
+</code></pre>
+<p>Charlene also adds some context to help set aside any bias possible in the claim by using fair witness methodologies:</p>
+<pre><code>CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj string &quot;endorsementContext&quot; string &quot;Personal friend, observed values and commitment over 2+ years&quot; &quot;$CHARLENE_ENDORSEMENT&quot;)
+CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj string &quot;endorsementScope&quot; string &quot;Character and values alignment, not technical skills&quot; &quot;$CHARLENE_ENDORSEMENT&quot;)
+CHARLENE_ENDORSEMENT=$(envelope assertion add pred-obj string &quot;relationshipBasis&quot; string &quot;Friend who introduced BRadvoc8 to RISK network concept&quot; &quot;$CHARLENE_ENDORSEMENT&quot;)
+</code></pre>
+<p>Finally, Charlene must wrap and sign her endorsement:</p>
+<pre><code>CHARLENE_WRAPPED_ENDORSEMENT=$(envelope subject type wrapped &quot;$CHARLENE_ENDORSEMENT&quot;)
+CHARLENE_SIGNED_ENDORSEMENT=$(envelope sign --signer &quot;$CHARLENE_PRVKEYS&quot; &quot;$CHARLENE_WRAPPED_ENDORSEMENT&quot;)
+
+echo &quot;Charlene's endorsement:&quot;
+envelope format &quot;$CHARLENE_SIGNED_ENDORSEMENT&quot;
+
+| Charlene's endorsement:
+| {
+|     &quot;BRadvoc8 is a thoughtful and committed contributor to privacy work that protects vulnerable communities&quot; [
+|         'isA': 'attestation'
+|         &quot;endorsementContext&quot;: &quot;Personal friend, observed values and commitment over 2+ years&quot;
+|         &quot;endorsementScope&quot;: &quot;Character and values alignment, not technical skills&quot;
+|         &quot;relationshipBasis&quot;: &quot;Friend who introduced BRadvoc8 to RISK network concept&quot;
+|         'date': &quot;2026-03-11T12:00-10:00&quot;
+|         'source': XID(69234c9f)
+|         'target': XID(5f1c3d9e)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+</code></pre>
+<p>Notice how the <code>endorsementScope</code> explicitly states what Charlene is
+<em>not</em> endorsing.</p>
+<h3 id="why-relationship-transparency-matters">Why Relationship Transparency Matters</h3>
+<p>The <code>relationshipBasis</code> assertion is one of the most valuable parts of
+this endorsement. When someone reads "Charlene endorses BRadvoc8,"
+they immediately wonder: How well does Charlene know BRadvoc8? What's
+her basis for judgment? Is there bias?</p>
+<p>Consider two versions of the same endorsement. The weak version says
+only "I endorse BRadvoc8"; the evaluator doesn't know the relationship
+basis, can't assess potential bias, and has little reason to trust the
+statement. The strong version says "I endorse BRadvoc8's
+character. Relationship: friend for 2+ years, observed commitment to
+privacy work." Now the evaluator has something to work with: length of
+relationship, what was actually observed, and honest acknowledgment of
+the friendship.</p>
+<p>Endorsement value comes from context. Without relationship
+transparency, even strong endorsements lose credibility. A stranger's
+"great work!" means nothing; a code reviewer's "I merged 8 of her PRs
+and they were all solid" means everything.</p>
+<h3 id="step-3-publish-endorsement">Step 3: Publish Endorsement</h3>
+<p>Now Charlene can either publicly release her endorsement or pass it on
+to Amira to do with as she pleases.</p>
+<p>If Amira distributes the endorsement herself, it creates the challenge of how viewers will discover Charlene's XID. This is currently an open issue, though reliably listing XIDs in <code>source</code>s and <code>target</code>s is a great start. Distributing a view of Charlene's XID with the endorsement may be a good solution, particularly if it contains a <a href="01_3_Making_a_XID_Verifiable/"><code>dereferenceVia</code></a> that allows viewers to find the fresh original.</p>
+<h3 id="step-4-store-charlenes-info">Step 4: Store Charlene's Info</h3>
+<p>You should store the new keys and XID you created for Charlene:</p>
+<pre><code>echo &quot;$CHARLENE_PRVKEYS&quot; &gt; envelopes/key-charlene-private-3-03.envelope
+echo &quot;$CHARLENE_PUBKEYS&quot; &gt; envelopes/key-charlene-public-3-03.envelope
+echo &quot;$CHARLENE_XID&quot; &gt; envelopes/Charlene-xid-private-3-03.envelope
+echo &quot;$CHARLENE_SIGNED_ENDORSEMENT&quot; &gt; envelopes/claim-charlene-3-03.envelope
+</code></pre>
+<h2 id="part-ii-creating-embedded-peer-endorsements">Part II: Creating Embedded Peer Endorsements</h2>
+<p>The introduction of edges in <a href="../03_1_Creating_Edges/">§3.1: Creating
+Edges</a> offers the possibility of attaching
+endorsements directly to a XID as a link between the two participants
+in the endorsement. Though this didn't make sense for Charlene's character endorsement, it might be appropriate for technical
+endorsements that validate actual skills, since they will go to the heart
+of the work that Amira hopes to do in the RISK network.</p>
+<p>Just as Part I was from Charlene's point of view, Part II is from
+DevReviewer's point of view.</p>
+<h3 id="step-5-create-devreviewers-identity">Step 5: Create DevReviewer's Identity</h3>
+<p>Thanks to Amira proving her BRadvoc8 identity to DevReviewer over the
+course of §2.2-§3.2, DevReviewer took her on to work on a first, small
+project. Afterward, Amira asked DevReviewer to write a peer
+endorsement that she could place in her XID as an embedded peer
+endorsement. DevReviewer agreed.</p>
+<p>This requires also creating DevReviewer's identity.</p>
+<p>You could generate DevReviewer's identity from scratch, but the
+following instead uses the keys already generated for DevReviewer in
+§2.3. (This is done for simplicity of the secondary characters in
+these tutorials; in real-life, Amira might have indeed grabbed the
+pubkeys from DevReviewer's XID to encrypt the material in §2.3, but
+she might have alternatively used keys that DevReviewer
+specifically published that were intended only for encryption of
+content sent to them.)</p>
+<pre><code>REVIEWER_PRVKEYS=$(cat envelopes/key-devreviewer-private-2-03.ur)
+REVIEWER_PUBKEYS=$(cat envelopes/key-devreviewer-public-2-03.ur)
+REVIEWER_PASSWORD=&quot;devreviewers-own-password&quot;
+REVIEWER_XID=$(echo $REVIEWER_PRVKEYS | \
+    envelope xid new \
+    --private encrypt \
+    --encrypt-password &quot;$REVIEWER_PASSWORD&quot; \
+    --nickname &quot;Charlene&quot; \
+    --generator encrypt \
+    --sign inception)
+REVIEWER_XID_ID=$(envelope xid id &quot;$REVIEWER_XID&quot;)
+</code></pre>
+<h3 id="step-6-prepare-data-for-edge-creation">Step 6: Prepare Data for Edge Creation</h3>
+<p>As detailed in
+<a href="03_1_Creating_Edges/#step-3-understand-the-edge">§3.1</a>, creating an
+attestation for use in an edge requires slightly different
+organization than a detached endorsement.</p>
+<p>First, it requires defining three predicates that will be used in the
+top-level of the edge:</p>
+<pre><code>ISA=&quot;attestation&quot;
+SOURCE_XID_ID=$REVIEWER_XID_ID
+TARGET_XID_ID=$XID_ID
+</code></pre>
+<h3 id="step-7-create-technical-endorsement">Step 7: Create Technical Endorsement</h3>
+<p>Now an endorsement can be created with the <code>$TARGET_XID_ID</code> as the
+subject and all the details of the attestation under that. The basics are simple:</p>
+<pre><code>REVIEWER_TARGET=$(envelope subject type ur $TARGET_XID_ID)
+REVIEWER_TARGET=$(envelope assertion add pred-obj string &quot;peerEndorsement&quot; string &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot; $REVIEWER_TARGET)
+REVIEWER_TARGET=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$REVIEWER_TARGET&quot;)
+</code></pre>
+<p>But once more, including context, such as the relationship basis, can add considerably to the value of the endorsement:</p>
+<pre><code>REVIEWER_TARGET=$(envelope assertion add pred-obj string &quot;endorsementContext&quot; string &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot; &quot;$REVIEWER_TARGET&quot;)
+REVIEWER_TARGET=$(envelope assertion add pred-obj string &quot;endorsementScope&quot; string &quot;Security architecture, cryptographic implementation, privacy patterns&quot; &quot;$REVIEWER_TARGET&quot;)
+REVIEWER_TARGET=$(envelope assertion add pred-obj string &quot;relationshipBasis&quot; string &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot; &quot;$REVIEWER_TARGET&quot;)
+</code></pre>
+<h3 id="step-8-enhance-endorser-information">Step 8: Enhance Endorser Information</h3>
+<p>Assertions can always be added to any part of an envelope. For an edge, that mainly means adding assertions to the <code>target</code>, which further define the attestation or credential being defined. However, you can also add content to the <code>source</code> about who the origin of the claim is. This is a self-attestation (since it'll ultimately be signed only
+by DevReviewer), but it can nonetheless add credibility to a peer endorsement (especially if it's verifiable).</p>
+<pre><code>REVIEWER_SOURCE=$(envelope subject type ur $SOURCE_XID_ID)
+</code></pre>
+<p>They then can add whatever details they want:</p>
+<pre><code>REVIEWER_SOURCE=$(envelope assertion add pred-obj string &quot;schema:worksFor&quot; string &quot;SisterSpaces&quot; $REVIEWER_SOURCE)
+REVIEWER_SOURCE=$(envelope assertion add pred-obj string &quot;schema:employeeRole&quot; string &quot;Head Security Programmer&quot; $REVIEWER_SOURCE)
+</code></pre>
+<p>The <a href="https://github.com/BlockchainCommons/Research/blob/master/known-value-assignments/markdown/10000_schema_registry.md"><code>schema</code>
+ontologies</a> that DevReviewer uses to define their role
+are very rich and support deeply recursive descriptions, but DevReviewer keeps it simple.</p>
+<h3 id="step-9-create-your-edge">Step 9: Create Your Edge</h3>
+<p>With all of the puzzle pieces in place (an <code>$ISA</code>, an envelope for the
+<code>source</code>, and an envelope for the <code>target</code>), DevReviewer can now
+create an edge. The only other thing needed is a subject which must be
+unique. Obviously, DevReviewer doesn't know what BRadvoc8 will have in
+their XID, but by adding an Apparently Random Identifier (ARID) on to
+a description, they can produce something that <em>should</em> be unique</p>
+<pre><code>REVIEWER_ARID=$(envelope generate arid -x | cut -c 1-16)
+REVIEWER_SUBJECT=peer-endorsement-from-devreviewer-$REVIEWER_ARID
+REVIEWER_EDGE=$(envelope subject type string $REVIEWER_SUBJECT)
+REVIEWER_EDGE=$(envelope assertion add pred-obj known isA string &quot;$ISA&quot; &quot;$REVIEWER_EDGE&quot;)
+REVIEWER_EDGE=$(envelope assertion add pred-obj known source envelope &quot;$REVIEWER_SOURCE&quot; &quot;$REVIEWER_EDGE&quot;)
+REVIEWER_EDGE=$(envelope assertion add pred-obj known target envelope &quot;$REVIEWER_TARGET&quot; &quot;$REVIEWER_EDGE&quot;)
+</code></pre>
+<p>As is required, the edge now must be wrapped and signed:</p>
+<pre><code>REVIEWER_WRAPPED_EDGE=$(envelope subject type wrapped $REVIEWER_EDGE)
+REVIEWER_SIGNED_EDGE=$(envelope sign --signer &quot;$REVIEWER_PRVKEYS&quot; &quot;$REVIEWER_WRAPPED_EDGE&quot;)
+</code></pre>
+<h3 id="step-10-transmit-your-edge">Step 10: Transmit Your Edge</h3>
+<p>DevReviewer can now send their edge to Amira. it looks like this:</p>
+<pre><code>echo &quot;DevReviewer's endorsement:&quot;
+envelope format $REVIEWER_SIGNED_EDGE
+
+| DevReviewer's endorsement:
+|
+| {
+|     &quot;peer-endorsement-from-devreviewer-28f4b6bc18637fd6&quot; [
+|         'isA': &quot;attestation&quot;
+|         'source': XID(6ab29708) [
+|             &quot;schema:employeeRole&quot;: &quot;Head Security Programmer&quot;
+|             &quot;schema:worksFor&quot;: &quot;SisterSpaces&quot;
+|         ]
+|         'target': XID(5f1c3d9e) [
+|             &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+|             &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+|             &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+|             &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+|             'date': &quot;2026-03-11T13:52-10:00&quot;
+|         ]
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+</code></pre>
+<p>At this point, DevReviewer's peer endorsement is essentially a
+detached attestation that happens to be organized into a very specific
+format. But because of that formatting (a unique subject with three
+assertions, for <code>isA</code>, <code>source</code>, and <code>target</code>), Amira can choose to
+add it to the BRadvoc8 XID <em>if she wants to</em>.</p>
+<p>That's how self-sovereign identity works. You can't control what other
+people say about you, but you can choose what's part of your identity
+as you present it.</p>
+<blockquote>
+<p>🔥 <strong>What is the Power of Self-Sovereign identity?</strong> Self-sovereign
+identity means that you control everything within a membrane in your
+identity ecosystem. Though you can't control what other people say
+about the identity, you control what is directly associated with the
+identity itself: you get to see it all, and you get to control it.</p>
+</blockquote>
+<h3 id="step-11-store-devreviewers-info">Step 11: Store DevReviewer's Info</h3>
+<p>You should also store DevReviewer's info:</p>
+<pre><code>echo &quot;$REVIEWER_PRVKEYS&quot; &gt; envelopes/key-devreviewer-private-3-03.envelope
+echo &quot;$REVIEWER_PUBKEYS&quot; &gt; envelopes/key-devreviewer-public-3-03.envelope
+echo &quot;$REVIEWER_XID&quot; &gt; envelopes/DevReviewer-xid-private-3-03.envelope
+echo &quot;$REVIEWER_SIGNED_EDGE&quot; &gt; envelopes/claim-devreviewer-3-03.envelope
+</code></pre>
+<p>(We did make another copy of the keys created in §2.3! They're just
+the same, but we figure having them together will make verification of
+the endorsement easier.)</p>
+<h2 id="part-iii-embedding-peer-endorsements">Part III: Embedding Peer Endorsements</h2>
+<p>Once Amira has received DevReviewer's endorsement, they can decide
+whether to add it to their XID, maintain it as a detached endorsement
+that they give out separately, or drop it entirely.</p>
+<h3 id="step-12-embed-devreviewers-peer-endorsement">Step 12: Embed DevReviewer's Peer Endorsement</h3>
+<p>If DevReviewer had not given Amira a peer endorsement in the precise
+format for an edge, it could not be attached as an edge. But because
+they did, it can be attached with a simple command, provided that Amira feels
+it's core to her XID and it's how she wants to present herself:</p>
+<pre><code>XID_WITH_EDGE=$(envelope xid edge add $REVIEWER_SIGNED_EDGE $XID)
+</code></pre>
+<p>As usual, after creating a new version of her XID (with either added
+or removed content), Amira should advance its provenance mark.</p>
+<pre><code>XID_WITH_EDGE=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$XID_WITH_EDGE&quot;)
+echo &quot;✅ Provenance advanced&quot;
+</code></pre>
+<p>Here's Amira's complete XID at this point:</p>
+<pre><code>echo &quot;Amira's v4 XID:&quot;
+envelope format $XID_WITH_EDGE
+
+| Amira's v4 XID:
+|
+| XID(5f1c3d9e) [
+|     'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+|     'edge': {
+|         &quot;account-credential-github&quot; [
+|             'isA': &quot;foaf:OnlineAccount&quot;
+|             'source': XID(5f1c3d9e)
+|             'target': XID(5f1c3d9e) [
+|                 &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|                 &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+|                 &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|                 &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+|                 &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|                 'conformsTo': URI(https://github.com)
+|                 'date': &quot;2026-03-11T09:21-10:00&quot;
+|                 'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+|             ]
+|         ]
+|     } [
+|         'signed': Signature(SshEd25519)
+|     ]
+|     'edge': {
+|         &quot;peer-endorsement-from-devreviewer-28f4b6bc18637fd6&quot; [
+|             'isA': &quot;attestation&quot;
+|             'source': XID(6ab29708) [
+|                 &quot;schema:employeeRole&quot;: &quot;Head Security Programmer&quot;
+|                 &quot;schema:worksFor&quot;: &quot;SisterSpaces&quot;
+|             ]
+|             'target': XID(5f1c3d9e) [
+|                 &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+|                 &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+|                 &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+|                 &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+|                 'date': &quot;2026-03-11T13:52-10:00&quot;
+|             ]
+|         ]
+|     } [
+|         'signed': Signature(Ed25519)
+|     ]
+|     'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Sign'
+|         'nickname': &quot;attestation-key&quot;
+|     ]
+|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'All'
+|         'nickname': &quot;BRadvoc8&quot;
+|     ]
+|     'provenance': ProvenanceMark(16be4cbd) [
+|         {
+|             'provenanceGenerator': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|     ]
+| ]
+</code></pre>
+<h3 id="step-13-export-store-your-work">Step 13: Export &amp; Store Your Work</h3>
+<p>As usual, you should create a public view of the new XID that elides all the
+sensitive keys:</p>
+<pre><code>PUBLIC_XID_WITH_EDGE=$(envelope xid export --private elide --generator elide &quot;$XID_WITH_EDGE&quot;)
+</code></pre>
+<p>Afterward, you should save your data, including the
+fourth version of Amira's XID.</p>
+<pre><code>echo &quot;$PUBLIC_XID_WITH_EDGE&quot; &gt; envelopes/BRadvoc8-xid-public-3-03.envelope
+echo &quot;$XID_WITH_EDGE&quot; &gt; envelopes/BRadvoc8-xid-private-3-03.envelope
+</code></pre>
+<h4 id="xid-version-comparison">XID Version Comparison</h4>
+<p>You've now created a fourth XID version. You take a look at the provenance marks again in the next section, but here's an overview of what each version contains</p>
+<table>
+<thead>
+<tr>
+<th>XID Version</th>
+<th>New Content</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seq 0</td>
+<td>👤 Identity</td>
+<td>§1.2+§1.3</td>
+</tr>
+<tr>
+<td>seq 1</td>
+<td>🔑 Attestation Key</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>seq 2</td>
+<td>🗣️ GitHub Edge</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>seq 3</td>
+<td>🗣️ Endorsement Edge</td>
+<td>§3.3</td>
+</tr>
+</tbody>
+</table>
+<h2 id="part-iv-creating-a-web-of-trust">Part IV: Creating a Web of Trust</h2>
+<p><a href="../concepts/progressive-trust.md">Progressive Trust</a> is created over time in two ways:</p>
+<ol>
+<li>By revealing more information to inviduals over time, such as with Amira revealed a commitment to DevReviewer in <a href="../02_2_Managing_Claims_Elision/">§2.2</a> and sent encrypted data to DevReviewer in <a href="../02_3_Managing_Claims_Encryption/">§2.3</a>.</li>
+<li>By building a web of trust that incorporates endorsements from many peers, who are themselves endorsed by other peers.</li>
+</ol>
+<p>Though Amira has successfully improved the trust of BRadvoc8 through
+the addition of a new detached endorsement from Charlene and a new
+embedded endorsement from DevReviewer, it's just part of a process.</p>
+<h3 id="step-14-collect-more-endorsements">Step 14: Collect More Endorsements</h3>
+<p>Over time, Amira will collect more endorsements that she might store separately or attach to her XID.</p>
+<p>Without going through the rigamarole of creating the endorsement, the
+following is a third attestation that Amira collects from the
+maintainer of a repo that she contributed to.</p>
+<pre><code>| SecurityMaintainer's endorsement:
+| {
+|     &quot;BRadvoc8 is a reliable contributor who delivers high-quality security enhancements and responds constructively to feedback&quot; [
+|         'isA': 'attestation'
+|         &quot;endorsementContext&quot;: &quot;Collaborated on 3 security features over 6 months&quot;
+|         &quot;endorsementScope&quot;: &quot;Technical skills, collaboration quality, communication&quot;
+|         &quot;relationshipBasis&quot;: &quot;Project maintainer who merged BRadvoc8's contributions&quot;
+|         'date': &quot;2026-09-17T07:31-07:00&quot;
+|         'source': XID(6c0523fc)
+|         'target': XID(5f1c3d9e)
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+
+</code></pre>
+<blockquote>
+<p>📖 <strong>Do I have to write endorsements in this format?</strong> You've
+doubtless noted that all of endorsements have rigidly used
+<code>endorsementContext</code>, <code>endorsementScope</code>, and
+<code>relationshipBasis</code>. Obviously, you can use whatever format you want
+when writing attestations. What we present here is simply a suggestion
+for best practice—and the best practice are not necessarily these specific predicates, but
+instead the practice of using a fair witness methodology to accurately
+and impartially report the context and potential bias of an endorsement.</p>
+</blockquote>
+<h3 id="step-15-verify-all-endorsements">Step 15: Verify All Endorsements</h3>
+<p>Whenever other viewers are looking over the endorsements, they'll want to verify them.</p>
+<p>For a detached endorsement like Charlene's, this is easy. They
+discover Charlene's XID or retrieve her public key from somewhere
+else, such as a PKI, then they verify it against the endorsement</p>
+<p>Once another user has Charlene's endorsement, and has acquired her
+pubkeys from her XID, they can verify her signature:</p>
+<pre><code>envelope verify -s --verifier &quot;$CHARLENE_PUBKEYS&quot; &quot;$CHARLENE_SIGNED_ENDORSEMENT&quot;
+
+│ Signature valid (silence means success)
+</code></pre>
+<p>The verified signature proves this endorsement was signed by Charlene
+and hasn't been modified. But why is this more trustworthy than
+Amira's self-attestations?</p>
+<p>The difference is cost. Charlene is an independent party staking her
+own reputation on BRadvoc8. If BRadvoc8 turns out to be incompetent or
+dishonest, Charlene looks bad for vouching. That reputational risk
+makes her endorsement a costly signal, one that goes up in value the
+more that Charlene's own XID has been used and is trusted.</p>
+<p>Self-attestations cost nothing; endorsements cost credibility.</p>
+<p>Verifying an embedded endorsement requires extracting it, then
+checking the signature. This was demonstrated in
+<a href="../03_2_Supporting_Cross_Verification/">§3.2</a>.</p>
+<p>[EXAMPLE TBD after writing §3.2]</p>
+<h4 id="what-if-someone-forges-an-endorsement">What If Someone Forges an Endorsement?</h4>
+<p>What happens if someone creates a fake endorsement, for example claiming Charlene endorsed them?</p>
+<pre><code>FAKE_CLAIM=$(envelope subject type string &quot;BRadvoc8 is amazing at everything&quot;)
+FAKE_ENDORSEMENT=$(envelope assertion add pred-obj known isA known 'attestation' &quot;$FAKE_CLAIM&quot;)
+FAKE_ENDORSEMENT=$(envelope assertion add pred-obj known source ur $CHARLENE_XID_ID &quot;$FAKE_ENDORSEMENT&quot;)
+FAKE_ENDORSEMENT=$(envelope assertion add pred-obj known target ur $XID_ID &quot;$FAKE_ENDORSEMENT&quot;)
+FAKE_ENDORSEMENT=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$FAKE_ENDORSEMENT&quot;)
+FAKE_WRAPPED=$(envelope subject type wrapped $FAKE_ENDORSEMENT)
+ATTACKER_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+FAKE_SIGNED=$(envelope sign --signer &quot;$ATTACKER_PRVKEYS&quot; &quot;$FAKE_WRAPPED&quot;)
+</code></pre>
+<p>The forgery fails because the attacker can't produce a valid signature
+without Charlene's private key. Anyone can <em>claim</em> they are endorsed
+by <code>source': XID(69234c9f)</code> in the metadata, but only the
+cryptographic signature proves authenticity and that requires
+Charlene's actual key.</p>
+<pre><code>envelope verify --verifier &quot;$REVIEWER_PUBKEYS&quot; &quot;$FAKE_SIGNED&quot;
+
+│ Error: could not verify a signature
+</code></pre>
+<h3 id="step-16-develop-a-web-of-trust">Step 16: Develop a Web of Trust</h3>
+<p>BRadvoc8 now has three endorsements from different contexts:</p>
+<table>
+<thead>
+<tr>
+<th>Endorser</th>
+<th>Type</th>
+<th>Relationship</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Charlene</td>
+<td>Character</td>
+<td>Friend (2+ years)</td>
+<td>Values, commitment</td>
+</tr>
+<tr>
+<td>DevReviewer</td>
+<td>Technical</td>
+<td>Security collaboration (short project)</td>
+<td>Security architecture, crypto</td>
+</tr>
+<tr>
+<td>SecurityMaintainer</td>
+<td>Collaboration</td>
+<td>Project maintainer (6 months)</td>
+<td>Technical skills, communication</td>
+</tr>
+</tbody>
+</table>
+<p>Trust multiplies as endorsements increase, especially when they have different contexts:</p>
+<table>
+<thead>
+<tr>
+<th>Endorsements</th>
+<th>Trust Level</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Weak</td>
+<td>Could be a friend doing a favor</td>
+</tr>
+<tr>
+<td>3 independent</td>
+<td>Moderate</td>
+<td>Pattern of validation</td>
+</tr>
+<tr>
+<td>3 from different contexts</td>
+<td>Strong</td>
+<td>Triangulated trust</td>
+</tr>
+</tbody>
+</table>
+<p>However, qulity matters more than quantity. Three endorsements from
+unknown people don't equal a strong reputation. Three from established
+community members with clear context is a strong signal.</p>
+<p>This is a web of trust!</p>
+<blockquote>
+<p>⚠️ <strong>Endorsement Quality</strong>: The quality of an endorsement
+comes in two parts. First, based on what the endorsement
+says. "BRadvoc8 is great!" with no context has low value, but "I
+reviewed 8 of her PRs and they were all high quality" with specific
+evidence has high value. Second, based on who the endorser
+is. Reputation is recursive: endorsements are only as valuable as the
+endorsers' own reputations.</p>
+</blockquote>
+<h4 id="the-problems-of-the-web-of-trust">The Problems of the Web of Trust</h4>
+<p>The Web of Trust is not perfect. We've been talking about it since the
+release of <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy">PGP</a> in
+1991. A decades worth of <a href="https://www.weboftrust.info/events/">Rebooting the Web of Trust
+events</a> offered answers to some
+of the problems, but not all. Here's some of the biggest issues you need to think about:</p>
+<p><strong>The XID Discovery Challenge:</strong> How do you find XIDs in the first place?
+Amira messaged hers to Ben (and later DevReviewer) in these tutorials,
+but how does someone else find Charlene's XID and DevReviewer's XID,
+which are mentioned in Amira's new peer endorsements?</p>
+<p>This is an active area of development. For now, discovery happens
+through existing channels: project READMEs, social introductions,
+conference talks, or forum posts. The XID provides the <em>verification</em>
+infrastructure; discovery tooling will make the ecosystem more
+navigable as it matures.  Other approaches include:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>How It Works</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct sharing</td>
+<td>Amira sends her XID or her publication URL</td>
+<td>Works now</td>
+</tr>
+<tr>
+<td>Project directories</td>
+<td>Maintainers list contributor XIDs</td>
+<td>Manual curation</td>
+</tr>
+<tr>
+<td>Skill registries</td>
+<td>Attestations are indexed by <code>isA</code> type</td>
+<td>Under development</td>
+</tr>
+<tr>
+<td>Web of trust crawling</td>
+<td>Endorsement links can be followed</td>
+<td>Under development</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The Endorsement Publication Challenge:</strong> Much the same question
+exists for what to do with the endorsements themselves. There are a
+number of possibilities, all of which have been previously
+considered. Many of these are orthgonal (e.g., a endorsement could be
+deatached and encrypted or embedded and elided).</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>How It Works</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detached Endorsement</td>
+<td>Endorsement stored separately</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>Elided Endorsement</td>
+<td>Endorsement redacted except for digest</td>
+<td>§2.2</td>
+</tr>
+<tr>
+<td>Embedded Endorsement</td>
+<td>Endorsement stored in XID</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>Encrypted Endorsement</td>
+<td>Encorsement encrypted</td>
+<td>§2.3</td>
+</tr>
+</tbody>
+</table>
+<p>A lot of this is from the point of view of the endorsee, but the
+endorser could also maintain signed lists of endorsements that they've
+made (or signed lists of commitments to those endorsements!).</p>
+<p><strong>The Bootstrapping Problem:</strong> Finally, how does someone know that "Charlene"
+is actually Charlene? You can verify that their signature matches
+Charlene's public key, but how do you know that key belongs to a
+trustworthy person named Charlene?</p>
+<p>This is the bootstrapping problem of any trust network. The signature
+proves the endorsement came from <em>whoever controls that key</em>. It
+doesn't prove that person is who they claim to be. For that you have to see what endorsements Charlene has, and what endorsements they have ... throughout the web until you're satisfied.</p>
+<h3 id="step-17-consider-the-endorsement-lifecycle">Step 17: Consider the Endorsement Lifecycle</h3>
+<p>Just as with all sorts of attestations, endorsements are point-in-time
+statements. Charlene's endorsement reflects what she observed through
+January 2026. Like all attestations, peer endorsements can grow stale,
+and so their age should be considered: if BRadvoc8's behavior changes,
+the endorsement doesn't automatically update.</p>
+<p>Managing the attestation lifecycle, as discussed in
+<a href="02_1_Creating_Self_Attestations/#part-v-managing-the-attestation-lifecycle">§2.1</a>,
+is at least as important for peer endorsements as it is for
+self-attestations.</p>
+<h2 id="summary-progressive-trust-layers">Summary: Progressive Trust Layers</h2>
+<p>At this point, Amira has built a succession of progressive trust layers:</p>
+<ol>
+<li><a href="../01_2_Your_First_XID/">§1.2</a>: Self-sovereign identity (XID exists)</li>
+<li><a href="../01_3_Making_a_XID_Verifiable/">§1.3</a>: Self-consistent (signature verifies, fresh)</li>
+<li><a href="../02_1_Creating_Self_Attestations/">§2.1</a>: Fair-witness claims (public, verifiable claims)</li>
+<li><a href="../02_2_Managing_Claims_Elision/">§2.2</a>: Medium sensitive claims managed (commit elided, reveal later)</li>
+<li><a href="../02_3_Managing_Claims_Encryption/">§2.3</a> High sensitive claims managed (encrypted, sent to trusted parties)</li>
+<li><a href="../03_1_Creating_Edges/">§3.1</a>: Externally linked (GitHub, SSH key)</li>
+<li><a href="../03_2_Supporting_Cross_Verification/">§3.2</a> Cross-verified (external accounts confirmed)</li>
+<li><a href="./">§3.3</a>: Peer validated (independent endorsements)</li>
+</ol>
+<p>Amira's reputation is <strong>portable</strong> (follows her XID), <strong>verifiable</strong>
+(anyone can check), <strong>privacy-preserving</strong> (no legal identity), and
+<strong>growing</strong> (can continue building).</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains the plethora of information created for this
+sections, mostly importantly included BRadvoc8's newest <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-3-01.envelope">private
+XID</a>
+and <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-3-01.envelope">public
+XID</a>.</p>
+<p><strong>Scripts:</strong> Scripts demonstrating this section are forthcoming.</p>
+<h3 id="exercises">Exercises</h3>
+<ol>
+<li>Design an endorsement request for a real collaborator. What would
+you ask them to endorse, and what context would you provide?</li>
+<li>Write an endorsement for a fictional peer using fair witness methodology (direct observation, specific scope, relationship disclosure, acknowledged limitations).</li>
+<li>Evaluate endorsement quality: compare "X is great!" vs "I reviewed X's code for 6 months and merged 12 PRs". What makes one better?</li>
+<li>Identify who could provide endorsements for different aspects of your work (technical, collaboration, character).</li>
+<li>Draft an endorsement you could honestly give someone today, being
+specific about what you've observed and what you can't speak to.</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>Future topics are being considered for this course, but at the moment this is the end.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Character Endorsement:</strong> A general peer endorsement speaking to who someone is.</p>
+<p><strong>Endorsement Scope:</strong> Explicit limitations on what an endorsement covers.</p>
+<p><strong>Peer Endorsement:</strong> A signed statement someone else makes about you, providing independent validation.</p>
+<p><strong>Relationship Transparency:</strong> Explanation of how endorser knows the endorsed person.</p>
+<p><strong>Technical Endorsement:</strong> A precise peer endorsement speaking to skills and expertise, often through fair-witnessed examples of work.</p>
+<p><strong>Web of Trust:</strong> Network of interconnected endorsements where trust propagates through relationships.</p>
+</blockquote>
+<h2 id="appendix-ii-common-questions">Appendix II: Common Questions</h2>
+<h3 id="q-how-many-endorsements-do-i-need">Q: How many endorsements do I need?</h3>
+<p><strong>A:</strong> Quality over quantity. Three strong endorsements from
+established community members with clear context are worth more than
+ten vague ones. Focus on endorsements from people with relevant
+expertise who can speak to specific aspects of your work.</p>
+<h3 id="q-what-if-an-endorser-becomes-disreputable">Q: What if an endorser becomes disreputable?</h3>
+<p><strong>A:</strong> Endorsements are point-in-time statements. The endorsement
+remains cryptographically valid, but evaluators will consider the
+endorser's current standing. Diversify your endorsers so no single
+person is critical to your reputation. This resilience is a key
+benefit of the web of trust.</p>
+<h3 id="q-can-i-endorse-others">Q: Can I endorse others?</h3>
+<p><strong>A:</strong> Yes! Apply fair witness methodology: endorse only what you've
+directly observed, be specific about scope, and disclose your
+relationship. Your endorsement staking helps build the network and
+strengthens your own reputation as a thoughtful evaluator.</p>
+<h3 id="q-can-i-warn-others-about-a-bad-actor">Q: Can I warn others about a bad actor?</h3>
+<p><strong>A:</strong> Yes: a signed statement with relationship context and specific
+evidence is a negative endorsement. But use this methodology carefully: false accusations
+damage your own reputation, and vague warnings ("X is bad") carry
+little weight. Specific, documented concerns ("I observed X claim
+credentials they didn't have") are more valuable.</p>
+<h3 id="q-what-if-i-want-to-withdraw-an-endorsement">Q: What if I want to withdraw an endorsement?</h3>
+<p><strong>A:</strong> You can publish a revocation as described in
+<a href="02_1_Creating_Self_Attestations/#step-15-retract-an-attestation">§2.1</a>: a new signed statement
+that supersedes the original endorsement. Include a reference to the
+original's digest and explain why you're withdrawing it. The original
+endorsement doesn't disappear, but the revocation provides context for
+evaluators.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
