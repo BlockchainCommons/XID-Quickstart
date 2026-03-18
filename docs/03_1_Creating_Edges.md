@@ -329,7 +329,7 @@ envelope format "$TARGET"
 |     "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net"
 |     "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
 |     'conformsTo': URI(https://github.com)
-|     'date': "2026-03-11T09:21-10:00"
+|     'date': "2026-03-18T11:55-10:00"
 |     'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
 | ]
 ```
@@ -383,6 +383,7 @@ echo "GitHub edge details:"
 envelope format "$EDGE"
 
 | GitHub edge details:
+|
 | "account-credential-github" [
 |     'isA': "foaf:OnlineAccount"
 |     'source': XID(5f1c3d9e)
@@ -393,7 +394,7 @@ envelope format "$EDGE"
 |         "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net"
 |         "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
 |         'conformsTo': URI(https://github.com)
-|         'date': "2026-03-11T09:21-10:00"
+|         'date': "2026-03-18T11:55-10:00"
 |         'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
 |     ]
 | ]
@@ -420,9 +421,15 @@ identified by 'source'). "
 
 Now that you've done all the work of creating an edge, linking it to Amira's XID is extremely simple:
 ```
-XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)
+XID_WITH_EDGE=$(envelope xid edge add \
+    --verify inception \
+    $SIGNED_EDGE $XID)
 ```
-This is a prime example of how simple `envelope xid` commands are when you don't have to decrypt and re-encrypt as part of the process.
+
+As in §2.1, we've verified the original inception signature, but we
+haven't bother to re-sign yet, because we haven't finalized the new
+edition of the XID.
+
 
 ```
 echo "XID with GitHub edge:"
@@ -443,7 +450,7 @@ envelope format "$XID_WITH_EDGE"
 |                 "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net"
 |                 "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
 |                 'conformsTo': URI(https://github.com)
-|                 'date': "2026-03-11T09:21-10:00"
+|                 'date': "2026-03-18T11:55-10:00"
 |                 'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
 |             ]
 |         ]
@@ -465,11 +472,13 @@ recursive metadata.
 
 By adding the GitHub edge, you've created a new edition of Amira's
 XID. Since you plan to publish it, that means you must update the
-provenance mark
+provenance mark (and as usual, sign the new XID, which requires
+decrypting and re-encrypting everything).
 
 ```
 XID_WITH_EDGE=$(envelope xid provenance next \
     --password "$PASSWORD" \
+    --sign inception \
     --private encrypt \
     --generator encrypt \
     --encrypt-password "$PASSWORD" \
@@ -484,8 +493,7 @@ You should also create a public view of the new XID that elides all the
 sensitive keys:
 
 ```
-PUBLIC_XID_WITH_EDGE=$(envelope xid export --private elide --generator
-elide "$XID_WITH_EDGE")
+PUBLIC_XID_WITH_EDGE=$(envelope xid export --private elide --generator elide "$XID_WITH_EDGE")
 ```
 
 This is what you'll send to DevReviewer for their review, which we'll
