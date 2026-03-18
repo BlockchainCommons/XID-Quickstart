@@ -15,7 +15,7 @@ theoretical foundations.
 After working through this section, a developer will be able to:
 
 - Create a basic XID for pseudonymous identity
-- Create public views of your XID using elision
+- Create public views of your XID using automated elision
 - Maintain strong cryptographic integrity while sharing selectively
 - Verify signature
 - Examine provenance marks
@@ -24,6 +24,7 @@ Supporting objectives include the ability to:
 
 - Understand what a XID is.
 - Know what a pseudonymous identity is.
+- Know what elision is and why you'd use it.
 - Understand XID file organization using secure naming conventions
 
 ## Amira's Story: Why Pseudonymous Identity Matters

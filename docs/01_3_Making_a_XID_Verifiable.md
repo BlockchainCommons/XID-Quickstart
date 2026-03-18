@@ -134,16 +134,18 @@ This command uses the following new arguments:
 
 1. The `$PUBLISH_URL` is of course required by `xid resolution add`.
 2. `--verify inception` says to verify that the signature of the original `$XID` was made with its inception key.
-3. `--password "$PASSWORD"` decrypts the previously encrypted information with the `$PASSWORD`.
+3. `--password "$PASSWORD"` decrypts the previously encrypted
+information with the `$PASSWORD`. This is necessary so that you can
+use the inception key (currently encrypted) to sign the new XID.
 
 You want the new, updated XID to have the same protections as the
 original, so you also repeat the various encryption and signature
 commands as part of the creation for Amira's updated XID:
 
-1. `--private encrypt` to encrypt the private key.
-2. `--generate encrypt` to encrypt the provenance mark generate.
+1. `--private encrypt` to re-encrypt the private key.
+2. `--generate encrypt` to re-encrypt the provenance mark generate.
 3. `--encrypt-password` to use the `$PASSWORD` in future decryption.
-4. `--sign` to sign the new document.
+4. `--sign` to sign the new document with your inception key.
 
 Note that you didn't have to repeat commands like `--nickname`. That's
 because the whole previous XID was read in. (You also could have excluded the decryption and the re-encryption, as they're only entirely necessary when you're adjusting the keys or the generator, but we included everything in this example so that they'd be clear in later examples where they are required.)
@@ -211,16 +213,52 @@ both a GitHub raw URL and a personal domain, so if one source becomes
 unavailable, verifiers can still fetch your current XID Document from
 the other.
 
+#### Update the Easy Way
+
+Our examples so far have signed each XID with its inception key. This
+allows viewers to verify that the owner of the XID stands behind this
+edition of the XID: it's not something that someone else made! Doing
+this is generally a best practice.
+
+However, it also creates a lot of additional rigamarole: you have to
+supply your password to decrypt the original, supply a new password to
+re-encrypt, and tell `envelope` to encrypt both the private key and
+the provenance mark generator.
+
+Here's what the command looks like without all of that complexity:
+
+```
+XID_WITH_URL=$(envelope xid resolution add \
+    "$PUBLISH_URL" \
+    --verify inception \
+    "$XID")
+```
+
+Or removing the old signature verification as well:
+
+```
+XID_WITH_URL=$(envelope xid resolution add \
+    "$PUBLISH_URL" \
+    "$XID")
+```
+
+The difference is that these versions of the XID won't be signed (and
+a new signature is needed every time a new edition is made, because
+changing an edition of a XID changes its root hash, which invalidates
+the old signature).
+
+Future examples will omit the signature of the XID overall to clarify
+the commands being used for updates. That doesn't meant they can't be
+signed: even after you've created a XID, you can always extract the
+inception key by hand, then wrap and sign it, which has the same
+effect as the `--sign` flag (though it's not as easy to use).
+
 ### Step 4: Export Public View
 
-You now want to elide the private keys in the XID, to create a view of
-this edition that is safe for publication. In
-[§1.2](01_2_Your_First_XID.md), you manually found digests and used
-`envelope elide removing` to create a public view. We used that method
-to show how elision works. However, there's a simpler command that
-optionally elides the private keys and/or the provenance mark
-generator: `xid export`. That's what you'll want to use most of the
-time (when you're not learning about elision!):
+You can now use `xid export` to create a public view by eliding your
+private keys and your provenance mark generator, just like you did in
+§1.2:
+
 
 ```
 PUBLIC_XID=$(envelope xid export --private elide --generator elide "$XID_WITH_URL")

@@ -106,6 +106,7 @@ You'll also want to reload your XID. The following assumes use of the [`envelope
 ```
 XID=$(cat envelopes/BRadvoc8-xid-private-1-03.envelope)
 XID_ID=$(envelope xid id $XID)
+PASSWORD="your-password-from-previous-tutorials"
 ```
 
 ## Part I: Adding an Attestation Key
@@ -140,11 +141,9 @@ ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
 For Ben to verify attestations came from BRadvoc8, the attestation public key must be in the XID. You also should embed the private key (encrypted) so that Amira can sign attestations without managing separate key files. This is done with the `xid key add` command, which is very similar yo the `xid resolution add` function that you used in the last tutorial.
 
 ```
-PASSWORD="your-password-from-previous-tutorials"
 UPDATED_XID=$(envelope xid key add \
     --nickname "attestation-key" \
     --allow sign \
-    --password "$PASSWORD" \
     --private encrypt \
     --encrypt-password "$PASSWORD" \
     "$ATTESTATION_PRVKEYS" \
@@ -153,7 +152,13 @@ UPDATED_XID=$(envelope xid key add \
 echo "✅ Added attestation key to XID"
 ```
 
-The `envelope-cli` programs derives the public key from the private key automatically. With the `--private encrypt`, `--password`, and `--encrypt-password` commands, the private XID is first decrypted, then re-encrypted. You also add a new `nickname` to clarify what the key is for, and tthen here's one new argument:
+The `envelope-cli` programs derives the public key from the private
+key automatically. Several commands are repeated from past
+examples. You use the `--private encrypt` and ``-encrypt-password`
+commands to make sure the new key is encrypted.  You also add a new
+`nickname` to clarify what the key is for
+
+There's just one new argument:
 
 1. `--allow sign` is a permission statement indicates this key can only sign, it cannot modify the XID itself. (That requires the inception key.)
 
@@ -163,7 +168,7 @@ The `envelope-cli` programs derives the public key from the private key automati
 
 You're going to need to publish this XID so that Ben can check Amira's self-attestation against her new signature. Whenever you publish a new edition of a XID (meaning that you've changed the underlying content, not just changing the view by eliding existing data differently), you should also advance the provenance mark. This will allow viewers who have multiple copies of a XID to determine which one is newest.
 
-Advancing the provenance mark is done with the simple `provenance next` command, which as usual must decrypt and reencrypt your content:
+Advancing the provenance mark is done with the simple `provenance next` command.
 ```
 UPDATED_XID=$(envelope xid provenance next \
     --password "$PASSWORD" \
@@ -175,6 +180,11 @@ echo "✅ Provenance advanced"
 
 | ✅ Provenance advanced
 ```
+
+Note that this is one of the situations where you actually need to
+decrypt your encrypted content, so that you can use the provenance
+mark generator to advance the chain. That means that you need to
+decrypt afterward.
 
 You can see what your XID looks like after all that work:
 ```

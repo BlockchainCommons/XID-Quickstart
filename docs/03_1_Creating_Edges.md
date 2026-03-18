@@ -418,9 +418,7 @@ Now that you've done all the work of creating an edge, linking it to Amira's XID
 ```
 XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)
 ```
-As we noted previously, as long as you're not touching the keys or the
-provenance marks, you don't have to work about decryption and
-re-encryption. This is the prime example.
+This is a prime example of how simple `envelope xid` commands are when you don't need to rearrange the encryption.
 
 ```
 echo "XID with GitHub edge:"
@@ -476,10 +474,6 @@ echo "✅ Provenance advanced"
 
 | ✅ Provenance advanced
 ```
-In contrast to the previous example, this is a situation where the
-password must be sent to the XID, since it's needed to unlock the
-Provenance Mark generator, to create the next Mark in the chain.
-
 ### Step 9: Export & Store Your Work
 
 You should create a public view of the new XID that elides all the
