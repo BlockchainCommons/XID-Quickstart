@@ -558,24 +558,22 @@ A digital signature is verified against a public key. For a XID, that's the publ
 After publication, a public key might also be retrieved from a PKI or
 other publication site. But for this tutorial, you have to dig down
 through the envelope to get to it. The following demonstrates that:
-`envelope xid key all` provides a list of all the keys. Because
-there's just one, we can then use `envelope extract ur` to grab the
-subject of that key, which is the public. (What to do if you _might_
-have multiple keys in a XID is covered in
+`envelope xid key all` provides a list of all the keys. Because we
+know there's just one, we can then use `that.  (What to do if you
+_might_ have multiple keys in a XID is covered in
 [§2.1](02_1_Creating_Self_Attestations.md), but this bit of sloppiness
 will do for the moment.)
 
 ```
 KEY_OBJECT=$(envelope xid key all $PUBLIC_XID)
-PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 ```
 
 You can then use envelope's `verify` command to verify the signature of the `PUBLIC_XID` against that public key:
 
 ```
-envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified!"
+envelope verify -v "$KEY_OBJECT" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified"
 
-│ ✅ Signature verified!
+│ ✅ Signature verified
 ```
 
 This confirms that this XID Document has been signed by the owner of

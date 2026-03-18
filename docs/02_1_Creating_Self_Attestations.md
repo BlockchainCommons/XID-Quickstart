@@ -466,9 +466,10 @@ read -d '' -r -a PUBKEY <<< $(envelope xid key all "$BEN_FETCHED_XID")
 
 As promised, the command-line work becomes somewhat more arcane when
 there might be multiple keys in a XID; now they all need to be
-extracted.  If he preferred, Ben could just output `envelope xid key
-all` to his screen, and then copy each one to a variable by hand and
-check each of those by hand with `envelope verify -v`.
+extracted, which is done here with the `read` command. If he
+preferred, Ben could just output `envelope xid key all` to his screen,
+and then copy each one to a variable by hand and check each of those
+by hand with `envelope verify -v`.
 
 But by having them in an array, Ben can do a quick check to see if any of the signatures verified (tossing out failures, because they're totally OK: only one key needs to be matched):
 ```

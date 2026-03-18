@@ -384,11 +384,19 @@ version, right? Not necessarily! It's possible that the URL is no
 longer Amira's primary publication location, and there's actually a
 newer version elsewhere! To verify that this isn't the case, Ben
 should check the `dereferenceVia` one more time, looking at the new
-document that he downloaded. He does this by extracting the
-`dereferenceVia` from this fetched and unwrapped XID (again, we'll
-talk more about how the 'find' commands work in
-[§3.5](03_5_Creating_Views_and_Versions.md)), and comparing it to the
-URL that he used to lookup the XID.
+document that he downloaded.
+
+He does this by extracting the `dereferenceVia` from the fetched
+XID. We've previously extracted keys, and that was simple because
+there's an `envelope xid key all` command to do so. Here we here
+instead use somewhat more complex `find` and extract commands that:
+
+1. Unwrap the envelope.
+2. Find the assertion with a `dereferenceVia` predicate.
+3. Extract the object of that predicate, which is the URL.
+
+We'll talk more about this process in [§3.5](03_5_Creating_Views_and_Versions.md).
+
 
 ```
 UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
@@ -429,9 +437,8 @@ signature and the provenance mark.
 
 ```
 KEY_OBJECT=$(envelope xid key all "$FETCHED_XID")
-PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 
-if envelope verify -v "$PUBLIC_KEYS" "$FETCHED_XID" >/dev/null 2>&1; then
+if envelope verify -v "$KEY_OBJECT" "$FETCHED_XID" >/dev/null 2>&1; then
     echo "✅ Signature verified - XID is self-consistent"
 else
     echo "❌ Signature FAILED - XID may be tampered\!"
