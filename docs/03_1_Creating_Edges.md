@@ -1,12 +1,14 @@
 # 3.1: Creating Edges
 
-A lot of data can be created adjacent to a XID: you create a new
-Gordian Envelope, you reference your XID, and you sign with your XID's
-signing key. The result is additional details for a XID without
-overfilling the XID's central data space. But sometimes data needs to
-be more centrally stored in the XID itself. There are a variety of
-methods for doing so; one of them is by creating Edges within the XID,
-which support attestations within the XID itself.
+Data about an identity doesn't have to be placed in your XID itself.
+You can alternatively create a new Gordian Envelope, reference your
+XID from that envelope, and sign the envelope with your XID's signing
+key. The result is additional details for a XID without overfilling
+the XID's central data space. This was how a variety of claims were
+created in chapter 2.  However, sometimes data needs to be more
+centrally stored in the XID itself. There are a variety of methods for
+doing so; one of them is by creating "edges" within the XID, which
+support attestations within the XID itself.
 
 > :brain: **Related Concepts**: This tutorial covers the creation of
 an attestation as an edge. For deeper understanding, see [Attestation
@@ -31,7 +33,7 @@ Supporting objectives include the ability to:
 
 ## Amira's Story: Verifying Claims
 
-Amira has made a number of claims for the BRadvoc8 account that are
+Amira has made a number of claims for the BRadvoc8 identity that are
 linked to GitHub. She made a claim about a PR she'd filed in
 [§2.1](02_1_Creating_Self_Attestations.md). Then she made claims about
 security auditing work and authentication design in
@@ -45,14 +47,14 @@ similar (but less correlatable) work on security systems.
 Because Amira previously couldn't provide an explicit link to her
 GitHub account, all of those claims have enjoyed only a medium level
 of trust. There were some other facts to back them up (like the shared
-name of the account and XID, the existence of the PR, and commitment
-about the security audit work), but ultimately the claims remained
-somewhat nebulous.
+name of the account and XID, the existence of the PR, and the hashed
+commitment for the security audit work), but ultimately the claims
+remained somewhat nebulous.
 
-DevReviewer is now getting ready to offer Amira a contract to work on
-Ben's SisterSpaces project, but they want one last piece of
-information to progress their trust of BRadvoc8: proof of control of
-the BRadvoc8 GitHub account.
+DevReviewer is now getting ready to offer Amira a contract for
+further, more intensive work on Ben's SisterSpaces project, but they
+want one last piece of information to progress their trust of
+BRadvoc8: proof of control of the BRadvoc8 GitHub account.
 
 This will be done by creating an "edge", which is a claim that's
 created as part of the XID itself, and signing it with a key
@@ -65,7 +67,7 @@ Gordian Envelope can accept any type of assertion, XIDs are organized into
 specific predicates.
 
 The following table lists a variety of `envelope-cli` commands, the
-predicate each creates, what it means, and where additional
+XID predicate each creates, what it means, and where additional
 information can be found.
 
 | Section | Command | Predicate | Description |
@@ -155,12 +157,12 @@ these tutorials because we'll test against the [existing BRadvoc8
 account](https://github.com/BRadvoc8/BRadvoc8) in [§3.2: Supportig
 Cross Verification](03_2_Supporting_Cross_Verification.md).
 
-> :book: **SSH Signing vs SSH Authentication**: GitHub has two
-separate SSH key registries. Authentication keys
-(`/users/{user}/keys`) control access to repositories. Signing keys
-(`/users/{user}/ssh_signing_keys`) verify commit signatures. Amira is
-adding a signing key. It proves that her commits are authentic, not
-that she can push to repos.
+> 📖 **What is the difference between SSH Signing an SSH
+Authentication keys?** GitHub has two separate SSH key
+registries. Authentication keys (`/users/{user}/keys`) control access
+to repositories. Signing keys (`/users/{user}/ssh_signing_keys`)
+verify commit signatures. Amira is adding a signing key. It proves
+that her commits are authentic, not that she can push to repos.
 
 #### Key Type Comparison
 
@@ -177,7 +179,8 @@ Amira now has three different keys serving three different purposes:
 As mentioned in
 [§2.1](2_1_Creating_Self_Attestations.md#key-type-comparison), having
 different keys for different purposes decreases the repercussions of
-key loss or compromise. Here's a look at how that's the case:
+key loss or compromise. Now that we have three keys, we can more
+extensively look at the protections that heterogeneity offers:
 
 | Key Type | Location | Compromise Impact |
 |----------|---------|------------------|
@@ -196,16 +199,16 @@ A new key can even be created to allow changes to the XID! Your
 identity persists across key changes.
 
 > 📖 **Why wasn't the SSH signing key added to Amira's XID?**
-Previously we added the attestation key to Amira's XID, but the new
+Previously, we added the attestation key to Amira's XID, but the new
 SSH key we're just keeping on-disk (with the public key uploaded to
 GitHub). This is a question of philosophy. You can choose to keep your
 XID neat and clean, and only use it to store the keys related to the
-control and use of that XID. Or, you can choose to use your XID to
-manage your whole "bag of keys", even keys securing other services
-(such as GitHub). We've chosen the "simple and clean" methodology for
-these tutorials, under the theory that you can choose to add onfrom
-there if you desire. If you decided to add the SSH keys to your XID,
-you would follow the methodology of
+control and use of that XID and related claims. Or, you can choose to
+use your XID to manage your whole "bag of keys", even keys securing
+other services (such as GitHub). We've chosen the "simple and clean"
+methodology for these tutorials, under the theory that you can choose
+to add on from there if you desire. If you decided to add the SSH keys
+to your XID, you would follow the methodology of
 [§2.1](2_1_Creating_Self_Attestations.md#step-2-register-attestation-key-in-xid)
 for registering a new key in your XID, and you would of course
 reencrypt all your keys afterward.
@@ -238,7 +241,7 @@ something more descriptive, to make it easier to find a specific edge
 within a XID. However, it should not define the claim itself; that
 falls to its content.
 
-There are three predicates that must be used in an edge:
+There are exactly three predicates that must be used in an edge:
 
 1. **`isA`:** either a description of a relationship between the two
 XIDs or a description of the claim that the first XID is making about
@@ -280,11 +283,11 @@ You can now assemble a complete envelope with all of the ownership
 information about Amira's GitHub account. These are the claim details
 that will later be added to the `target` of the edge.
 
-First, you should decide what the `isA` for the edge is going to
+But first you should decide what the `isA` for the edge is going to
 be. You're not going to embed that yet, but it's good to know since
 the `isA` defines the claim's type and the `target` subenvelope will
-define the claim's details. The BCR suggests using known ontologies,
-and for this we're going to use [the FOAF
+define the claim's details. The edges BCR suggests using known
+ontologies, and for this we're going to use [the FOAF
 registry](https://github.com/BlockchainCommons/Research/blob/master/known-value-assignments/markdown/2500_foaf_registry.md).
 
 We're not describing a relationship, but instead making an attestation for what's essentially a
@@ -351,9 +354,10 @@ predicate-object pair as an assertion to that subject.
 | `string "sshSigningKeysURL" uri "..."` | Custom (`"sshSigningKeysURL"`) | Where to verify the key is registered |
 | `known conformsTo string "https://github.com"` | Known (`'conformsTo'`) | The account conforms to this type |
 | `known date "..."` | string (date)| When this attestation was created |
-| `known verifiableAt uri "..."` | Known (`'verifiableAt'`) | Points to verification source |
+| `known verifiableAt uri "..."` | Known (`'verifiableAt'`) | Where this info can be verified |
 
-The complete package is a description of the credential being declared, `isA: foaf:OnlineAccount`.
+This complete package is meant to be a description of the credential
+being declared, `isA: foaf:OnlineAccount`.
 
 ### Step 5: Create the Edge
 
@@ -418,7 +422,7 @@ Now that you've done all the work of creating an edge, linking it to Amira's XID
 ```
 XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)
 ```
-This is a prime example of how simple `envelope xid` commands are when you don't need to rearrange the encryption.
+This is a prime example of how simple `envelope xid` commands are when you don't have to decrypt and re-encrypt as part of the process.
 
 ```
 echo "XID with GitHub edge:"
@@ -459,7 +463,7 @@ recursive metadata.
 
 ### Step 8: Advance Your Provenance Mark
 
-By adding the GitHub edge, you've created a new version of Amira's
+By adding the GitHub edge, you've created a new edition of Amira's
 XID. Since you plan to publish it, that means you must update the
 provenance mark
 
@@ -476,7 +480,7 @@ echo "✅ Provenance advanced"
 ```
 ### Step 9: Export & Store Your Work
 
-You should create a public view of the new XID that elides all the
+You should also create a public view of the new XID that elides all the
 sensitive keys:
 
 ```
@@ -484,10 +488,11 @@ PUBLIC_XID_WITH_EDGE=$(envelope xid export --private elide --generator
 elide "$XID_WITH_EDGE")
 ```
 
-This is what you'll send to DevReviewer for their review, which we'll see in the next section.
+This is what you'll send to DevReviewer for their review, which we'll
+see in the next section.
 
 Afterward, you should save your data, particularly since you now have
-a third version of Amira's XID.
+a third edition of Amira's XID.
 
 ```
 echo "$PUBLIC_XID_WITH_EDGE" > envelopes/BRadvoc8-xid-public-3-01.envelope
@@ -496,7 +501,9 @@ echo "$XID_WITH_EDGE" > envelopes/BRadvoc8-xid-private-3-01.envelope
 
 #### XID Version Comparison
 
-You've now created a third XID version. You take a look at the provenance marks again in the next section, but here's an overview of what each versionc ontains
+You've now created a third XID edition. We'll take a look at the
+provenance marks again in the next section, but here's an overview of
+what each version contains
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
@@ -508,7 +515,7 @@ You've now created a third XID version. You take a look at the provenance marks 
 
 On the surface, the lesson of this tutorial was simple: you can create
 embedded attestations by linking them into a XID as an edge, which
-defines eitehr a relationship between two XIDs or else an attestation
+defines either a relationship between two XIDs or else an attestation
 (or credential) that one XID is making of another. That can be a
 self-attestation if the source and target XIDs are the same, as is the
 case here.
@@ -516,7 +523,8 @@ case here.
 But when you did deeper, this tutorial opens up a whole new world of
 verification, because it used a key that's registered with another
 account, which is going to allow cross-verification of that account,
-but that's a topic for the next section.
+but that's a topic for the [next
+section](03_2_Supporting_Cross_Verification.md).
 
 ### Additional Files
 
@@ -548,8 +556,8 @@ Endorsements](03_3_Creating_Peer_Endorsements.md).
 
 ## Appendix I: Appendix: Key Terminology
 
-> **BCR** - Blockchain Research paper, describing a specification or technology.
+> **BCR** - A Blockchain Research paper, describing a specification or technology.
 >
-> **Edge** - A link between two XIDs that demonstrates relations or an attestation made by one about the other.
+> **Edge** - A link between two XIDs that demonstrates their relationship or includes an attestation made by one about the other.
 >
 > **SSH Signing Key** - An SSH key used to sign Git commits. Different from authentication keys; GitHub maintains them at `/users/{user}/ssh_signing_keys`.

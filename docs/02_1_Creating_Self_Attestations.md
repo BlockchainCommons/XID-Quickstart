@@ -258,12 +258,14 @@ at each of them.
 #### Key Type Comparison
 
 It is a best practice to have different keys for different
-purposes. This improves privacy and decreases the repercussions of key
-loss or compromise. The traditional problem with this approach has
-been figuring out how to handle a "bag of keys." XIDs offer the
-answer: they can be used to manage a whole set of keys, and the keys
-can be encrypted with a password for protection on your own storage
-and elided for near-total protection when a XID is shared.
+purposes. This practice of
+[heterogeneity](https://developer.blockchaincommons.com/architecture/patterns/auth/)
+improves privacy and decreases the repercussions of key loss or
+compromise. The traditional problem with this approach has been
+figuring out how to handle a "bag of keys." XIDs offer the answer: a
+XID can be used to manage a whole set of keys, and the keys can be
+encrypted with a password for protection on your own storage and
+elided for near-total protection when a XID is shared.
 
 So far, Amira has two keys:
 
@@ -272,6 +274,8 @@ So far, Amira has two keys:
 | 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
 | 🗣️ Attestation key | Signs attestations | XID key list | §2.1 |
 
+We'll talk more about the keys and the protections that heterogeneity
+offers in [§3.1](03_1_Creating_Edges.md) when we add a third one.
 
 #### XID Version Comparison
 
