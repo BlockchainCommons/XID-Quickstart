@@ -153,9 +153,7 @@ echo ""
 echo "Step 9: Verify the Signature & Provenance"
 echo "========================================="
 
-UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
-KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED")
-KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
+KEY_OBJECT=$(envelope xid key all "$FETCHED_XID")
 PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 
 if envelope verify -v "$PUBLIC_KEYS" "$FETCHED_XID" >/dev/null 2>&1; then

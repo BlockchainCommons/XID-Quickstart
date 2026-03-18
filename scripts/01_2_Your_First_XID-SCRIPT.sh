@@ -80,6 +80,7 @@ echo "Step 4: Verify the XID"
 echo "======================"
 
 # Extract public keys from unwrapped XID
+KEY_OBJECT=$(envelope xid key all $PUBLIC_XID)
 PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 
 # Verify signature

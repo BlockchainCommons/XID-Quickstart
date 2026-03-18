@@ -85,7 +85,7 @@ XID=$(envelope xid provenance next \
     --private encrypt \
     --generator encrypt \
     --encrypt-password "$PASSWORD" \
-    "$nXID")
+    "$XID")
 PROV_MARK=$(envelope xid provenance get "$XID")
 
 # Verify key was added with encrypted private key

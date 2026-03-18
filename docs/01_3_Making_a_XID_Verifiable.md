@@ -382,11 +382,13 @@ Since Ben has dereferenced the XID that Amira mailed him, to access an
 up-to-date version of the document, he has the most up-to-date
 version, right? Not necessarily! It's possible that the URL is no
 longer Amira's primary publication location, and there's actually a
-newer version elsewhere! To verify that this isn't the case, Ben should
-check the `dereferenceVia` one more time, looking at the new document
-that he downloaded. He does this by extracting the `dereferenceVia`
-from this fetched and unwrapped XID, and comparing it to the URL that
-he used to lookup the XID.
+newer version elsewhere! To verify that this isn't the case, Ben
+should check the `dereferenceVia` one more time, looking at the new
+document that he downloaded. He does this by extracting the
+`dereferenceVia` from this fetched and unwrapped XID (again, we'll
+talk more about how the 'find' commands work in
+[§3.5](03_5_Creating_Views_and_Versions.md)), and comparing it to the
+URL that he used to lookup the XID.
 
 ```
 UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
@@ -426,9 +428,7 @@ Ben will now repeat the steps from
 signature and the provenance mark.
 
 ```
-UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
-KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED")
-KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
+KEY_OBJECT=$(envelope xid key all "$FETCHED_XID")
 PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 
 if envelope verify -v "$PUBLIC_KEYS" "$FETCHED_XID" >/dev/null 2>&1; then
