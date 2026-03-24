@@ -13,13 +13,14 @@ to be hidden in various ways.
 This isn't always the case. There are claims (and other data) that are
 important enough that they should be linked to the XID in a more
 permanent way. They can still be elided: any data on a XID can be
-redacted to ensure data minmization. But, because of their importance,
-they need be embedded within the XID rather than being separate.
+redacted to ensure data minimization. But, because of their
+importance, they need be embedded within the XID rather than being
+separate.
 
 This chapter will discuss a variety of ways to add data to a XID using
 _edges_, which are a methodology for placing a claim directly on a
 XID. It will also talk about how to produce clean views of a XID, even
-when it's gotten quite complex.
+when it's grown quite complex.
 
 ## Major Objectives for this Chapter
 
