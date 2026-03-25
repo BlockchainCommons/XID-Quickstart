@@ -1,326 +1,615 @@
-# Tutorial 06: Supporting Cross Verification
+# 3.2: Supporting Cross Verification
 
-In Tutorial 03, Amira added her GitHub account and SSH signing key to her XIDDoc. She *offered* these as attestations—claims about her skills and activities. But claims aren't proof. Ben needs to verify them independently before trusting BRadvoc8 with code contributions.
+In [§3.1](03_1_Creating_Edges.md), Amira added her GitHub account and
+SSH signing key to her XID via an edge.This was another
+self-attestation, but it was stronger than previous self-attestations
+because it could be checked against an independent source (GitHub).
+This section demonstrates how DevReviewer cross-verifies Amira's
+attestations against that external source, allowing Amira to
+demonstrate proof of control.
 
-This tutorial shows how Ben cross-verifies Amira's attestations against external sources. He'll query GitHub's API, check commit signatures, and understand what this evidence actually proves.
+> 🧠 **Related Concepts**: This tutorial demonstrates verification
+from the relying party's perspective. See [Progressive
+Trust](../concepts/progressive-trust.md) for how trust accumulates
+through evidence, and [Attestation & Endorsement
+Model](../concepts/attestation-endorsement-model.md) for understanding
+what claims vs endorsements prove.
 
-**Time to complete**: ~15-20 minutes
-**Difficulty**: Intermediate
-**Builds on**: Tutorials 01-03
+## Objectives of this Section
 
-> **Related Concepts**: This tutorial demonstrates verification from the relying party's perspective. See [Progressive Trust](../concepts/progressive-trust.md) for how trust accumulates through evidence, and [Attestation & Endorsement Model](../concepts/attestation-endorsement-model.md) for understanding what claims vs endorsements prove.
+After working through this section, a developer will be able to:
 
-## Prerequisites
+- Extract attestations from XID edges.
+- Verify claims against GitHub's API.
+- Check Git commit signatures.
 
-- Understanding of Tutorials 01-03
-- The [Gordian Envelope-CLI](https://github.com/BlockchainCommons/bc-envelope-cli-rust) tool installed (release 0.32.0 or later)
-- `curl` and `jq` for API queries (standard on macOS/Linux)
+Supporting objectives include the ability to:
 
-## What You'll Learn
+- Understand how temporal anchors establish when claims became valid.
+- Know what cross-verification proves (and its limits).
 
-- How to extract attestations from XID attachments
-- How to verify claims against GitHub's API
-- How to check Git commit signatures
-- How temporal anchors establish when claims became valid
-- What cross-verification proves (and its limits)
+## DevReviewer's Story: Verifying Claims
 
-XID_WITH_EDGE=$(envelope xid edge add $SIGNED_EDGE $XID)	
+DevReviewer asked BRadvoc8 for one last bit of data: proof of control
+of the BRadvoc8 GitHub account. Having that will allow DevReviewer to
+verify a lot of claims that were previously only lightly supported,
+like Amira's work on the Galaxy Project and other PRs that she's
+produced.
 
-## The Verification Problem
+Amira supported this request by creating an edge on her XID that not
+only officially recognized the BRadvoc8 GitHub account as belonging to
+the BRadvoc8 XID, but also included a signature from a key registered
+with that account. This will allow DevReviewer to engage in
+cross-verification to further check BRadvoc8's claims.
 
-Ben received a message from someone claiming to be "BRadvoc8":
+So, does BRadvoc8 check out?
 
-> "Hey Ben, I'd like to contribute to SisterSpaces. Here's my XID: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
+> 📖 **What is Cross-Verification?** Cross-verification is the process
+of checking a claim against multiple independent sources. If all
+sources agree, confidence increases. If sources conflict, the claim is
+suspect.
 
-The XID contains a GitHub attachment with an SSH signing key. But anyone could create an XID claiming to be "BRadvoc8" with a random SSH key. Ben needs to verify that the key in the XID is actually registered on GitHub under that account, that commits signed with that key actually exist, and when this relationship was established.
+## Part 0: Verify Dependencies
 
-This is cross-verification: checking claims against multiple independent sources until the evidence converges (or reveals inconsistencies).
+This section requires the installation of `jq`, which will make JSON
+content easier to access. You can download it at
+[jqlang.org](https://jqlang.org/), but you may also be able to install
+it with Homebrew or other package managers.
 
-> :book: **Cross-Verification**: The process of checking a claim against multiple independent sources. If all sources agree, confidence increases. If sources conflict, the claim is suspect.
+If you do not install JQ then you'll simpy need to fill in variables
+by hand instead of having it automated.
 
----
-
-## Part I: Ben Fetches and Inspects
-
-### Step 0: Verify Dependencies
-
-Ensure you have the required tools:
-
+As usual, also check your `envelope-cli` version:
 ```
 envelope --version
-curl --version | head -1
-jq --version
 
-│ bc-envelope-cli 0.32.0
-│ curl 8.7.1 (x86_64-apple-darwin23.0) ...
-│ jq-1.7.1
+│ bc-envelope-cli 0.34.1
 ```
 
-If `envelope` is not installed, see Tutorial 01 Step 0. The `curl` and `jq` tools are standard on macOS and most Linux distributions.
+> ⚠️ **Network Required!** This tutorial queries external APIs
+(GitHub). Verification will fail if you're offline or if the external
+services are unavailable. In production, cache API responses and
+handle network failures gracefully.
 
-> :warning: **Network Required**: This tutorial queries external APIs (GitHub). Verification will fail if you're offline or if the external services are unavailable. In production, cache API responses and handle network failures gracefully.
+## Part I: Inspecting the XID
+
+The cross-verification begins with the retrieval of the XID and a
+check of its internal consistency.
 
 ### Step 1: Fetch the XIDDoc
 
-Ben fetches Amira's published XIDDoc:
+For the fullest cross-verification, DevReviewer would retrieve Amira's
+most up-to-date edition of their XID from the `dereferenceVia` URL:
 
 ```
-# Ben's perspective - he only has the URL
 XID_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
-
-# Fetch the XIDDoc
 FETCHED_XID=$(curl -sL "$XID_URL")
+```
 
-echo "Fetched XIDDoc from: $XID_URL"
-envelope xid id "$FETCHED_XID"
+To get the precise version intended for this tutorial, you should
+instead retrieve it from the `envelopes` directory, as usual, but this
+time we're going to be looking at the public view, as a viewer rather
+than an editor:
 
-│ Fetched XIDDoc from: https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt
-│ ur:xid/hdcxhecefsnnionspljpftktetwymnfmcyecveuotktpwenlhyhdpmpykpchcmzchywzfelovwrf
+```
+FETCHED_XID=$(cat envelopes/BRadvoc8-xid-public-3-01.envelope)
 ```
 
 ### Step 2: Verify Self-Consistency
 
-Before checking external sources, Ben verifies the XID is internally consistent—signed by its own key:
+Before checking external sources, verify that the XID is internally
+consistent and has been signed by its own key.
+
+We learned in [§2.1](02_1_Creating_Self_Attestations.md), one method
+for extracting all the keys from a XID and checking them, which we
+repeat here:
 
 ```
-# Extract public keys from the XID itself
-UNWRAPPED=$(envelope extract wrapped "$FETCHED_XID")
-KEY_ASSERTION=$(envelope assertion find predicate known key "$UNWRAPPED")
-KEY_OBJECT=$(envelope extract object "$KEY_ASSERTION")
-PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
+read -d '' -r -a PUBKEY <<< $(envelope xid key all "$FETCHED_XID")
+for i in "${PUBKEY[@]}"
+  do
+    if envelope verify -v $i $FETCHED_XID >/dev/null 2>&1; then
+      echo "✅ One of the signatures verified! "
+      echo $i
+    fi
+done
 
-# Verify signature
-if envelope verify -v "$PUBLIC_KEYS" "$FETCHED_XID" >/dev/null 2>&1; then
-    echo "✅ Signature verified - XID is self-consistent"
-else
-    echo "❌ Signature FAILED - do not trust!"
-    exit 1
-fi
+| ✅ One of the signatures verified! 
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfghdcxvdfpnltylrmowtutatkedsgresehiednenuthnveclgthgutprdlynoeuepkmnwtvlbwhndt
 
-│ ✅ Signature verified - XID is self-consistent
 ```
 
-Self-consistency is necessary but not sufficient. It proves the document wasn't tampered with after signing—not that the claims inside are true.
+Self-consistency is necessary but not sufficient. It proves the
+document wasn't tampered with after signing, not that the claims
+inside are true.
 
-### Step 3: Check Provenance
+### Step 3: Verify Provenance Consistency
 
-Ben checks the provenance to understand version history:
+DevReviewer also checks the provenance mark to ensure that it's valid and
+to see what edition of the XID they're looking at.
 
 ```
 PROVENANCE_MARK=$(envelope xid provenance get "$FETCHED_XID")
-provenance validate --format json-pretty "$PROVENANCE_MARK" | head -20
+provenance validate --format json-pretty "$PROVENANCE_MARK"
 
-│ {
-│   "chains": [
-│     {
-│       "chain_id": "...",
-│       "has_genesis": false,
-│       "sequences": [
-│         {
-│           "start_seq": 1,
-│           "end_seq": 1,
-│           "marks": [...]
-│         }
-│       ]
-│     }
-│   ]
-│ }
+| Error: Validation failed with issues:
+| {
+|   "marks": [
+|     "ur:provenance/lfaxhdimwpenbadrpkylftpdcysglohkhlwsdwwzfsineodwbgaezowkstehdwsnmtrnrptarooyiybaseldcnfdahehdedkuygrtiescmcxmsrnvtylfhlewegyotayhkfsuramlbpezsaylrcsjyotbysobektlywmprgmmkwspdctlgtodrtsvdbngljzromnfynddpceatkschjltkmslshnuectfnos"
+|   ],
+|   "chains": [
+|     {
+|       "chain_id": "61a8fa603b7ebe4bad7bb82fc5858b9d55fda26811e1070b44d80369486c6202",
+|       "has_genesis": false,
+|       "marks": [
+|         "ur:provenance/lfaxhdimwpenbadrpkylftpdcysglohkhlwsdwwzfsineodwbgaezowkstehdwsnmtrnrptarooyiybaseldcnfdahehdedkuygrtiescmcxmsrnvtylfhlewegyotayhkfsuramlbpezsaylrcsjyotbysobektlywmprgmmkwspdctlgtodrtsvdbngljzromnfynddpceatkschjltkmslshnuectfnos"
+|       ],
+|       "sequences": [
+|         {
+|           "start_seq": 2,
+|           "end_seq": 2,
+|           "marks": [
+|             {
+|               "mark": "ur:provenance/lfaxhdimwpenbadrpkylftpdcysglohkhlwsdwwzfsineodwbgaezowkstehdwsnmtrnrptarooyiybaseldcnfdahehdedkuygrtiescmcxmsrnvtylfhlewegyotayhkfsuramlbpezsaylrcsjyotbysobektlywmprgmmkwspdctlgtodrtsvdbngljzromnfynddpceatkschjltkmslshnuectfnos",
+|               "issues": []
+|             }
+|           ]
+|         }
+|       ]
+|     }
+|   ]
+| }
 ```
 
-The output shows `has_genesis: false` because Ben only has the current provenance mark (seq 1), not the original genesis mark (seq 0). The `start_seq: 1, end_seq: 1` confirms this is the second version. The real BRadvoc8 XID is at sequence 1—the basic XID was published first at sequence 0, then the GitHub attestation was added and provenance advanced to sequence 1. Ben doesn't need the genesis mark to verify the current state; he just needs to know this is version 1 of the identity.
+The output shows `has_genesis: false` because Ben only has the current
+provenance mark (seq 2), not the original genesis mark (seq 0). The
+`start_seq: 2, end_seq: 2` confirms this is the third edition.
 
----
+If this utility seems limited, it is: all a singular provenance mark
+can tell you is that the provenance mark is valid and what edition it
+is. The power of provenance marks comes with the ability to compare
+different marks, and we've now got enough to finally make that
+meaningful.
 
-## Part II: Extract and Verify the GitHub Attestation
+### Step 4: Compare Provenance Marks
 
-Ben has established that the XID is self-consistent and has a valid provenance chain. But self-consistency only proves the document wasn't tampered with—not that its claims are true. Now he extracts the GitHub attestation and verifies it against external evidence.
-
-### Step 4: Extract the GitHub Attachment
-
-Ben extracts the GitHub account attestation from the XID:
-
-```
-# Get all attachments
-ATTACHMENT=$(envelope xid attachment all "$FETCHED_XID" | head -1)
-
-echo "Found attachment:"
-envelope format "$ATTACHMENT"
-
-│ Found attachment:
-│ {
-│     "BRadvoc8" [
-│         'dereferenceVia': URI(https://api.github.com/users/BRadvoc8)
-│         'isA': "GitHubAccount"
-│         "createdAt": 2026-01-21T05:34:20Z
-│         "sshSigningKey": SigningPublicKey(714b3b69, SSHPublicKey(f733cab9))
-│         "sshSigningKeyProof": "BRadvoc8 controls SSH signing key registered on GitHub as of 2026-01-21" [
-│             'signed': Signature(SshEd25519)
-│         ]
-│         "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe"
-│         "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
-│         "updatedAt": 2026-01-21T05:34:20Z
-│     ]
-│ } [
-│     'vendor': "self"
-│ ]
-```
-
-The attachment contains everything Ben needs for verification: the claimed GitHub username (`"BRadvoc8"`), a `dereferenceVia` URL pointing to the GitHub account itself, the SSH signing key in text format, a proof-of-control signed with that key, an `sshSigningKeysURL` pointing directly to GitHub's signing keys API for verification, and timestamps. Each piece plays a role in the verification chain he's about to build.
-
-### Step 5: Extract the Claimed SSH Key
-
-Ben extracts the SSH public key text that he'll compare against GitHub:
+Provenance marks become more powerful when you have several provenance
+marks to compare. In this case, we have coopies of each of the
+previous editions of Amira's XID. We can extract a provenance mark
+from each of those XIDs:
 
 ```
-# Get the attachment's payload (unwrap the vendor wrapper)
-ATTACHMENT_OBJECT=$(envelope extract object "$ATTACHMENT")
-ATTACHMENT_PAYLOAD=$(envelope extract wrapped "$ATTACHMENT_OBJECT")
-
-# Find the SSH key text assertion
-SSH_KEY_ASSERTION=$(envelope assertion find predicate string sshSigningKeyText "$ATTACHMENT_PAYLOAD")
-CLAIMED_SSH_KEY=$(envelope extract object "$SSH_KEY_ASSERTION" | envelope format)
-
-echo "SSH key claimed in XID:"
-echo "$CLAIMED_SSH_KEY"
-
-│ SSH key claimed in XID:
-│ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe"
+XID_0=$(cat envelopes/BRadvoc8-xid-public-1-03.envelope)
+XID_1=$(cat envelopes/BRadvoc8-xid-public-2-01.envelope)
+PM_0=$(envelope xid provenance get $XID_0)
+PM_1=$(envelope xid provenance get $XID_1)
+PM_2=$PROVENANCE_MARK
 ```
 
-The extraction requires multiple steps because attachments are nested envelopes:
-
-| Step | Command | What It Does |
-|------|---------|--------------|
-| 1 | `envelope extract object "$ATTACHMENT"` | Gets the wrapped payload from the attachment assertion |
-| 2 | `envelope extract wrapped "$ATTACHMENT_OBJECT"` | Unwraps to access the inner envelope with assertions |
-| 3 | `envelope assertion find predicate string sshSigningKeyText "$ATTACHMENT_PAYLOAD"` | Finds the SSH key assertion by predicate name |
-| 4 | `envelope extract object "$SSH_KEY_ASSERTION" \| envelope format` | Extracts and formats the key value |
-
-The outer layer contains the vendor assertion (`'vendor': "self"`), and the inner wrapped envelope contains the actual payload. This nesting is why simple `grep` won't work—you need envelope-aware extraction.
-
-### Step 6: Query GitHub's API
-
-Now Ben queries GitHub to see what signing keys are actually registered:
+We've numbered the variables for each of the provenance marks for
+clarity. This was easy because we knew which edition each provenance
+mark corresponded to. But even if you don't, you can figure it out
+from the mark itself. As we've seen previously, we just need to
+extract the `end_seq` value:
 
 ```
-# Extract username from the attachment
-USERNAME="BRadvoc8"
+$ provenance validate --format json-compact "$PM_0" 2>&1 | grep -o '"end_seq":[0-9]*'
+"end_seq":0
+$ provenance validate --format json-compact "$PM_1" 2>&1 | grep -o '"end_seq":[0-9]*'
+"end_seq":1
+$ provenance validate --format json-compact "$PM_2" 2>&1 | grep -o '"end_seq":[0-9]*'
+"end_seq":2
+```
 
-# Query GitHub's SSH signing keys API
+Just knowing these numbers is important because it will allow you
+identify which object of several that you hold is the most
+up-to-date. For Amira's XIDs, we could extract all of the provenance
+marks, then know that the one that held the `"end_seq": 2` mark was
+the newest.
+
+The next power of provenance marks is that it will show that two marks
+are from the same chain. Take the following example of a comparison of
+the first and third marks. It shows `Total marks: 2`, but `Chains: 1`.
+
+```
+$ provenance validate $PM_0 $PM_2
+Error: Validation failed with issues:
+Total marks: 2
+Chains: 1
+
+Chain 1: 61a8fa60
+  0: 1896ba49 (genesis mark)
+  2: 0f300aba (gap: 1 missing)
+```
+
+This also shows which marks we have (`0` and `2`) and which are missing (`1`).
+
+This is probably the most important provenance mark check after simple
+validation. It tells you that a newer XID is related to an earlier,
+trusted XID that you hold.
+
+Looking at the second two marks yields similar results:
+```
+$ provenance validate $PM_1 $PM_2
+Error: Validation failed with issues:
+Total marks: 2
+Chains: 1
+
+Chain 1: 61a8fa60
+  Warning: No genesis mark found
+  1: 1d640bb3
+  2: 0f300aba
+```
+
+Often that's all you need to know: which object bears the newest mark;
+and that multiple objects are from the same chain. That verifies that
+the newest mark is not a fake or counterfeit, but belongs to the chain
+of an earlier object that you trusted.
+
+However, there are use cases when you want to know that you have every
+object in a chain, such as when you're checking revisions. Provenance
+marks will tell you this too. The following example gives no response,
+which means there was no error:
+
+```
+$ provenance validate $PM_0 $PM_1 $PM_2
+
+| ✅ Provenance chain is complete
+```
+
+> 🔥 **What is the Power of Provenance Marks?** Provenance marks link
+together multiple editions of the same object. They tell you which is
+newest and that the objects are part of the same cryptographically
+linked chain. In addition, they can tell you if you have all editions
+of an object.
+
+#### What if a Provenance Chain is Invalid?
+
+There are two ways that a provenance chain could be invalid: because
+you accidentally grouped together multiple editions of different
+objects or because someone created a fradulent XID not from the chain
+of a previous XID you have.
+
+You can simulate this by creating a new XID and extracting its provenance mark:
+```
+XID_N=$(envelope generate keypairs --signing ed25519 \
+    | envelope xid new \
+    --nickname "test_xid" \
+    --sign inception)
+PM_N=$(envelope xid provenance get $XID_C)
+```
+When you compare that with Amira's newest edition provenance mark, you'll see that they're from different chains:
+```
+$ provenance validate $PM_N $PM_2
+Error: Validation failed with issues:
+Total marks: 2
+Chains: 2
+
+Chain 1: 61a8fa60
+  Warning: No genesis mark found
+  2: 0f300aba
+
+Chain 2: ba3c752b
+  0: 95698b96 (genesis mark)
+```
+As noted above, this is the most important test. Its failure tells you
+that either you've made a mistake or you're the target of an attack.
+
+## Part II: Verifying the GitHub Attestation
+
+Now that DevReviewer has verified that BRadvoc8's XID is valid and
+that it's properly linked to their previous XIDs, they can assess
+whether BRadvoc8 has actually established proof of control of the
+BRadvoc8 GitHub account. This is done by extracting and verifying the
+edge that makes the claim of GitHub ownership and then checking that
+its signature was made by a GitHub key.
+
+### Step 5: Extract the GitHub Attachment
+
+To verify the signature of an edge first requires extracting the edge
+from the XID. Extrarcting most of the native XID predicates is pretty
+easy, because they're all structured. The `xid edge all` command will
+extract every edge from a XID.
+
+```
+XID_EDGE=$(envelope xid edge all $FETCHED_XID)
+```
+
+If you have multiple edges, you'd need to figure out which one to use
+(again, see §3.5), but when you just have one, as is the case here,
+the extraction is all that's required.
+```
+echo "✅ Found edge:"
+envelope format "$XID_EDGE"
+
+| ✅ Found edge:
+| 
+| {
+|     "account-credential-github" [
+|         'isA': "foaf:OnlineAccount"
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e) [
+|             "foaf:accountName": "BRadvoc8"
+|             "foaf:accountServiceHomepage": URI(https://github.com/BRadvoc8/BRadvoc8)
+|             "sshSigningKey": SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|             "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net"
+|             "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|             'conformsTo': URI(https://github.com)
+|             'date': "2026-03-18T11:55-10:00"
+|             'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+|         ]
+|     ]
+| } [
+|     'signed': Signature(SshEd25519)
+| ]
+
+
+The edge contains everything DevReviewer needs for verification: the
+claimed GitHub username (`"BRadvoc8"`), a
+`foaf:accountServiceHomepage` URL pointing to the GitHub account
+itself, the SSH signing key in text format, the SSH signing key in UR
+format, a timestamp, and a signature from the SSH key itself.  Each
+piece plays a role in the verification chain that they're about to build.
+
+### Step 6: Extract the Claimed SSH Key
+
+DevReviewer now needs to extract the SSH public keys (and other
+information) that they'll use for the purpose of cross-verification.
+
+[§1.3](01_3_Making_a_XID_Verifiable.md) briefly talked about how to
+extract data from a XID. Generally, you need to iteratively cut an
+envelope down to the point where you just have a subject and a set of
+assertions, and then pull out the assertions that you want. (Again,
+more on this in [§3.5](03_5_Creating_Views_and_Versions.md).)
+
+To do so here requires stepping down through the envelope three times:
+```
+UNWRAPPED_EDGE=$(envelope extract wrapped "$XID_EDGE")
+EDGE_TARGET=$(envelope assertion find predicate known 'target' "$UNWRAPPED_EDGE")
+EDGE_CLAIM=$(envelope extract object $EDGE_TARGET)
+```
+1. We unwrap the edge.
+
+```
+| "account-credential-github" [
+|     'isA': "foaf:OnlineAccount"
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e) [
+|         "foaf:accountName": "BRadvoc8"
+| 	...
+|     ]
+| ]    
+```
+
+2. We find the predicate `target`.
+
+```
+| 'target': XID(5f1c3d9e) [
+|     "foaf:accountName": "BRadvoc8"
+|     ...
+| ]
+```
+
+3. We extract that predicate's object.
+
+```
+| XID(5f1c3d9e) [
+|     "foaf:accountName": "BRadvoc8"
+|     "foaf:accountServiceHomepage": URI(https://github.com/BRadvoc8/BRadvoc8)
+|     "sshSigningKey": SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|     "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net"
+|     "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|     'conformsTo': URI(https://github.com)
+|     'date': "2026-03-18T11:55-10:00"
+|     'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+| ]
+```
+
+That leaves us with a simple subject `XID(5f1c3d9e)` and its
+assertions, and we can at this point use `find` to grab any of those
+assertions. We want three of them: the GitHub user name, the UR key,
+and the plain text key.
+
+```
+USERNAME=$(envelope assertion find predicate string "foaf:accountName" "$EDGE_CLAIM" | envelope extract object | envelope format | tr -d '"')
+CLAIMED_KEY_UR=$(envelope assertion find predicate string "sshSigningKey" "$EDGE_CLAIM"  | envelope extract object | envelope extract ur)
+CLAIMED_KEY_TEXT=$(envelope assertion find predicate string "sshSigningKeyText" "$EDGE_CLAIM" | envelope extract object | envelope format | tr -d '"')
+
+echo "SSH key claimed $USERNAME GitHub account"
+echo "$CLAIMED_KEY_UR"
+echo "$CLAIMED_KEY_TEXT"
+
+│ SSH key claimed BRadvoc8 GitHub account
+| ur:signing-public-key/tanehsksimjkjkisdpihieeyececehescxfpfpfpfpfxeoglknhsfxehjzhtfygaehglghfeecfpfpfpfpgagwingwjykpiyesisktfyfwimglhdkkimkoimfdgtgrihgsgygrkkknghetfliafdeojygskofdglgrjphdgeihcxfwgmhsiekojliaetfzgthsiadmhsjyjyjzjliahsjzdmjtihjyoxjlkbdw
+| ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net
+```
+
+For all three bits of data, we find the appropriate predicate, extract
+its object, and then massage that text as appropriate.
+
+DevReviewer now has the UR and plain text of the public key that
+BRadvoc8 claims is the same one they used on GitHub.
+
+### Step 7: Query GitHub's API
+
+One more puzzle piece is required before we can begin verifying: retrieving the public key from GitHub.
+
+```
 echo "Querying GitHub API for $USERNAME's signing keys..."
 GITHUB_KEYS=$(curl -s "https://api.github.com/users/$USERNAME/ssh_signing_keys")
+GITHUB_KEY=$(echo "$GITHUB_KEYS" | jq -r '.[0].key')
 
 echo "GitHub API response:"
 echo "$GITHUB_KEYS" | jq '.[0] | {key, created_at}'
 
-│ Querying GitHub API for BRadvoc8's signing keys...
-│ GitHub API response:
-│ {
-│   "key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe",
-│   "created_at": "2025-05-10T02:15:26Z"
-│ }
+| Querying GitHub API for BRadvoc8's signing keys...
+|
+| GitHub API response:
+| $ echo "$GITHUB_KEYS" | jq '.[0] | {key, created_at}'
+| {
+|   "key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe",
+|   "created_at": "2025-05-10T02:15:26.791Z"
+| }
 ```
 
-Ben now has two pieces of data: the key claimed in the XID and the key registered on GitHub.
+DevReviewer now has two pieces of data: the key claimed in the XID (in
+two different forms) and the key registered on GitHub.
 
-> :warning: **API Rate Limits**: GitHub's API allows 60 unauthenticated requests per hour per IP. For automated verification, consider using a GitHub personal access token to increase the limit to 5,000 requests/hour. If you receive a 403 response, wait for the rate limit to reset.
+> ⚠️ **API Rate Limits**: GitHub's API allows 60 unauthenticated
+requests per hour per IP. For automated verification, consider using a
+GitHub personal access token to increase the limit to 5,000
+requests/hour. If you receive a 403 response, wait for the rate limit
+to reset.
 
-### Step 7: Compare Keys
+### Step 8: Compare Keys
 
-Ben compares the XID claim against GitHub's registry:
+You can now compare all the keys.
+
+> 📖 **Why do we have the key in two different forms?** The XID's text
+key can easily be compared to GitHub's key, while the XID's UR key can
+be used to check the edge's signature.
+
+First, does the GitHub key match the plain text version of the public
+key included in the XID?
+
+Determining this requires converting the two keys into arraies, so
+that we can just check the first two values (the key type and the key)
+and not any notes that might be at the end of the key file.
+
 
 ```
-# Extract just the key portion from GitHub response
-GITHUB_KEY=$(echo "$GITHUB_KEYS" | jq -r '.[0].key')
+GITHUB_KEY_ARRAY=( $GITHUB_KEY )
+CLAIMED_KEY_ARRAY=( $CLAIMED_KEY_TEXT )
 
-# Compare (strip quotes from claimed key for comparison)
-CLAIMED_KEY=$(echo "$CLAIMED_SSH_KEY" | tr -d '"')
+echo "Claimed text key: ${CLAIMED_KEY_ARRAY[0]} ${CLAIMED_KEY_ARRAY[1]}"
+echo "GitHub key:       ${GITHUB_KEY_ARRAY[0]} ${GITHUB_KEY_ARRAY[1]}"
 
-echo "Claimed key: $CLAIMED_KEY"
-echo "GitHub key:  $GITHUB_KEY"
-
-if [ "$CLAIMED_KEY" = "$GITHUB_KEY" ]; then
+if [ "${CLAIMED_KEY_ARRAY[0]}" = "${GITHUB_KEY_ARRAY[0]}" ] &&
+   [ "${CLAIMED_KEY_ARRAY[1]}" = "${GITHUB_KEY_ARRAY[1]}" ]; then
     echo ""
-    echo "✅ KEYS MATCH - XID claim matches GitHub registry"
+    echo "✅ GITHUB KEY MATCHES - XID claim matches GitHub registry"
 else
     echo ""
-    echo "❌ KEYS DO NOT MATCH - attestation is invalid!"
+    echo "❌ KEYS DO NOT MATCH - GitHub and XID Text Key Do Not Match"
 fi
 
-│ Claimed key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
-│ GitHub key:  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
-│
-│ ✅ KEYS MATCH - XID claim matches GitHub registry
+| Claimed text key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+| GitHub key:       ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+|
+| ✅ GITHUB KEY MATCHES - XID claim matches GitHub registry
+
+Second, does the plain version of the key in the XID match the UR
+version of the key in the XID?
+
+```
+EXPORTED_KEY_UR=$(envelope export "$CLAIMED_KEY_UR")
+EXPORTED_KEY_ARRAY=( $EXPORTED_KEY_UR )
+
+echo ""
+echo "Claimed text key: ${CLAIMED_KEY_ARRAY[0]} ${CLAIMED_KEY_ARRAY[1]}"
+echo "Claimed UR key:   ${EXPORTED_KEY_ARRAY[0]} ${EXPORTED_KEY_ARRAY[1]}"
+
+if [ "${CLAIMED_KEY_ARRAY[0]}" = "${EXPORTED_KEY_ARRAY[0]}" ] &&
+   [ "${CLAIMED_KEY_ARRAY[1]}" = "${EXPORTED_KEY_ARRAY[1]}" ]; then
+    echo ""
+    echo "✅ KEYS MATCH - Both XID keys match "
+else
+    echo ""
+    echo "❌ KEYS DO NOT MATCH - XID keys do not match "
+fi
+
+| Claimed text key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+| Claimed UR key:   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+|
+| ✅ KEYS MATCH - Both XID keys match 
+
 ```
 
-The keys match. The XID's claim about BRadvoc8's GitHub signing key is consistent with GitHub's own registry.
+At this point you know:
+```
+🔑 GitHub = 🔑 in XID (text) = 🔑 in XID (UR)
+```
+
+But anyone could publish that GitHub key in their XID, so there's one more step.
 
 #### What If the Keys Don't Match?
 
-What would Ben see if someone created a fake XID with a different key?
+hat would DevReviewer see if someone created a fake XID with a different key?
 
 ```
-# Simulate a forged XID with wrong key
 FAKE_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyThatDoesNotMatchGitHub"
+FAKE_KEY_ARRAY=( $FAKE_KEY )
 
-echo "Claimed key: $FAKE_KEY"
-echo "GitHub key:  $GITHUB_KEY"
+echo "Fake key:   ${FAKE_KEY_ARRAY[0]} ${FAKE_KEY_ARRAY[1]}"
+echo "GitHub key: ${GITHUB_KEY_ARRAY[0]} ${GITHUB_KEY_ARRAY[1]}"
 
-if [ "$FAKE_KEY" = "$GITHUB_KEY" ]; then
-    echo "✅ KEYS MATCH"
+if [ "${FAKE_KEY_ARRAY[0]}" = "${GITHUB_KEY_ARRAY[0]}" ] &&
+   [ "${FAKE_KEY_ARRAY[1]}" = "${GITHUB_KEY_ARRAY[1]}" ]; then
+    echo ""
+    echo "✅ GITHUB KEY MATCHES - XID claim matches GitHub registry"
 else
     echo ""
-    echo "❌ KEYS DO NOT MATCH - attestation is INVALID!"
-    echo "   This XID claims a key not registered on GitHub."
-    echo "   Do not trust this identity!"
+    echo "❌ KEYS DO NOT MATCH - GitHub and XID Text Key Do Not Match"
 fi
 
-│ Claimed key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyThatDoesNotMatchGitHub
-│ GitHub key:  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
-│
-│ ❌ KEYS DO NOT MATCH - attestation is INVALID!
-│    This XID claims a key not registered on GitHub.
-│    Do not trust this identity!
+| Fake key:   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyThatDoesNotMatchGitHub
+| GitHub key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+|
+| ❌ KEYS DO NOT MATCH - GitHub and XID Text Key Do Not Match
 ```
 
-This is why cross-verification matters. An attacker can create a self-consistent XID (valid signature), but they can't fake GitHub's registry. The mismatch exposes the forgery.
+This is why cross-verification matters. An attacker can create a
+self-consistent XID (valid signature), but they can't fake GitHub's
+registry. The mismatch exposes the forgery.
 
-#### What If No Signing Keys Exist?
+These scripts would give a similar response if no signing key was
+found in GitHub, because the `""` key would not be the same as the key
+reported in the XID. So, seeing an error may actually require more
+investigation to determine the root cause.
 
-Another failure mode: the GitHub account exists but has no registered signing keys.
+### Step 9: Verify Keys
+
+One last step is required: BRadvoc8 must prove that they actually
+control the private key that links to the public key on GitHub.
+
+This is easy. DevReviewer just needs to check that the edge with the
+claim was signed with the linked private key:
 
 ```
-# Simulate account with no signing keys
-EMPTY_RESPONSE='[]'
+envelope verify --verifier $CLAIMED_KEY_UR -s $XID_EDGE  2>&1 || true
 
-if [ "$(echo "$EMPTY_RESPONSE" | jq 'length')" -eq 0 ]; then
-    echo "❌ No signing keys found for this GitHub account!"
-    echo "   The XID claims a signing key, but GitHub has none registered."
-    echo "   Possible causes:"
-    echo "   - Key was removed from GitHub"
-    echo "   - Wrong GitHub account"
-    echo "   - Fake attestation"
-fi
-
-│ ❌ No signing keys found for this GitHub account!
-│    The XID claims a signing key, but GitHub has none registered.
-│    Possible causes:
-│    - Key was removed from GitHub
-│    - Wrong GitHub account
-│    - Fake attestation
+| ✅ (silence means success)
 ```
 
-Key removal is legitimate (users can delete keys), but it invalidates the attestation. The XID claims a relationship that no longer exists. Ben would need to ask BRadvoc8 to update their XID with a current key.
+We already know that the claimed key UR matches the claimed key text
+and that the claimed key text matches the GitHub key. Therefore, this
+shows that the controller of the BRadvoc8 XID has the signing key for
+the GitHub account.
 
----
+Is this proof of control? It's pretty close. Technically, Amira hasn't
+proven that she controls the account, because she hasn't shown that
+she controls the _authentication_ key that allows logins, but she has
+shown that she controls the GitHub account's registered signing key,
+and at the least that's another strong addition along the path of
+progressive trust ... and one that can be strengthened if we can show
+that the signing key has been in long usage on the GitHub account.
+
+> 📖 **What is Proof of Control?** You can prove you control an
+account or other resource in multiple ways. Commonly you'll be asked
+to add content to a a resource (e.g., a specific URL). Alternatively,
+as shown here, you can prove that you hold a secret in use by the
+resource.
 
 ## Part III: Temporal Anchors
 
-Ben has verified the *what*: the SSH key in the XID matches GitHub's registry. But verification also requires *when*. An attacker could create a matching XID today and backdate its claims. Temporal anchors from external sources establish when relationships were actually created.
+DevReviewer has verified the *what*: the SSH key in BRadvoc8's XID
+matches GitHub's registry. But verification is strengthened if you can
+also show *when*. Just as with the commitment in
+[§2.2](02_2_Managing_Claims_Elision.md ), the longer that signing key
+has been on the GitHub account, the more likely it is to be
+legitimate, and not a latter-day addition.
 
-Matching keys prove consistency, but when was this established? Ben examines temporal evidence.
-
-### Step 8: Check GitHub's Timestamp
+### Step 10: Check GitHub's Timestamp
 
 GitHub records when each signing key was added:
 
@@ -328,290 +617,180 @@ GitHub records when each signing key was added:
 GITHUB_CREATED=$(echo "$GITHUB_KEYS" | jq -r '.[0].created_at')
 echo "Key registered on GitHub: $GITHUB_CREATED"
 
-│ Key registered on GitHub: 2025-05-10T02:15:26Z
+│ Key registered on GitHub: 2025-05-10T02:15:26.791Z
 ```
 
-This is a temporal anchor from an external source—GitHub's server timestamp when BRadvoc8 registered this key. Ben can trust this more than the XID's internal claims because GitHub is an independent party.
+This is a temporal anchor from an external source: GitHub's server
+timestamped when BRadvoc8 registered their signing key. DevReviewer
+can trust this more than a XID's internal claim of dating because
+GitHub is an independent party.
 
-> :book: **Temporal Anchor**: An external timestamp that establishes when something occurred. Unlike internal claims (which the claimant controls), temporal anchors come from independent parties—GitHub's API, commit dates, blockchain timestamps, or signed inception commits.
+> 📖 **What is a Temporal Anchor?** A temporal anchor is an
+external timestamp that establishes when something occurred. Unlike
+internal claims (which the claimant controls), temporal anchors come
+from independent parties: GitHub's API, commit dates, blockchain
+timestamps, or signed inception commits.
 
-### Step 9: Cross-Reference Provenance
+This strengthens Amira's proof of control, because it shows that she
+not only holds the signing key for the GitHub account, but it's been
+the signing key for an extended amount of time.
 
-Ben compares the XID's provenance with GitHub's timeline:
+### Step 11: Cross-Reference Provenance
+
+To further verify improve the temporal anchor, DevReviewer can also
+compare the GitHub key registration date to the XID edge creation
+date.
 
 ```
+CLAIMED_DATE=$(envelope assertion find predicate known "date" "$EDGE_CLAIM" | envelope extract object | envelope format | tr -d '"')
+
 echo "Timeline analysis:"
 echo "  - GitHub key registered: $GITHUB_CREATED"
-echo "  - XID provenance: sequence 1"
-echo "  - XID attachment created: 2026-01-21 (from createdAt in attachment)"
+echo "  - XID edge created:      $CLAIMED_DATE"
 
 │ Timeline analysis:
-│   - GitHub key registered: 2025-05-10T02:15:26Z
-│   - XID provenance: sequence 1 (one update since genesis)
-│   - XID attachment created: 2026-01-21 (from createdAt in attachment)
+|   - GitHub key registered: 2025-05-10T02:15:26.791Z
+|   - XID edge created:      2026-03-18T11:55-10:00
 ```
 
-The provenance mark doesn't contain a timestamp—only a sequence number. The real BRadvoc8 XID is at sequence 1 (basic XID published at seq 0, then updated with GitHub attestation at seq 1). Combined with GitHub's timestamp showing the SSH key was registered in May 2025, Ben can establish that the SSH key has a longer history than the XID itself—BRadvoc8 was active on GitHub before creating this XID document.
+This is a less powerful verification because the XID edge's date was a
+self-attestation. Nonetheless, if there was a discrepency (e.g., the
+XID edge was created before the GitHub key was registered, despite
+being a claim about that key's registration), it would set off red
+flags 🚩🚩.
 
-> :book: **Provenance = Ordering**:
->
-> The provenance chain proves seq 0 → seq 1 → seq 2, but not when these transitions occurred. Temporal anchors come from external sources: GitHub's API timestamps, commit dates, or inception commits that reference specific points in time.
+### Step 12: Check Commit Signatures (Optional)
 
-#### What If the Timeline Doesn't Add Up?
-
-What would Ben see if someone created a fake XID claiming to have registered a key before they actually did?
-
-```
-# Simulate suspicious timeline
-FAKE_XID_CREATED="2024-01-01"   # XID claims key was added in 2024
-GITHUB_REGISTERED="2025-05-10"  # But GitHub shows key registered in 2025
-
-echo "XID claims key added:    $FAKE_XID_CREATED"
-echo "GitHub key registered:   $GITHUB_REGISTERED"
-echo ""
-echo "⚠️  SUSPICIOUS: XID claims key existed BEFORE GitHub registration!"
-echo "   This could indicate:"
-echo "   - Backdated claims in the XID"
-echo "   - Key was re-registered on GitHub"
-echo "   - Requires further investigation"
-
-│ XID claims key added:    2024-01-01
-│ GitHub key registered:   2025-05-10
-│
-│ ⚠️  SUSPICIOUS: XID claims key existed BEFORE GitHub registration!
-│    This could indicate:
-│    - Backdated claims in the XID
-│    - Key was re-registered on GitHub
-│    - Requires further investigation
-```
-
-Timeline inconsistencies don't automatically mean fraud—keys can be re-registered, accounts recreated—but they warrant closer examination. The legitimate BRadvoc8 XID shows the opposite: the GitHub key (May 2025) predates the XID attestation (January 2026), which is the expected pattern.
-
-### Step 10: Check Commit Signatures (Optional)
-
-For stronger evidence, Ben can verify that signed commits actually exist:
+There's one last thing that DevReviewer can do to strengthen the
+temporal ancho: they can look at the commits in the BRadvoc8 account.
 
 ```
-# Check a recent commit from BRadvoc8
 echo "Checking commit signatures..."
-COMMIT_URL="https://api.github.com/repos/BRadvoc8/BRadvoc8/commits?per_page=1"
-RECENT_COMMIT=$(curl -s "$COMMIT_URL" | jq -r '.[0].sha')
+COMMIT_URL="https://api.github.com/repos/BRadvoc8/BRadvoc8/commits"
+RECENT_COMMIT=$(curl -s "$COMMIT_URL" | jq -r '.[].sha'|head -1)
+OLD_COMMIT=$(curl -s "$COMMIT_URL" | jq -r '.[].sha'|tail -1)
 
+echo ""
 echo "Most recent commit: $RECENT_COMMIT"
-echo "Verification status:"
+echo "Recent verification status:"
 curl -s "https://api.github.com/repos/BRadvoc8/BRadvoc8/commits/$RECENT_COMMIT" | \
-    jq '{verified: .commit.verification.verified, reason: .commit.verification.reason}'
-
+    jq '{date: .commit.author.date, verified: .commit.verification.verified, reason: .commit.verification.reason}'
+echo ""
+echo "Older commit: $OLD_COMMIT"
+echo "Old verification status:"
+curl -s "https://api.github.com/repos/BRadvoc8/BRadvoc8/commits/$OLD_COMMIT" | \
+    jq '{date: .commit.author.date, verified: .commit.verification.verified, reason: .commit.verification.reason}'
+    
 │ Checking commit signatures...
-│ Most recent commit: abc123...
-│ Verification status:
-│ {
-│   "verified": true,
-│   "reason": "valid"
-│ }
-```
-
-GitHub verified this commit's signature using the registered signing key. This closes the loop: the key in BRadvoc8's XID was used to create actual commits, GitHub independently verified those signatures against its own registry, and all three sources (XID, API, commits) point to the same key. An attacker would need to compromise all three to forge this evidence.
-
-#### About Repository Authority
-
-*For high-stakes verification, there's an even stronger check Ben could perform. Skip ahead to Part IV if you're ready to move on.*
-
-Ben verified that the SSH key in BRadvoc8's XID matches GitHub's registry. But there's an even stronger connection he could check: the repository's **inception commit**.
-
-The BRadvoc8/BRadvoc8 repository was created with an inception commit signed by the same SSH key that appears in the XID. This creates cryptographic proof that whoever controls the XID also controls the publication repository—not just a GitHub account, but the specific location where the XID is published.
-
-Why does this matter? Someone could register "BRadvoc8" on GitHub, add an SSH key, and publish a fake XID. But they couldn't forge the inception commit signature without the original SSH private key. The inception commit is a temporal anchor that proves: "On this date, whoever held this SSH private key created this repository."
-
-Ben isn't checking inception authority in this tutorial—it requires examining the repository's git history rather than the API. But understanding this link completes the trust chain: XID → SSH key → inception commit → repository control.
-
-> :brain: **Learn more**: The [Open Integrity](https://github.com/OpenIntegrityProject/core) project formalizes repository authority through inception commits.
-
----
-
-## Part IV: Understanding What's Proven
-
-### The Verification Chain
-
-Ben has now established a chain of evidence:
+|
+│ Most recent commit: 26bb956f41c36db7f9f912a4744e224024f404a7
+| {
+|   "date": "2026-01-21T05:36:11Z",
+|   "verified": true,
+|   "reason": "valid"
+| }
+|
+| Older commit: 1ab31db40e48145c14f19bc735add0d279cdc62d
+│ Older verification status:
+| {
+|   "date": "2025-05-10T01:25:18Z",
+|   "verified": true,
+|   "reason": "valid"
+| }
 
 ```
-XID Claim                    External Verification
-─────────────────────────    ─────────────────────────────────
-"BRadvoc8" username    →     GitHub account exists
-SSH signing key        →     Key registered on GitHub (May 2025)
-dereferenceVia URL     →     Points to correct API endpoint
-Signed commits         →     GitHub verifies signatures valid
-```
 
-Each link in the chain corroborates the others. An attacker would need to compromise multiple independent systems to forge this evidence.
+This provides two more pieces of evidence for the progressive trust of the BRadvoc8 XID.
 
-FROM OTHER
+It shows:
 
-## What You Accomplished
+1. That the signing key that is held by the owner of the BRadvoc8 XID
+has been used to sign commits (as shown by `verified`).
+2. That the signing key has been used over a wide scope of time, from
+May 2025 to January 2026 (as shown by `date`).
 
-BRadvoc8 now has verifiable attestations:
+DevReviewer could also skim through BRadvoc8's GitHub account and
+check specific PRs, such as that Galaxy Project PR. Every commit or PR
+that is related to the type of work that Amira has previously claimed
+would strengthen her claims that much more, because of her control of
+the signing key tha was used to generate those requests.
 
-- **GitHub account attachment** with SSH signing key
-- **Proof-of-control** demonstrating key ownership at creation time
-- **Verification pointer** (`dereferenceVia`) to GitHub's API
-- **Signed commit** creating a temporal anchor on GitHub
+> 🧠 **About Open Integrity.** Blockchain Commons also offers a
+project called [Open
+Integrity](https://github.com/OpenIntegrityProject/core) that
+formalizes repository authority through inception commits. An
+inception commit signed with the key BRadvoc8 holds would be even
+stronger proof of control of the GitHub, but that's a topic for
+another chapter.
 
-### Trust Assessment
+### Step 13: Assess Your Level of Trust
 
-What can be verified now (without external checks):
+The various claims made in chapter 2 tended to have a medium level of
+trust. Now, that trust level has been upgraded thanks to Amira's
+fairly strong proof that she controls the BRadvoc8 GitHub account.
 
-| Check | Status | What It Proves |
-|-------|--------|----------------|
-| XID signature | ✅ Verifiable | Document integrity, self-consistency |
-| Provenance chain | ✅ Verifiable | Update ordering, version history |
-| Proof-of-control signature | ✅ Verifiable | Key holder signed the claim |
-| Attachment structure | ✅ Verifiable | Data is well-formed |
+This is courtesy of a chain of evidence, much of which was locked down in this section:
 
-What requires external verification (Tutorial 04):
+| ⛓️ Evidence | Verification | Section |
+|----------|--------------|---------|
+| 🔗 derefenceVia URL | URL is on GitHub | §1.3 |
+| 🌌 Galaxy PR | PR Exists | §2.1 |
+| 👀 Cryptographic Audit Work | Previous Commitment | §2.2 |
+| 🔐 Security Work for Civil Trust | Similar PRs | §2.3 |
+| 👩🏽‍💻 GitHub Ownership | Account Exists | §3.1 |
+| 🔑 Signing Keys | Keys Match Account | §3.1-3.2 |
+| 🔑 Signing Keys | BRadvoc8 Has Private Key | §3.1-3.2 |
+| 🌌 Galaxy PR | Commit Matches Keys | §3.2 |
+| 💾 Other PRs | Commit Matches Keys | §3.2 |
+| 🗓️ Dates | Previous Keys & Commits | §3.2 |
 
-| Check | Status | What It Would Prove |
-|-------|--------|---------------------|
-| SSH key on GitHub | ⏳ Not yet checked | Key is actually registered |
-| Signed commits | ⏳ Not yet checked | Key is actively used |
-| GitHub account exists | ⏳ Not yet checked | Account is real |
+As a result, DevReviewer can make a new assessment of BRadvoc8's trust:
 
-This is a *self-attestation*—Amira claiming she controls a GitHub account and SSH key. Ben has the information he needs to check these claims, but the checking happens in Tutorial 04.
+| What DevReviewer Can Verify | What Remains Unproven |
+|---------------------|----------------------|
+| ✅ BRadvoc8 controls GitHub signing key | ❓ Who BRadvoc8 is |
+| ✅ GitHub signing key has been used for a year | ❓ BRadvoc8 is original owner of key |
+| ✅ Key signed commits related to expertise | ❓ BRadvoc8 wrote the commits |
 
-The trust model is now richer: Tutorial 01 established that BRadvoc8 exists, Tutorial 02 made that existence verifiable and fresh, and now Tutorial 03 offers attestations that connect BRadvoc8 to real-world systems.
+To a certain extent, each new bit of evidence just exposes what else
+has _not_ been proven. But they all continue to progress the trust of
+the pseudonymous identity, BRadvoc8. At some point a viewer will
+decide the requirements for their threshold of trust have been
+met.
 
-> :brain: **Making Stronger Claims**: This tutorial covers *account linkage*—proving you control a GitHub account. For making *skill and capability claims* that are more credible, see [Tutorial 05: Fair Witness Attestations](05-fair-witness-attestations.md), which teaches the methodology of specific, verifiable, evidence-backed claims.
+For DevReviewer, that threshold of trust has been met now.
 
+## Summary: Supporting Verification
 
---
+Creating claims is just half the battle. To properly support a
+pseudonymous identity requires creating claims that can be
+verified. Amira has been thinking about that all along, but the
+creation of the GitHub edge really brought it together. Her use of the
+GitHub signing key allowed her to (mostly) prove that she controlled
+the GitHub account, which in turn supported many of the claims made in
+chapter 2.
 
-### What This DOES Prove
+When you're thinking about claims, think about how you can actually
+prove what you're saying, without revealing who you actually are.
 
-Ben can now trust that someone who controls the GitHub account "BRadvoc8" also created this XID—the key binding is cryptographically verified. Commits signed with this key came from the same entity, and the timeline is bounded: the key was registered on GitHub in May 2025, giving Ben a lower bound on how long this identity has existed.
+### Additional Files
 
-### What This DOESN'T Prove
+**Envelopes:** There are no envelopes for this section, since it was all about verification.
 
-> :warning: **Verification Has Limits**:
->
-> BRadvoc8 is still pseudonymous—Ben doesn't know who Amira really is, and that's by design. Keys can be compromised, so this verification is a snapshot, not an ongoing guarantee. Most importantly, account ownership doesn't prove coding skill or predict future behavior. Verification establishes *credibility*, not *competence*.
+**Scripts:** Scripts demonstrating this section are forthcoming.
 
-Ben should recognize these limits and continue building trust through actual collaboration.
+### Exercises
 
-### Ben's Trust Decision
+**Verification exercises:**
 
-Ben summarizes his verification:
-
-```
-echo "=== Verification Summary for BRadvoc8 ==="
-echo ""
-echo "✅ XID self-consistent (signature valid)"
-echo "✅ Provenance chain intact (seq 1)"
-echo "✅ SSH signing key matches GitHub registry"
-echo "✅ Key registered on GitHub: $GITHUB_CREATED"
-echo "✅ Signed commits verified by GitHub"
-echo ""
-echo "Trust level: CREDIBLE PSEUDONYM"
-echo ""
-echo "Ben can reasonably trust that:"
-echo "  - This XID represents whoever controls the BRadvoc8 GitHub account"
-echo "  - Commits signed with this key came from the same entity"
-echo "  - The identity has existed since at least May 2025"
-echo ""
-echo "Ben should still:"
-echo "  - Review code quality before merging"
-echo "  - Start with low-risk contributions"
-echo "  - Build trust incrementally through collaboration"
-
-│ === Verification Summary for BRadvoc8 ===
-│
-│ ✅ XID self-consistent (signature valid)
-│ ✅ Provenance chain intact (seq 1)
-│ ✅ SSH signing key matches GitHub registry
-│ ✅ Key registered on GitHub: 2025-05-10T02:15:26Z
-│ ✅ Signed commits verified by GitHub
-│
-│ Trust level: CREDIBLE PSEUDONYM
-│
-│ Ben can reasonably trust that:
-│   - This XID represents whoever controls the BRadvoc8 GitHub account
-│   - Commits signed with this key came from the same entity
-│   - The identity has existed since at least May 2025
-│
-│ Ben should still:
-│   - Review code quality before merging
-│   - Start with low-risk contributions
-│   - Build trust incrementally through collaboration
-```
-
----
-
-## The Progressive Trust Model
-
-This tutorial demonstrates the assessment phase of progressive trust. Amira *declared* her identity (T01), made it *verifiable* (T02), and *offered* attestations (T03). Ben now *assesses* those attestations through cross-verification.
-
-Trust isn't binary. Ben doesn't fully trust BRadvoc8 after one verification—he has *sufficient* trust to begin collaboration. Each successful interaction builds more trust:
-
-```
-T01: Identity exists           → Self-sovereign, but unproven
-T02: Identity is verifiable    → Fresh, self-consistent, but no attestations
-T03: Attestations offered      → Claims exist, but unverified
-T04: Attestations verified     → Credible pseudonym, ready for collaboration
-T05: Peer endorsement          → Others vouch for quality (future tutorial)
-```
-
-Ben might later *endorse* BRadvoc8 after reviewing good contributions—adding his own attestation to Amira's XID. That endorsement becomes evidence for others, and trust propagates through the network.
-
-> :brain: **Learn more**: The [Progressive Trust](../concepts/progressive-trust.md) concept doc explains the full trust hierarchy and how verification, collaboration, and endorsement combine to build meaningful trust.
-
-## What You Accomplished
-
-Ben verified BRadvoc8's attestations by extracting the GitHub attachment, querying GitHub's API for the registered signing key, comparing the claimed key against the external registry, and checking commit signatures for additional corroboration. He established temporal anchors from independent sources and understood both what this evidence proves and its limitations.
-
-This is the verification side of self-attestation. Amira's claims in T03 are now externally validated—not by a central authority, but by evidence that Ben gathered and evaluated himself.
-
-## Appendix: Key Terminology
-
-> **Cross-Verification** - Checking claims against multiple independent sources to establish corroboration.
->
-> **Temporal Anchor** - External timestamp establishing when something occurred. GitHub's `created_at`, commit dates, and inception commits serve as temporal anchors.
->
-> **Verification Chain** - The sequence of checks that link an XID claim to external evidence.
->
-> **Credible Pseudonym** - An identity with verified attestations but unknown real-world mapping. Trustworthy for specific purposes, not all purposes.
->
-> **Progressive Trust** - Building trust incrementally through verification, collaboration, and endorsement rather than upfront credentialing.
-
-## Common Questions
-
-### Q: What if the account's signing key changes after verification?
-
-**A:** Verification is a snapshot, not an ongoing guarantee. If BRadvoc8 removes or replaces their SSH key on GitHub, your previous verification no longer reflects the current state. For high-stakes decisions, re-verify before taking action. The provenance mark helps—if it has advanced since your last check, the XID has been updated.
-
-### Q: Can I verify claims against sources other than GitHub?
-
-**A:** Yes. The cross-verification pattern works with any external source that provides independent attestation. GitLab, Bitbucket, and other forges have similar APIs. For non-code sources (domain ownership, social media accounts), you'd adapt the same approach: extract the claim from the XID, query the external source, and compare. The key is finding an authoritative endpoint that the claimant can't easily forge.
-
-### Q: What if GitHub's API is unavailable during verification?
-
-**A:** Network failures are a real concern. In production, cache API responses with timestamps, implement graceful degradation (proceed with warning, not hard failure), and consider multiple verification methods. An XID with both GitHub and GitLab attestations provides redundancy—if one API is down, you can still verify against the other.
-
-### Q: How do I know the endorser (Charlene, DevReviewer) is trustworthy?
-
-**A:** This is the bootstrapping problem. The signature proves the endorsement came from *whoever controls that key*—not that you should trust them. Solutions: check the endorser's own endorsements, look for their public contributions, or rely on a trusted introduction. Trust has to start somewhere; the web of trust makes it transferable, not automatic.
-
----
-
-## Exercises
-
-**Verification exercises (Ben's perspective):**
+- Compare two versions of an XID with different provenance sequences.
 - Extract the proof-of-control from an attachment and verify its signature.
 - Tamper with a proof (change one character) and confirm verification fails.
-- Compare two versions of an XID with different provenance sequences.
 - Extract the SSH signing key text from an attachment and compare it to GitHub's API response.
 
 Try these to solidify your understanding:
 
-**Verification exercises (Ben's perspective):**
+**GitHub exercises:*8
 
 - Fetch the real BRadvoc8 XIDDoc and verify its attestations using the workflow from this tutorial.
 - Query GitHub's API directly: `curl https://api.github.com/users/BRadvoc8/ssh_signing_keys | jq`
@@ -624,66 +803,48 @@ Try these to solidify your understanding:
 - Think about what additional evidence would strengthen trust beyond what's shown here.
 - Research other external sources that could serve as temporal anchors (Twitter/X posts, blockchain timestamps, etc.).
 
-## Example Script
-
-A complete working script implementing this tutorial is available at `tests/04-cross-verification-TEST.sh`. Run it to see all verification steps in action:
-
-```
-bash tests/04-cross-verification-TEST.sh
-```
-
-This script fetches the real BRadvoc8 XIDDoc, extracts the GitHub attachment, queries GitHub's API, and compares the keys—demonstrating the complete cross-verification workflow.
-
 ## What's Next
 
-Ben has established that BRadvoc8 is *credible*—the identity is real, self-consistent, and connected to a verifiable GitHub account. But credibility isn't competence. Ben still doesn't know if BRadvoc8 can actually write good code.
+What else can you put in an edge? How about a peer endorsement that
+has different source and target?. That can be found in [§3.3: Creating
+Peer Endorsements](03_3_Creating_Peer_Endorsements.md).
 
-**Tutorial 05: Fair Witness Attestations** introduces the methodology for making credible claims: specific, factual statements that can be verified against observable evidence. Instead of vague assertions like "I'm a security expert," Amira learns to make claims like "I contributed to Galaxy Project (PR #12847)"—claims that invite verification rather than demand belief.
+## Appendix I: Key Terminology
 
-The tutorial covers detached attestations (separate signed documents that reference your XID) and dedicated attestation keys that Ben can verify against the XID's key list.
-
----
-
-**Previous**: [Offering Self-Attestation](03-offering-self-attestation.md) | **Next**: [Fair Witness Attestations](05-fair-witness-attestations.md)
-
-STILL THINKING ABOUT THIS: COULD GO HERE, MIGHT BELONG IN 02.1
-
-This was in 02, but this is the first tutorial where we actually have a second edition XID, so something like it should go here instead
-
-#### Detecting Stale Copies
-
-What if someone gave Ben an old copy of the XID instead of the current one? He can compare provenance marks to detect this:
-
-```
-# Ben has two versions - one from a friend, one freshly fetched
-# Compare their sequence numbers
-
-# Simulate: OLD_MARK from friend's copy (sequence 0)
-# Simulate: NEW_MARK from fresh fetch (sequence 1 after an update)
-
-OLD_SEQ=0   # From stale copy
-NEW_SEQ=1   # From fresh fetch
-
-echo "Copy from friend:  sequence $OLD_SEQ"
-echo "Fresh from URL:    sequence $NEW_SEQ"
-
-if [ "$NEW_SEQ" -gt "$OLD_SEQ" ]; then
-    echo "⚠️  Friend's copy is STALE - use the fresh version!"
-fi
-
-│ Copy from friend:  sequence 0
-│ Fresh from URL:    sequence 1
-│ ⚠️  Friend's copy is STALE - use the fresh version!
-```
-
-Higher sequence number means newer version. Ben should always fetch from `dereferenceVia` to ensure he has the current XIDDoc, especially before making trust decisions.
-
-> :brain: **Learn more**: The [Provenance Marks](../concepts/provenance-marks.md) concept doc explains the cryptographic chain structure and how it prevents history falsification.
+> **Credible Pseudonym** - An identity with verified attestations but unknown real-world mapping. Trustworthy for specific purposes, not all purposes.
 >
----
-
-Add this in:
-
-> **Proof-of-Control** - A signed statement proving key possession at a point in time. Temporal snapshot, not ongoing guarantee.
+> **Cross-Verification** - Checking claims against multiple independent sources to establish corroboration.
 >
-> **Provenance Sequence** - The version number in a provenance chain. Sequence 0 is genesis, sequence 1 is first update, etc. Provides ordering, not timestamps.
+> **Progressive Trust** - Building trust incrementally through verification, collaboration, and endorsement rather than upfront credentialing.
+>
+> **Temporal Anchor** - External timestamp establishing when something occurred. GitHub's `created_at`, commit dates, and inception commits serve as temporal anchors.
+>
+> **Verification Chain** - The sequence of checks that link an XID claim to external evidence.
+
+## Appendix II: Common Questions
+
+### Q: What if the account's signing key changes after verification?
+
+**A:** Verification is a snapshot, not an ongoing guarantee. If
+BRadvoc8 removes or replaces their SSH key on GitHub, your previous
+verification no longer reflects the current state. For high-stakes
+decisions, re-verify before taking action.
+
+### Q: Can I verify claims against sources other than GitHub?
+
+**A:** Yes. The cross-verification pattern works with any external
+source that provides independent attestation. GitLab, Bitbucket, and
+other forges have similar APIs. For non-code sources (domain
+ownership, social media accounts), you'd adapt the same approach:
+extract the claim from the XID, query the external source, and
+compare. The key is finding an authoritative endpoint that the
+claimant can't easily forge.
+
+### Q: What if GitHub's API is unavailable during verification?
+
+**A:** Network failures are a real concern. In production, cache API
+responses with timestamps, implement graceful degradation (proceed
+with warning, not hard failure), and consider multiple verification
+methods. An XID with both GitHub and GitLab attestations provides
+redundancy: if one API is down, you can still verify against the other.
+

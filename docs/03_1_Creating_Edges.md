@@ -10,7 +10,7 @@ in the XID itself. There are a variety of methods for doing so; one of
 them is by creating "edges" within the XID, which support attestations
 within the XID itself.
 
-> :brain: **Related Concepts**: This tutorial covers the creation of
+> 🧠 **Related Concepts**: This tutorial covers the creation of
 an attestation as an edge. For deeper understanding, see [Attestation
 & Endorsement Model](../concepts/attestation-endorsement-model.md) for
 the framework of claims and verification, [Fair
@@ -574,7 +574,7 @@ might want to immediately jump to the next step in attestation: peer
 endorsement. That can be found in [§3.3: Creating Peer
 Endorsements](03_3_Creating_Peer_Endorsements.md).
 
-## Appendix I: Appendix: Key Terminology
+## Appendix I: Key Terminology
 
 > **BCR** - A Blockchain Research paper, describing a specification or technology.
 >
