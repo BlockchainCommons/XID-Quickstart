@@ -35,6 +35,7 @@ After working through this chapter, a developer will be able to:
 Supporting objectives include the ability to:
 
 - Know different methodologies for linking data to XIDs
+- Understand what provenance marks can do (and what they can't)
 - Understand the difference between self-attestations and peer endorsements
 - Know the value of relationship transparency
 

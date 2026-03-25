@@ -1,10 +1,12 @@
 # 3.3: Creating Peer Endorsements
 
 Self-attestations can go a long way, particularly if they can be
-verified. But the trust of a pseudonymous identity ultimately requires the endorsements of peers, who are effectively passing on some
-of their own reputation when they attest to your skills or abilities.
+cross-verified against external sources (like GitHub). But the trust
+of a pseudonymous identity ultimately requires the endorsements of
+peers, who are effectively passing on some of their own reputation
+when they attest to your skills or abilities.
 
-> **Related Concepts**: After completing this tutorial, explore the
+> 🧠 **Related Concepts**: After completing this tutorial, explore the
 [Attestation & Endorsement
 Model](../concepts/attestation-endorsement-model.md) and [Progressive
 Trust](../concepts/progressive-trust.md) to deepen your understanding.
@@ -13,29 +15,29 @@ Trust](../concepts/progressive-trust.md) to deepen your understanding.
 
 After working through this section, a developer will be able to:
 
-- Give peer endorsements using the fair witness methodology
-- Build a web of trust through multiple independent endorsers
-- Create peer endorsements using detached and embedded methodologies
+- Give peer endorsements using the fair witness methodology.
+- Build a web of trust through multiple independent endorser.s
+- Create peer endorsements using detached and embedded methodologies.
 
 Supporting objectives include the ability to:
 
-- Know the difference between attestations (your claims) and endorsements (others' validation)
-- Understand how relationship transparency makes endorsements more valuable
+- Know the difference between attestations (your claims) and endorsements (others' validation).
+- Understand how relationship transparency makes endorsements more valuable.
 
 ## Amira's Challenge: Getting Endorsed
 
 Amira has made self attestations about her skills and done her best to
-support validation of those attestations through links to proof of
-her work. But, there are limits to this: deeper trust requires
-attestations from other members, to create a web of trust among its
+support validation of those attestations through links to proof of her
+work. But, there are limits to this: deeper trust often requires
+attestations from other people, to create a web of trust among its
 members.
 
 To accomplish this, Amira needs peer endorsements. Her friend
 Charlene, who introduced Amira to the RISK network in the first place
-is a great first endorsement. However, Amira has also now done an initial
-project with DevReviewer, and getting a peer endorsement from her
-would be even more valuable, because she's active on SisterSpaces and
-in other social-design categories that Amira is interested in.
+is a great first endorsement. However, Amira has also now done an
+initial project with DevReviewer and getting a peer endorsement from
+her would be even more valuable because she's active on SisterSpaces
+and in other social-design categories that Amira is interested in.
 
 The key distinction between Amira's self attestations and Charlene and
 DevReviewer's peer endorsements is whose keys sign the
@@ -54,14 +56,14 @@ interpretation.
 
 To create a proper fair-witness attestation for Amira, Charlene would ask herself five questions:
 
-1. **What have I actually observed?** She's seen BRadvoc8's commitment
-to privacy work over two years, and that's endorsable. But "probably a great
-coder" would be speculation.
+1. **What have I actually observed?** She's seen Amira's commitment to
+privacy work over two years, and that's endorsable. But "probably a
+great coder" would be speculation.
 2. **What's the right scope?** "I endorse everything about BRadvoc8"
-isn't credible. "I endorse her character and values" is specific and
+isn't credible. "I endorse their character and values" is specific and
 honest.
 3. **How do I disclose the relationship?** "Personal friend who
-introduced her to RISK network" lets evaluators calibrate for
+introduced BRadvoc8 to RISK network" lets evaluators calibrate for
 potential bias.
 4. **What can't I speak to?** Charlene hasn't seen Amira's
 code. Acknowledging this makes the endorsement more credible, not
@@ -69,7 +71,8 @@ less.
 5. **Would I be embarrassed if wrong?** If BRadvoc8 turns out badly,
 would this endorsement look foolish? If yes, Charlene should narrow the scope.
 
-As a result, Charlene's endorsement will be limited to character and values: that's what she can honestly attest to.
+As a result, Charlene's endorsement will be limited to character and
+values: that's what she can honestly attest to.
 
 ## Part 0: Verify Dependencies
 
@@ -94,9 +97,9 @@ it's a fairly light attestation that Amira expects she'll only need as
 she bootstraps up her pseudonymous BRadvoc8 identity. For that reason,
 she'll be creating it as a detached endorsement.
 
-As for actually creating the endorsement: that falls on Charlene. This part is from her
-point of view, as she creates an endorsement for Amira (or rather for
-BRadvoc8).
+As for actually creating the endorsement: that falls on Charlene. This
+part is from her point of view, as she creates an endorsement for
+Amira (or rather for BRadvoc8).
 
 ### Step 1: Create Charlene's Identity
 
@@ -120,8 +123,9 @@ echo "✅ Charlene's XID created: $CHARLENE_XID_ID"
 │ ✅ Charlene's XID created: ur:xid/hdcxincngsnehykswzsfwsrstocwproevwssuybnknhgryflswknwmfenlesrodsfewnmsroserl
 ```
 
-Best practice at this point would be for Charlene to also great a
-seperate endorsement key and add that to her XID as described in
+Best practice of key heterogeneity at this point would be for Charlene
+to create a seperate endorsement key and add that to her XID as
+described in
 [§2.1](02_1_Creating_Self_Attestations/#step-1-create-an-attestation-key),
 but we're going to keep it simple by not doing so.
 
@@ -174,7 +178,7 @@ envelope format "$CHARLENE_SIGNED_ENDORSEMENT"
 Notice how the `endorsementScope` explicitly states what Charlene is
 _not_ endorsing.
 
-### Why Relationship Transparency Matters
+#### Why Relationship Transparency Matters
 
 The `relationshipBasis` assertion is one of the most valuable parts of
 this endorsement. When someone reads "Charlene endorses BRadvoc8,"
@@ -200,14 +204,20 @@ and they were all solid" means everything.
 Now Charlene can either publicly release her endorsement or pass it on
 to Amira to do with as she pleases.
 
-If Amira distributes the endorsement herself, it creates the challenge of how viewers will discover Charlene's XID. This is currently an open issue, though reliably listing XIDs in `source`s and `target`s is a great start. Distributing a view of Charlene's XID with the endorsement may be a good solution, particularly if it contains a [`dereferenceVia`](01_3_Making_a_XID_Verifiable/) that allows viewers to find the fresh original.
+If Amira distributes the endorsement herself, it creates the challenge
+of how viewers will discover Charlene's XID. This is currently an open
+issue, though reliably listing XIDs in `source`s and `target`s is a
+great start. Distributing a view of Charlene's XID with the
+endorsement may be a good solution, particularly if it contains a
+[`dereferenceVia`](01_3_Making_a_XID_Verifiable/) that allows viewers
+to find the fresh original.
 
 ### Step 4: Store Charlene's Info
 
 You should store the new keys and XID you created for Charlene:
 ```
-echo "$CHARLENE_PRVKEYS" > envelopes/key-charlene-private-3-03.envelope
-echo "$CHARLENE_PUBKEYS" > envelopes/key-charlene-public-3-03.envelope
+echo "$CHARLENE_PRVKEYS" > envelopes/key-charlene-private-3-03.ur
+echo "$CHARLENE_PUBKEYS" > envelopes/key-charlene-public-3-03.ur
 echo "$CHARLENE_XID" > envelopes/Charlene-xid-private-3-03.envelope
 echo "$CHARLENE_SIGNED_ENDORSEMENT" > envelopes/claim-charlene-3-03.envelope
 ```
@@ -217,9 +227,10 @@ echo "$CHARLENE_SIGNED_ENDORSEMENT" > envelopes/claim-charlene-3-03.envelope
 The introduction of edges in [§3.1: Creating
 Edges](03_1_Creating_Edges.md) offers the possibility of attaching
 endorsements directly to a XID as a link between the two participants
-in the endorsement. Though this didn't make sense for Charlene's character endorsement, it might be appropriate for technical
-endorsements that validate actual skills, since they will go to the heart
-of the work that Amira hopes to do in the RISK network.
+in the endorsement. Though this didn't make sense for Charlene's
+character endorsement, it might be appropriate for technical
+endorsements that validate actual skills, since they will go to the
+heart of the work that Amira hopes to do in the RISK network.
 
 Just as Part I was from Charlene's point of view, Part II is from
 DevReviewer's point of view.
@@ -237,11 +248,11 @@ This requires also creating DevReviewer's identity.
 You could generate DevReviewer's identity from scratch, but the
 following instead uses the keys already generated for DevReviewer in
 §2.3. (This is done for simplicity of the secondary characters in
-these tutorials; in real-life, Amira might have indeed grabbed the
+these tutorials; in real-life, Amira might indeed have grabbed the
 pubkeys from DevReviewer's XID to encrypt the material in §2.3, but
-she might have alternatively used keys that DevReviewer
-specifically published that were intended only for encryption of
-content sent to them.)
+she might have alternatively used keys that DevReviewer specifically
+published that were intended only for encryption of content sent to
+them.)
 
 ```
 REVIEWER_PRVKEYS=$(cat envelopes/key-devreviewer-private-2-03.ur)
@@ -276,7 +287,8 @@ TARGET_XID_ID=$XID_ID
 ### Step 7: Create Technical Endorsement
 
 Now an endorsement can be created with the `$TARGET_XID_ID` as the
-subject and all the details of the attestation under that. The basics are simple:
+subject and all the details of the attestation under that. The basics
+are simple:
 
 ```
 REVIEWER_TARGET=$(envelope subject type ur $TARGET_XID_ID)
@@ -293,20 +305,29 @@ REVIEWER_TARGET=$(envelope assertion add pred-obj string "relationshipBasis" str
 
 ### Step 8: Enhance Endorser Information
 
-Assertions can always be added to any part of an envelope. For an edge, that mainly means adding assertions to the `target`, which further define the attestation or credential being defined. However, you can also add content to the `source` about who the origin of the claim is. This is a self-attestation (since it'll ultimately be signed only
-by DevReviewer), but it can nonetheless add credibility to a peer endorsement (especially if it's verifiable).
+Assertions can always be added to any part of an envelope. For an
+edge, that mainly means adding assertions to the `target`, which
+further define the attestation or credential being defined. However,
+you can also add content to the `source` to better describe the origin
+of the claim. This is a self-attestation (since it'll ultimately be
+signed by the source), but it can nonetheless add credibility to a
+peer endorsement (especially if it's verifiable).
+
 ```
 REVIEWER_SOURCE=$(envelope subject type ur $SOURCE_XID_ID)
 ```
+
 They then can add whatever details they want:
+
 ```
 REVIEWER_SOURCE=$(envelope assertion add pred-obj string "schema:worksFor" string "SisterSpaces" $REVIEWER_SOURCE)
 REVIEWER_SOURCE=$(envelope assertion add pred-obj string "schema:employeeRole" string "Head Security Programmer" $REVIEWER_SOURCE)
 ```
 
 The [`schema`
-ontologies](https://github.com/BlockchainCommons/Research/blob/master/known-value-assignments/markdown/10000_schema_registry.md) that DevReviewer uses to define their role
-are very rich and support deeply recursive descriptions, but DevReviewer keeps it simple.
+ontologies](https://github.com/BlockchainCommons/Research/blob/master/known-value-assignments/markdown/10000_schema_registry.md)
+that DevReviewer uses to define their role are very rich and support
+deeply recursive descriptions, but DevReviewer keeps it simple.
 
 ### Step 9: Create Your Edge
 
@@ -316,6 +337,7 @@ create an edge. The only other thing needed is a subject which must be
 unique. Obviously, DevReviewer doesn't know what BRadvoc8 will have in
 their XID, but by adding an Apparently Random Identifier (ARID) on to
 a description, they can produce something that _should_ be unique
+
 ```
 REVIEWER_ARID=$(envelope generate arid -x | cut -c 1-16)
 REVIEWER_SUBJECT=peer-endorsement-from-devreviewer-$REVIEWER_ARID
@@ -358,6 +380,7 @@ envelope format $REVIEWER_SIGNED_EDGE
 |     'signed': Signature(Ed25519)
 | ]
 ```
+
 At this point, DevReviewer's peer endorsement is essentially a
 detached attestation that happens to be organized into a very specific
 format. But because of that formatting (a unique subject with three
@@ -371,15 +394,15 @@ as you present it.
 > 🔥 **What is the Power of Self-Sovereign identity?** Self-sovereign
 identity means that you control everything within a membrane in your
 identity ecosystem. Though you can't control what other people say
-about the identity, you control what is directly associated with the
-identity itself: you get to see it all, and you get to control it.
+about your identity, you control what is directly associated with the
+identity itself.
 
 ### Step 11: Store DevReviewer's Info
 
 You should also store DevReviewer's info:
 ```
-echo "$REVIEWER_PRVKEYS" > envelopes/key-devreviewer-private-3-03.envelope
-echo "$REVIEWER_PUBKEYS" > envelopes/key-devreviewer-public-3-03.envelope
+echo "$REVIEWER_PRVKEYS" > envelopes/key-devreviewer-private-3-03.ur
+echo "$REVIEWER_PUBKEYS" > envelopes/key-devreviewer-public-3-03.ur
 echo "$REVIEWER_XID" > envelopes/DevReviewer-xid-private-3-03.envelope
 echo "$REVIEWER_SIGNED_EDGE" > envelopes/claim-devreviewer-3-03.envelope
 ```
@@ -390,9 +413,9 @@ the endorsement easier.)
 
 ## Part III: Embedding Peer Endorsements
 
-Once Amira has received DevReviewer's endorsement, they can decide
-whether to add it to their XID, maintain it as a detached endorsement
-that they give out separately, or drop it entirely.
+Once Amira has received DevReviewer's endorsement, she can decide
+whether to add it to her XID, maintain it as a detached endorsement
+that she gives out separately, or drop it entirely.
 
 ### Step 12: Embed DevReviewer's Peer Endorsement
 
@@ -400,15 +423,20 @@ If DevReviewer had not given Amira a peer endorsement in the precise
 format for an edge, it could not be attached as an edge. But because
 they did, it can be attached with a simple command, provided that Amira feels
 it's core to her XID and it's how she wants to present herself:
+
 ```
-XID_WITH_EDGE=$(envelope xid edge add $REVIEWER_SIGNED_EDGE $XID)
+XID_WITH_EDGE=$(envelope xid edge add \
+    --verify inception \
+    $REVIEWER_SIGNED_EDGE $XID)
 ```
 
 As usual, after creating a new version of her XID (with either added
 or removed content), Amira should advance its provenance mark.
+
 ```
 XID_WITH_EDGE=$(envelope xid provenance next \
     --password "$PASSWORD" \
+    --sign inception \
     --private encrypt \
     --generator encrypt \
     --encrypt-password "$PASSWORD" \
@@ -422,77 +450,82 @@ envelope format $XID_WITH_EDGE
 
 | Amira's v4 XID:
 |
-| XID(5f1c3d9e) [
-|     'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
-|     'edge': {
-|         "account-credential-github" [
-|             'isA': "foaf:OnlineAccount"
-|             'source': XID(5f1c3d9e)
-|             'target': XID(5f1c3d9e) [
-|                 "foaf:accountName": "BRadvoc8"
-|                 "foaf:accountServiceHomepage": URI(https://github.com/BRadvoc8/BRadvoc8)
-|                 "sshSigningKey": SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
-|                 "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net"
-|                 "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
-|                 'conformsTo': URI(https://github.com)
-|                 'date': "2026-03-11T09:21-10:00"
-|                 'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
-|             ]
-|         ]
-|     } [
-|         'signed': Signature(SshEd25519)
-|     ]
-|     'edge': {
-|         "peer-endorsement-from-devreviewer-28f4b6bc18637fd6" [
-|             'isA': "attestation"
-|             'source': XID(6ab29708) [
-|                 "schema:employeeRole": "Head Security Programmer"
-|                 "schema:worksFor": "SisterSpaces"
-|             ]
-|             'target': XID(5f1c3d9e) [
-|                 "endorsementContext": "Verfied previous security experience, worked together on short project for SisterSpaces"
-|                 "endorsementScope": "Security architecture, cryptographic implementation, privacy patterns"
-|                 "peerEndorsement": "Writes secure, well-tested code with clear attention to privacy-preserving patterns"
-|                 "relationshipBasis": "Security collaboration partner who verified credentials through commit-reveal and encrypted sharing"
-|                 'date': "2026-03-11T13:52-10:00"
-|             ]
-|         ]
-|     } [
-|         'signed': Signature(Ed25519)
-|     ]
-|     'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
-|         {
-|             'privateKey': ENCRYPTED [
-|                 'hasSecret': EncryptedKey(Argon2id)
+| {
+|     XID(5f1c3d9e) [
+|         'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+|         'edge': {
+|             "account-credential-github" [
+|                 'isA': "foaf:OnlineAccount"
+|                 'source': XID(5f1c3d9e)
+|                 'target': XID(5f1c3d9e) [
+|                     "foaf:accountName": "BRadvoc8"
+|                     "foaf:accountServiceHomepage": URI(https://github.com/BRadvoc8/BRadvoc8)
+|                     "sshSigningKey": SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|                     "sshSigningKeyText": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net"
+|                     "sshSigningKeysURL": URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|                     'conformsTo': URI(https://github.com)
+|                     'date': "2026-03-18T11:55-10:00"
+|                     'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+|                 ]
 |             ]
 |         } [
-|             'salt': Salt
+|             'signed': Signature(SshEd25519)
 |         ]
-|         'allow': 'Sign'
-|         'nickname': "attestation-key"
-|     ]
-|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
-|         {
-|             'privateKey': ENCRYPTED [
-|                 'hasSecret': EncryptedKey(Argon2id)
+|         'edge': {
+|             "peer-endorsement-from-devreviewer-28f4b6bc18637fd6" [
+|                 'isA': "attestation"
+|                 'source': XID(6ab29708) [
+|                     "schema:employeeRole": "Head Security Programmer"
+|                     "schema:worksFor": "SisterSpaces"
+|                 ]
+|                 'target': XID(5f1c3d9e) [
+|                     "endorsementContext": "Verfied previous security experience, worked together on short project for SisterSpaces"
+|                     "endorsementScope": "Security architecture, cryptographic implementation, privacy patterns"
+|                     "peerEndorsement": "Writes secure, well-tested code with clear attention to privacy-preserving patterns"
+|                     "relationshipBasis": "Security collaboration partner who verified credentials through commit-reveal and encrypted sharing"
+|                     'date': "2026-03-11T13:52-10:00"
+|                 ]
 |             ]
 |         } [
-|             'salt': Salt
+|             'signed': Signature(Ed25519)
 |         ]
-|         'allow': 'All'
-|         'nickname': "BRadvoc8"
-|     ]
-|     'provenance': ProvenanceMark(16be4cbd) [
-|         {
-|             'provenanceGenerator': ENCRYPTED [
-|                 'hasSecret': EncryptedKey(Argon2id)
+|         'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|             {
+|                 'privateKey': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
 |             ]
-|         } [
-|             'salt': Salt
+|             'allow': 'Sign'
+|             'nickname': "attestation-key"
+|         ]
+|         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|             {
+|                 'privateKey': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
+|             ]
+|             'allow': 'All'
+|             'nickname': "BRadvoc8"
+|         ]
+|         'provenance': ProvenanceMark(e1b067a4) [
+|             {
+|                 'provenanceGenerator': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
+|             ]
 |         ]
 |     ]
+| } [
+|     'signed': Signature(Ed25519)
 | ]
 ```
+Yes! It's gotten big at this point! We'll talk more about what to do about that in [§3.5](03_5_Creating_Views_and_Versions.md).
 
 ### Step 13: Export & Store Your Work
 
@@ -513,7 +546,8 @@ echo "$XID_WITH_EDGE" > envelopes/BRadvoc8-xid-private-3-03.envelope
 
 #### XID Version Comparison
 
-You've now created a fourth XID version. You take a look at the provenance marks again in the next section, but here's an overview of what each version contains
+You've now created a fourth XID edition.  Here's an overview of what
+each version contains
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
@@ -564,9 +598,10 @@ doubtless noted that all of endorsements have rigidly used
 `endorsementContext`, `endorsementScope`, and
 `relationshipBasis`. Obviously, you can use whatever format you want
 when writing attestations. What we present here is simply a suggestion
-for best practice—and the best practice are not necessarily these specific predicates, but
-instead the practice of using a fair witness methodology to accurately
-and impartially report the context and potential bias of an endorsement.
+for best practice—and the best practice are not necessarily these
+specific predicates, but instead the practice of using a fair witness
+methodology to accurately and impartially report the context and
+potential bias of an endorsement.
 
 ### Step 15: Verify All Endorsements
 
@@ -599,9 +634,51 @@ Self-attestations cost nothing; endorsements cost credibility.
 
 Verifying an embedded endorsement requires extracting it, then
 checking the signature. This was demonstrated in
-[§3.2](03_2_Supporting_Cross_Verification.md).
+[§3.2](03_2_Supporting_Cross_Verification.md). The only difference is
+that BRadvoc8's XID now contains multiple edges.
 
-[EXAMPLE TBD after writing §3.2]
+You can get the output from `envelope xid edge all
+$PUBLIC_XID_WITH_EDGE`, find the right edge, and then check that
+against Reviewer's signature:
+```
+envelope verify -v $REVIEWER_PUBKEYS -s ur:envelope/lftpsplrtpsokseyjoihihjpdpihjtiejljpjkihjnihjtjydpiyjpjljndpieihkojpihkoinihktihjpdpeyetiyeeidenidiaeheteneoemiyieenoycfaornlstpsotanshdhdcximprmsaylgfwcyjzzcamzmdrbdetjsrngamnbsfptbwtksihrhzonsahuthydwtboytpsojkjkiaisihjnhsftihjnjojzjlkkihihgmjljzihtpsokscsfdihhsiecxguihiakpjpinjykkcxgdjpjliojphsjnjnihjpoytpsojljkiaisihjnhsftktjljpjejkfgjljptpsojzguinjkjyihjpgujohsiaihjkoycfaorslntpsotanshdhdcxhecefsnnionspljpftktetwymnfmcyecveuotktpwenlhyhdpmpykpchcmzchywzoytpsojsjpihjzhsjyinjljtjkisinjofwhsjkinjktpsoksiaguihiakpjpinjykkcxiajljzjzhsidjljphsjyinjljtcxjohsjpjyjtihjpcxktisjlcxkoihjpiniyinihiecxiajpihieihjtjyinhsjzjkcxjyisjpjlkpioiscxiajljnjninjydpjpihkoihhsjzcxhsjtiecxihjtiajpkkjojyihiecxjkishsjpinjtiooybetpsokoeydyeyendpdyeodpehehgheheofteceydpehdyftdydyoytpsojpihjtiejljpjkihjnihjtjyfxjljtjyihksjytpsokshghfihjpiyinihiecxjojpihkoinjlkpjkcxjkihiakpjpinjykkcxihksjoihjpinihjtiaihdwcxktjljpjeihiecxjyjlioihjyisihjpcxjljtcxjkisjljpjycxjojpjlimihiajycxiyjljpcxguinjkjyihjpgujohsiaihjkoytpsojljoihihjpfejtiejljpjkihjnihjtjytpsoksguhgjpinjyihjkcxjkihiakpjpihdwcxktihjzjzdpjyihjkjyihiecxiajlieihcxktinjyiscxiajzihhsjpcxhsjyjyihjtjyinjljtcxjyjlcxjojpinkohsiakkdpjojpihjkihjpkoinjtiocxjohsjyjyihjpjtjkoytpsojoihjtiejljpjkihjnihjtjyguiajljoihtpsoksfeguihiakpjpinjykkcxhsjpiaisinjyihiajykpjpihdwcxiajpkkjojyjliojphsjoisiniacxinjnjojzihjnihjtjyhsjyinjljtdwcxjojpinkohsiakkcxjohsjyjyihjpjtjkoyadtpsojehsjyjyihjkjyhsjyinjljtoyaxtpsotansghlfaohdfztotdmttbtkeojlgalkiywpdlhkckltcnlnleksaysntyrefegweygmasrlcyksplemghihynhscxnlspkonlhlemksiaadbewfdrieksehvypychmtteurwemktttiaxjegodrvt
+```
+
+Or you could read in the edges as an array and check each of those
+edges against a signature, and when you find a success, send an
+alert. (This uses a method similar to how we checked a bunch of keys
+against a single XID in the past.)
+
+```
+read -d '' -r -a XID_EDGES <<< $(envelope xid edge all "$PUBLIC_XID_WITH_EDGE")
+for i in "${XID_EDGES[@]}"
+  do
+    if envelope verify -v $REVIEWER_PUBKEYS $i >/dev/null 2>&1; then
+      echo "✅ The signature verified for: "
+      envelope format $i
+    fi
+done
+
+| ✅ The signature verified for: 
+| {
+|     "peer-endorsement-from-devreviewer-28f4b6bc18637fd6" [
+|         'isA': "attestation"
+|         'source': XID(6ab29708) [
+|             "schema:employeeRole": "Head Security Programmer"
+|             "schema:worksFor": "SisterSpaces"
+|         ]
+|         'target': XID(5f1c3d9e) [
+|             "endorsementContext": "Verfied previous security experience, worked together on short project for SisterSpaces"
+|             "endorsementScope": "Security architecture, cryptographic implementation, privacy patterns"
+|             "peerEndorsement": "Writes secure, well-tested code with clear attention to privacy-preserving patterns"
+|             "relationshipBasis": "Security collaboration partner who verified credentials through commit-reveal and encrypted sharing"
+|             'date': "2026-03-11T13:52-10:00"
+|         ]
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+```
 
 #### What If Someone Forges an Endorsement?
 
@@ -627,7 +704,7 @@ Charlene's actual key.
 ```
 envelope verify --verifier "$REVIEWER_PUBKEYS" "$FAKE_SIGNED"
 
-│ Error: could not verify a signature
+│ ❌ Error: could not verify a signature
 ```
 
 ### Step 16: Develop a Web of Trust
@@ -648,7 +725,7 @@ Trust multiplies as endorsements increase, especially when they have different c
 | 3 independent | Moderate | Pattern of validation |
 | 3 from different contexts | Strong | Triangulated trust |
 
-However, qulity matters more than quantity. Three endorsements from
+However, quality matters more than quantity. Three endorsements from
 unknown people don't equal a strong reputation. Three from established
 community members with clear context is a strong signal.
 
@@ -668,12 +745,14 @@ The Web of Trust is not perfect. We've been talking about it since the
 release of [PGP](https://en.wikipedia.org/wiki/Pretty_Good_Privacy) in
 1991. A decades worth of [Rebooting the Web of Trust
 events](https://www.weboftrust.info/events/) offered answers to some
-of the problems, but not all. Here's some of the biggest issues you need to think about:
+of the problems, but not all. Here's some of the biggest issues you
+need to think about with regard to XIDs as part of a Web of Trust:
 
-**The XID Discovery Challenge:** How do you find XIDs in the first place?
-Amira messaged hers to Ben (and later DevReviewer) in these tutorials,
-but how does someone else find Charlene's XID and DevReviewer's XID,
-which are mentioned in Amira's new peer endorsements?
+**The XID Discovery Challenge:** How do you find XIDs in the first
+place?  Amira messaged hers to Ben and later DevReviewer in these
+tutorials, but how does someone else find Charlene's XID and
+DevReviewer's XID, which are mentioned in Amira's new peer
+endorsements?
 
 This is an active area of development. For now, discovery happens
 through existing channels: project READMEs, social introductions,
@@ -705,22 +784,24 @@ A lot of this is from the point of view of the endorsee, but the
 endorser could also maintain signed lists of endorsements that they've
 made (or signed lists of commitments to those endorsements!).
 
-**The Bootstrapping Problem:** Finally, how does someone know that "Charlene"
-is actually Charlene? You can verify that their signature matches
-Charlene's public key, but how do you know that key belongs to a
-trustworthy person named Charlene?
+**The Bootstrapping Problem:** Finally, how does someone know that
+"Charlene" is actually Charlene? You can verify that their signature
+matches Charlene's public key, but how do you know that key belongs to
+a trustworthy person named Charlene?
 
 This is the bootstrapping problem of any trust network. The signature
 proves the endorsement came from *whoever controls that key*. It
-doesn't prove that person is who they claim to be. For that you have to see what endorsements Charlene has, and what endorsements they have ... throughout the web until you're satisfied.
+doesn't prove that person is who they claim to be. For that you have
+to see what endorsements Charlene has, and what endorsements they have
+... throughout the web until you're satisfied.
 
 ### Step 17: Consider the Endorsement Lifecycle
 
 Just as with all sorts of attestations, endorsements are point-in-time
 statements. Charlene's endorsement reflects what she observed through
-January 2026. Like all attestations, peer endorsements can grow stale,
-and so their age should be considered: if BRadvoc8's behavior changes,
-the endorsement doesn't automatically update.
+a certain time. Like all attestations, peer endorsements can grow
+stale, and so their age should be considered: if BRadvoc8's behavior
+changes, the endorsement doesn't automatically update.
 
 Managing the attestation lifecycle, as discussed in
 [§2.1](02_1_Creating_Self_Attestations/#part-v-managing-the-attestation-lifecycle),
@@ -740,9 +821,9 @@ At this point, Amira has built a succession of progressive trust layers:
 7. [§3.2](03_2_Supporting_Cross_Verification.md) Cross-verified (external accounts confirmed)
 8. [§3.3](03_3_Creating_Peer_Endorsements.md): Peer validated (independent endorsements)
 
-Amira's reputation is **portable** (follows her XID), **verifiable**
-(anyone can check), **privacy-preserving** (no legal identity), and
-**growing** (can continue building).
+At this point, Amira's reputation is **portable** (follows her XID),
+**verifiable** (anyone can check), **privacy-preserving** (no legal
+identity), and **growing** (can continue building).
 
 ### Additional Files
 
@@ -768,7 +849,9 @@ specific about what you've observed and what you can't speak to.
 
 ## What's Next
 
-Future topics are being considered for this course, but at the moment this is the end.
+[§3.4: Creating Binding
+Agreements](3_4_Creating_Binding_Agreements.md) extends the power of
+XIDs by discussing how to use them for contracts.
 
 ## Appendix I: Key Terminology
 

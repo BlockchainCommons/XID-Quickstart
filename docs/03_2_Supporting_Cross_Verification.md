@@ -22,11 +22,13 @@ After working through this section, a developer will be able to:
 - Extract attestations from XID edges.
 - Verify claims against GitHub's API.
 - Check Git commit signatures.
+- Compare multiple provenance marks.
 
 Supporting objectives include the ability to:
 
 - Understand how temporal anchors establish when claims became valid.
 - Know what cross-verification proves (and its limits).
+- Understand what provenance marks can do (and what they can't).
 
 ## DevReviewer's Story: Verifying Claims
 
