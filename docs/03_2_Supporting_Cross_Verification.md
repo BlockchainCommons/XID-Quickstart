@@ -342,7 +342,7 @@ envelope format "$XID_EDGE"
 | } [
 |     'signed': Signature(SshEd25519)
 | ]
-
+```
 
 The edge contains everything DevReviewer needs for verification: the
 claimed GitHub username (`"BRadvoc8"`), a
