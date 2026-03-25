@@ -6,7 +6,7 @@ of a pseudonymous identity ultimately requires the endorsements of
 peers, who are effectively passing on some of their own reputation
 when they attest to your skills or abilities.
 
-> 🧠 **Related Concepts**: After completing this tutorial, explore the
+> 🧠 **Related Concepts.** After completing this tutorial, explore the
 [Attestation & Endorsement
 Model](../concepts/attestation-endorsement-model.md) and [Progressive
 Trust](../concepts/progressive-trust.md) to deepen your understanding.
@@ -24,7 +24,7 @@ Supporting objectives include the ability to:
 - Know the difference between attestations (your claims) and endorsements (others' validation).
 - Understand how relationship transparency makes endorsements more valuable.
 
-## Amira's Challenge: Getting Endorsed
+## Amira's Story: Getting Endorsed
 
 Amira has made self attestations about her skills and done her best to
 support validation of those attestations through links to proof of her
