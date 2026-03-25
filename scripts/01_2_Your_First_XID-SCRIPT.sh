@@ -79,12 +79,11 @@ echo ""
 echo "Step 4: Verify the XID"
 echo "======================"
 
-# Extract public keys from unwrapped XID
+# Extract public keys from  XID
 KEY_OBJECT=$(envelope xid key all $PUBLIC_XID)
-PUBLIC_KEYS=$(envelope extract ur "$KEY_OBJECT")
 
 # Verify signature
-envelope verify -v "$PUBLIC_KEYS" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified!"
+envelope verify -v "$KEY_OBJECT" "$PUBLIC_XID" >/dev/null && echo "✅ Signature verified"
 echo ""
 
 echo "Step 5: Verify the Provenance Mark"
