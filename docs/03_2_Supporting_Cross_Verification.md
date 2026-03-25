@@ -497,6 +497,7 @@ fi
 | GitHub key:       ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
 |
 | ✅ GITHUB KEY MATCHES - XID claim matches GitHub registry
+```
 
 Second, does the plain version of the key in the XID match the UR
 version of the key in the XID?
