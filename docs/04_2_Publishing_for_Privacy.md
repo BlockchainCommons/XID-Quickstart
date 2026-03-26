@@ -233,8 +233,8 @@ each version contains
 | seq 1 | 🔑 Attestation Key | §2.1 |
 | seq 2 | 🗣️ GitHub Edge | §3.1 |
 | seq 3 | 🗣️ Endorsement Edge | §3.3 |
-| seq 4 | 🔑 Contract Key | §3.4 |
-| seq 5 | 📄️  Contract scommitment | §3.4 |
+| seq 4 | 🔑 Contract Key | §4.1 |
+| seq 5 | 📄 Contract Commitment | §4.2 |
 
 ## Part II: Incorporating a Contract into a Commitment List
 
