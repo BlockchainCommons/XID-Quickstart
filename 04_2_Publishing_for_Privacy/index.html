@@ -1,0 +1,1551 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/04_2_Publishing_for_Privacy/">
+      
+      
+        <link rel="prev" href="../04_1_Creating_Binding_Agreements/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>4.2: Publishing for Privacy - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#42-publishing-for-privacy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4.2: Publishing for Privacy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Expanding &amp; Contracting Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing for Privacy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-preserving-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Preserving Privacy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-commitments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Commitments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-herd-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Herd Privacy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-incorporating-a-contract-into-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Incorporating a Contract into a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Incorporating a Contract into a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-a-contract-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create a Contract Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-publish-your-contract-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Publish Your Contract Edge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Publish Your Contract Edge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-incorporating-a-contract-into-a-commitment-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Incorporating a Contract into a Commitment List
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Incorporating a Contract into a Commitment List">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-computer-a-digest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Computer a Digest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-publish-a-commitment-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Publish a Commitment List
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-check-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Check a Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-xxx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: XXX
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: XXX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-preserving-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Preserving Privacy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-commitments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Commitments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-herd-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Herd Privacy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-incorporating-a-contract-into-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Incorporating a Contract into a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Incorporating a Contract into a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-a-contract-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create a Contract Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-publish-your-contract-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Publish Your Contract Edge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Publish Your Contract Edge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-incorporating-a-contract-into-a-commitment-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Incorporating a Contract into a Commitment List
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Incorporating a Contract into a Commitment List">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-computer-a-digest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Computer a Digest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-publish-a-commitment-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Publish a Commitment List
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-check-a-commitment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Check a Commitment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-xxx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: XXX
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: XXX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="42-publishing-for-privacy">4.2: Publishing for Privacy</h1>
+<p>Amira and Ben have a contract that ensures that SisterSpaces will
+always be able to use Amira's work. Maybe they're comfortable
+publishing that full contract, but maybe they prefer to keep details
+to themselves, to maximize the privacy and protection of both
+parties. This section explains how they could do so.</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> After completing this tutorial, explore
+<a href="../concepts/data-minimization.md">Data Minimization</a> and <a href="../concepts/elision-cryptography.md">Elision
+Cryptography</a>.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Store hashed records of a contract as a commitment.</li>
+<li>Create herd privacy through the publication of numerous hashes.</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand what a commitment means,</li>
+<li>Understand what herd privacy is.</li>
+</ul>
+<h2 id="amiras-story-preserving-privacy">Amira's Story: Preserving Privacy</h2>
+<p>Amira has signed a CLA to allow her work to be used in SisterSpaces'
+SecureAuth Library. Most open-source repositories would publish CLAs
+like that as part of their repos. But Ben is very aware of privacy
+concerns, as many of the women who use his services come from abusive
+backgrounds. He extends that to the people working with him.</p>
+<p>Because she is standing behind her BRadvoc8 identity, Amira doesn't
+have the same concerns as those people working with SisterSpaces
+without the benefit of a pseudonymous agreement. In fact, she's eager
+to reveal her connection to them to improve the trust for her
+identity. But that doesn't mean she wants everyone to know the entire
+contents of the contract she signed, or at the least doesn't want the
+whole huge text incorporated into her XID.</p>
+<p>How can licensing rights be ensured without endangering any of the
+participants? The answer is commitments.</p>
+<h2 id="the-power-of-commitments">The Power of Commitments</h2>
+<p>We've seen commitments previously, in
+<a href="../02_2_Managing_Claims_Elision/">§2.2</a>. Their use there was simple:
+we created a claim; we elided that claim; and then we used the hash of
+the claim as proof that the claim existed (and had existed for some
+period of time).</p>
+<p>At the time we said that the commitment <em>could</em> be published, but we
+didn't really say how. This chapter explores that more:</p>
+<p>To start with, we offer two major methods to create a commitment:
+<code>shasum</code> a plain file (which we saw in
+<a href="../04_1_Creating_Binding_Agreements/">§4.1</a>) and <code>digest</code> an envelope
+(which we use here).</p>
+<table>
+<thead>
+<tr>
+<th>Hashing Method</th>
+<th>App</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SHASum a File</td>
+<td><code>shasum</code></td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>Digest an Envelope</td>
+<td><code>envelope</code></td>
+<td>§4.2</td>
+</tr>
+</tbody>
+</table>
+<p>Each of these digests can also be published in a variety of ways. Ben
+incorporated a <code>shasum</code> into an envelope in the last section. Here
+we're going to see a <code>digest</code> incorporated into an envelope and also
+discuss how digests can be published in plain (<code>.md</code>) files.</p>
+<table>
+<thead>
+<tr>
+<th>Publication Method</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incorporate into a XID</td>
+<td>§4.1, §4.2</td>
+</tr>
+<tr>
+<td>In a File</td>
+<td>§4.2</td>
+</tr>
+<tr>
+<td>As a Long List</td>
+<td>§4.2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-power-of-herd-privacy">The Power of Herd Privacy</h2>
+<p>As noted above, one of the methods of publishing commitments is as
+part of a long list. Doing so can create herd privacy. When a long
+list of commitments is created, each one blends in with the others. An
+observer simply sees a long list of commitments: they can't easily
+determine which one belongs to the human rights worker, which to a
+student, and which to a retiree. The crowd provides cover.</p>
+<table>
+<thead>
+<tr>
+<th>Contributors</th>
+<th>Observer's Challenge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Trivial to identify</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Difficult to identify</td>
+</tr>
+<tr>
+<td>50</td>
+<td>Needle in haystack</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Effectively anonymous</td>
+</tr>
+</tbody>
+</table>
+<p>Even if an attacker discovered a flaw in the methodology that Ben uses
+to make commitments, they wouldn't know which hash to try and attack
+to prove that BRadvoc8 (or anyone else) is involved. The specifics are lost among the crowd.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID. We're also going to be using Amira's
+attestation key to create a new edge about her work with SisterSpaces,
+which will also depend on the CLA she signed.</p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-3-03.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
+CLA=$(cat envelopes/cla-bradvoc8-accepted-4-01.envelope)
+</code></pre>
+<h2 id="part-i-incorporating-a-contract-into-a-xid">Part I: Incorporating a Contract into a XID</h2>
+<p>Amira is thrilled to talk about her work with SisterSpaces. That's
+because Ben's signature on Amira's contract is another step forward in
+the progressive trust of BRadvoc8 as a reliable security expert.</p>
+<p>On the other hand, she does have some privacy concerns. She knows that
+Ben only releases the full CLAs if they're legally necessary to prove
+ownership of SisterSpaces code. She wants to respect his privacy and
+also doesn't want to clutter up in XID with the full contract.</p>
+<p>A commitment of the contract offers a compromise that will meet her
+needs to show off the connection but still protect Ben's privacy and
+her own XID's accessability.</p>
+<h3 id="step-1-create-a-contract-edge">Step 1: Create a Contract Edge</h3>
+<p>To record the contract, Amira will create a new self-attestation edge that
+she is working on SisterSpaces.</p>
+<p>As with any other edge, she first needs to define the three core elements of the edge: <code>isA</code>, <code>source</code>, and <code>target</code>:</p>
+<pre><code>ISA=&quot;foaf:Project&quot;
+SOURCE_XID_ID=$XID_ID
+TARGET_XID_ID=$XID_ID
+</code></pre>
+<p>To create the commitment of the contract she will use a similar methodology to that of <a href="../02_2_Managing_Claims_Elision/">§2.2</a>.</p>
+<pre><code>DIGEST_CLA=$(envelope digest &quot;$SIGNED_ACCEPTED_CLA&quot;)
+</code></pre>
+<p>There, we elided the envelope, leaving only the digest. Here, we're
+instead going to incorporate the digest into this claim. If anyone
+asks for more info they can ask BRadvoc8 for the full contract, and
+she can decide whether it's appropriate to give it out.</p>
+<p>The commitment to the conract, as with the rest of the details of the
+claim, are placed as a target subenvelope:</p>
+<pre><code>PROJECT_TARGET=$(envelope subject type ur $TARGET_XID_ID)
+PROJECT_TARGET=$(envelope assertion add pred-obj string $ISA string &quot;SisterSpaces&quot; &quot;$PROJECT_TARGET&quot;)
+PROJECT_TARGET=$(envelope assertion add pred-obj known verifiableAt string &quot;https://github.com/SisterSpaces/SecureAuth/CLAs/&quot; &quot;$PROJECT_TARGET&quot;)
+PROJECT_TARGET=$(envelope assertion add pred-obj string &quot;claDigest&quot; digest &quot;$DIGEST_CLA&quot; &quot;$PROJECT_TARGET&quot;)
+</code></pre>
+<p>With those details, you can now put together the contract edge:</p>
+<pre><code>EDGE=$(envelope subject type string &quot;project-sister-spaces-secureauth&quot;)
+EDGE=$(envelope assertion add pred-obj known isA string &quot;$ISA&quot; &quot;$EDGE&quot;)
+EDGE=$(envelope assertion add pred-obj known source ur &quot;$SOURCE_XID_ID&quot; &quot;$EDGE&quot;)
+EDGE=$(envelope assertion add pred-obj known target envelope &quot;$PROJECT_TARGET&quot; &quot;$EDGE&quot;)
+
+echo &quot;SisterSpaces edge details:&quot;
+envelope format &quot;$EDGE&quot;
+
+| SisterSpaces edge details:
+| 
+| &quot;project-sister-spaces-secureauth&quot; [
+|     'isA': &quot;foaf:Project&quot;
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e) [
+|         &quot;claDigest&quot;: Digest(0ecac6b7)
+|         &quot;foaf:Project&quot;: &quot;SisterSpaces&quot;
+|         'verifiableAt': &quot;https://github.com/SisterSpaces/SecureAuth/CLAs/&quot;
+|     ]
+| ]
+</code></pre>
+<p>This is a relatively simple edge, but that's because the CLA commitment stands in for the entire CLA!</p>
+<h3 id="step-2-publish-your-contract-edge">Step 2: Publish Your Contract Edge</h3>
+<p>You can now take the several steps to attach this edge and publish the result.</p>
+<p>First, incorporate the edge:</p>
+<pre><code>WRAPPED_EDGE=$(envelope subject type wrapped &quot;$EDGE&quot;)
+SIGNED_EDGE=$(envelope sign --signer &quot;$ATTESTATION_PRVKEYS&quot; &quot;$WRAPPED_EDGE&quot;)
+
+XID_WITH_CONTRACT_EDGE=$(envelope xid edge add \
+    --verify inception \
+    $SIGNED_EDGE $XID_WITH_CONTRACT_KEY)
+</code></pre>
+<p>Second, advance the provenance mark and produce a public version</p>
+<pre><code>XID_WITH_CONTRACT_EDGE=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$XID_WITH_CONTRACT_EDGE&quot;)
+PUBLIC_XID_WITH_CONTRACT_EDGE=$(envelope xid export --private elide --generator elide &quot;$XID_WITH_CONTRACT_EDGE&quot;)
+</code></pre>
+<p>Third, store everything:</p>
+<pre><code>echo &quot;$PUBLIC_XID_WITH_CONTRACT_EDGE&quot; &gt; envelopes/BRadvoc8-xid-public-4-02.envelope
+echo &quot;$XID_WITH_CONTRACT_EDGE&quot; &gt; envelopes/BRadvoc8-xid-private-4-02.envelope
+</code></pre>
+<p>You've now demonstrated how Amira highlights her new connection to SisterSpaces while preserving privacy, but that's just half the story.</p>
+<h4 id="xid-version-comparison">XID Version Comparison</h4>
+<p>You've now created a sixth XID edition of Amira's XID.  Here's another overview of what
+each version contains</p>
+<table>
+<thead>
+<tr>
+<th>XID Version</th>
+<th>New Content</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seq 0</td>
+<td>👤 Identity</td>
+<td>§1.2+§1.3</td>
+</tr>
+<tr>
+<td>seq 1</td>
+<td>🔑 Attestation Key</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>seq 2</td>
+<td>🗣️ GitHub Edge</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>seq 3</td>
+<td>🗣️ Endorsement Edge</td>
+<td>§3.3</td>
+</tr>
+<tr>
+<td>seq 4</td>
+<td>🔑 Contract Key</td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>seq 5</td>
+<td>📄 Contract Commitment</td>
+<td>§4.2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="part-ii-incorporating-a-contract-into-a-commitment-list">Part II: Incorporating a Contract into a Commitment List</h2>
+<p>Ben also needs to publish the CLA, to show everyone that his software
+is safe to use, because he has contracts with all the authors. But,
+Ben has 50 different people who have worked on SisterSpaces (and
+signed CLAs). He doesn't want all of that in his XID (or even in a XID
+he created for SisterSpaces). Nor does he want to just publish those
+CLAs separately, because of the privacy concerns.</p>
+<p>His answer: a commitment list</p>
+<h3 id="step-3-computer-a-digest">Step 3: Computer a Digest</h3>
+<p>[TBD]</p>
+<h3 id="step-4-publish-a-commitment-list">Step 4: Publish a Commitment List</h3>
+<p>[TBD]</p>
+<h3 id="step-5-check-a-commitment">Step 5: Check a Commitment</h3>
+<p>[TBD]</p>
+<h2 id="summary-xxx">Summary: XXX</h2>
+<p>...</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains numerous data created in this section, the most
+important of which are Amira's sixth
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-4-02.envelope">private</a>
+and
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-4-02.envelope">public</a>
+XIDs as well as the</p>
+<p>... Ben's list ...</p>
+<p><strong>Scripts:</strong> Scripts demonstrating this section are forthcoming.</p>
+<h3 id="exercises">Exercises</h3>
+<p>...</p>
+<h2 id="whats-next">What's Next</h2>
+<p>Though we've completed Amira's first arc, there's one open question: has
+her XID gotten too big? <a href="04_3_Creating_Views_and_Versions.md">§4.3: Creating Views and
+Viewsion</a> talks about how to
+clean it up.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Commitment List</strong>:</p>
+<p><strong>Herd Privacy</strong>:</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
