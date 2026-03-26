@@ -364,7 +364,7 @@ envelope format "$CLA"
 |         'nickname': "Ben (SisterSpaces)"
 |     ]
 | ]
-``
+```
 
 ## Part III: Signing a CLA
 
