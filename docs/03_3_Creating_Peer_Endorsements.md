@@ -525,7 +525,7 @@ envelope format $XID_WITH_EDGE
 |     'signed': Signature(Ed25519)
 | ]
 ```
-Yes! It's gotten big at this point! We'll talk more about what to do about that in [§3.5](03_5_Creating_Views_and_Versions.md).
+Yes! It's gotten big at this point! We'll talk more about what to do about that in [§4.3](04_3_Creating_Views_and_Versions.md).
 
 ### Step 13: Export & Store Your Work
 
@@ -849,9 +849,9 @@ specific about what you've observed and what you can't speak to.
 
 ## What's Next
 
-[§3.4: Creating Binding
-Agreements](3_4_Creating_Binding_Agreements.md) extends the power of
-XIDs by discussing how to use them for contracts.
+[Chapter Four: Expanding & Contracting Your XIDs](04_0_Advanced.md)
+will take the next step, discussing how XIDs can be used to store
+other sorts of content and how a XID can be kept lean and clean.
 
 ## Appendix I: Key Terminology
 

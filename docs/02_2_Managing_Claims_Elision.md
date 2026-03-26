@@ -195,7 +195,7 @@ value and it hashes correctly, your commitment has been fulfilled.
 
 Elision becomes trickier when you want to create new views of your XID
 by removing individual elements of the XID's
-data. [§3.5](03_5_Creating_Views_and_Versions.md) demonstrates how to
+data. [§4.3](04_3_Creating_Views_and_Versions.md) demonstrates how to
 do so.
 
 ### Step 4: Store Your Work

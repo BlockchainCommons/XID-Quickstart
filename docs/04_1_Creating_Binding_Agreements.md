@@ -1,8 +1,8 @@
-# 3.4: Creating Binding Agreements
+# 4.1: Creating Binding Agreements
 
 In order to contribute to a project, open-source developers should
-sign binding agreements allowing use of their code.  This is the
-culmination of an identity journey from pseudonymous phantom to
+sign binding agreements allowing use of their code. Amira doing so is
+the culmination of an identity journey from pseudonymous phantom to
 trusted contributor.
 
 > 🧠 **Related Concepts.** After completing this tutorial, explore
@@ -14,7 +14,6 @@ After working through this section, a developer will be able to:
 
 - Create contract-signing keys with limited permissions.
 - Create a verification workflow for accepting contributions.
-- Store hashed records of a contract as a commitment.
 
 Supporting objectives include the ability to:
 
@@ -39,13 +38,17 @@ CLA, then both parties will record it.
 
 ## The Power of CLAs
 
-The Web of Trust is all about edges: who interacts with whom in what way. To date, we've investigated unilateral edges: you say something about yourself ↩️ or you say something about someone else ➡️️. A CLA offers a third model for Web of Trust interaction: you and someone else make an agreement ↔️.
+The Web of Trust is all about edges: who interacts with whom in what
+way. To date, we've investigated unilateral edges: you say something
+about yourself ↩️ or you say something about someone else ➡️️. A CLA
+offers a third model for Web of Trust interaction: you and someone
+else make an agreement ↔️.
 
 | Type | Who Signs | Obligations |
 |------|-----------|-------------|
 | ↩️  Self-attestation | You | One-way claim about yourself |
 | ➡️ Peer endorsement | Someone else | One-way claim about someone else |
-| ↔️. CLA | Both parties | Bilateral agreement between two parties |
+| ↔️ CLA | Both parties | Bilateral agreement between two parties |
 
 The bilateral nature of contracts such as CLAs requires more careful
 handling.
@@ -82,7 +85,6 @@ Then, reload your XID.
 XID=$(cat envelopes/BRadvoc8-xid-private-3-03.envelope)
 XID_ID=$(envelope xid id $XID)
 PASSWORD="your-password-from-previous-tutorials"
-ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
 ```
 
 ## Part I: Preparing for a CLA
@@ -100,7 +102,6 @@ permissions. This follows the principle of least authority: her
 identity key can do anything, but her contract key can only sign.
 
 ```
-# Generate contract-signing keys
 CONTRACT_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 CONTRACT_PUBKEYS=$(envelope generate pubkeys "$CONTRACT_PRVKEYS")
 
@@ -110,12 +111,13 @@ echo "✅ Contract-signing key created (limited to signing only)"
 ```
 
 As we wrote previously: creating separate keys for separate purposes
-limited the exposure if any key is compromise. Though it might usually
+limited the exposure if any key is compromised. Though it might usually
 be difficult to manage a "bag of keys," XIDs make it easy because you
 can register your keys there.
 
 ### Step 2: Register Contract Key in XID
 
+You can register Amira's new key with `xid key add`.
 ```
 XID_WITH_CONTRACT_KEY=$(envelope xid key add \
     --verify inception \
@@ -138,17 +140,64 @@ This of course expands the set of keys that Amira has in use
 | 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
 | 🗣️  Attestation key | Signs attestations | XID key list | §2.1 |
 | 🖋️  SSH signing key | Signs Git commits | GitHub account | §3.1 |
-| 📄️  Contract signing key | Signs contracts | XID key list | §3.4 |
+| 📄️  Contract signing key | Signs contracts | XID key list | §4.1 |
+
+Remember that you can always access just your keys with `xid key all`,
+which we've previously used to extract keys to check signatures. But
+you can also use it to view your keys, which makes it much easier to
+maintain this "bag of keys".
+
+```
+read -d '' -r -a KEYLIST <<< $(envelope xid key all "$XID_WITH_CONTRACT_KEY")
+for i in "${KEYLIST[@]}"
+  do
+    envelope format $i
+done
+
+| PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|     {
+|         'privateKey': ENCRYPTED [
+|             'hasSecret': EncryptedKey(Argon2id)
+|         ]
+|     } [
+|         'salt': Salt
+|     ]
+|     'allow': 'All'
+|     'nickname': "BRadvoc8"
+| ]
+| 
+| PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|     {
+|         'privateKey': ENCRYPTED [
+|             'hasSecret': EncryptedKey(Argon2id)
+|         ]
+|     } [
+|         'salt': Salt
+|     ]
+|     'allow': 'Sign'
+|     'nickname': "attestation-key"
+| ]
+|
+| PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+|     {
+|         'privateKey': ENCRYPTED [
+|             'hasSecret': EncryptedKey(Argon2id)
+|         ]
+|     } [
+|         'salt': Salt
+|     ]
+|     'allow': 'Sign'
+|     'nickname': "contract-key"
+| ]
+```
+
+Accurately labeling your keys is a must to ensure they remain manageable!
 
 ### Step 3: Publish New XID
 
-We're going to produce two versions of Amira's XID over the course of
-this section: one with her new contract key and one with a commitment
-about her CLA. Though we could short-hand and just produce one at the
-end, this is how it work work in the real-world: Amira would release a
-new edition of her XID with her new key, sign something with that key,
-and then only incorporate the later content into her XID (if she
-decided to).
+Amira now needs to publish her XID, so that everyone knows about her
+new legal signing key. This should definitely happen before she signs
+with it, to create a temporal anchor (key existence before signing).
 
 The three steps of publishing a XID have gotten pretty standard:
 
@@ -176,11 +225,24 @@ PUBLIC_XID_WITH_CONTRACT_KEY=$(envelope xid export --private elide --generator e
 3. Store local copies.
 
 ```
-echo "$PUBLIC_XID_WITH_CONTRACT_KEY" > envelopes/BRadvoc8-xid-public-3-04a.envelope
-echo "$XID_WITH_CONTRACT_KEY" > envelopes/BRadvoc8-xid-private-3-04a.envelope
-echo "$CONTRACT_PRVKEYS" > envelopes/key-contract-private-3-04.ur
-echo "$CONTRACT_PUBKEYS" > envelopes/key-contract-public-3-04.ur
+echo "$PUBLIC_XID_WITH_CONTRACT_KEY" > envelopes/BRadvoc8-xid-public-4-01.envelope
+echo "$XID_WITH_CONTRACT_KEY" > envelopes/BRadvoc8-xid-private-4-01.envelope
+echo "$CONTRACT_PRVKEYS" > envelopes/key-contract-private-4-01.ur
+echo "$CONTRACT_PUBKEYS" > envelopes/key-contract-public-4-01.ur
 ```
+
+#### XID Version Comparison
+
+The fourth version of Amira's XID adds a key, just like we did in
+[§2.1](02_1_Creating_Self_Attestations.md).
+
+| XID Version | New Content | Created In |
+|-------------|-------------|------------|
+| seq 0 | 👤 Identity | §1.2+§1.3 |
+| seq 1 | 🔑 Attestation Key | §2.1 |
+| seq 2 | 🗣️ GitHub Edge | §3.1 |
+| seq 3 | 🗣️ Endorsement Edge | §3.3 |
+| seq 4 | 🔑 Contract Key | §4.1 |
 
 ## Part II: Preparing a CLA
 
@@ -190,7 +252,7 @@ Meanwhile, Ben is preparing the CLA itself.
 
 Obviously, Ben has a XID like everyone else. Much as with Charlene's
 XID in §3.3, we're going to short-hand its creation. In real-life, Ben
-would have a much more complex XID, and using best practices, he'd
+would have a much more complex XID and using best practices, he'd
 have a contract-signing key, just like Amira does. But, we're going to
 keep things simple and just create and use a single inception key.
 
@@ -213,29 +275,30 @@ echo "✅ Ben's XID created: $BEN_XID_ID"
 You should of course save a copy of this:
 
 ```
-echo "$BEN_XID" > envelopes/Ben-xid-private-3-04.envelope
+echo "$BEN_XID" > envelopes/Ben-xid-private-4-01.envelope
 ```
 
 ### Step 5: Create the CLA Document
 
 Though CLAs today are often signed as text files with GPG, Gordian
-Envelope offers better integration of the whole signing process, which
-is why Ben uses it. 
+Envelope offers better integration of the signing process, which is
+why Ben uses it.
 
 Ben's projects uses a standard Individual CLA, which he generates from
 a shell script for each individual contributor. It's based on the
 Apache 2.0 license. Ben keeps a local copy of the license and has also
 created a hash of it.
+
 ```
-curl -q https://www.apache.org/licenses/LICENSE-2.0.txt > envelopes/license-apache-3-04.txt
-shasum -a 256 envelopes/license-apache-3-04.txt > envelopes/license-apache-3-04-hash.txt
+curl -q https://www.apache.org/licenses/LICENSE-2.0.txt > envelopes/license-apache-4-01.txt
+shasum -a 256 envelopes/license-apache-4-01.txt > envelopes/license-apache-4-01-hash.txt
 ```
 
-Ben's CLA includes a subenvelope with a clear definition of a
+Ben's CLA includes a subenvelope with a clear definition of the
 license. (Remember, envelopes are usually built from the inside out.)
 
 ```
-read hash filename < envelopes/license-apache-3-04-hash.txt 
+read hash filename < envelopes/license-apache-4-01-hash.txt 
 LICENSE=$(envelope subject type string "Apache-2.0")
 LICENSE=$(envelope assertion add pred-obj known 'dereferenceVia' string "https://www.apache.org/licenses/LICENSE-2.0.txt" $LICENSE)
 LICENSE=$(envelope assertion add pred-obj known 'date' string "2004-01-00T00:00-00:00" $LICENSE)
@@ -259,6 +322,7 @@ CLA=$(envelope assertion add pred-obj string "project" string "SisterSpaces Secu
 ```
 
 It includes the grants and represtations typical for a CLA:
+
 ```
 CLA=$(envelope assertion add pred-obj known isA string "ContributorLicenseAgreement" "$CLA")
 CLA=$(envelope assertion add pred-obj string "grantsCopyrightLicense" string "perpetual, worldwide, non-exclusive, royalty-free" "$CLA")
@@ -267,13 +331,15 @@ CLA=$(envelope assertion add pred-obj string "contributorRepresents" string "ori
 ```
 
 It also incorporates the subenvelopes that Ben's script creates:
+
 ```
 CLA=$(envelope assertion add pred-obj string "licenseType" envelope "$LICENSE" "$CLA")
 CLA=$(envelope assertion add pred-obj string "projectManager" envelope "$PM" "$CLA")
 CLA=$(envelope assertion add pred-obj string "contributor" envelope "$CONTRIBUTOR" "$CLA")
 ```
 
-Finally, to prepare it for signing, Ben always wraps the envelope:
+With that final step, Ben has put the entire (unsigned) CLA together:
+
 ```
 echo "✅ CLA document created:"
 envelope format "$CLA"
@@ -306,10 +372,9 @@ For Amira, signing the contract is a simple application of her new contract key.
 
 ### Step 6: Sign with Contract Key
 
-Amira signs the CLA with her contract-signing key by first dating it
-(the date isn't verifiable, but it will be assured by BRadvoc8's
-signature) then wrapping it, then signing it.
-
+Amira stats out by dating her signing of the contract.  The date isn't
+verifiable, but it will be assured by BRadvoc8's signature. Afterward,
+she wraps and signs as usual.
 
 ```
 CLA_WITH_DATE=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$CLA")
@@ -324,18 +389,18 @@ project.
 as you think. There are several methods:
 >
 > (1) you can date the content before you wrap and sign it. This may
-be undesirable in some situationss, if the content should not be
+be undesirable in some situations, if the content should not be
 changed (e.g., if it's already been hashed for a commitment, or if a
-date just mdudles the content). Otherwise, it's a great solution, as
+date just muddles the content). Otherwise, it's a great solution, as
 it ensures the date is part of what's signed, and so part of a claim
-that the sigger is making.
+that the signer is making.
 >
 >
 > (2) You can date the content after wrapping and signing. This is
 very clean-looking as the date and signature are sitting right next to
-each other, as they would be a paper document. But it's also
+each other, as they would be in a paper document. But it's also
 misleading because it makes it look like the signer has agreed to the
-date, when in actuality *anyone* could have added the date after the
+date, when in actuality *anyone* could have added (or changed) the date after the
 signer signed.
 >
 > (3) You can wrap, sign, date, wrap, and sign again. This
@@ -346,13 +411,15 @@ simultaneously locking in the date as assured by the signer.
 ## Part IV: Verifying a CLA
 
 Maintaing a standard workflow for a CLA ensures the maintenance of
-rights necessary to support open software.
+rights necessary to support open software. Here, we return to Ben's
+point of view as he receives Amira's signed CLA and verifies that it's
+OK.
 
 ### Step 7: Verify CLA
 
 To verify Amira's CLA, Ben walks through several steps:
 
-1. Retrieve newest version of XID (per [§1.3](01_3_Making_a_XID_Verifiable.md)
+1. Retrieve newest version of BRadvoc8's XID (per [§1.3](01_3_Making_a_XID_Verifiable.md)
 
 ```
 FETCHED_XID=$PUBLIC_XID_WITH_CONTRACT_KEY
@@ -369,6 +436,10 @@ for i in "${PUBKEY[@]}"
       echo $i
     fi
 done
+
+| ✅ One of the signatures verified! 
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkkhdcxrfdnqztslsdelyrsttvlcwbsnnsscfnlzeuekscyjsssbyneehgtjncsmkinhpsfoycsfncsfdoefnmnhd
+
 ```
 
 3. Review contributor reputation (optional)
@@ -383,10 +454,10 @@ Satisfied with the verification, Ben accepts the CLA and records it.
 
 4. Add acceptance to envelope
 
-He could do this as a separate acceptance envelope, but he chooses to
-add the acceptance to the envelope as another layer of an onion. He
-does so by wrapping Amira's copy of the envelope, adding his
-acceptance, and wrapping and signing that.
+Ben could note acceptance of Amira's CLA using a separate acceptance
+envelope, but he chooses to add the acceptance to the envelope as
+another layer of an onion. He does so by wrapping Amira's copy of the
+envelope, adding his acceptance, and wrapping and signing that.
 
 ```
 WRAPPED_SIGNED_CLA=$(envelope subject type wrapped "$SIGNED_CLA")
@@ -436,19 +507,18 @@ envelope format $SIGNED_ACCEPTED_CLA
 
 The final steps are bureaucratic:
 
-5. Upload signed CLA to repo
+5. Send CLA Back to Contributor
 
-In this case, we're going to store both versions of the CLA in our `envelopes` directory
+Ben sends the approved CLA back to Amira at this point, so that she has a record of it too.
+
+That's our sign to make a copy of the CLA in our storage:
 
 ```
-echo "$SIGNED_CLA" > envelopes/cla-bradvoc8-signed-3-04.envelope
-echo "$SIGNED_ACCEPTED_CLA" > envelopes/cla-bradvoc8-accepted-3-04.envelope
+echo "$SIGNED_CLA" > envelopes/cla-bradvoc8-signed-4-01.envelope
+echo "$SIGNED_ACCEPTED_CLA" > envelopes/cla-bradvoc8-accepted-4-01.envelope
 ```
 
 6. Update permissions
-
-Ben stores the doubly-signed CLA in his project repository, making it
-part of the project's legal record.
 
 With the CLA accepted, Ben grants BRadvoc8 limited repository access:
 push to feature branches, but not main. He can do so confidently
@@ -457,135 +527,26 @@ BRadvoc8 GitHub account and the BRadvoc8 XID. He also gives BRadvoc8
 the OK to merge Amira's PR (and to do so in the future at her own
 perogative).
 
-## Part V: Publishing a Contract
-
-Ben's signature on Amira's contract is another step forward in the
-progressive trust of BRadvoc8 as a reliable security expert. She'd
-love to add this to her pseudonymous identity record.
-
-### Step 9: Create a Contract Edge
-
-To record the contract, Amira will create a new self-attestation that
-she is working on SisterSpaces.
-
-As with any other edge, she first needs to define the three core elements of the edge: `isA`, `source`, and `target`:
-```
-ISA="foaf:Project"
-SOURCE_XID_ID=$XID_ID
-TARGET_XID_ID=$XID_ID
-```
-
-Amira wants to be able to reference the contract, since it's signed by
-Ben as the project manager of SisterSpaces, but she doesn't want to
-include the whole contract in her XID. She can meet her needs instead
-by including a commitment to the contract in her XID.
-
-[§2.2](02_2_Managing_Claims_Elision.md) demonstrated the methodology
-for making a commitment to an envelope:
-```
-DIGEST_CLA=$(envelope digest "$SIGNED_ACCEPTED_CLA")
-```
-
-There, we elided the envelope, leaving only the digest. Here, we're
-instead going to incorporate the digest into this claim. If anyone
-asks for more info they can ask BRadvoc8 for the full contract or they
-can just look it up.
-
-The latter info, as with the rest of the details of the claim, are placed as a target subenvelope:
-
-```
-PROJECT_TARGET=$(envelope subject type ur $TARGET_XID_ID)
-PROJECT_TARGET=$(envelope assertion add pred-obj string $ISA string "SisterSpaces" "$PROJECT_TARGET")
-PROJECT_TARGET=$(envelope assertion add pred-obj known verifiableAt string "https://github.com/SisterSpaces/SecureAuth/CLAs/" "$PROJECT_TARGET")
-PROJECT_TARGET=$(envelope assertion add pred-obj string "claDigest" digest "$DIGEST_CLA" "$PROJECT_TARGET")
-```
-
-With those details, you can now put together the contract edge:
-
-```
-EDGE=$(envelope subject type string "project-sister-spaces-secureauth")
-EDGE=$(envelope assertion add pred-obj known isA string "$ISA" "$EDGE")
-EDGE=$(envelope assertion add pred-obj known source ur "$SOURCE_XID_ID" "$EDGE")
-EDGE=$(envelope assertion add pred-obj known target envelope "$PROJECT_TARGET" "$EDGE")
-
-echo "SisterSpaces edge details:"
-envelope format "$EDGE"
-
-| SisterSpaces edge details:
-| 
-| "project-sister-spaces-secureauth" [
-|     'isA': "foaf:Project"
-|     'source': XID(5f1c3d9e)
-|     'target': XID(5f1c3d9e) [
-|         "claDigest": Digest(0ecac6b7)
-|         "foaf:Project": "SisterSpaces"
-|         'verifiableAt': "https://github.com/SisterSpaces/SecureAuth/CLAs/"
-|     ]
-| ]
-```
-
-This is a relatively simple edge, but that's because the digest stands in for the entire CLA!
-
-### Step 10: Publish Your Contract Edge
-
-You can now take the several steps to attach this edge and publish the result.
-
-First, incorporate the edge:
-```
-WRAPPED_EDGE=$(envelope subject type wrapped "$EDGE")
-SIGNED_EDGE=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$WRAPPED_EDGE")
-
-XID_WITH_CONTRACT_EDGE=$(envelope xid edge add \
-    --verify inception \
-    $SIGNED_EDGE $XID_WITH_CONTRACT_KEY)
-```
-
-Then, advance the provenance mark and produce a public version
-```
-XID_WITH_CONTRACT_EDGE=$(envelope xid provenance next \
-    --password "$PASSWORD" \
-    --sign inception \
-    --private encrypt \
-    --generator encrypt \
-    --encrypt-password "$PASSWORD" \
-    "$XID_WITH_CONTRACT_EDGE")
-PUBLIC_XID_WITH_CONTRACT_EDGE=$(envelope xid export --private elide --generator elide "$XID_WITH_CONTRACT_EDGE")
-```
-Finally, store everything:
-
-```
-echo "$PUBLIC_XID_WITH_CONTRACT_EDGE" > envelopes/BRadvoc8-xid-public-3-04b.envelope
-echo "$XID_WITH_CONTRACT_EDGE" > envelopes/BRadvoc8-xid-private-3-04b.envelope
-```
-
-#### XID Version Comparison
-
-You've now created a fifth and sixth XID edition.  Here's another overview of what
-each version contains
-
-| XID Version | New Content | Created In |
-|-------------|-------------|------------|
-| seq 0 | 👤 Identity | §1.2+§1.3 |
-| seq 1 | 🔑 Attestation Key | §2.1 |
-| seq 2 | 🗣️ GitHub Edge | §3.1 |
-| seq 3 | 🗣️ Endorsement Edge | §3.3 |
-| seq 4 | 🔑 Contract Key | §3.4 |
-| seq 5 || 📄️  Contract scommitment | §3.4 |
-
+The next step would be "7. Publish the CLA" but there are some complexities here that are going to await
+[§4.2](04_2_Publishing_for_Privacy.md).
 
 ## Summary: First Arc Complete
 
 In [§3.3](03_3_Creating_Peer_Endorsements.md), Amira put a capstone on
 her progressive trust journey when she acquired peer endorsements for
-her BRadvoc8 pseudonymous identity. Here, in §3.4 that paid out with
-her work being accepted for uses in SisterSpaces.
+her BRadvoc8 pseudonymous identity. Here, in §4.1 that paid out with
+her work being accepted for use in SisterSpaces.
 
 This completes the first arc of Amira's story, from anonymous person
 to trusted contributor. Amira now has everything she needs to
 participate in open source projects while protecting her real-world
 identity.
 
-Future arcs will cover advanced topics such as security hardening and advanced collaboration.
+The rest of this chapter will spin out the results of this conclusion:
+how Amira's contract can be published in privacy protecting ways and
+how she can keep her growing XID clean and accessible. Future arcs
+will then cover advanced topics such as security hardening and
+advanced collaboration.
 
 ### Additional Files
 
@@ -593,11 +554,11 @@ Future arcs will cover advanced topics such as security hardening and advanced c
 [envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
 directory contains numerous data created in this section, the most
 important of which are Amira's final
-[private](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-3-04b.envelope)
+[private](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-4-01.envelope)
 and
-[public](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-3-04b.envelope)
+[public](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-4-01.envelope)
 XIDs as well as the [accepted
-CLA](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/cla-bradvoc8-accepted-3-04.envelope).
+CLA](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/cla-bradvoc8-accepted-4-01.envelope).
 
 **Scripts:** Scripts demonstrating this section are forthcoming.
 
@@ -609,9 +570,13 @@ CLA](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/cla
 
 ## What's Next
 
-Though we've complete Amira's first arc, there's an open question: has
-her XID gotten too big? [§3.5: Creating Views and
-Viewsion](03_5_Creating_Views_and_Versions.md) talks about how to
+We've complete Amira's first arc, but there are two open
+questions. First, how can that contract be published in a maximally
+private way? [§4.2: Publishing for
+Privacy](04_2_Publishing_for_Privacy.md) discusses concerns and how
+hashing can be used to protect content.  Second, has Amira's XID
+gotten too big? [§4.3: Creating Views and
+Viewsion](04_3_Creating_Views_and_Versions.md) talks about how to
 clean it up.
 
 ## Appendix I: Key Terminology

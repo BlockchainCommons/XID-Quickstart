@@ -395,7 +395,7 @@ instead use somewhat more complex `find` and extract commands that:
 2. Find the assertion with a `dereferenceVia` predicate.
 3. Extract the object of that predicate, which is the URL.
 
-We'll talk more about this process in [§3.5](03_5_Creating_Views_and_Versions.md).
+We'll talk more about this process in [§4.3](04_3_Creating_Views_and_Versions.md).
 
 
 ```

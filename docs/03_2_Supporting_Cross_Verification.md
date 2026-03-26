@@ -318,7 +318,7 @@ XID_EDGE=$(envelope xid edge all $FETCHED_XID)
 ```
 
 If you have multiple edges, you'd need to figure out which one to use
-(again, see §3.5), but when you just have one, as is the case here,
+(again, see §4.3), but when you just have one, as is the case here,
 the extraction is all that's required.
 ```
 echo "✅ Found edge:"
@@ -362,7 +362,7 @@ information) that they'll use for the purpose of cross-verification.
 extract data from a XID. Generally, you need to iteratively cut an
 envelope down to the point where you just have a subject and a set of
 assertions, and then pull out the assertions that you want. (Again,
-more on this in [§3.5](03_5_Creating_Views_and_Versions.md).)
+more on this in [§4.3](04_3_Creating_Views_and_Versions.md).)
 
 To do so here requires stepping down through the envelope three times:
 ```

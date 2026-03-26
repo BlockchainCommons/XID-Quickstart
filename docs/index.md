@@ -11,13 +11,17 @@
 * [§2.2: Managing Sensitive Claims with Elision](02_2_Managing_Claims_Elision.md)
 * [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md)
 
-[**Chapter Three: Working with Edges**](03_0_Edges.md)
+[**Chapter Three: Endorsing with Edges**](03_0_Edges.md)
 
 * [§3.1: Creating Edges](03_1_Creating_Edges.md)
 * [§3.2: Supporting Cross Verification](03_2_Supporting_Cross_Verification.md)
 * [§3.3: Creating Peer Endorsements](03_3_Creating_Peer_Endorsements.md)
-* [§3.4: Creating Binding Agreements](03_4_Creating_Binding_Agreements.md)
-* [§3.5: Creating Views and Versions] (**pending**)
+
+[**Chapter Four: Expanding & Contracting Your XIDs**](04_0_Advanced.md)
+
+* [§4.1: Creating Binding Agreements](04_1_Creating_Binding_Agreements.md)
+* [§4.2: Publlshing for Privacy] (**pending**)
+* [§4.3: Creating Views and Versions] (**pending**)
 
 ---
 

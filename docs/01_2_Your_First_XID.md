@@ -417,7 +417,7 @@ momentarily). Once you find the right hash, you simply tell the
 Envelope CLI to remove the data represented by that particular
 hash. [§2.2](02_2_Managing_Claims_Elision.md) includes a mininimal
 look at the technique, then
-[§3.5](03_5_Creating_Views_and_Versions.md) examines it more
+[§4.3](04_3_Creating_Views_and_Versions.md) examines it more
 extensively.
 
 However, we don't need that to elide the secrets of the private key
