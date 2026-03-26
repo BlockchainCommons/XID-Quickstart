@@ -11,7 +11,7 @@
 * [§2.2: Managing Sensitive Claims with Elision](02_2_Managing_Claims_Elision.md)
 * [§2.3: Managing Sensitive Claims with Encryption](02_3_Managing_Claims_Encryption.md)
 
-[**Chapter Three: Endorsing with Edges**](03_0_Edges.md)
+[**Chapter Three: Attesting with Edges**](03_0_Edges.md)
 
 * [§3.1: Creating Edges](03_1_Creating_Edges.md)
 * [§3.2: Supporting Cross Verification](03_2_Supporting_Cross_Verification.md)
