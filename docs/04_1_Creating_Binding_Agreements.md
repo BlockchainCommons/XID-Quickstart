@@ -294,6 +294,12 @@ curl -q https://www.apache.org/licenses/LICENSE-2.0.txt > envelopes/license-apac
 shasum -a 256 envelopes/license-apache-4-01.txt > envelopes/license-apache-4-01-hash.txt
 ```
 
+That hash is essentially a proof of the license: Ben can later offer
+the license and show it hashes to the shasum he incudes in the
+CLA. It's the same methodology as used to created commitments, but in
+this case Ben is committing to the text of a file, mainly for legal
+clarity. (More on that in §4.2.)
+
 Ben's CLA includes a subenvelope with a clear definition of the
 license. (Remember, envelopes are usually built from the inside out.)
 
