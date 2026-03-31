@@ -47,7 +47,7 @@ Watch how Amira's anonymity set shrinks:
 
 That last combination might describe three people in the world. If an adversary knows those facts and sees BRadvoc8's public profile, correlation becomes trivial.
 
-> :warning: **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
+> ⚠️ **Consider the Correlation Risks Before Making Claims.** Ask "How many people worldwide could truthfully make this exact statement?" If the answer is under 100, combine it with your other public claims and ask again. If the combined answer approaches single digits, that claim needs special handling.
 
 ## The Possibilities of Protecting Sensitive Data
 ### Omission, Elision, and Encryption
@@ -178,15 +178,7 @@ envelope format "$AUDIT_ELIDED"
 
 The elided version shows nothing, just the word `ELIDED`. But here's the key property: the hash (digest) of the elided envelope will be identical to the hash of the original envelope, offering proof that their content is identical, even though it can not longer be seen in the elided envelope.
 
-This commitment could be published in a variety of ways. Amira might
-have a set of self-attestations available on her GitHub, some of which
-are elided and some of which are not. Or, she might maintain a public
-commitment list. This is typically a list of digests in a public
-profile with category hints (e.g., "Security", "Privacy
-Engineering"). This tells collaborators that she has additional
-credentials without revealing what they are.
-
-> :book: **What is a Commitment?** A commitment is literally a
+> 📖 **What is a Commitment?** A commitment is literally a
 promise. Cryptographically, a commitment is a promise that you have
 recorded a certain value. All you reveal is a hash of that value,
 which is the cryptographic commitment. Since (probabalistically) each
@@ -198,9 +190,22 @@ by removing individual elements of the XID's
 data. [§4.3](04_3_Creating_Views_and_Versions.md) demonstrates how to
 do so.
 
-### Step 4: Store Your Work
+### Step 4: Publish the Commitment
 
-Again, we're going to store copies of our work for future reference.
+In order for a commitment to be powerful, it should be published.
+This commitment could be published in a variety of ways. Amira might
+have a set of self-attestations available on her GitHub, some of which
+are elided and some of which are not. Or, she might maintain a public
+commitment list. This is typically a list of digests in a public
+profile with category hints (e.g., "Security", "Privacy
+Engineering"). This tells collaborators that she has additional
+credentials without revealing what they are. She might even include
+commitments in her XID itself if they're important
+enough. [§4.2](04_2_Publishing_for_Privacy.md) demonstrates some of
+the possibilities.
+
+
+In the meantime, we're going to store copies of our work for future reference.
 ```
 echo $AUDIT_SIGNED > envelopes/claim-2-02.envelope
 echo $AUDIT_ELIDED > envelopes/claim-elided-2-02.envelope
@@ -237,7 +242,7 @@ the full attestation will come in two parts: checking that this is the
 same document as the commitment (which is very similar to the process
 of checking an inclusion proof) and verifying the signature.
 
-> :book: **What is an Inclusion Proof?** An inclusion proof typically
+> 📖 **What is an Inclusion Proof?** An inclusion proof typically
 reveals that a piece of data is part of a larger data set without
 revealing the entirety of the larger data set. For example, you could
 a claim was in a partially elided Gordian Envelope just by knowing a
@@ -276,7 +281,7 @@ fi
 
 The digests match. This proves the full attestation Amira revealed is the same document she committed to earlier, not something she fabricated after the fact.
 
-> :book: **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
+> 📖 **Why Is It Important that Amira Committed in Advance?** Amira committing and publishing her elided commitment about her security audit work literally shows commitment. Progressive trust is all about establishing and improving levels of trust, and this is a strong signal that Amira can be trusted on this claim (which is otherwise not verifiable). She made the statement some time ago. It's been publicly available on the web for some time, something that might be verifiable by GitHub timestamps or archive.org storage. It's also presumably a part of a relatively small set of claims (or at least a relatively small set of hidden claims). That means that Amira isn't just pulling the claim that she can do security audits out of a hat. It's one of a small number of things she said some time ago, increasing its credibility despite the lack of verification. 
 
 ### Step 8: Verify the Signature
 

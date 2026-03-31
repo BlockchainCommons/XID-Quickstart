@@ -20,7 +20,7 @@
 [**Chapter Four: Expanding & Contracting Your XIDs**](04_0_Advanced.md)
 
 * [§4.1: Creating Binding Agreements](04_1_Creating_Binding_Agreements.md)
-* [§4.2: Publlshing for Privacy](04_2_Publishing_for_Privacy.md) (**partial**)
+* [§4.2: Publishing Commitments for Privacy](04_2_Publishing_for_Privacy.md)
 * [§4.3: Creating Views and Versions] (**pending**)
 
 ---
