@@ -111,7 +111,7 @@ echo "✅ Contract-signing key created (limited to signing only)"
 ```
 
 As we wrote previously: creating separate keys for separate purposes
-limited the exposure if any key is compromised. Though it might usually
+limits the exposure if any key is compromised. Though it might usually
 be difficult to manage a "bag of keys," XIDs make it easy because you
 can register your keys there.
 
@@ -133,7 +133,7 @@ echo "✅ Added attestation key to XID"
 
 #### Key Type Comparison
 
-This of course expands the set of keys that Amira has in use
+This of course expands the set of keys that Amira has in use.
 
 | Key Type | Purpose | Verified Against | Added In |
 |----------|---------|------------------|----------|
@@ -233,8 +233,8 @@ echo "$CONTRACT_PUBKEYS" > envelopes/key-contract-public-4-01.ur
 
 #### XID Version Comparison
 
-The fourth version of Amira's XID adds a key, just like we did in
-[§2.1](02_1_Creating_Self_Attestations.md).
+The fifth edition of Amira's XID adds another key, mirroring the work
+in [§2.1](02_1_Creating_Self_Attestations.md).
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
@@ -272,22 +272,25 @@ BEN_XID_ID=$(envelope xid id "$BEN_XID")
 echo "✅ Ben's XID created: $BEN_XID_ID"
 ```
 
-You should of course save a copy of this:
+You should of course save a copy of Ben's materials:
 
 ```
 echo "$BEN_XID" > envelopes/Ben-xid-private-4-01.envelope
+echo "$BEN_PRVKEYS" > envelopes/key-ben-private-4-01.ur
+echo "$BEN_PUBKEYS" > envelopes/key-ben-public-4-01.ur
 ```
 
 ### Step 5: Create the CLA Document
 
-Though CLAs today are often signed as text files with GPG, Gordian
+Today, CLAs are often signed as text files with GPG, but Gordian
 Envelope offers better integration of the signing process, which is
 why Ben uses it.
 
-Ben's projects uses a standard Individual CLA, which he generates from
-a shell script for each individual contributor. It's based on the
-Apache 2.0 license. Ben keeps a local copy of the license and has also
-created a hash of it.
+Ben's projects uses a standard Individual CLA basd on the Apache 2.0
+license that he generates from a shell script for each individual
+contributor. Ben keeps a local copy of the Apache 2.0 license that
+he's referencing and has also created a hash of it.
+
 
 ```
 curl -q https://www.apache.org/licenses/LICENSE-2.0.txt > envelopes/license-apache-4-01.txt
@@ -297,7 +300,7 @@ shasum -a 256 envelopes/license-apache-4-01.txt > envelopes/license-apache-4-01-
 That hash is essentially a proof of the license: Ben can later offer
 the license and show it hashes to the shasum he incudes in the
 CLA. It's the same methodology as used to created commitments, but in
-this case Ben is committing to the text of a file, mainly for legal
+˜this case Ben is committing to the text of a file, mainly for legal
 clarity. (More on that in §4.2.)
 
 Ben's CLA includes a subenvelope with a clear definition of the
@@ -308,7 +311,8 @@ read hash filename < envelopes/license-apache-4-01-hash.txt
 LICENSE=$(envelope subject type string "Apache-2.0")
 LICENSE=$(envelope assertion add pred-obj known 'dereferenceVia' string "https://www.apache.org/licenses/LICENSE-2.0.txt" $LICENSE)
 LICENSE=$(envelope assertion add pred-obj known 'date' string "2004-01-00T00:00-00:00" $LICENSE)
-LICENSE=$(envelope assertion add pred-obj string 'contractHash' string $hash $LICENSE)
+LICENSE=$(envelope assertion add pred-obj string "contractHash" string $hash $LICENSE)
+LICENSE=$(envelope assertion add pred-obj string "hashAlgorithm" string "shasum256" $LICENSE)
 ```
 
 He also creates subenvelopes to provide details on both himself and BRadvoc8:
@@ -320,7 +324,8 @@ CONTRIBUTOR=$(envelope subject type ur $XID_ID)
 CONTRIBUTOR=$(envelope assertion add pred-obj known 'nickname' string "BRadvoc8" $CONTRIBUTOR)
 ```
 
-The CLA itself defines one of the modules for SisterSpaces:
+We're now ready to build the main CLA envelope. It starts by defining
+one of the modules for SisterSpaces:
 
 ```
 CLA=$(envelope subject type string "Individual Contributor License Agreement")
@@ -336,7 +341,7 @@ CLA=$(envelope assertion add pred-obj string "grantsPatentLicense" string "for c
 CLA=$(envelope assertion add pred-obj string "contributorRepresents" string "original work with authority to grant license" "$CLA")
 ```
 
-It also incorporates the subenvelopes that Ben's script creates:
+It also incorporates the subenvelopes that Ben's script created:
 
 ```
 CLA=$(envelope assertion add pred-obj string "licenseType" envelope "$LICENSE" "$CLA")
@@ -362,11 +367,12 @@ envelope format "$CLA"
 |     "grantsPatentLicense": "for contributions containing patentable technology"
 |     "licenseType": "Apache-2.0" [
 |         "contractHash": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+|         "hashAlgorithm": "shasum256"
 |         'date': "2004-01-00T00:00-00:00"
 |         'dereferenceVia': "https://www.apache.org/licenses/LICENSE-2.0.txt"
 |     ]
 |     "project": "SisterSpaces SecureAuth Library"
-|     "projectManager": XID(59be46b6) [
+|     "projectManager": XID(a80e2c23) [
 |         'nickname': "Ben (SisterSpaces)"
 |     ]
 | ]
@@ -378,7 +384,7 @@ For Amira, signing the contract is a simple application of her new contract key.
 
 ### Step 6: Sign with Contract Key
 
-Amira stats out by dating her signing of the contract.  The date isn't
+Amira starts out by dating her signing of the contract.  The date isn't
 verifiable, but it will be assured by BRadvoc8's signature. Afterward,
 she wraps and signs as usual.
 
@@ -416,7 +422,7 @@ simultaneously locking in the date as assured by the signer.
 
 ## Part IV: Verifying a CLA
 
-Maintaing a standard workflow for a CLA ensures the maintenance of
+Maintaining a standard workflow for a CLA ensures the maintenance of
 rights necessary to support open software. Here, we return to Ben's
 point of view as he receives Amira's signed CLA and verifies that it's
 OK.
@@ -445,7 +451,6 @@ done
 
 | ✅ One of the signatures verified! 
 | ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkkhdcxrfdnqztslsdelyrsttvlcwbsnnsscfnlzeuekscyjsssbyneehgtjncsmkinhpsfoycsfncsfdoefnmnhd
-
 ```
 
 3. Review contributor reputation (optional)
@@ -490,25 +495,27 @@ envelope format $SIGNED_ACCEPTED_CLA
 |                 "grantsPatentLicense": "for contributions containing patentable technology"
 |                 "licenseType": "Apache-2.0" [
 |                     "contractHash": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+|                     "hashAlgorithm": "shasum256"
 |                     'date': "2004-01-00T00:00-00:00"
 |                     'dereferenceVia': "https://www.apache.org/licenses/LICENSE-2.0.txt"
 |                 ]
 |                 "project": "SisterSpaces SecureAuth Library"
-|                 "projectManager": XID(59be46b6) [
+|                 "projectManager": XID(a80e2c23) [
 |                     'nickname': "Ben (SisterSpaces)"
 |                 ]
-|                 'date': "2026-03-25T11:14-10:00"
+|                 'date': "2026-03-31T08:23-10:00"
 |             ]
 |         } [
 |             'signed': Signature(Ed25519)
 |         ]
 |     } [
-|         "acceptedBy": XID(59be46b6)
-|         'date': "2026-03-25T11:46-10:00"
+|         "acceptedBy": XID(a80e2c23)
+|         'date': "2026-03-31T08:27-10:00"
 |     ]
 | } [
 |     'signed': Signature(Ed25519)
 | ]
+
 ```
 
 The final steps are bureaucratic:
