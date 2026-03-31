@@ -1,4 +1,4 @@
-c# 4.2: Publishing Commitments for Privacy
+# 4.2: Publishing Commitments for Privacy
 
 Amira and Ben have a contract that ensures that SisterSpaces will
 always be able to use Amira's work. Maybe they're comfortable
