@@ -30,6 +30,7 @@ Supporting objectives include the ability to:
 
 * Understand what a XID is.
 * Know what a pseudonymous identity is.
+* Understand a variety of underlying concepts.
 * Understand the power of dereferencing.
 
 ## Table of Contents

@@ -99,7 +99,7 @@ provenance --version
 ```
 
 If not installed, see
-[§1.2](01_2_Your_First_XID.md#step-0-setting-up-your-workspace) for
+[§1.3](01_3_Your_First_XID.md#step-0-setting-up-your-workspace) for
 installation instructions.
 
 You'll also want to reload your XID. The following assumes use of the [`envelopes`](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes) directory that was described in the last tutorial.
@@ -291,7 +291,7 @@ So far, Amira has two keys:
 
 | Key Type | Purpose | Verified Against | Added In |
 |----------|---------|------------------|----------|
-| 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
+| 👤 XID inception key | Signs XID document updates | XID itself | §1.3 |
 | 🗣️ Attestation key | Signs attestations | XID key list | §2.1 |
 
 We'll talk more about the keys and the protections that heterogeneity
@@ -303,7 +303,7 @@ Here's a look at our two XID versions created to date:
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
-| seq 0 | 👤 Identity | §1.2+§1.3 |
+| seq 0 | 👤 Identity | §1.3+§1.4 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 
 ## Part II: Creating a Detached Attestation

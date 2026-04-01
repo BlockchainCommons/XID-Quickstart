@@ -151,7 +151,7 @@ This is the full attestation that Amira will keep secure and private. But she wa
 
 You can now create a view of the attestation with the content removed
 but the cryptographic structure preserved. In
-[§1.2](01_2_Your_First_XID.md), we mentioned the general technique for
+[§1.3](01_3_Your_First_XID.md), we mentioned the general technique for
 doing this when we used an automated method to elide private keys and
 provenance mark generators. Generally, you need to (1) find the digest
 (hash) of the node or leaf that you want to elide and then (2) use the

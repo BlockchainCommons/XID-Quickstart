@@ -26,8 +26,8 @@ users should have full visibility on their identity, they should have
 principal authority over it, and they should be able to move it around as
 they see fit.
 
-Unfortunately, as the SSI ecosystem matured, it has moved away from
-these core principles, as discussed in ["Has our SSI Ecosystem Become
+Unfortunately, as the SSI ecosystem matured, it moved away from these
+core principles, as discussed in ["Has our SSI Ecosystem Become
 Morally
 Bankrupt?"](https://www.blockchaincommons.com/musings/musings-ssi-bankruptcy/). Issuers
 took control of identities and created centralized points-of-failure
@@ -47,7 +47,7 @@ It starts out with the core design: a XID is an autonomous
 cryptographic object (ACO). It's a self-sufficient package that
 contains an identifier, keys to control that identifier, and other
 data. You don't need to depend on any infrastructure: there's no
-separate issuer or verifier, no centralized authority at all. It's
+separate issuer or verifier, no centralized authority at all. A XID is
 holder-created and holder-controlled. That's the dream of
 self-sovereign identity.
 
@@ -63,11 +63,11 @@ issuer (which violates the most central vision of SSI).
 The technology in XIDs is novel (including deterministic encoding,
 radical elision, and progressive trust). The privacy is greatly
 improved over existing systems that put issuers in the driver's
-seat. Finally, it's supported by radically private communication
+seat. Finally, it's bolstered by radically private communication
 methods such as
 [Garner](https://developer.blockchaincommons.com/garner/), which
-ensure your self-sovereign identity is supported by self-sovereign
-networking.
+ensure that your self-sovereign identity is supported by
+self-sovereign networking.
 
 If you believe in self-sovereign identity (or privacy or novel
 technologies or improving the specifications we already have), then
@@ -90,24 +90,6 @@ feel for how everything works. Explore the results, digging into them
 further if you wish, as that's the power of a hands-on course like
 this.
 
-### Core Concepts
-
-A set of [Core Concepts
-documents](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/README.md)
-were written in conjunction with the course. They're not an integrated
-part of the "Learning XIDs" tutorial, but they offer deep hands-on
-exercises for a variety of related technologies.
-
-In particular, we suggest reading three fundamental concepts before
-you start in on the course:
-[XIDs](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/xid.md),
-[Gordian
-Envelope](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/gordian-envelope.md),
-and [Data
-Minimization](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/data-minimization.md). At
-a future point, we expect to move these to the [Developer web
-pages](https://developer.blockchaincommons.com/) or their own course.
-
 ## Summary: Doing Self-Sovereign Identity Right
 
 Self-sovereign identity was a dream of giving us all autonomy on the
@@ -121,8 +103,9 @@ focused on the holder, not an issuer or verifier.
 
 ## What's Next
 
-You now know what a XID is and should be ready to create one, which
-you'll do in [§1.2: Creating Your First XID](01_2_Your_First_XID.md ).
+A number of technologies and core concepts underlie XIDss. These are covered in [§1.2: Understanding Core Concepts](01_2_Core_Concepts.md).
+But if you're eager to get hands on with your XIDs, you should jump to
+[§1.3: Creating Your First XID](01_3_Your_First_XID.md).
 
 ## Appendix I: Key Terminology
 

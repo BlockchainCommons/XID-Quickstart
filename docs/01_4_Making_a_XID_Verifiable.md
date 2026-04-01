@@ -1,4 +1,4 @@
-# 1.3: Making a XID Verifiable
+# 1.4: Making a XID Verifiable
 
 This section demonstrates how to maintain a XID's freshness without
 direct communication through the use of a publication URL.
@@ -16,7 +16,7 @@ After working through this section, a developer will be able to:
 
 ## Amira's Story: The Freshness Problem
 
-After §1.2, Amira could give Ben her public XID directly. She could
+After §1.3, Amira could give Ben her public XID directly. She could
 email it, share it via Signal, or do whatever else works. But what
 happens when she updates her XID next month? Ben has no way to know
 his copy is stale. He might verify signatures against outdated
@@ -46,7 +46,7 @@ provenance --version
 ```
 
 If either tool is not installed, see [Step 0 of
-§1.2](01_2_Your_First_XID.md#step-0-setting-up-your-workspace) for
+§1.3](01_3_Your_First_XID.md#step-0-setting-up-your-workspace) for
 installation instructions.
 
 ## Part I: Publishing a XID
@@ -217,7 +217,7 @@ the other.
 
 You can now use `xid export` to create a public view by eliding your
 private keys and your provenance mark generator, just like you did in
-§1.2:
+§1.3:
 
 
 ```
@@ -432,7 +432,7 @@ can he trust it?
 ### Step 9: Verify the Signature & Provenance
 
 Ben will now repeat the steps from
-[§1.2](01_2_Your_First_XID.md#part-iii-verifying-a-xid), verifying the
+[§1.3](01_3_Your_First_XID.md#part-iii-verifying-a-xid), verifying the
 signature and the provenance mark.
 
 ```
@@ -456,7 +456,7 @@ provenance validate "$PROVENANCE_MARK" && echo "✅ Provenance chain intact"
 
 He could also examine details of the provenance mark with `provenance
 validate --format json-pretty "$PROVENANCE_MARK"`, but since this is
-Amira's first edition, it'll look the same as it did in 1.1 The more
+Amira's first edition, it'll look the same as it did in §1.3. The more
 interesting test would come if Ben had multiple, different copies of
 the XID and needed to determine which was stale and which fresh, but
 that's a topic for chapter 2

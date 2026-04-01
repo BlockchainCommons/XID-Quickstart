@@ -1,4 +1,4 @@
-# 1.2: Creating Your First XID
+# 1.3: Creating Your First XID
 
 This section demonstrates how to create a basic XID (eXtensible
 IDentifier) that enables pseudonymous contributions while maintaining
@@ -378,7 +378,7 @@ styles of quotes:
 ### Step 3: Create a Public View of Your XID with Elision
 
 Amira's XID is not ready for publication yet. You're going to add some
-more information in [§1.3](01_3_Making_a_XID_Verifiable.md) before
+more information in [§1.4](01_4_Making_a_XID_Verifiable.md) before
 sending it to Amira's first contact, Ben. But to prepare yourself for
 that, you're going to go over the crical step that _would_ be required
 to publish a XID: creating a public view.
@@ -733,7 +733,7 @@ actually published Amira's XID. More on that in the next tutorial!
 
 ### Additional Files
 
-**Envelopes:** The envelopes for this section are not stored in the Learning-XIDs repo as they'll be updated in §1.3 prior to publication.
+**Envelopes:** The envelopes for this section are not stored in the Learning-XIDs repo as they'll be updated in §1.4 prior to publication.
 
 **Scripts:** The [scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts) directory contains [01_2_Your_First_XID-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/01_2_Your_First_XID-SCRIPT.sh), which runs through all the commands in this section. From the command line, `git clone https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd XID-Quickstart`, then `bash scripts/01_2_Your_First_XID-SCRIPT.sh` to test it.
 
@@ -749,7 +749,7 @@ Try these to solidify your understanding:
 ## What's Next
 
 Since XIDs are autonomous, Amira needs a way to assure people that
-they have an up-to-date verison. Doing that (and publishing that XID) is the topic of [§1.3: Making a XID Verifiable](01_3_Making_a_XID_Verifiable.md).
+they have an up-to-date verison. Doing that (and publishing that XID) is the topic of [§1.4: Making a XID Verifiable](01_4_Making_a_XID_Verifiable.md).
 
 ## Appendix I: Key Terminology
 

@@ -358,7 +358,7 @@ piece plays a role in the verification chain that they're about to build.
 DevReviewer now needs to extract the SSH public keys (and other
 information) that they'll use for the purpose of cross-verification.
 
-[§1.3](01_3_Making_a_XID_Verifiable.md) briefly talked about how to
+[§1.4](01_4_Making_a_XID_Verifiable.md) briefly talked about how to
 extract data from a XID. Generally, you need to iteratively cut an
 envelope down to the point where you just have a subject and a set of
 assertions, and then pull out the assertions that you want. (Again,
@@ -736,7 +736,7 @@ This is courtesy of a chain of evidence, much of which was locked down in this s
 
 | ⛓️ Evidence | Verification | Section |
 |----------|--------------|---------|
-| 🔗 derefenceVia URL | URL is on GitHub | §1.3 |
+| 🔗 derefenceVia URL | URL is on GitHub | §1.4 |
 | 🌌 Galaxy PR | PR Exists | §2.1 |
 | 👀 Cryptographic Audit Work | Previous Commitment | §2.2 |
 | 🔐 Security Work for Civil Trust | Similar PRs | §2.3 |

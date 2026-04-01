@@ -307,8 +307,9 @@ BRadvoc8 account.
 
 That problem has been lingering, and it'll be the reason for Amira to
 finally add a bit more information to her BRadvoc8 XID, proof that she
-controls the GitHub account she referenced in §1.3, but that'll be the
-topic of the next chapter.
+controls the GitHub account she referenced in
+[§1.4](01_4_Making_a_XID_Verifiable.md), but that'll be the topic of
+the next chapter.
 
 ## Summary: From Elision to Encryption
 

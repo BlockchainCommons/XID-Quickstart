@@ -333,7 +333,7 @@ endorsement.
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
-| seq 0 | 👤 Identity | §1.2+§1.3 |
+| seq 0 | 👤 Identity | §1.3+§1.4 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 | seq 2 | 🗣️ GitHub Edge | §3.1 |
 | seq 3 | 🗣️ Endorsement Edge | §3.3 |

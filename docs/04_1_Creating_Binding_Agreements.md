@@ -137,7 +137,7 @@ This of course expands the set of keys that Amira has in use.
 
 | Key Type | Purpose | Verified Against | Added In |
 |----------|---------|------------------|----------|
-| 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
+| 👤 XID inception key | Signs XID document updates | XID itself | §1.3 |
 | 🗣️  Attestation key | Signs attestations | XID key list | §2.1 |
 | 🖋️  SSH signing key | Signs Git commits | GitHub account | §3.1 |
 | 📄️  Contract signing key | Signs contracts | XID key list | §4.1 |
@@ -238,7 +238,7 @@ in [§2.1](02_1_Creating_Self_Attestations.md).
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
-| seq 0 | 👤 Identity | §1.2+§1.3 |
+| seq 0 | 👤 Identity | §1.3+§1.4 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 | seq 2 | 🗣️ GitHub Edge | §3.1 |
 | seq 3 | 🗣️ Endorsement Edge | §3.3 |
@@ -431,7 +431,7 @@ OK.
 
 To verify Amira's CLA, Ben walks through several steps:
 
-1. Retrieve newest version of BRadvoc8's XID (per [§1.3](01_3_Making_a_XID_Verifiable.md)
+1. Retrieve newest version of BRadvoc8's XID (per [§1.4](01_4_Making_a_XID_Verifiable.md)
 
 ```
 FETCHED_XID=$PUBLIC_XID_WITH_CONTRACT_KEY

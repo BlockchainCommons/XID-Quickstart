@@ -75,10 +75,10 @@ information can be found.
 | | `attachment` | `'attachment'` | 📂 Third-party metadata |
 | | `delegate` | `'delegate'` | 👌🏽 Permission delegation | 
 | §3.1-§3.3 | `edge` | `'edge'` | 🗣️  Attestations |
-| §1.2, §2.1 | `key` | `'key'`<br>`'privateKey'` | 🔑 Key pairs |
-| §1.3 | `method`<br>`resolution` | `'dereferencevia'` | 🧶 Resolution method |
+| §1.3, §2.1 | `key` | `'key'`<br>`'privateKey'` | 🔑 Key pairs |
+| §1.4 | `method`<br>`resolution` | `'dereferencevia'` | 🧶 Resolution method |
 | | `service` | `'service'` | ☁️  Service delegation |
-| §1.2, §2.1 | `provenance` | `'provenance'` | ⛓️  Provenance mark |
+| §1.3, §2.1 | `provenance` | `'provenance'` | ⛓️  Provenance mark |
 
 Edges will be the topic of this chapter.
 
@@ -172,7 +172,7 @@ Amira now has three different keys serving three different purposes:
 
 | Key Type | Purpose | Verified Against | Added In |
 |----------|---------|------------------|----------|
-| 👤 XID inception key | Signs XID document updates | XID itself | §1.2 |
+| 👤 XID inception key | Signs XID document updates | XID itself | §1.3 |
 | 🗣️  Attestation key | Signs attestations | XID key list | §2.1 |
 | 🖋️  SSH signing key | Signs Git commits | GitHub account | §3.1 |
 
@@ -521,7 +521,7 @@ what each version contains
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
-| seq 0 | 👤 Identity | §1.2+§1.3 |
+| seq 0 | 👤 Identity | §1.3+§1.4 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 | seq 2 | 🗣️ GitHub Edge | §3.1 |
 

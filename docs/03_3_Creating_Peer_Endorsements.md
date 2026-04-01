@@ -551,7 +551,7 @@ each version contains
 
 | XID Version | New Content | Created In |
 |-------------|-------------|------------|
-| seq 0 | 👤 Identity | §1.2+§1.3 |
+| seq 0 | 👤 Identity | §1.3+§1.4 |
 | seq 1 | 🔑 Attestation Key | §2.1 |
 | seq 2 | 🗣️ GitHub Edge | §3.1 |
 | seq 3 | 🗣️ Endorsement Edge | §3.3 |
@@ -812,8 +812,8 @@ self-attestations.
 
 At this point, Amira has built a succession of progressive trust layers:
 
-1. [§1.2](01_2_Your_First_XID.md): Self-sovereign identity (XID exists)
-2. [§1.3](01_3_Making_a_XID_Verifiable.md): Self-consistent (signature verifies, fresh)
+1. [§1.3](01_3_Your_First_XID.md): Self-sovereign identity (XID exists)
+2. [§1.4](01_4_Making_a_XID_Verifiable.md): Self-consistent (signature verifies, fresh)
 3. [§2.1](02_1_Creating_Self_Attestations.md): Fair-witness claims (public, verifiable claims)
 4. [§2.2](02_2_Managing_Claims_Elision.md): Medium sensitive claims managed (commit elided, reveal later)
 5. [§2.3](02_3_Managing_Claims_Encryption.md) High sensitive claims managed (encrypted, sent to trusted parties)
