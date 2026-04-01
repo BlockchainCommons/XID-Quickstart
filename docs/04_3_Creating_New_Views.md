@@ -357,7 +357,7 @@ As usual, we'll store new copies:
 ```
 echo "$XID_WO_CONTRACTKEY" > envelopes/BRadvoc8-xid-s5v2-private-4-03.envelope
 echo "$PUBLIC_XID_WO_CONTRACTKEY" > envelopes/BRadvoc8-xid-s5v2-public-4-03.envelope
----
+```
 
 ## Part II: Eliding XID Sub-Objects
 
