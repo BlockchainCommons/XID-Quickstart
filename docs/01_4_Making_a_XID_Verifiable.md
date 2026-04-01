@@ -550,12 +550,12 @@ versions of the XID created in this section.
 **Scripts:** The
 [scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
 directory contains
-[01_3_Making_a_XID_Verifiable-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/01_3_Making_a_XID_Verifiable-SCRIPT.sh),
+[01_4_Making_a_XID_Verifiable-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/scripts/01_4_Making_a_XID_Verifiable-SCRIPT.sh),
 which runs through all the commands in this section. From the command
 line, `git clone
 https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
 XID-Quickstart`, then `bash
-scripts/01_3_Making_a_XID_Verifiable-SCRIPT.sh` test it.
+scripts/01_4_Making_a_XID_Verifiable-SCRIPT.sh` test it.
 
 ### Exercises
 
