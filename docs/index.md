@@ -2,8 +2,9 @@
 [**Chapter One: Introduction to XIDs**](01_0_Introduction.md)
 
 * [§1.1: Getting Started with SSI & XIDs](01_1_Getting_Started_SSI_XIDs.md)
-* [§1.2: Creating Your First XID](01_2_Your_First_XID.md)
-* [§1.3: Making a XID Verifiable](01_3_Making_a_XID_Verifiable.md)
+* [§1.2: Understanding Core Concepts](01_2_Core_Concepts.md)
+* [§1.3: Creating Your First XID](01_3_Your_First_XID.md)
+* [§1.4: Making a XID Verifiable](01_4_Making_a_XID_Verifiable.md)
 
 [**Chapter Two: Making Claims (And Protecting Them)**](02_0_Claims.md)
 
