@@ -91,7 +91,7 @@ you don't lose everything. Beyond that, it requires key rotation and
 revocation as things change over time.
 
 [**The Progressive Trust Life
-Cycle](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/progressive-trust.md). In
+Cycle**](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/progressive-trust.md). In
 real life, trust is a progressive thing. When you meet someone and
 grow your relationship over years, you slowly extend new information
 to them, slowly learn new things about them, and so over time gain
@@ -145,7 +145,7 @@ Minimization_ by eliding any information in an envelope while
 maintaining any signatures on the envelope and any credentials it
 might hold.
 
-[**XID**](xid.md). Obviously this whole course is about XIDs,
+[**XID**](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/xid.md). Obviously this whole course is about XIDs,
 Blockchain Commons' self-sovereign identifier. The XID core concept
 document briefly outlines what a XID is, what it contains, and how
 it's created.
