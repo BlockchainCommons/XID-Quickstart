@@ -15,9 +15,8 @@ set -e
 echo "=== LEARNING XIDS §2.3: Managing Sensitive Claims with Encryption CODE TEST ==="
 echo ""
 
-
 # Create output directory
-OUTPUT_DIR="output/script-02-2-$(date +%Y%m%d-%H%M%S)"
+OUTPUT_DIR="output/script-02-3-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$OUTPUT_DIR"
 
 echo "Step 0: Recreate XID & Keys"

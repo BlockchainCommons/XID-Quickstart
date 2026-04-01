@@ -1,12 +1,12 @@
 #!/bin/bash
 #
-# 01_3_Making_a_XID_Verifiable-SCRIPT.sh - Test all code examples from §1.3
+# 01_4_Making_a_XID_Verifiable-SCRIPT.sh - Test all code examples from §1.4
 #
 # Validates that every command in §1.3: Making a XID Verifiable
 # works correctly. Tests dereferenceVia, XID export, signature verification,
 # provenance validation, and Ben's verification workflow.
 #
-# Usage: bash 01_3_Making_a_XID_Verifiable-SCRIPT.sh
+# Usage: bash 01_4_Making_a_XID_Verifiable-SCRIPT.sh
 #
 # Dependencies: envelope (bc-envelope-cli-rust), provenance
 #
@@ -26,7 +26,7 @@ PASSWORD="test-password-for-tutorial"
 PUBLISH_URL="https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt"
 
 # Create output directory
-OUTPUT_DIR="output/script-01-3-$(date +%Y%m%d-%H%M%S)"
+OUTPUT_DIR="output/script-01-4-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$OUTPUT_DIR"
 
 echo "Step 1: Load Your XID"

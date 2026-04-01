@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# 01_2_Your_First_XID-SCRIPT.sh - Test all code examples from §1.2
+# 01_3_Your_First_XID-SCRIPT.sh - Test all code examples from §1.2
 #
 # Validates that every command in §1.2: Creating Your First XID works correctly.
 # Tests XID creation, elision, signature verification, and provenance validation.
 #
-# Usage: bash 01_2_Your_First_XID-SCRIPT.sh
+# Usage: bash 01_3_Your_First_XID-SCRIPT.sh
 #
 # Dependencies: envelope (bc-envelope-cli-rust), provenance
 #
