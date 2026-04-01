@@ -362,7 +362,7 @@ information) that they'll use for the purpose of cross-verification.
 extract data from a XID. Generally, you need to iteratively cut an
 envelope down to the point where you just have a subject and a set of
 assertions, and then pull out the assertions that you want. (Again,
-more on this in [§4.3](04_3_Creating_Views_and_Versions.md).)
+more on this in [§4.3](04_3_Creating_New_Views.md).)
 
 To do so here requires stepping down through the envelope three times:
 ```

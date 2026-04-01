@@ -525,7 +525,7 @@ envelope format $XID_WITH_EDGE
 |     'signed': Signature(Ed25519)
 | ]
 ```
-Yes! It's gotten big at this point! We'll talk more about what to do about that in [§4.3](04_3_Creating_Views_and_Versions.md).
+Yes! It's gotten big at this point! We'll talk more about what to do about that in [§4.3](04_3_Creating_New_Views.md).
 
 ### Step 13: Export & Store Your Work
 

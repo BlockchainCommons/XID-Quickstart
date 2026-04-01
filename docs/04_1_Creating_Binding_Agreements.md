@@ -588,9 +588,9 @@ questions. First, how can that contract be published in a maximally
 private way? [§4.2: Publishing for
 Privacy](04_2_Publishing_for_Privacy.md) discusses concerns and how
 hashing can be used to protect content.  Second, has Amira's XID
-gotten too big? [§4.3: Creating Views and
-Viewsion](04_3_Creating_Views_and_Versions.md) talks about how to
-clean it up.
+gotten too big? [§4.3: Creating New Views](04_3_Creating_New_Views.md)
+and [§4.4: Creating New Editions](04_4_Creating_New_editions.md) talk
+about how to clean it up.
 
 ## Appendix I: Key Terminology
 

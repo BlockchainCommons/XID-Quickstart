@@ -116,6 +116,7 @@ ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
 CLA=$(cat envelopes/cla-bradvoc8-accepted-4-01.envelope)
 ```
 
+
 ## Part I: Incorporating a Contract into a XID
 
 Amira is thrilled to talk about her work with SisterSpaces. That's
@@ -385,8 +386,8 @@ XIDs as well as [Ben's README](https://github.com/BlockchainCommons/XID-Quicksta
 ## What's Next
 
 Though we've completed Amira's first arc, there's one open question:
-has her XID gotten too big? [§4.3: Creating Views and
-Viewsion](04_3_Creating_Views_and_Versions.md) talks about how to
+has her XID gotten too big? [§4.3: Creating New Views](04_3_Creating_New_Views.md)
+talks about how to
 clean it up.
 
 ## Appendix I: Key Terminology

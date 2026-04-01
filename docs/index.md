@@ -17,11 +17,12 @@
 * [§3.2: Supporting Cross Verification](03_2_Supporting_Cross_Verification.md)
 * [§3.3: Creating Peer Endorsements](03_3_Creating_Peer_Endorsements.md)
 
-[**Chapter Four: Expanding & Contracting Your XIDs**](04_0_Advanced.md)
+[**Chapter Four: Managing Your XIDs**](04_0_Advanced.md)
 
 * [§4.1: Creating Binding Agreements](04_1_Creating_Binding_Agreements.md)
 * [§4.2: Publishing Commitments for Privacy](04_2_Publishing_for_Privacy.md)
-* [§4.3: Creating Views and Versions] (**pending**)
+* [§4.3: Creating New Views](04_3_Creating_New_Views.md)
+* [§4.4: Creating New Editions] (**pending**)
 
 ---
 
