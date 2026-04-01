@@ -27,6 +27,7 @@ Supporting objectives include the ability to:
 
 - Know the power of hashing.
 - Understand the advantages of creating views versus editions.
+- Understand the power of revocation.
 
 ## Table of Contents
 

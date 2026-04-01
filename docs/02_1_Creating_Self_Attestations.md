@@ -532,6 +532,10 @@ new attestations, supersede attestations, or retract attestations.
 
 Creating a totally new attestation follows the same procedure as above. Our suggested best practices for superseding and revoking involve creating totally new attestations that clearly denote their relationship to the previous ones.
 
+Also see [§4.4](04_4_Creating_New_Editions.md) for managing the
+lifecycle of attestations (or really any data) that's been directly
+attached to a XID.
+
 ### Step 14: Supersede an Attestation
 
 Two years later, Amira's Galaxy Project work has expanded. This means the old claim is outdated, requiring a new one that supersedes it.

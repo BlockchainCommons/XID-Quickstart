@@ -22,7 +22,7 @@
 * [§4.1: Creating Binding Agreements](04_1_Creating_Binding_Agreements.md)
 * [§4.2: Publishing Commitments for Privacy](04_2_Publishing_for_Privacy.md)
 * [§4.3: Creating New Views](04_3_Creating_New_Views.md)
-* [§4.4: Creating New Editions] (**pending**)
+* [§4.4: Creating New Editions](04_4_Creating_New_Editions.md)
 
 ---
 

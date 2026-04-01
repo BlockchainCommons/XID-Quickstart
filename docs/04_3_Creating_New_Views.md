@@ -675,9 +675,9 @@ created in this section.
 
 ### Exercises
 
-1. Remove an edge or key from a XID.
+1. Elide an edge or key in a XID.
 2. Find an assertion more deeply buried in an edge or XID.
-3. Remove only the object of that assertion.
+3. Elide only the object of that assertion.
 4. Create a different view where you remove only the predicate of that exertion.
 
 ## What's Next
