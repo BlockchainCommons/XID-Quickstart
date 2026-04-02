@@ -8,7 +8,7 @@
 # - Decryption and verification
 # - Failed decryption by unauthorized party
 #
-# Usage: bash 02_3_Managing_Claims_Encryption-SCRIPT.md
+# Usage: bash 02_3_Managing_Claims_Encryption-SCRIPT.sh
 
 set -e
 
