@@ -17,7 +17,7 @@
 
 set -e
 
-echo "=== LEARNING XIDS §1.3: Making a XID Verifiable"
+echo "=== LEARNING XIDS §1.4: Making a XID Verifiable"
 echo ""
 
 # Configuration

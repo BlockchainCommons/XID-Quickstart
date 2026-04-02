@@ -16,7 +16,7 @@
 
 set -e
 
-echo "=== LEARNING XIDS §1.2: Creating Your First XID CODE TEST ==="
+echo "=== LEARNING XIDS §1.3: Creating Your First XID CODE TEST ==="
 echo ""
 
 echo "Step 1: Create Your XID"
