@@ -1,0 +1,1670 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/04_4_Creating_New_Editions/">
+      
+      
+        <link rel="prev" href="../04_3_Creating_New_Views/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>4.4: Creating New Editions - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#44-creating-new-editions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4.4: Creating New Editions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_3_Creating_New_Views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-updating-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Updating a XID
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Revocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Power of Revocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-explicit-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Explicit Revocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-removing-xid-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Removing XID Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Removing XID Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-the-object-to-remove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find the Object to Remove
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-remove-the-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Remove the Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-publish-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Publish Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-checking-for-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Checking for Revocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-check-provenance-marks-for-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Check Provenance Marks for Revocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Check Provenance Marks for Revocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-creating-new-editions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Creating New Editions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Creating New Editions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-updating-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Updating a XID
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Revocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Power of Revocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-explicit-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Explicit Revocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-removing-xid-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Removing XID Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Removing XID Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-the-object-to-remove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find the Object to Remove
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-remove-the-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Remove the Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-publish-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Publish Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-checking-for-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Checking for Revocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-check-provenance-marks-for-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Check Provenance Marks for Revocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Check Provenance Marks for Revocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-creating-new-editions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Creating New Editions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Creating New Editions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="44-creating-new-editions">4.4: Creating New Editions</h1>
+<p>Views are a great way to practice data minimization. They allow you to
+give each viewer a XID that contains the precise data that they should
+see without changing the underlying content of your XID.</p>
+<p>However, sometimes you want to do that as well. That's where new
+editions come in.  And, though you've created a lot of new editions to
+date, the ones in this section will be different, because they'll
+<em>remove</em> content.</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> After completing this tutorial, explore
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md">Data
+Minimization</a>
+and <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/elision-cryptography.md">Elision
+Cryptography</a>.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Remove content from a XID.</li>
+<li>Update content in a XID.</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand what revocation means.</li>
+<li>Undestand the concept of implicit revocation.</li>
+<li>Learn more techniques for comparing provenance marks.</li>
+</ul>
+<h2 id="amiras-story-updating-a-xid">Amira's Story: Updating a XID</h2>
+<p>DevReviewer's endorsement is a problem for Amira. She wants it in her
+XID because it improves the reputation of her pseudonymous
+identity. But, she doesn't want the information that's
+correlatable. Eliding the correlatable statement was just a temporary
+fix. It resolves Amira's privacy issue, but it weakens the endorsement
+itself because viewers will know that Amira is purposefully hiding
+part of it.</p>
+<p>A better solution would be either: (1) to entirely remove the
+endorsement, if Amira has other endorsement that fit the same need; or
+(2) to replace the endorsement with a new, newly signed version that
+doesn't contain the problem statement.</p>
+<h2 id="the-power-of-revocation">The Power of Revocation</h2>
+<p>Sometimes an old document includes something that you no longer stand
+by. It might contain dangerous information (such as in Amira's story);
+it might contain out-of-date information (such as if Amira changed
+where the master copy of her XID is); or it might contain something
+that's become a problem (such as if you'd received an endorsement from
+someone who afterward was kicked out of a community).</p>
+<p>Revocation is when you reject a previous claim or other information
+that you'd published. You could revoke a credential, an endorsement, a
+key, a resolution method, or any other datum.</p>
+<p>In Gordian Envelope, revocation is implicit. If a datum is present in
+one version of a XID, but absent from later ones, then the datum has
+implicitly been revoked. If instead an updated version of information
+is available in the later XID, then the previous datum has been
+revoked and the new one is now the up-to-date one.</p>
+<p>Provenance marks can always be used to verify which edition of a XID
+is the up-to-date one.</p>
+<blockquote>
+<p>🔥 <strong>*What is the Power of Revocation?</strong> Nothing is forever! Revocation allows
+you to say that something in some former version of your XID is no longer
+valid, or at the very least, no longer supported by you.</p>
+</blockquote>
+<h3 id="the-power-of-explicit-revocation">The Power of Explicit Revocation</h3>
+<p>Sometimes implicit revocation isn't enough. In this case you can
+explicitly revoke something by creating and signing a statement saying
+that the old content is no longer valid.
+<a href="02_1_Creating_Self_Attestations/#step-15-retract-an-attestation">§2.1</a>
+contains an example of this pattern.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID. </p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-4-02.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<p>We're also going to again use <code>jq</code>, so make sure you've downloaded it
+from <a href="https://jqlang.org/">jqlang.org</a>, or installed it with Homebrew
+or some other package manager, else you won't be able to automate the
+checking of provenance marks.</p>
+<h2 id="part-i-removing-xid-objects">Part I: Removing XID Objects</h2>
+<p>Amira keeps getting questions about the information she removed from
+DevReviewer's endorsement. Her elision preserved her privacy, but even
+with her being transparent about what she removed, she decreased the
+value of the endorsement. As such, she decides to create a new edition
+of her XID that removes DevReviewer's endorsement entirely.</p>
+<h3 id="step-1-find-the-object-to-remove">Step 1: Find the Object to Remove</h3>
+<p>Most top-level XID object types have a a <code>remove</code> command that allows
+you to pass the <code>envelope</code> CLI both the object to remove and the base
+XID. That means that the first thing to do is to find the object you
+want to remove, which follows the same process that you used in the
+last section when you were looking for digests.</p>
+<p>In this case, you list out all the edges:</p>
+<pre><code>envelope xid edge all $XID
+</code></pre>
+<p>Then you find the edge you want to remove, which is:</p>
+<pre><code>ur:envelope/lftpsplrtpsokseyjoihihjpdpihjtiejljpjkihjnihjtjydpiyjpjljndpieihkojpihkoinihktihjpdpeyetiyeeidenidiaeheteneoemiyieenoycfaornlstpsotanshdhdcximprmsaylgfwcyjzzcamzmdrbdetjsrngamnbsfptbwtksihrhzonsahuthydwtboytpsojkjkiaisihjnhsftihjnjojzjlkkihihgmjljzihtpsokscsfdihhsiecxguihiakpjpinjykkcxgdjpjliojphsjnjnihjpoytpsojljkiaisihjnhsftktjljpjejkfgjljptpsojzguinjkjyihjpgujohsiaihjkoycfaorslntpsotanshdhdcxhecefsnnionspljpftktetwymnfmcyecveuotktpwenlhyhdpmpykpchcmzchywzoytpsojsjpihjzhsjyinjljtjkisinjofwhsjkinjktpsoksiaguihiakpjpinjykkcxiajljzjzhsidjljphsjyinjljtcxjohsjpjyjtihjpcxktisjlcxkoihjpiniyinihiecxiajpihieihjtjyinhsjzjkcxjyisjpjlkpioiscxiajljnjninjydpjpihkoihhsjzcxhsjtiecxihjtiajpkkjojyihiecxjkishsjpinjtiooybetpsokoeydyeyendpdyeodpehehgheheofteceydpehdyftdydyoytpsojpihjtiejljpjkihjnihjtjyfxjljtjyihksjytpsokshghfihjpiyinihiecxjojpihkoinjlkpjkcxjkihiakpjpinjykkcxihksjoihjpinihjtiaihdwcxktjljpjeihiecxjyjlioihjyisihjpcxjljtcxjkisjljpjycxjojpjlimihiajycxiyjljpcxguinjkjyihjpgujohsiaihjkoytpsojljoihihjpfejtiejljpjkihjnihjtjytpsoksguhgjpinjyihjkcxjkihiakpjpihdwcxktihjzjzdpjyihjkjyihiecxiajlieihcxktinjyiscxiajzihhsjpcxhsjyjyihjtjyinjljtcxjyjlcxjojpinkohsiakkdpjojpihjkihjpkoinjtiocxjohsjyjyihjpjtjkoytpsojoihjtiejljpjkihjnihjtjyguiajljoihtpsoksfeguihiakpjpinjykkcxhsjpiaisinjyihiajykpjpihdwcxiajpkkjojyjliojphsjoisiniacxinjnjojzihjnihjtjyhsjyinjljtdwcxjojpinkohsiakkcxjohsjyjyihjpjtjkoyadtpsojehsjyjyihjkjyhsjyinjljtoyaxtpsotansghlfaohdfztotdmttbtkeojlgalkiywpdlhkckltcnlnleksaysntyrefegweygmasrlcyksplemghihynhscxnlspkonlhlemksiaadbewfdrieksehvypychmtteurwemktttiaxjegodrvt
+</code></pre>
+<p>We'll be storing that as <code>$DEV_EDGE</code></p>
+<h3 id="step-2-remove-the-object">Step 2: Remove the Object</h3>
+<p>With the object to delete in hand, you use the appropriate <code>remove</code>
+command such as <code>xid edge remove</code> to do so:</p>
+<pre><code>REDUCED_XID=$(envelope xid edge remove $DEV_EDGE $XID)
+</code></pre>
+<p>If you look at the output of your new <code>$REDUCED_EDGE</code>, you'll see that
+the DevReviewer edge is <em>gone</em>. It's not elided: it was totally
+removed in a new edition of your XID.</p>
+<h3 id="step-3-publish-your-xid">Step 3: Publish Your XID</h3>
+<p>That's it! Removing content from a XID is easy.</p>
+<p>As usual, you should make a new public view with an updated provenance mark:</p>
+<pre><code>REDUCED_XID=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$REDUCED_XID&quot;)
+PUBLIC_REDUCED_XID=$(envelope xid export --private elide --generator elide &quot;$REDUCED_XID&quot;)
+</code></pre>
+<p>And of course store everything:</p>
+<pre><code>echo &quot;$REDUCED_XID&quot; &gt; envelopes/BRadvoc8-xid-s6-private-4-04.envelope
+echo &quot;$PUBLIC_REDUCED_XID&quot; &gt; envelopes/BRadvoc8-xid-s6-public-4-04.envelope
+</code></pre>
+<blockquote>
+<p>📖 <strong>Do I elide or delete data?</strong> You should elide data in your XID
+if it still has a purpose: if you might want to show it to someone at
+some time, if you could need it for some future use, or even if you
+just want to keep it around for your own reference. You should instead
+delete data only if it's no longer accurate, it no longer serves a
+purpose, or if it's just cluttering up your XID.</p>
+</blockquote>
+<h2 id="part-ii-checking-for-revocation">Part II: Checking for Revocation</h2>
+<p>SecurityMaintainer sees that BRadvoc8 has submitted a PR to his repo,
+and he wants to know a bit about them before he accepts it. He ends up
+with two copies of her XID, one with the DevReviewer endorsement and
+one without. He needs to know: is it a new endorsement that wasn't
+there before or an old endorsement that's been revoked? (The answer
+depends on which edition of the XID is newer.)</p>
+<h2 id="step-4-check-provenance-marks-for-revocation">Step 4: Check Provenance Marks for Revocation</h2>
+<p>SecurityMaintainer has two copies of Amira's XID:</p>
+<pre><code>XID[0]=$(cat envelopes/BRadvoc8-xid-public-3-03.envelope)
+XID[1]=$PUBLIC_REDUCED_XID
+</code></pre>
+<p>Best practice would be to use <code>derefenceVia</code> to go grab the newest
+version of the XID, but SecurityMaintainer fails to! Fortunately, he
+knows to look at the provenance marks.</p>
+<pre><code>PM[0]=$(envelope xid provenance get ${XID[0]})
+PM[1]=$(envelope xid provenance get ${XID[1]})
+....
+
+Checking them tells him that he has two editions of the XID, but not neecessarily which is which:
+
+</code></pre>
+<p>$ provenance validate ${PM[0]} ${PM[1]}
+Error: Validation failed with issues:
+Total marks: 2
+Chains: 1</p>
+<p>Chain 1: 61a8fa60
+  Warning: No genesis mark found
+  3: e1b067a4
+  6: 1d75e41b (gap: 4 missing)</p>
+<pre><code>
+He could look at each provenance mark, find the one with higher `seq`
+and use that. But the following script does the job for him:
+
+
+</code></pre>
+<p>newseq=0
+selectedi=-1
+for i in $(seq 0 1)
+do
+  thisseq=$(provenance validate --warn --format json-compact ${PM[$i]} | jq -r ".chains.[0].sequences.[0].end_seq")
+  if (( $thisseq &gt; $newseq )); then
+    newseq=$thisseq
+    selectedi=$i
+  fi
+done</p>
+<p>if (( $i &gt;&gt; 0 )); then
+  echo "✅ Current version of XID is:"
+  echo ""
+  envelope format ${XID[$i]}
+else
+  echo "❌ No valid XIDs found"
+fi  </p>
+<pre><code>
+SecurityMaintainer runs this script and is pointed to the `seq: 6`
+version of Amira's XID.
+
+Add this to your tool kit to accurately view the newest XID when
+you're handed multiple ones.
+
+## Part III: Replacing XID Objects
+
+Hearing about the problem with her endorsement, DevReviewer creates a
+new peer endorsement for Amira, usable as an edge if Amira desires.
+
+Replacing an element in a XID is easy: you remove the old object, just
+like you did in Part I, then you add in the new object. As it happens,
+Amira published her BRadvoc8 XID in between, but that doesn't have to
+happen. An edition with old content followed by a new edition with new
+content implicitly revokes the old content just as well as publishing
+an edition without the content at all.
+
+## Step 5: Find and Remove Old Content
+
+First you need to find the old content and remove it, per steps 1-2
+above. In this case, Amira has alreayd removed the old peer
+endorsement.
+
+## Step 6: Prepare the New Content
+
+Next, you must prepare the new content that will be replacing the old
+content. In this case, DevReviewer sends Amira a new Gordian Envelope:
+
+</code></pre>
+<p>REVIEWER_SIGNED_EDGE=ur:envelope/lftpsplrtpsokseyjoihihjpdpihjtiejljpjkihjnihjtjydpiyjpjljndpieihkojpihkoinihktihjpdpeeehiaeshsenieehidehhseyihiyesenoycfaornlstpsotanshdhdcximprmsaylgfwcyjzzcamzmdrbdetjsrngamnbsfptbwtksihrhzonsahuthydwtboytpsojkjkiaisihjnhsftihjnjojzjlkkihihgmjljzihtpsokscsfdihhsiecxguihiakpjpinjykkcxgdjpjliojphsjnjnihjpoytpsojljkiaisihjnhsftktjljpjejkfgjljptpsojzguinjkjyihjpgujohsiaihjkoycfaorslntpsotanshdhdcxhecefsnnionspljpftktetwymnfmcyecveuotktpwenlhyhdpmpykpchcmzchywzoytpsojpihjtiejljpjkihjnihjtjyfxjljtjyihksjytpsoksglhfihjpiyinihiecxjojpihkoinjlkpjkcxihksjoihjpinihjtiaihdwcxktjljpjeihiecxjyjlioihjyisihjpcxjljtcxjkisjljpjycxjojpjlimihiajycxiyjljpcxguinjkjyihjpgujohsiaihjkoybetpsokoeydyeyendpdyeedpdyehghdyetfteyecdpehdyftdydyoytpsojsjpihjzhsjyinjljtjkisinjofwhsjkinjktpsoksiaguihiakpjpinjykkcxiajljzjzhsidjljphsjyinjljtcxjohsjpjyjtihjpcxktisjlcxkoihjpiniyinihiecxiajpihieihjtjyinhsjzjkcxjyisjpjlkpioiscxiajljnjninjydpjpihkoihhsjzcxhsjtiecxihjtiajpkkjojyihiecxjkishsjpinjtiooytpsojljoihihjpfejtiejljpjkihjnihjtjytpsoksguhgjpinjyihjkcxjkihiakpjpihdwcxktihjzjzdpjyihjkjyihiecxiajlieihcxktinjyiscxiajzihhsjpcxhsjyjyihjtjyinjljtcxjyjlcxjojpinkohsiakkdpjojpihjkihjpkoinjtiocxjohsjyjyihjpjtjkoytpsojoihjtiejljpjkihjnihjtjyguiajljoihtpsoksfeguihiakpjpinjykkcxhsjpiaisinjyihiajykpjpihdwcxiajpkkjojyjliojphsjoisiniacxinjnjojzihjnihjtjyhsjyinjljtdwcxjojpinkohsiakkcxjohsjyjyihjpjtjkoyadtpsojehsjyjyihjkjyhsjyinjljtoyaxtpsotansghlfaohdfzbzfslnetykknhplpwmhhcmcnwtfrwftogtrdadjtaxbsjkptmsmesbotldcstngyteisfhrntecemkoxtpueinjtmtfdrtvebwvtasbdcxeclafphthtfylfhgrhlabntabgpsmy</p>
+<pre><code>
+Amira looks over the new endorsement and see that DevReviewer made one
+simple modification: they changed &quot;previous security experience&quot; to
+&quot;previence experience.&quot; That's what Amira needed!
+
+</code></pre>
+<p>$ envelope format $REVIEWER_SIGNED_EDGE
+{
+    "peer-endorsement-from-devreviewer-41c9a6d1b1a2ef96" [
+        'isA': "attestation"
+        'source': XID(6ab29708) [
+            "schema:employeeRole": "Head Security Programmer"
+            "schema:worksFor": "SisterSpaces"
+        ]
+        'target': XID(5f1c3d9e) [
+            "endorsementContext": "Verfied previous experience, worked together on short project for SisterSpaces"
+            "endorsementScope": "Security architecture, cryptographic implementation, privacy patterns"
+            "peerEndorsement": "Writes secure, well-tested code with clear attention to privacy-preserving patterns"
+            "relationshipBasis": "Security collaboration partner who verified credentials through commit-reveal and encrypted sharing"
+            'date': "2026-04-01T08:25-10:00"
+        ]
+    ]
+} [
+    'signed': Signature(Ed25519)
+]</p>
+<pre><code>
+## Step 7: Insert New Content
+
+Amira inserts the updated peer endorsement into her XID as usual:
+</code></pre>
+<p>XID_WITH_NEW_EDGE=$(envelope xid edge add \
+    --verify inception \
+    $REVIEWER_SIGNED_EDGE $REDUCED_XID)</p>
+<pre><code>
+## Step 8: Publish Updated XID
+
+Finally, Amira updates the provenance mark and produces a new public view:
+
+</code></pre>
+<p>XID_WITH_NEW_EDGE=$(envelope xid provenance next \
+    --password "$PASSWORD" \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password "$PASSWORD" \
+    "$XID_WITH_NEW_EDGE")
+PUBLIC_XID_WITH_NEW_EDGE=$(envelope xid export --private elide --generator elide "$XID_WITH_NEW_EDGE")</p>
+<pre><code>
+She'll upload that to GitHub, while we'll save a copy:
+
+</code></pre>
+<p>echo "$XID_WITH_NEW_EDGE" &gt; envelopes/BRadvoc8-xid-s7-private-4-04.envelope
+echo "$PUBLIC_XID_WITH_NEW_EDGE" &gt; envelopes/BRadvoc8-xid-s7-public-4-04.envelope
+```</p>
+<h4 id="xid-version-comparison">XID Version Comparison</h4>
+<p>Over the course of this section, Amira created two more editions of
+her XID, as she first removed, then replaced DevReviewer's
+endorsement.</p>
+<table>
+<thead>
+<tr>
+<th>XID Version</th>
+<th>New Content</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seq 0</td>
+<td>👤 Identity</td>
+<td>§1.3+§1.4</td>
+</tr>
+<tr>
+<td>seq 1</td>
+<td>🔑 Attestation Key</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>seq 2</td>
+<td>🗣️ GitHub Edge</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>seq 3</td>
+<td>🗣️ Endorsement Edge</td>
+<td>§3.3</td>
+</tr>
+<tr>
+<td>seq 4</td>
+<td>🔑 Contract Key</td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>seq 5</td>
+<td>📄 Contract Commitment</td>
+<td>§4.2</td>
+</tr>
+<tr>
+<td>seq 6</td>
+<td>❌ Endorsement Removal</td>
+<td>§4.4</td>
+</tr>
+<tr>
+<td>seq 7</td>
+<td>🗣️ Endorsement Replacement</td>
+<td>§4.4</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>XIDs Are Forever!</strong> Though Amira removed the endorsement with
+the possibly correlatable information, the old edition is probably
+still out there on the 'net. Revoking content in an old XID doesn't
+remove it from the net! Worse, it might draw attention to what you've
+changed. Making sure that her current XID has the safer information
+was probably the right answer for Amira, but this demonstrates how you
+always need to think carefully about what you publish, because in the
+internet age, it'll be around forever.</p>
+</blockquote>
+<h2 id="summary-creating-new-editions">Summary: Creating New Editions</h2>
+<p>You have two options when making changes to your XID. As you saw in
+<a href="../04_3_Creating_New_Views/">§4.3</a>, you can create different views
+with elision, following the principle of <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/data-minimization.md">data
+minimization</a>
+so that each person only sees what they need to see.</p>
+<p>However, you can also entirely remove content from your XID (and
+possibly replace it as well). This creates an <em>implicit revocation</em>:
+you're saying that the old information is no longer valid for some
+reason. Doing so is easy: you just <code>remove</code> the old content (and
+optionally use commands you've used before to replace it).</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains data created in this section, including the <a href="BRadvoc8-xid-s6-public-4-05.envelope">seq:
+6</a> and the <a href="BRadvoc8-xid-s7-public-4-05.envelope">seq:
+7</a> versions of Amira's envelope.</p>
+<p><strong>Scripts:</strong> Scripts demonstrating this section are forthcoming.</p>
+<h3 id="exercises">Exercises</h3>
+<ol>
+<li>Find the UR: for both an edge and a key.</li>
+<li>Permanently remove an edge or key from a XID.</li>
+<li>Add in a new edge or key to replace the old one.</li>
+<li>Find the newest XID from several different editions.</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>We'll be returning soon with Chapter Five and keys, but for the moment, this course is at an end.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Explicit Revocation</strong> - A separate statement of revocation, usually issued as a signed document.</p>
+<p><strong>Implicit Revocation</strong> - A statement of revocation that is implicit in the fact that some data is not in the newest edition of an identity.</p>
+<p><strong>Revocation</strong> - The cancellation of something, here the removal of content from an identity document to say that it's no longer valid, supported, or relevant.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2068 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/03_1_Creating_Edges/">
+      
+      
+        <link rel="prev" href="../03_0_Edges/">
+      
+      
+        <link rel="next" href="../03_2_Supporting_Cross_Verification/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>3.1: Creating Edges - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#31-creating-edges" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3.1: Creating Edges
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-verifying-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Verifying Claims
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-options-for-recording-data-in-xids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Options for Recording Data in XIDs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-setting-up-a-github-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Setting Up a GitHub Account
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Setting Up a GitHub Account">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-ssh-signing-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate SSH Signing Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-upload-keys-to-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Upload Keys to GitHub
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Upload Keys to GitHub">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-adding-an-edge-to-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Adding an Edge to a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Adding an Edge to a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-understand-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Understand the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-ownership-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create Ownership Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-wrap-sign-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Wrap &amp; Sign the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-link-your-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Link Your Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-advance-your-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Advance Your Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-export-store-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Export &amp; Store Your Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Export &amp; Store Your Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-the-world-of-edges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: The World of Edges
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: The World of Edges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_3_Creating_New_Views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_4_Creating_New_Editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-verifying-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Verifying Claims
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-options-for-recording-data-in-xids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Options for Recording Data in XIDs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-setting-up-a-github-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Setting Up a GitHub Account
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Setting Up a GitHub Account">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-ssh-signing-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate SSH Signing Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-upload-keys-to-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Upload Keys to GitHub
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Upload Keys to GitHub">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-adding-an-edge-to-a-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Adding an Edge to a XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Adding an Edge to a XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-understand-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Understand the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-ownership-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create Ownership Claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-wrap-sign-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Wrap &amp; Sign the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-link-your-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Link Your Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-advance-your-provenance-mark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Advance Your Provenance Mark
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-export-store-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Export &amp; Store Your Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Export &amp; Store Your Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-the-world-of-edges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: The World of Edges
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: The World of Edges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="31-creating-edges">3.1: Creating Edges</h1>
+<p>Data about an identity doesn't have to be placed in your XID itself.
+You can create a new Gordian Envelope, reference your XID from that
+envelope, and sign the envelope with your XID's signing key. The
+result is additional details for a XID without overfilling your XID's
+central data space. This was how a variety of claims were created in
+chapter 2.  However, sometimes data needs to be more centrally stored
+in the XID itself. There are a variety of methods for doing so; one of
+them is by creating "edges" within the XID, which support attestations
+within the XID itself.</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts</strong>: This tutorial covers the creation of
+an attestation as an edge. For deeper understanding, see <a href="../concepts/attestation-endorsement-model.md">Attestation
+&amp; Endorsement Model</a> for
+the framework of claims and verification, <a href="../concepts/fair-witness.md">Fair
+Witness</a> for making trustworthy
+assertions, and <a href="../concepts/pseudonymous-trust-building.md">Pseudonymous Trust
+Building</a> for building
+reputation while maintaining privacy.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Create self-attestation edges</li>
+<li>Link XIDs to online services</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Know different methodologies for linking data to XIDs</li>
+<li>Understand how SSH signing keys differ from authentication keys</li>
+</ul>
+<h2 id="amiras-story-verifying-claims">Amira's Story: Verifying Claims</h2>
+<p>Amira has made a number of claims for the BRadvoc8 identity that are
+linked to GitHub. She made a claim about a PR she'd filed in
+<a href="../02_1_Creating_Self_Attestations/">§2.1</a>. Then she made claims about
+security auditing work and authentication design in
+<a href="../02_2_Managing_Claims_Elision/">§2.2</a> and
+<a href="../02_3_Managing_Claims_Encryption/">§2.3</a>. The PR is definitely
+linked to her BRadvoc8 account, and though the more sensitive work
+doing security audits and designing for CivilTrust isn't (because of
+their sensitivity), the BRadvoc8 account does include work that shows
+similar (but less correlatable) work on security systems.</p>
+<p>Because Amira previously couldn't provide an explicit link to her
+GitHub account, all of those claims have enjoyed only a medium level
+of trust. There were some other facts to back them up (like the shared
+name of the account and XID, the existence of the PR, and the hashed
+commitment for the security audit work), but ultimately the claims
+were not fully verifiable.</p>
+<p>DevReviewer is now getting ready to offer Amira a contract for
+further, more intensive work on Ben's SisterSpaces project, but they
+want one last piece of information to progress their trust of
+BRadvoc8: proof of control of the BRadvoc8 GitHub account.</p>
+<p>This will be done by creating an "edge", which is a claim that's
+created as part of the XID itself and signing it with a key registered
+on the GitHub account.</p>
+<h2 id="the-options-for-recording-data-in-xids">The Options for Recording Data in XIDs</h2>
+<p>As has been written elsewhere: XIDs are precisely structured. Though
+Gordian Envelope can accept any type of assertion, XIDs are organized
+into specific predicates.</p>
+<p>The following table lists a variety of <code>envelope-cli</code> commands, the
+XID predicate each creates, what it means, and where additional
+information can be found.</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Command</th>
+<th>Predicate</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><code>attachment</code></td>
+<td><code>'attachment'</code></td>
+<td>📂 Third-party metadata</td>
+</tr>
+<tr>
+<td></td>
+<td><code>delegate</code></td>
+<td><code>'delegate'</code></td>
+<td>👌🏽 Permission delegation</td>
+</tr>
+<tr>
+<td>§3.1-§3.3</td>
+<td><code>edge</code></td>
+<td><code>'edge'</code></td>
+<td>🗣️  Attestations</td>
+</tr>
+<tr>
+<td>§1.3, §2.1</td>
+<td><code>key</code></td>
+<td><code>'key'</code><br><code>'privateKey'</code></td>
+<td>🔑 Key pairs</td>
+</tr>
+<tr>
+<td>§1.4</td>
+<td><code>method</code><br><code>resolution</code></td>
+<td><code>'dereferencevia'</code></td>
+<td>🧶 Resolution method</td>
+</tr>
+<tr>
+<td></td>
+<td><code>service</code></td>
+<td><code>'service'</code></td>
+<td>☁️  Service delegation</td>
+</tr>
+<tr>
+<td>§1.3, §2.1</td>
+<td><code>provenance</code></td>
+<td><code>'provenance'</code></td>
+<td>⛓️  Provenance mark</td>
+</tr>
+</tbody>
+</table>
+<p>Edges will be the topic of this chapter.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>As usual, check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID.</p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-2-01.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<h2 id="part-i-setting-up-a-github-account">Part I: Setting Up a GitHub Account</h2>
+<p>The first step toward creating a link to GitHub is one that Amira did
+a while ago: setting up her BRadvoc8 GitHub account. She created a
+signing key for it, uploaded it, and has since been using that to sign
+commits, including the Galaxy Project commit that she references in
+her claim from <a href="../02_1_Creating_Self_Attestations/">§2.1</a>.</p>
+<p>Here's a review of how all that was done.</p>
+<h3 id="step-1-generate-ssh-signing-key">Step 1: Generate SSH Signing Key</h3>
+<p>Amira needed to create SSH keys for signing her Git commits. These are
+different from her SSH authentication (login) keys and maintained
+seperately by GitHub. There are a number of methods that can be used
+to generate ed25519 SSH keys, but she chose to use the <code>envelope-cli</code>,
+requesting that it <code>generate prvkeys</code> of the type <code>--signing
+ssh-ed25519</code>, which is the preferred type for GitHub.</p>
+<pre><code>SSH_PRVKEYS=$(envelope generate prvkeys --signing ssh-ed25519)
+</code></pre>
+<p>If you instead have an ed25519 signing key that you've created by
+other means, can you instead use <code>envelope-cli</code> to import it for usage
+with XIDs.  Just run <code>import</code> on the appropriate file:</p>
+<pre><code>SSH_PRVKEYS=$(cat ~/.ssh/your_signing_key | envelope import)
+</code></pre>
+<p>In either case, you can then create your public keys from your private keys:</p>
+<pre><code>SSH_PUBKEYS=$(envelope generate pubkeys &quot;$SSH_PRVKEYS&quot;)
+</code></pre>
+<p>Finally, you can <code>export</code> your public keys to tranform th UR format
+used by Gordian Envelope into an interoperable SSH format (<em>not</em> raw
+Ed25519) that will be recognized by GitHub:</p>
+<pre><code>SSH_EXPORT=$(envelope export &quot;$SSH_PUBKEYS&quot;)
+
+echo &quot;✅ Generated SSH signing key:&quot;
+echo &quot;$SSH_EXPORT&quot;
+</code></pre>
+<p>│ ✅ Generated SSH signing key:
+│ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe</p>
+<h3 id="step-2-upload-keys-to-github">Step 2: Upload Keys to GitHub</h3>
+<p>Afterward, Amira uploaded the exported version of the public key <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">to
+GitHub</a>
+as an SSH signing key ... but you don't actually have to do this for
+these tutorials because we'll test against the <a href="https://github.com/BRadvoc8/BRadvoc8">existing BRadvoc8
+account</a> in <a href="../03_2_Supporting_Cross_Verification/">§3.2: Supportig
+Cross Verification</a>.</p>
+<blockquote>
+<p>📖 <strong>What is the difference between SSH Signing and SSH
+Authentication keys?</strong> GitHub has two separate SSH key
+registries. Authentication keys (<code>/users/{user}/keys</code>) control access
+to repositories. Signing keys (<code>/users/{user}/ssh_signing_keys</code>)
+verify commit signatures. Amira is adding a signing key. It proves
+that her commits are authentic, not that she can push to repos.</p>
+</blockquote>
+<h4 id="key-type-comparison">Key Type Comparison</h4>
+<p>In keeping with the best practice of
+<a href="https://developer.blockchaincommons.com/architecture/patterns/auth/">heterogeneity</a>,
+Amira now has three different keys serving three different purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Purpose</th>
+<th>Verified Against</th>
+<th>Added In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👤 XID inception key</td>
+<td>Signs XID document updates</td>
+<td>XID itself</td>
+<td>§1.3</td>
+</tr>
+<tr>
+<td>🗣️  Attestation key</td>
+<td>Signs attestations</td>
+<td>XID key list</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>🖋️  SSH signing key</td>
+<td>Signs Git commits</td>
+<td>GitHub account</td>
+<td>§3.1</td>
+</tr>
+</tbody>
+</table>
+<p>As mentioned in
+<a href="2_1_Creating_Self_Attestations.md#key-type-comparison">§2.1</a>, having
+different keys that are used for different purposes decreases the
+repercussions of key loss or compromise. Now that we have three keys,
+we can more extensively look at the protections that heterogeneity
+offers:</p>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Location</th>
+<th>Compromise Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👤 XID inception key</td>
+<td>XID (encrypted or elided)</td>
+<td>Identity compromised</td>
+</tr>
+<tr>
+<td>🗣️  Attestation key</td>
+<td>XID (encrypted or elided)</td>
+<td>Claims forged</td>
+</tr>
+<tr>
+<td>🖋️  SSH signing key</td>
+<td>Local files</td>
+<td>Commits forged</td>
+</tr>
+</tbody>
+</table>
+<p>This shows the containment enabled by key heterogeneity: if Amira's
+SSH key is stolen, an attacker can forge commits and if her
+attestation key is stolen, an attacker can forge claims, but in those
+situations, her XID identity remains intact. In both cases, she could
+revoke the compromised key and add a new one without losing her
+identity or reputation history.</p>
+<p>A new key can even be created to allow changes to the XID! Your
+identity persists across key changes.</p>
+<blockquote>
+<p>📖 <strong>Why wasn't the SSH signing key added to Amira's XID?</strong>
+Previously, we added the attestation key to Amira's XID, but the new
+SSH key we're just keeping on-disk (with the public key uploaded to
+GitHub). This is a question of philosophy. You can choose to keep your
+XID neat and clean, and only use it to store the keys related to the
+control and use of that XID and related claims. Or, you can choose to
+use your XID to manage your whole "bag of keys", even keys securing
+other services (such as GitHub). We've chosen the "simple and clean"
+methodology for these tutorials, under the theory that you can choose
+to add on from there if you desire. If you decided to add the SSH keys
+to your XID, you would follow the methodology of
+<a href="2_1_Creating_Self_Attestations.md#step-2-register-attestation-key-in-xid">§2.1</a>
+for registering a new key in your XID, and you would of course
+reencrypt all your keys afterward.</p>
+</blockquote>
+<h2 id="part-ii-adding-an-edge-to-a-xid">Part II: Adding an Edge to a XID</h2>
+<p>You now need to create a claim that the XID BRadvoc8 owns the BRadvoc8
+GitHub account. This is largely done like the other claims created
+starting in <a href="../02_1_Creating_Self_Attestations/">§2.1</a>, except with
+two notable changes:</p>
+<ol>
+<li>The structure of the claim will be slightly different, to accomodate
+the fact that it will be <em>embedded</em> instead of <em>detached</em>.</li>
+<li>The claim will be signed by the SSH signing key uploaded to the
+GitHub account.</li>
+</ol>
+<h3 id="step-3-understand-the-edge">Step 3: Understand the Edge</h3>
+<p>Amira's claim that the BRadvoc8 XID owns the BRadvoc8 GitHub account
+will be created as an edge, which is a specific XID assertion that
+enables the incorporation of an attestation directly into a XID.</p>
+<blockquote>
+<p>📖 <strong>What is an edge?</strong> An edge is a link between two XIDs intended
+to describe a claim. If the XIDs are the same, a self-attestation is
+created; if the XIDs are different, a peer endorsement is created.</p>
+</blockquote>
+<p>An edge has a subject that must be unique within a XID. It could be a
+UUID or credential number used for reference. It might also be
+something more descriptive, to make it easier to find a specific edge
+within a XID. However, it should not define the claim itself; that
+falls to its content.</p>
+<p>There are exactly three predicates that must be used in an edge:</p>
+<ol>
+<li><strong><code>isA</code>:</strong> either a description of a relationship between the two
+XIDs or a description of the claim that the first XID is making about
+the second.</li>
+<li><strong><code>source</code>:</strong> The XID making the claim.</li>
+<li><strong><code>target</code>:</strong> The XID that the claim is about.</li>
+</ol>
+<p>You'll note that <code>isA</code>, <code>source</code>, and <code>target</code> were all also used in
+the detached claims in <a href="../02_0_Claims/">chapter 2</a>. This was
+intentional. These three predicates are <em>required</em> for defining
+edges. Also including them in detached claims is optional, but helps
+those detached claims to be consistent with embedded claims, and so
+easier to understand.</p>
+<p>Those three assertions are the only ones allowed as descriptions of
+the edge subject, which might seem limiting. This is resolved by the
+fact that additional envelopes can be linked below each of these
+assertions. <code>target</code> assertions are where additional information on
+the claim is usually placed (as shown here), while <code>source</code> assertions
+could provide self-reported details on the person making the claim (as
+shown in <a href="../03_3_Creating_Peer_Endorsements/">§3.3</a>) and <code>isA</code>
+assertions could better define the claim type.</p>
+<p>After a claim has been fully created with this methodology of laying
+out these three assertions, then adding sub-envelopes to those
+assertions as appropriate, it will then be wrapped and signed before
+it is attached to the XID as an edge. All of these specifics are
+further described in
+<a href="https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2026-003-xid-edges.md">BCR-2026-003</a>.</p>
+<blockquote>
+<p>📖 <strong>What is a BCR?</strong> BCRs are Blockchain Commons Research papers,
+which precisely define Blockchain Commons technologies and
+specifications. They are all stored in the <a href="https://github.com/BlockchainCommons/Research?tab=readme-ov-file">Blockchain Commons
+Research
+repo</a>.</p>
+</blockquote>
+<h3 id="step-4-create-ownership-claim">Step 4: Create Ownership Claim</h3>
+<p>You can now assemble a complete envelope with all of the ownership
+information about Amira's GitHub account. These are the claim details
+that will later be added to the <code>target</code> of the edge.</p>
+<p>But first you should decide what the <code>isA</code> for the edge is going to
+be. You're not going to embed that yet, but it's good to know since
+the <code>isA</code> defines the claim's type and the <code>target</code> subenvelope will
+define the claim's details. The edges BCR suggests using known
+ontologies, and for this we're going to use <a href="https://github.com/BlockchainCommons/Research/blob/master/known-value-assignments/markdown/2500_foaf_registry.md">the FOAF
+registry</a>.</p>
+<p>We're not describing a relationship, but instead making an attestation
+for what's essentially a credential ("BRadvoc8 owns this account"). To
+be precise, we're claiming ownership of an online account, for which
+<code>foaf:OnlineAccount</code> is appropriate.</p>
+<pre><code>ISA=&quot;foaf:OnlineAccount&quot;
+</code></pre>
+<p>We're now ready to create the sub-envelope. Because it's a <code>target</code>
+envelope, we need to start out with the target's XID:</p>
+<pre><code>TARGET=$(envelope subject type ur &quot;$XID_ID&quot;)
+</code></pre>
+<p>We then provide additional details about the <code>onlineAccount</code> as assertions that will be added to the target:</p>
+<pre><code>GH_NAME=&quot;BRadvoc8&quot;
+TARGET=$(envelope assertion add pred-obj string &quot;foaf:accountName&quot; string &quot;$GH_NAME&quot; &quot;$TARGET&quot;)
+TARGET=$(envelope assertion add pred-obj string &quot;foaf:accountServiceHomepage&quot; uri &quot;https://github.com/$GH_NAME/$GH_NAME&quot; &quot;$TARGET&quot;)
+TARGET=$(envelope assertion add pred-obj string &quot;sshSigningKey&quot; ur &quot;$SSH_PUBKEYS&quot; &quot;$TARGET&quot;)
+TARGET=$(envelope assertion add pred-obj string &quot;sshSigningKeyText&quot; string &quot;$SSH_EXPORT&quot; &quot;$TARGET&quot;)
+TARGET=$(envelope assertion add pred-obj string &quot;sshSigningKeysURL&quot; uri &quot;https://api.github.com/users/$GH_NAME/ssh_signing_keys&quot; &quot;$TARGET&quot;)
+TARGET=$(envelope assertion add pred-obj known conformsTo uri &quot;https://github.com&quot; &quot;$TARGET&quot;)
+TARGET=$(envelope assertion add pred-obj known date string `date -Iminutes` &quot;$TARGET&quot;)
+TARGET=$(envelope assertion add pred-obj known verifiableAt uri &quot;https://api.github.com/users/$GH_NAME&quot; &quot;$TARGET&quot;)
+
+echo &quot;GitHub account credential details:&quot;
+envelope format &quot;$TARGET&quot;
+
+│ GitHub account payload:
+|
+| XID(5f1c3d9e) [
+|     &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|     &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+|     &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|     &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+|     &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|     'conformsTo': URI(https://github.com)
+|     'date': &quot;2026-03-18T11:55-10:00&quot;
+|     'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+| ]
+</code></pre>
+<p>This builds the payload step by step. The <code>subject type</code> command used
+the XID ID, which is required as this envelope is describing the
+<code>target</code> of the edge.</p>
+<table>
+<thead>
+<tr>
+<th><code>subject</code> Command</th>
+<th>Subject Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>string "$XID_ID"</code></td>
+<td>UR (<code>"$XID_ID"</code>)</td>
+<td>Sets "XID(5f1c3d9e)" as the envelope subject</td>
+</tr>
+</tbody>
+</table>
+<p>Each <code>envelope assertion add pred-obj</code> command then adds one
+predicate-object pair as an assertion to that subject.</p>
+<table>
+<thead>
+<tr>
+<th><code>assertion</code> Command</th>
+<th>Predicate Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>string  "foaf:accountName" string "..."</code></td>
+<td>Custom (<code>"foaf:accountName"</code>)</td>
+<td>The name of the online account</td>
+</tr>
+<tr>
+<td><code>string "foaf:accountServiceHomepage" uri "..."</code></td>
+<td>Custom (<code>"foaf:accountServiceHomePage"</code></td>
+<td>Home URI of the account</td>
+</tr>
+<tr>
+<td><code>string "sshSigningKey" ur "$SSH_PUBKEYS"</code></td>
+<td>Custom (<code>"sshSigningKey"</code>)</td>
+<td>The key in structured UR format</td>
+</tr>
+<tr>
+<td><code>string "sshSigningKeyText" string "..."</code></td>
+<td>Custom (<code>"sshSigningKeyText"</code>)</td>
+<td>The key in human-readable format</td>
+</tr>
+<tr>
+<td><code>string "sshSigningKeysURL" uri "..."</code></td>
+<td>Custom (<code>"sshSigningKeysURL"</code>)</td>
+<td>Where to verify the key is registered</td>
+</tr>
+<tr>
+<td><code>known conformsTo string "https://github.com"</code></td>
+<td>Known (<code>'conformsTo'</code>)</td>
+<td>The account conforms to this type</td>
+</tr>
+<tr>
+<td><code>known date "..."</code></td>
+<td>string (date)</td>
+<td>When this attestation was created</td>
+</tr>
+<tr>
+<td><code>known verifiableAt uri "..."</code></td>
+<td>Known (<code>'verifiableAt'</code>)</td>
+<td>Where this info can be verified</td>
+</tr>
+</tbody>
+</table>
+<p>This complete package is meant to be a description of the credential
+being declared, <code>isA: foaf:OnlineAccount</code>.</p>
+<h3 id="step-5-create-the-edge">Step 5: Create the Edge</h3>
+<p>You're now ready to create the edge structure, which as discussed in
+Step 3 is an envelope with an arbitrary, but unique, ID and the three assertions: <code>isA</code>, <code>source</code>, and <code>target</code>.</p>
+<pre><code>EDGE=$(envelope subject type string &quot;account-credential-github&quot;)
+EDGE=$(envelope assertion add pred-obj known isA string &quot;$ISA&quot; &quot;$EDGE&quot;)
+EDGE=$(envelope assertion add pred-obj known source ur &quot;$XID_ID&quot; &quot;$EDGE&quot;)
+EDGE=$(envelope assertion add pred-obj known target envelope &quot;$TARGET&quot; &quot;$EDGE&quot;)
+</code></pre>
+<p>We chose a subject that was descriptive without being declarative,
+added in our <code>$ISA</code> and used BRadvoc8's <code>$XID_ID</code> as both the <code>source</code>
+and the <code>target</code>, just as in the previous chapter, because this is
+another self-attestation ... just one that's more verifiable than
+before. (The <code>target</code> is actually the entire envelope we previously
+created, but it leads off with the <code>$XID_ID</code>.)</p>
+<pre><code>echo &quot;GitHub edge details:&quot;
+envelope format &quot;$EDGE&quot;
+
+| GitHub edge details:
+|
+| &quot;account-credential-github&quot; [
+|     'isA': &quot;foaf:OnlineAccount&quot;
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e) [
+|         &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|         &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+|         &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|         &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+|         &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|         'conformsTo': URI(https://github.com)
+|         'date': &quot;2026-03-18T11:55-10:00&quot;
+|         'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+|     ]
+| ]
+</code></pre>
+<h3 id="step-6-wrap-sign-the-edge">Step 6: Wrap &amp; Sign the Edge</h3>
+<p>You can now wrap and sign your edge:</p>
+<pre><code>WRAPPED_EDGE=$(envelope subject type wrapped $EDGE)
+SIGNED_EDGE=$(envelope sign --signer &quot;$SSH_PRVKEYS&quot; &quot;$WRAPPED_EDGE&quot;)
+</code></pre>
+<p>The big change here is that you signed with the same SSH private key
+used for signing on Amira's GitHub account, but as you can see, the
+<code>envelope-cli</code> allows that with no fuss. This will be what allows proof of control.</p>
+<p>Signing is <em>not</em> an optional step. As stated in the <a href="https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2026-003-xid-edges.md#signing">Edges
+BCR</a>:
+"Every edge MUST be wrapped and signed by the claimant (the entity
+identified by 'source'). "</p>
+<h3 id="step-7-link-your-edge">Step 7: Link Your Edge</h3>
+<p>Now that you've done all the work of creating an edge, linking it to Amira's XID is extremely simple:</p>
+<pre><code>XID_WITH_EDGE=$(envelope xid edge add \
+    --verify inception \
+    $SIGNED_EDGE $XID)
+</code></pre>
+<p>As in §2.1, we've verified the original inception signature, but we
+haven't bother to re-sign yet, because we haven't finalized the new
+edition of the XID.</p>
+<pre><code>echo &quot;XID with GitHub edge:&quot;
+envelope format &quot;$XID_WITH_EDGE&quot;
+
+| XID with GitHub edge:
+| 
+| XID(5f1c3d9e) [
+|     'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+|     'edge': {
+|         &quot;account-credential-github&quot; [
+|             'isA': &quot;foaf:OnlineAccount&quot;
+|             'source': XID(5f1c3d9e)
+|             'target': XID(5f1c3d9e) [
+|                 &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|                 &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+|                 &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|                 &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+|                 &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|                 'conformsTo': URI(https://github.com)
+|                 'date': &quot;2026-03-18T11:55-10:00&quot;
+|                 'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+|             ]
+|         ]
+|     } [
+|         'signed': Signature(SshEd25519)
+|     ]
+|     ...
+| ]
+</code></pre>
+<p>Though that XID might look imposing, it was creating using the
+standard methodology for envelopes: build from the inside out. So you
+constructed a target envelope and attached it to the target, then you
+created an edge and attached it to the XID. Each step was clear and
+self-contained, but you were able to create a document with dense,
+recursive metadata.</p>
+<h3 id="step-8-advance-your-provenance-mark">Step 8: Advance Your Provenance Mark</h3>
+<p>By adding the GitHub edge, you've created a new edition of Amira's
+XID. Since you plan to publish it, that means you must update the
+provenance mark (and as usual, sign the new XID, which requires
+decrypting and re-encrypting everything).</p>
+<pre><code>XID_WITH_EDGE=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$XID_WITH_EDGE&quot;)
+echo &quot;✅ Provenance advanced&quot;
+
+| ✅ Provenance advanced
+</code></pre>
+<h3 id="step-9-export-store-your-work">Step 9: Export &amp; Store Your Work</h3>
+<p>You should also create a public view of the new XID that elides all the
+sensitive keys:</p>
+<pre><code>PUBLIC_XID_WITH_EDGE=$(envelope xid export --private elide --generator elide &quot;$XID_WITH_EDGE&quot;)
+</code></pre>
+<p>This is what you'll send to DevReviewer for their review, which we'll
+see in the next section.</p>
+<p>Afterward, you should save your data, particularly since you now have
+a third edition of Amira's XID. We're also saving the public SSH
+signing key, which will be used to verify the signature in the next
+section.</p>
+<pre><code>echo &quot;$PUBLIC_XID_WITH_EDGE&quot; &gt; envelopes/BRadvoc8-xid-public-3-01.envelope
+echo &quot;$XID_WITH_EDGE&quot; &gt; envelopes/BRadvoc8-xid-private-3-01.envelope
+echo &quot;$SSH_PUBKEYS&quot; &gt; envelopes/key-github-public-3-01.ur
+</code></pre>
+<h4 id="xid-version-comparison">XID Version Comparison</h4>
+<p>You've now created a third XID edition. We'll take a look at the
+provenance marks again in the next section, but here's an overview of
+what each version contains</p>
+<table>
+<thead>
+<tr>
+<th>XID Version</th>
+<th>New Content</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seq 0</td>
+<td>👤 Identity</td>
+<td>§1.3+§1.4</td>
+</tr>
+<tr>
+<td>seq 1</td>
+<td>🔑 Attestation Key</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>seq 2</td>
+<td>🗣️ GitHub Edge</td>
+<td>§3.1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="summary-the-world-of-edges">Summary: The World of Edges</h2>
+<p>On the surface, the lesson of this tutorial was simple: you can create
+embedded attestations by linking them into a XID as an edge, which
+defines either a relationship between two XIDs or else an attestation
+(or credential) that one XID is making of another. That can be a
+self-attestation if the source and target XIDs are the same, as is the
+case here.</p>
+<p>But when you did deeper, this tutorial opens up a whole new world of
+verification, because it used a key that's registered with another
+account, which is going to allow cross-verification of that account,
+but that's a topic for the <a href="../03_2_Supporting_Cross_Verification/">next
+section</a>.</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains the <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-3-01.envelope">private
+XID</a>
+and the <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-3-01.envelope">public
+XID</a>
+created in this section as well as the <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/key-github-public-3-01.ur">public
+key</a>
+that will be needed to verify proof of control of the GitHub account.</p>
+<p><strong>Scripts:</strong> Scripts demonstrating this section are forthcoming.</p>
+<h3 id="exercises">Exercises</h3>
+<p>Try these to solidify your understanding:</p>
+<ul>
+<li>Generate a new SSH signing key.</li>
+<li>Build a target envelope that details an attestation or credential for the target.</li>
+<li>Turn the target envelope into an edge.</li>
+<li>Attach the edge to a XID. (Remember to advance your provenance mark!)</li>
+</ul>
+<h2 id="whats-next">What's Next</h2>
+<p>Again, this section allows you to branch off into a few topics. Most
+likely you want to see how Amira's new edge can be cross-verified with
+GitHub, creating a higher level of trust. You can find that in <a href="../03_2_Supporting_Cross_Verification/">§3.2:
+Supporting Cross
+Verification</a>. However, you
+might want to immediately jump to the next step in attestation: peer
+endorsement. That can be found in <a href="../03_3_Creating_Peer_Endorsements/">§3.3: Creating Peer
+Endorsements</a>.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>BCR</strong> - A Blockchain Research paper, describing a specification or technology.</p>
+<p><strong>Edge</strong> - A link between two XIDs that demonstrates their relationship or includes an attestation made by one about the other.</p>
+<p><strong>SSH Signing Key</strong> - An SSH key used to sign Git commits. Different from authentication keys; GitHub maintains them at <code>/users/{user}/ssh_signing_keys</code>.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

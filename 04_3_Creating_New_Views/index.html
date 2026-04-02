@@ -1,0 +1,2004 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/04_3_Creating_New_Views/">
+      
+      
+        <link rel="prev" href="../04_2_Publishing_for_Privacy/">
+      
+      
+        <link rel="next" href="../04_4_Creating_New_Editions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>4.3: Creating New Views - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#43-creating-new-views" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4.3: Creating New Views
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-managing-an-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Managing an Identity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Elision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-eliding-xid-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Eliding XID Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Eliding XID Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-an-object-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate an Object List
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-choose-a-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Choose a Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-digest-a-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Digest a Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-remove-the-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Remove the Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-a-new-public-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create a New Public Edition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-eliding-xid-sub-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Eliding XID Sub-Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Eliding XID Sub-Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-find-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Find the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-extract-objects-to-reach-the-subjectassertion-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Extract Objects to Reach the Subject/Assertion Level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-remove-the-sub-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Remove the Sub-Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-create-a-new-public-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Create a New Public Edition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Create a New Public Edition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-seq-5-view-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID 📄 seq: 5 View Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-creating-new-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Creating New Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Creating New Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_4_Creating_New_Editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-managing-an-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Managing an Identity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-elision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Elision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-eliding-xid-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Eliding XID Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Eliding XID Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-an-object-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate an Object List
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-choose-a-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Choose a Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-digest-a-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Digest a Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-remove-the-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Remove the Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-a-new-public-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create a New Public Edition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-eliding-xid-sub-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Eliding XID Sub-Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Eliding XID Sub-Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-find-the-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Find the Edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-extract-objects-to-reach-the-subjectassertion-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Extract Objects to Reach the Subject/Assertion Level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-remove-the-sub-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Remove the Sub-Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-create-a-new-public-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Create a New Public Edition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Create a New Public Edition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-seq-5-view-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID 📄 seq: 5 View Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-creating-new-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Creating New Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Creating New Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="43-creating-new-views">4.3: Creating New Views</h1>
+<p>Amira has created multiple versions of her XID, and now feels that
+it's fully developed enough that she can do the work that she
+wants. But does she need to publish her full XID every time?</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> After completing this tutorial, explore
+<a href="/concepts/data-minimization.md">Data Minimization</a> and <a href="../concepts/elision-cryptography.md">Elision
+Cryptography</a>.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Decide what should be elided from a XID.</li>
+<li>Elide content to create distinct views of XID.</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand how Gordian Envelope manages elision</li>
+<li>Understand the difference between a view and an edition</li>
+</ul>
+<h2 id="amiras-story-managing-an-identity">Amira's Story: Managing an Identity</h2>
+<p>Amira's XID has gotten crowded:</p>
+<pre><code>{
+    XID(5f1c3d9e) [
+        'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+        'edge': {
+            &quot;account-credential-github&quot; [
+                'isA': &quot;foaf:OnlineAccount&quot;
+                'source': XID(5f1c3d9e)
+                'target': XID(5f1c3d9e) [
+                    &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+                    &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+                    &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+                    &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+                    &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+                    'conformsTo': URI(https://github.com)
+                    'date': &quot;2026-03-18T11:55-10:00&quot;
+                    'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+                ]
+            ]
+        } [
+            'signed': Signature(SshEd25519)
+        ]
+        'edge': {
+            &quot;peer-endorsement-from-devreviewer-28f4b6bc18637fd6&quot; [
+                'isA': &quot;attestation&quot;
+                'source': XID(6ab29708) [
+                    &quot;schema:employeeRole&quot;: &quot;Head Security Programmer&quot;
+                    &quot;schema:worksFor&quot;: &quot;SisterSpaces&quot;
+                ]
+                'target': XID(5f1c3d9e) [
+                    &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+                    &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+                    &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+                    &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+                    'date': &quot;2026-03-11T13:52-10:00&quot;
+                ]
+            ]
+        } [
+            'signed': Signature(Ed25519)
+        ]
+        'edge': {
+            &quot;project-sister-spaces-secureauth&quot; [
+                'isA': &quot;foaf:Project&quot;
+                'source': XID(5f1c3d9e)
+                'target': XID(5f1c3d9e) [
+                    &quot;claDigest&quot;: Digest(cb26376e)
+                    &quot;foaf:Project&quot;: &quot;SisterSpaces&quot;
+                    'verifiableAt': &quot;https://github.com/SisterSpaces/SecureAuth/CLAs/README.md&quot;
+                ]
+            ]
+        } [
+            'signed': Signature(Ed25519)
+        ]
+        'key': PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+            {
+                'privateKey': ENCRYPTED [
+                    'hasSecret': EncryptedKey(Argon2id)
+                ]
+            } [
+                'salt': Salt
+            ]
+            'allow': 'Sign'
+            'nickname': &quot;contract-key&quot;
+        ]
+        'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+            {
+                'privateKey': ENCRYPTED [
+                    'hasSecret': EncryptedKey(Argon2id)
+                ]
+            } [
+                'salt': Salt
+            ]
+            'allow': 'Sign'
+            'nickname': &quot;attestation-key&quot;
+        ]
+        'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+            {
+                'privateKey': ENCRYPTED [
+                    'hasSecret': EncryptedKey(Argon2id)
+                ]
+            } [
+                'salt': Salt
+            ]
+            'allow': 'All'
+            'nickname': &quot;BRadvoc8&quot;
+        ]
+        'provenance': ProvenanceMark(93595c6f) [
+            {
+                'provenanceGenerator': ENCRYPTED [
+                    'hasSecret': EncryptedKey(Argon2id)
+                ]
+            } [
+                'salt': Salt
+            ]
+        ]
+    ]
+} [
+    'signed': Signature(Ed25519)
+]
+</code></pre>
+<p>It now includes one <code>dereferenceVia</code>, three <code>edge</code>s (a GitHub account
+link, a peer endorsement, and a project link), three <code>key</code>s (an
+inception key, an attestation key, and a contract key), and a
+provenance mark. Though Amira has decided that she wants all of that
+content in her XID, she doesn't necessarily need ever viewer to see
+all of that. That's partially a question of privacy, but partially the
+fact that she wants each viewer to actually <em>see</em> what's important to
+them.</p>
+<p>To make changes to what people see, without changing the underlying
+XID, Amira can create a new <strong>view</strong> using elision. This is a
+different solution from changing the underlying content of a XID to
+create a new edition, which will be the topic of the next section.</p>
+<h2 id="the-power-of-elision">The Power of Elision</h2>
+<p>Elision (or redaction) refers to the reversable removal of content in
+a XID (or other Gordian Envelope). It's powerful because it doesn't
+change the underlying structure of the Gordian Envelope. Every leaf
+and every node in a Gordian Envelope's Merkle-like tree of content
+hash a hash. Even when the content is elided, the hash remains. That
+means that (1) you can later prove the data was there; and (2) you
+don't change the root hash of the envelope, and as a result signatures
+of the envelope remain valid.</p>
+<p>We've seen the power of elision throughout this course, but especially
+whenever we made a public version of an envelope (by eliding key
+material) and when we elided an entire envelope of sensitive material
+in <a href="../02_2_Managing_Claims_Elision/">§2.2</a>.</p>
+<blockquote>
+<p>🔥 <strong>*What is the Power of Elision?</strong> Elision in Gordian Envelopes
+(including XIDs) also you to remove content without affecting
+authenticating signatures on the envelope. You can also later prove
+that the removed content is part of the envelope through an inclusion
+proof, where you present the removed content and the elided envelope
+and show that the one fits into the other through its hash.</p>
+</blockquote>
+<p>Eliding content from a Gordian Envelope requires using the <code>envelope
+elide removing</code> command to remove the specific content identified by a
+digest. That means that you need to be able to find the digests of
+specific leaves and nodes in an envelope. This is primarily done with
+the <code>envelope assertion find</code> command, which returns either an
+assertion with a specific <code>predicate</code> or an assertion with a specific
+<code>object</code>. However, the assertion you're looking for must be a
+assertion to the subject that is at the top level of your current
+envelope. Sometimes this requires using the <code>envelope extract</code> command
+to find a subenvelope before you can get to the specific predicate
+you're looking for.</p>
+<p>The examples in this section will include both eliding high-level
+content with the <code>xid ... all</code> commands and digging down further to
+find a specific element within a subenvelope.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID. </p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-4-02.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<h2 id="part-i-eliding-xid-objects">Part I: Eliding XID Objects</h2>
+<p>XIDs have a number of top level objects such as keys and edges that
+are easy to elide because there are XID commands such as <code>envelope xid
+key all</code> and <code>envelope xid edge all</code> that list out all objects of
+these types.</p>
+<p>Because of this accessible functionality, it's very easy to elide
+objects of these types.</p>
+<h3 id="step-1-generate-an-object-list">Step 1: Generate an Object List</h3>
+<p>Amira has decided that her contract key does not need to be in the
+public XID that she gives out in most cases. She'll of course still
+send it to people when she's signing contracts, but it doesn't need to
+be seen every time she wants to connect with someone.</p>
+<p>You can remove the contract key by creating a new view of the <code>seq: 5</code>
+edition of Amira's XID with the contract key elided.</p>
+<p>The first thing to do is to generate a list of keys. This is done with <code>xid key all</code>:</p>
+<pre><code>envelope xid key all $PUBLIC_XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkhdcxeorknnestystpmytlklrfdwmvoeekptasaolcpvabdjedegdgugwhtiagwiainfpoycsfncsfdgrdwhssr
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfghdcxgsttmtbababdytimroflampdjzprlggwfrbzdscnmujycthshysolbcwseoloxfdhfltcxds
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfghdcxjzwsckiyfygdcyoefdeydlsndswpgwdkkswmimlyspeslbcabeatfthghkhfpypaoycscstpsojziajljtjyjphsiajydpjeihkkoycsfncsfdhtntoeur
+</code></pre>
+<p>You can put that in a variable, then turn it into an array for easier access:</p>
+<pre><code>KEYLIST=$(envelope xid key all $XID)
+KEYS=($KEYLIST)
+</code></pre>
+<p>This will then allow access as <code>${KEYS[0]}</code>, <code>${KEYS[1]}</code>, etc.</p>
+<h3 id="step-2-choose-a-key">Step 2: Choose a Key</h3>
+<p>You now need to find the key with the <code>"contract-key"</code>
+nickname. (Hint: it's <code>${keys[2]}</code>.) You could easily do this by just
+doing an <code>envelope format</code> of each of the keys:</p>
+<pre><code>envelope format ${keys[2]}
+
+| PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+|     'allow': 'Sign'
+|     'nickname': &quot;contract-key&quot;
+|     ELIDED
+| ]
+</code></pre>
+<p>But you can also automatically look up the key that you want. This is
+done with the <code>assertion find object</code> command that we'll also be using
+to find a particular subenvelope in the next section. As noted
+earlier, it can be used to find the assertions under a subject that
+you have, so here it could be used to find the <code>'allow': 'Sign'</code>
+assertion or the <code>'nickname': "contract-key"</code> assertion.</p>
+<p>Here's what that looks like:</p>
+<pre><code>envelope assertion find object string &quot;contract-key&quot; ${KEYS[2]}
+
+| ur:envelope/oycscstpsojziajljtjyjphsiajydpjeihkkjoutnlty
+</code></pre>
+<p>And here's what it found:</p>
+<pre><code>envelope format ur:envelope/oycscstpsojziajljtjyjphsiajydpjeihkkjoutnlty
+
+| 'nickname': &quot;contract-key&quot;
+</code></pre>
+<p>We can now use a bash <code>for</code> to look for the key that returns a non-null
+result when we try to <code>find</code> the <code>"contract-key"</code> and output that:</p>
+<pre><code>for i in &quot;${KEYS[@]}&quot;
+do
+  if [[ -n `envelope assertion find object string &quot;contract-key&quot; $i` ]]
+  then
+    echo $i
+  fi
+done
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfglfoycsfplftansfwlrhdghplnbjecwgtmwhstpnsaeiyaxjsvebzguadtoprvoronngldlhllfintiskhdzckggmvyjnrtgukicpmhdiahssmdbgknknvtwfhyrtsrjznsynlupfihptmojyfmdyuowpaycafgfnehfppydmcnbyetresncygetdpllusegsmtgstsienetdrkbzemolbnsogdtaaedsuyollbrphdmhgtrsuyhlkpeyrehddatansfphdcxpavacsswfllernaavopkhgbezcdkfyptldgemygtytdsfrjtpyeekkrplttkfpceoybwtpsotanshptansfwlrhdcxpyetzsdkhnmsjohemutkzmjplatkltwdknjnpeqdwmsorhfebwlnrnttynrsnbglgsftcmpagrzctkkkkegmfdgrkigdbsuyckdytloygslbrkfedrdnkiuorkkthflfaxtansgmgdtnlosfcljtrlzcynsetnksoewelpzmltoybstpsotansgmhdcxgugwrhwseycsdisbvdzewegrecoykensgrhpglfnfgnyimylchhtgewlaoeslkihoycscstpsojziajljtjyjphsiajydpjeihkkoycsfncsfdiyoetyyk
+
+</code></pre>
+<p>For easy access, we can put that in a variable:</p>
+<pre><code>CONTRACTKEY=$(for i in &quot;${KEYS[@]}&quot;; do   if [[ -n `envelope assertion find object string &quot;contract-key&quot; $i` ]];   then     echo $i;   fi; done)
+</code></pre>
+<h3 id="step-3-digest-a-key">Step 3: Digest a Key</h3>
+<p>Now that you have the key that you want to elide, you can output its digest:</p>
+<pre><code>CONTRACTKEY_DIGEST=$(envelope digest $CONTRACTKEY)
+</code></pre>
+<h3 id="step-4-remove-the-content">Step 4: Remove the Content</h3>
+<p>Finally, you use that digest with <code>envelope elide remove</code> to remove it:</p>
+<pre><code>XID_WO_CONTRACTKEY=$(envelope elide removing $CONTRACTKEY_DIGEST $XID)
+</code></pre>
+<p>The result is a new XID with that key removed (except for its digest!), as shown in this look at just the keys:</p>
+<pre><code>envelope format $XID_WO_CONTRACTKEY
+| {
+|     XID(5f1c3d9e) [
+|         ...
+|         'key': ELIDED
+|         'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|             {
+|                 'privateKey': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
+|             ]
+|             'allow': 'Sign'
+|             'nickname': &quot;attestation-key&quot;
+|         ]
+|         'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|             {
+|                 'privateKey': ENCRYPTED [
+|                     'hasSecret': EncryptedKey(Argon2id)
+|                 ]
+|             } [
+|                 'salt': Salt
+|             ]
+|             'allow': 'All'
+|             'nickname': &quot;BRadvoc8&quot;
+|         ]
+|         ...
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+</code></pre>
+<h3 id="step-5-create-a-new-public-edition">Step 5: Create a New Public Edition</h3>
+<p>You already made a first public view of XID <code>seq: 5</code> in
+<a href="../04_2_Publishing_for_Privacy/">§4.2</a>when you did a public export of
+the full XID (minus the keys). You're now ready to make a second
+public view that has <code>ELIDED</code> the contract-key:</p>
+<pre><code>PUBLIC_XID_WO_CONTRACTKEY=$(envelope xid export --private elide --generator elide &quot;$XID_WO_CONTRACTKEY&quot;)
+</code></pre>
+<p>As usual, we'll store new copies:</p>
+<pre><code>echo &quot;$XID_WO_CONTRACTKEY&quot; &gt; envelopes/BRadvoc8-xid-s5v2-private-4-03.envelope
+echo &quot;$PUBLIC_XID_WO_CONTRACTKEY&quot; &gt; envelopes/BRadvoc8-xid-s5v2-public-4-03.envelope
+</code></pre>
+<h2 id="part-ii-eliding-xid-sub-objects">Part II: Eliding XID Sub-Objects</h2>
+<p>Eliding a complete edge or key is simple because <code>envelope</code> can
+provide lists of top-level XID objects. Sometimes, however, you don't
+want to elide a complete top-level object, but instead some aspect of
+that object.</p>
+<p>This is equally simple with Envelope: you simply find the digest of
+that sub-object and elide it. However, <em>finding</em> the digest can be a
+little more difficult because you need to dig down until the assertion
+you're looking for is just one level down from your main subject.</p>
+<p>Amira encounters this when she decides she needs to redact the
+<code>endorsementContext</code> of DevReviewer's peer endorsement because
+DevReviewer's statement that she "Verfied previous security
+experience" creates a correlation risk for Amira by revealing that she
+had previous security experience.</p>
+<h3 id="step-6-find-the-edge">Step 6: Find the Edge</h3>
+<p>Start out by generating a list of edges:</p>
+<pre><code>envelope xid edge all $XID
+</code></pre>
+<p>Then use whatever method you prefer to find the right edge.</p>
+<p>It's:</p>
+<pre><code>ur:envelope/lftpsplrtpsokseyjoihihjpdpihjtiejljpjkihjnihjtjydpiyjpjljndpieihkojpihkoinihktihjpdpeyetiyeeidenidiaeheteneoemiyieenoycfaornlstpsotanshdhdcximprmsaylgfwcyjzzcamzmdrbdetjsrngamnbsfptbwtksihrhzonsahuthydwtboytpsojkjkiaisihjnhsftihjnjojzjlkkihihgmjljzihtpsokscsfdihhsiecxguihiakpjpinjykkcxgdjpjliojphsjnjnihjpoytpsojljkiaisihjnhsftktjljpjejkfgjljptpsojzguinjkjyihjpgujohsiaihjkoycfaorslntpsotanshdhdcxhecefsnnionspljpftktetwymnfmcyecveuotktpwenlhyhdpmpykpchcmzchywzoytpsojsjpihjzhsjyinjljtjkisinjofwhsjkinjktpsoksiaguihiakpjpinjykkcxiajljzjzhsidjljphsjyinjljtcxjohsjpjyjtihjpcxktisjlcxkoihjpiniyinihiecxiajpihieihjtjyinhsjzjkcxjyisjpjlkpioiscxiajljnjninjydpjpihkoihhsjzcxhsjtiecxihjtiajpkkjojyihiecxjkishsjpinjtiooybetpsokoeydyeyendpdyeodpehehgheheofteceydpehdyftdydyoytpsojpihjtiejljpjkihjnihjtjyfxjljtjyihksjytpsokshghfihjpiyinihiecxjojpihkoinjlkpjkcxjkihiakpjpinjykkcxihksjoihjpinihjtiaihdwcxktjljpjeihiecxjyjlioihjyisihjpcxjljtcxjkisjljpjycxjojpjlimihiajycxiyjljpcxguinjkjyihjpgujohsiaihjkoytpsojljoihihjpfejtiejljpjkihjnihjtjytpsoksguhgjpinjyihjkcxjkihiakpjpihdwcxktihjzjzdpjyihjkjyihiecxiajlieihcxktinjyiscxiajzihhsjpcxhsjyjyihjtjyinjljtcxjyjlcxjojpinkohsiakkdpjojpihjkihjpkoinjtiocxjohsjyjyihjpjtjkoytpsojoihjtiejljpjkihjnihjtjyguiajljoihtpsoksfeguihiakpjpinjykkcxhsjpiaisinjyihiajykpjpihdwcxiajpkkjojyjliojphsjoisiniacxinjnjojzihjnihjtjyhsjyinjljtdwcxjojpinkohsiakkcxjohsjyjyihjpjtjkoyadtpsojehsjyjyihjkjyhsjyinjljtoyaxtpsotansghlfaohdfztotdmttbtkeojlgalkiywpdlhkckltcnlnleksaysntyrefegweygmasrlcyksplemghihynhscxnlspkonlhlemksiaadbewfdrieksehvypychmtteurwemktttiaxjegodrvt
+</code></pre>
+<p>Which we're storing as <code>$DEV_EDGE</code></p>
+<h3 id="step-7-extract-objects-to-reach-the-subjectassertion-level">Step 7: Extract Objects to Reach the Subject/Assertion Level</h3>
+<p>Digging down to find an object in an envelope generally requires two iterative steps:</p>
+<ul>
+<li><code>extract</code> an object from your envelope to create a simple subject/assertion(s) pairing.</li>
+<li><code>find</code> an assertion to dig down to the next level.</li>
+</ul>
+<p>You repeat these steps until the assertion you find or the object you
+extract is the one you actually want to elide.</p>
+<p>In this case, we're working with the following edge that we extracted:</p>
+<pre><code>{
+    &quot;peer-endorsement-from-devreviewer-28f4b6bc18637fd6&quot; [
+        'isA': &quot;attestation&quot;
+        'source': XID(6ab29708) [
+            &quot;schema:employeeRole&quot;: &quot;Head Security Programmer&quot;
+            &quot;schema:worksFor&quot;: &quot;SisterSpaces&quot;
+        ]
+        'target': XID(5f1c3d9e) [
+            &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+            &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+            &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+            &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+            'date': &quot;2026-03-11T13:52-10:00&quot;
+        ]
+    ]
+} [
+    'signed': Signature(Ed25519)
+]
+</code></pre>
+<p>And we want to get down to the <code>peerEndorsement</code>, which as shown is a few levels removed.</p>
+<p>Here's the process:</p>
+<ol>
+<li>The edge is signed, which means the entire content of the edge is
+wrapped, so we first <code>extract</code> the content from the subject wrapping.</li>
+</ol>
+<pre><code>DEV_UNWRAPPED=$(envelope extract wrapped $DEV_EDGE)
+
+| &quot;peer-endorsement-from-devreviewer-28f4b6bc18637fd6&quot; [
+|     'isA': &quot;attestation&quot;
+|     'source': XID(6ab29708) [
+|         &quot;schema:employeeRole&quot;: &quot;Head Security Programmer&quot;
+|         &quot;schema:worksFor&quot;: &quot;SisterSpaces&quot;
+|     ]
+|     'target': XID(5f1c3d9e) [
+|         &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+|         &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+|         &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+|         &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+|         'date': &quot;2026-03-11T13:52-10:00&quot;
+|     ]
+| ]
+</code></pre>
+<ol>
+<li>We need to <code>find</code> the <code>'target'</code> predicate, because <code>"endorsementContext"</code> is under that:</li>
+</ol>
+<pre><code>DEV_TARGET=$(envelope assertion find predicate known 'target' $DEV_UNWRAPPED)
+
+| 'target': XID(5f1c3d9e) [
+|     &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+|     &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+|     &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+|     &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+|     'date': &quot;2026-03-11T13:52-10:00&quot;
+| ]
+</code></pre>
+<ol>
+<li><code>'target': XID(5f1c3d9e)</code> is a full assertion rather than a simple subject. We need to <code>extract</code> its object <code>XID(5f1c3d9e)</code> so that we have a simple subject/assertion(s) pairing.</li>
+</ol>
+<pre><code>DEV_TARGET_XID=$(envelope extract object $DEV_TARGET)
+
+| XID(5f1c3d9e) [
+|     &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+|     &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+|     &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+|     &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+|     'date': &quot;2026-03-11T13:52-10:00&quot;
+| ]
+</code></pre>
+<ol>
+<li>We can now <code>find</code> the <code>"endorsementContext"</code>.</li>
+</ol>
+<pre><code>DEV_EC=$(envelope assertion find predicate string &quot;endorsementContext&quot; $DEV_TARGET_XID)
+
+| &quot;endorsementContext&quot;: &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+</code></pre>
+<p>At this point, we could be done, as that's the assertion that Amira
+wants to elide, but Amira decides it would be bad practice to just
+remove the <code>"endorsementContext"</code> as if it were not there. She instead
+decides to remove only the object of the assertion, which has the data
+that she fears could be correlatable.</p>
+<ol>
+<li><code>extract</code> the object from the <code>"endorsementContext"</code> assertion</li>
+</ol>
+<pre><code>DEV_EC_OBJECT=$(envelope extract object $DEV_EC)
+
+| &quot;Verfied previous security experience, worked together on short project for SisterSpaces&quot;
+</code></pre>
+<ol>
+<li>Once you've found the right element of the XID, find its digest.</li>
+</ol>
+<pre><code>DEV_DIGEST=$(envelope digest $DEV_EC_OBJECT)
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>XIDs are Alterable.</strong> We've noted many time that XIDs are
+alterable through elision. This example shows that viewers must take
+care of that fact. If something is removed they should ask themselves
+what it means for what remains. Is an endorsement still valid if some
+of the content has been removed? Keeping as much of the endorsement as
+possible, perhaps even including the predicates for what's been
+removed, can increase the level of trust.</p>
+</blockquote>
+<h3 id="step-8-remove-the-sub-content">Step 8: Remove the Sub-Content</h3>
+<p>For creating her third public view of her <code>seq: 5</code> XID, Amira could do
+one of two things: she could apply the elision to the original view of
+that XID edition or she could apply the elision to the view of the XID
+that she's already removed a key from. Both would be valid views: they
+don't have to build on each other. In fact, it's likely that many
+views of XIDs will run parallel to each other, with different content
+extracted from each XID, as appropriate for each audience.</p>
+<p>In this case, Amira decides that the removal of the contract key
+remains valid while she also removes this potentially correlatable
+content, so she stacks them atop each other:</p>
+<pre><code>XID_V3=$(envelope elide removing $DEV_DIGEST $XID_WO_CONTRACTKEY)
+</code></pre>
+<p>Two things are of note here:</p>
+<ol>
+<li>Amira kept in the predicate, <code>"endorsementContext"</code>, even as she removed the context object. That allows people to see what she did and if they find it necessary, to ask her why she removed the context. Amira might even chose to privately reveal the view of the XID that contains the context as part of a cycle of progressive trust.</li>
+<li>Even though Amira removed part of DevReviewer's endorsement, DevReviewer's signature on the endorsement remains valid because that signature is made across the hash of the endorsement, and the hashes remain unchanged despite elisions.</li>
+</ol>
+<h3 id="step-9-create-a-new-public-edition">Step 9: Create a New Public Edition</h3>
+<p>Finally, you can make a public version of the double-elided view:</p>
+<pre><code>PXID_V3=$(envelope xid export --private elide --generator elide &quot;$XID_V3&quot;)
+</code></pre>
+<p>Here's what the view looks like:</p>
+<pre><code>{
+    XID(5f1c3d9e) [
+        'dereferenceVia': URI(https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt)
+        'edge': {
+            &quot;account-credential-github&quot; [
+                'isA': &quot;foaf:OnlineAccount&quot;
+                'source': XID(5f1c3d9e)
+                'target': XID(5f1c3d9e) [
+                    &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+                    &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+                    &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+                    &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+                    &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+                    'conformsTo': URI(https://github.com)
+                    'date': &quot;2026-03-18T11:55-10:00&quot;
+                    'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+                ]
+            ]
+        } [
+            'signed': Signature(SshEd25519)
+        ]
+        'edge': {
+            &quot;peer-endorsement-from-devreviewer-28f4b6bc18637fd6&quot; [
+                'isA': &quot;attestation&quot;
+                'source': XID(6ab29708) [
+                    &quot;schema:employeeRole&quot;: &quot;Head Security Programmer&quot;
+                    &quot;schema:worksFor&quot;: &quot;SisterSpaces&quot;
+                ]
+                'target': XID(5f1c3d9e) [
+                    &quot;endorsementContext&quot;: ELIDED
+                    &quot;endorsementScope&quot;: &quot;Security architecture, cryptographic implementation, privacy patterns&quot;
+                    &quot;peerEndorsement&quot;: &quot;Writes secure, well-tested code with clear attention to privacy-preserving patterns&quot;
+                    &quot;relationshipBasis&quot;: &quot;Security collaboration partner who verified credentials through commit-reveal and encrypted sharing&quot;
+                    'date': &quot;2026-03-11T13:52-10:00&quot;
+                ]
+            ]
+        } [
+            'signed': Signature(Ed25519)
+        ]
+        'edge': {
+            &quot;project-sister-spaces-secureauth&quot; [
+                'isA': &quot;foaf:Project&quot;
+                'source': XID(5f1c3d9e)
+                'target': XID(5f1c3d9e) [
+                    &quot;claDigest&quot;: Digest(cb26376e)
+                    &quot;foaf:Project&quot;: &quot;SisterSpaces&quot;
+                    'verifiableAt': &quot;https://github.com/SisterSpaces/SecureAuth/CLAs/README.md&quot;
+                ]
+            ]
+        } [
+            'signed': Signature(Ed25519)
+        ]
+        'key': ELIDED
+        'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+            'allow': 'Sign'
+            'nickname': &quot;attestation-key&quot;
+            ELIDED
+        ]
+        'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+            'allow': 'All'
+            'nickname': &quot;BRadvoc8&quot;
+            ELIDED
+        ]
+        'provenance': ProvenanceMark(93595c6f) [
+            ELIDED
+        ]
+    ]
+} [
+    'signed': Signature(Ed25519)
+]
+</code></pre>
+<p>You'll notice five things are elided:</p>
+<ol>
+<li>The entire "contract-key" is elided, per Part I.</li>
+<li>DevReviewer's "endorsementContext" is elided, per Part II.</li>
+<li>The two remaining private keys and the provenance mark generator are elided, per the "export" command.</li>
+</ol>
+<p>As usual, we'll store new copies:</p>
+<pre><code>echo &quot;$XID_V3&quot; &gt; envelopes/BRadvoc8-xid-s5v3-private-4-03.envelope
+echo &quot;$PXID_V3&quot; &gt; envelopes/BRadvoc8-xid-s5v3-public-4-03.envelope
+</code></pre>
+<h4 id="xid-seq-5-view-comparison">XID 📄 <code>seq: 5</code> View Comparison</h4>
+<p>At this point, Amira has made four views of the <code>seq: 5</code> edition that
+she produced in the last tutorial when she added her contract
+commitment edge. They are:</p>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th>Notes</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔒 Private View</td>
+<td>§4.2</td>
+<td></td>
+</tr>
+<tr>
+<td>👁️  Public View</td>
+<td>Elided key material</td>
+<td>§4.2</td>
+</tr>
+<tr>
+<td>🔑 Simplified View</td>
+<td>Elided contract key</td>
+<td>§4.3</td>
+</tr>
+<tr>
+<td>❗ Non-Correlatable View</td>
+<td>Elided correlatable content</td>
+<td>§4.3</td>
+</tr>
+</tbody>
+</table>
+<p>You'll note that unlike editions, these views are not numbered.
+That's because you can make as many views as you want, and they can be
+totally disconnected from each. You simply follow the concept of <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/data-minimization.md">data
+minimization</a>
+for each, creating views for any viewer that are appropriate for what
+they need to know. The underlying content of your XID doesn't change
+(that would be a new edition). All that changes is what can be seen.</p>
+<h2 id="summary-creating-new-views">Summary: Creating New Views</h2>
+<p>Elision can be used for a variety of purposes. It can entirely protect
+sensitive data, as discussed in
+<a href="../02_2_Managing_Claims_Elision/">§2.2</a>. It can be used to simplify
+XIDs if they're growing over complex. However, it can also be used to
+create multiple views of a single version of a XID, each appropriate
+for a different viewer.</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains numerous data created in this section, including
+the public versions of the <a href="BRadvoc8-xid-s5v2-public-4-03.envelope">keyless
+XID</a> and the <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-s5v3-public-4-03.envelope">less
+correlatable
+XID</a>
+created in this section.</p>
+<p><strong>Scripts:</strong> Scripts demonstrating this section are forthcoming.</p>
+<h3 id="exercises">Exercises</h3>
+<ol>
+<li>Elide an edge or key in a XID.</li>
+<li>Find an assertion more deeply buried in an edge or XID.</li>
+<li>Elide only the object of that assertion.</li>
+<li>Create a different view where you remove only the predicate of that exertion.</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>Elision is great if you want to maintain the same edition of a XID
+and/or ensure that it signatures can be authenticated. But what if you
+want to entirely remove content from a XID? <a href="../04_4_Creating_New_Editions/">§4.4: Creating New
+Editions</a> covers that final topic.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Elision</strong> - Removing data from an envelope while preserving the envelope's root hash, enabling selective disclosure while maintaining cryptographic integrity.</p>
+<p><strong>View</strong> - A version of a specific edition of a XIDDoc (or other envelope) that has been elided in a specific way, to preserve selective disclosure. Despite the elision, signatures remain valid, because they are made across the Root Hash.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

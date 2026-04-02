@@ -1,0 +1,2394 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/03_2_Supporting_Cross_Verification/">
+      
+      
+        <link rel="prev" href="../03_1_Creating_Edges/">
+      
+      
+        <link rel="next" href="../03_3_Creating_Peer_Endorsements/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>3.2: Supporting Cross Verification - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#32-supporting-cross-verification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3.2: Supporting Cross Verification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#devreviewers-story-verifying-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DevReviewer's Story: Verifying Claims
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-inspecting-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Inspecting the XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Inspecting the XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-fetch-the-xiddoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Fetch the XIDDoc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-verify-self-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Verify Self-Consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify-provenance-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Verify Provenance Consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-compare-provenance-marks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Compare Provenance Marks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Compare Provenance Marks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-a-provenance-chain-is-invalid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What if a Provenance Chain is Invalid?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-verifying-the-github-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Verifying the GitHub Attestation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Verifying the GitHub Attestation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-5-extract-the-github-attachment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Extract the GitHub Attachment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-extract-the-claimed-ssh-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Extract the Claimed SSH Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-query-githubs-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Query GitHub's API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-compare-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Compare Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Compare Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-the-keys-dont-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If the Keys Don't Match?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-verify-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Verify Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-temporal-anchors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Temporal Anchors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Temporal Anchors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-10-check-githubs-timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Check GitHub's Timestamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-11-cross-reference-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Cross-Reference Provenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-12-check-commit-signatures-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Check Commit Signatures (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 13: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-supporting-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Supporting Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Supporting Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-the-accounts-signing-key-changes-after-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if the account's signing key changes after verification?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-verify-claims-against-sources-other-than-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I verify claims against sources other than GitHub?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-githubs-api-is-unavailable-during-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if GitHub's API is unavailable during verification?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_3_Creating_New_Views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_4_Creating_New_Editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#devreviewers-story-verifying-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DevReviewer's Story: Verifying Claims
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-inspecting-the-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Inspecting the XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Inspecting the XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-fetch-the-xiddoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Fetch the XIDDoc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-verify-self-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Verify Self-Consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify-provenance-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Verify Provenance Consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-compare-provenance-marks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Compare Provenance Marks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Compare Provenance Marks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-a-provenance-chain-is-invalid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What if a Provenance Chain is Invalid?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-verifying-the-github-attestation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Verifying the GitHub Attestation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Verifying the GitHub Attestation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-5-extract-the-github-attachment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Extract the GitHub Attachment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-extract-the-claimed-ssh-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Extract the Claimed SSH Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-query-githubs-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Query GitHub's API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-compare-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Compare Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Compare Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-the-keys-dont-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If the Keys Don't Match?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-verify-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Verify Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-temporal-anchors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Temporal Anchors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Temporal Anchors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-10-check-githubs-timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Check GitHub's Timestamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-11-cross-reference-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Cross-Reference Provenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-12-check-commit-signatures-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 12: Check Commit Signatures (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-13-assess-your-level-of-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 13: Assess Your Level of Trust
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-supporting-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Supporting Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Supporting Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-the-accounts-signing-key-changes-after-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if the account's signing key changes after verification?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-verify-claims-against-sources-other-than-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I verify claims against sources other than GitHub?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-githubs-api-is-unavailable-during-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if GitHub's API is unavailable during verification?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="32-supporting-cross-verification">3.2: Supporting Cross Verification</h1>
+<p>In <a href="../03_1_Creating_Edges/">§3.1</a>, Amira added her GitHub account and
+SSH signing key to her XID via an edge.This was another
+self-attestation, but it was stronger than previous self-attestations
+because it could be checked against an independent source (GitHub).
+This section demonstrates how DevReviewer cross-verifies Amira's
+attestations against that external source, allowing Amira to
+demonstrate proof of control.</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts</strong>: This tutorial demonstrates verification
+from the relying party's perspective. See <a href="../concepts/progressive-trust.md">Progressive
+Trust</a> for how trust accumulates
+through evidence, and <a href="../concepts/attestation-endorsement-model.md">Attestation &amp; Endorsement
+Model</a> for understanding
+what claims vs endorsements prove.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Extract attestations from XID edges.</li>
+<li>Verify claims against GitHub's API.</li>
+<li>Check Git commit signatures.</li>
+<li>Compare multiple provenance marks.</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand how temporal anchors establish when claims became valid.</li>
+<li>Know what cross-verification proves (and its limits).</li>
+<li>Understand what provenance marks can do (and what they can't).</li>
+</ul>
+<h2 id="devreviewers-story-verifying-claims">DevReviewer's Story: Verifying Claims</h2>
+<p>DevReviewer asked BRadvoc8 for one last bit of data: proof of control
+of the BRadvoc8 GitHub account. Having that will allow DevReviewer to
+verify a lot of claims that were previously only lightly supported,
+like Amira's work on the Galaxy Project and other PRs that she's
+produced.</p>
+<p>Amira supported this request by creating an edge on her XID that not
+only officially recognized the BRadvoc8 GitHub account as belonging to
+the BRadvoc8 XID, but also included a signature from a key registered
+with that account. This will allow DevReviewer to engage in
+cross-verification to further check BRadvoc8's claims.</p>
+<p>So, does BRadvoc8 check out?</p>
+<blockquote>
+<p>📖 <strong>What is Cross-Verification?</strong> Cross-verification is the process
+of checking a claim against multiple independent sources. If all
+sources agree, confidence increases. If sources conflict, the claim is
+suspect.</p>
+</blockquote>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>This section requires the installation of <code>jq</code>, which will make JSON
+content easier to access. You can download it at
+<a href="https://jqlang.org/">jqlang.org</a>, but you may also be able to install
+it with Homebrew or other package managers.</p>
+<p>If you do not install JQ then you'll simpy need to fill in variables
+by hand instead of having it automated.</p>
+<p>As usual, also check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Network Required!</strong> This tutorial queries external APIs
+(GitHub). Verification will fail if you're offline or if the external
+services are unavailable. In production, cache API responses and
+handle network failures gracefully.</p>
+</blockquote>
+<h2 id="part-i-inspecting-the-xid">Part I: Inspecting the XID</h2>
+<p>The cross-verification begins with the retrieval of the XID and a
+check of its internal consistency.</p>
+<h3 id="step-1-fetch-the-xiddoc">Step 1: Fetch the XIDDoc</h3>
+<p>For the fullest cross-verification, DevReviewer would retrieve Amira's
+most up-to-date edition of their XID from the <code>dereferenceVia</code> URL:</p>
+<pre><code>XID_URL=&quot;https://github.com/BRadvoc8/BRadvoc8/raw/main/xid.txt&quot;
+FETCHED_XID=$(curl -sL &quot;$XID_URL&quot;)
+</code></pre>
+<p>To get the precise version intended for this tutorial, you should
+instead retrieve it from the <code>envelopes</code> directory, as usual, but this
+time we're going to be looking at the public view, as a viewer rather
+than an editor:</p>
+<pre><code>FETCHED_XID=$(cat envelopes/BRadvoc8-xid-public-3-01.envelope)
+</code></pre>
+<h3 id="step-2-verify-self-consistency">Step 2: Verify Self-Consistency</h3>
+<p>Before checking external sources, verify that the XID is internally
+consistent and has been signed by its own key.</p>
+<p>We learned in <a href="../02_1_Creating_Self_Attestations/">§2.1</a>, one method
+for extracting all the keys from a XID and checking them, which we
+repeat here:</p>
+<pre><code>read -d '' -r -a PUBKEY &lt;&lt;&lt; $(envelope xid key all &quot;$FETCHED_XID&quot;)
+for i in &quot;${PUBKEY[@]}&quot;
+  do
+    if envelope verify -v $i $FETCHED_XID &gt;/dev/null 2&gt;&amp;1; then
+      echo &quot;✅ One of the signatures verified! &quot;
+      echo $i
+    fi
+done
+
+| ✅ One of the signatures verified! 
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfghdcxvdfpnltylrmowtutatkedsgresehiednenuthnveclgthgutprdlynoeuepkmnwtvlbwhndt
+
+</code></pre>
+<p>Self-consistency is necessary but not sufficient. It proves the
+document wasn't tampered with after signing, not that the claims
+inside are true.</p>
+<h3 id="step-3-verify-provenance-consistency">Step 3: Verify Provenance Consistency</h3>
+<p>DevReviewer also checks the provenance mark to ensure that it's valid and
+to see what edition of the XID they're looking at.</p>
+<pre><code>PROVENANCE_MARK=$(envelope xid provenance get &quot;$FETCHED_XID&quot;)
+provenance validate --format json-pretty &quot;$PROVENANCE_MARK&quot;
+
+| Error: Validation failed with issues:
+| {
+|   &quot;marks&quot;: [
+|     &quot;ur:provenance/lfaxhdimwpenbadrpkylftpdcysglohkhlwsdwwzfsineodwbgaezowkstehdwsnmtrnrptarooyiybaseldcnfdahehdedkuygrtiescmcxmsrnvtylfhlewegyotayhkfsuramlbpezsaylrcsjyotbysobektlywmprgmmkwspdctlgtodrtsvdbngljzromnfynddpceatkschjltkmslshnuectfnos&quot;
+|   ],
+|   &quot;chains&quot;: [
+|     {
+|       &quot;chain_id&quot;: &quot;61a8fa603b7ebe4bad7bb82fc5858b9d55fda26811e1070b44d80369486c6202&quot;,
+|       &quot;has_genesis&quot;: false,
+|       &quot;marks&quot;: [
+|         &quot;ur:provenance/lfaxhdimwpenbadrpkylftpdcysglohkhlwsdwwzfsineodwbgaezowkstehdwsnmtrnrptarooyiybaseldcnfdahehdedkuygrtiescmcxmsrnvtylfhlewegyotayhkfsuramlbpezsaylrcsjyotbysobektlywmprgmmkwspdctlgtodrtsvdbngljzromnfynddpceatkschjltkmslshnuectfnos&quot;
+|       ],
+|       &quot;sequences&quot;: [
+|         {
+|           &quot;start_seq&quot;: 2,
+|           &quot;end_seq&quot;: 2,
+|           &quot;marks&quot;: [
+|             {
+|               &quot;mark&quot;: &quot;ur:provenance/lfaxhdimwpenbadrpkylftpdcysglohkhlwsdwwzfsineodwbgaezowkstehdwsnmtrnrptarooyiybaseldcnfdahehdedkuygrtiescmcxmsrnvtylfhlewegyotayhkfsuramlbpezsaylrcsjyotbysobektlywmprgmmkwspdctlgtodrtsvdbngljzromnfynddpceatkschjltkmslshnuectfnos&quot;,
+|               &quot;issues&quot;: []
+|             }
+|           ]
+|         }
+|       ]
+|     }
+|   ]
+| }
+</code></pre>
+<p>The output shows <code>has_genesis: false</code> because Ben only has the current
+provenance mark (seq 2), not the original genesis mark (seq 0). The
+<code>start_seq: 2, end_seq: 2</code> confirms this is the third edition.</p>
+<p>If this utility seems limited, it is: all a singular provenance mark
+can tell you is that the provenance mark is valid and what edition it
+is. The power of provenance marks comes with the ability to compare
+different marks, and we've now got enough to finally make that
+meaningful.</p>
+<h3 id="step-4-compare-provenance-marks">Step 4: Compare Provenance Marks</h3>
+<p>Provenance marks become more powerful when you have several provenance
+marks to compare. In this case, we have coopies of each of the
+previous editions of Amira's XID. We can extract a provenance mark
+from each of those XIDs:</p>
+<pre><code>XID_0=$(cat envelopes/BRadvoc8-xid-public-1-03.envelope)
+XID_1=$(cat envelopes/BRadvoc8-xid-public-2-01.envelope)
+PM_0=$(envelope xid provenance get $XID_0)
+PM_1=$(envelope xid provenance get $XID_1)
+PM_2=$PROVENANCE_MARK
+</code></pre>
+<p>We've numbered the variables for each of the provenance marks for
+clarity. This was easy because we knew which edition each provenance
+mark corresponded to. But even if you don't, you can figure it out
+from the mark itself. As we've seen previously, we just need to
+extract the <code>end_seq</code> value:</p>
+<pre><code>$ provenance validate --format json-compact &quot;$PM_0&quot; 2&gt;&amp;1 | grep -o '&quot;end_seq&quot;:[0-9]*'
+&quot;end_seq&quot;:0
+$ provenance validate --format json-compact &quot;$PM_1&quot; 2&gt;&amp;1 | grep -o '&quot;end_seq&quot;:[0-9]*'
+&quot;end_seq&quot;:1
+$ provenance validate --format json-compact &quot;$PM_2&quot; 2&gt;&amp;1 | grep -o '&quot;end_seq&quot;:[0-9]*'
+&quot;end_seq&quot;:2
+</code></pre>
+<p>Just knowing these numbers is important because it will allow you
+identify which object of several that you hold is the most
+up-to-date. For Amira's XIDs, we could extract all of the provenance
+marks, then know that the one that held the <code>"end_seq": 2</code> mark was
+the newest.</p>
+<p>The next power of provenance marks is that it will show that two marks
+are from the same chain. Take the following example of a comparison of
+the first and third marks. It shows <code>Total marks: 2</code>, but <code>Chains: 1</code>.</p>
+<pre><code>$ provenance validate $PM_0 $PM_2
+Error: Validation failed with issues:
+Total marks: 2
+Chains: 1
+
+Chain 1: 61a8fa60
+  0: 1896ba49 (genesis mark)
+  2: 0f300aba (gap: 1 missing)
+</code></pre>
+<p>This also shows which marks we have (<code>0</code> and <code>2</code>) and which are missing (<code>1</code>).</p>
+<p>This is probably the most important provenance mark check after simple
+validation. It tells you that a newer XID is related to an earlier,
+trusted XID that you hold.</p>
+<p>Looking at the second two marks yields similar results:</p>
+<pre><code>$ provenance validate $PM_1 $PM_2
+Error: Validation failed with issues:
+Total marks: 2
+Chains: 1
+
+Chain 1: 61a8fa60
+  Warning: No genesis mark found
+  1: 1d640bb3
+  2: 0f300aba
+</code></pre>
+<p>Often that's all you need to know: which object bears the newest mark;
+and that multiple objects are from the same chain. That verifies that
+the newest mark is not a fake or counterfeit, but belongs to the chain
+of an earlier object that you trusted.</p>
+<p>However, there are use cases when you want to know that you have every
+object in a chain, such as when you're checking revisions. Provenance
+marks will tell you this too. The following example gives no response,
+which means there was no error:</p>
+<pre><code>$ provenance validate $PM_0 $PM_1 $PM_2
+
+| ✅ Provenance chain is complete
+</code></pre>
+<blockquote>
+<p>🔥 <strong>What is the Power of Provenance Marks?</strong> Provenance marks link
+together multiple editions of the same object. They tell you which is
+newest and that the objects are part of the same cryptographically
+linked chain. In addition, they can tell you if you have all editions
+of an object.</p>
+</blockquote>
+<h4 id="what-if-a-provenance-chain-is-invalid">What if a Provenance Chain is Invalid?</h4>
+<p>There are two ways that a provenance chain could be invalid: because
+you accidentally grouped together multiple editions of different
+objects or because someone created a fradulent XID not from the chain
+of a previous XID you have.</p>
+<p>You can simulate this by creating a new XID and extracting its provenance mark:</p>
+<pre><code>XID_N=$(envelope generate keypairs --signing ed25519 \
+    | envelope xid new \
+    --nickname &quot;test_xid&quot; \
+    --sign inception)
+PM_N=$(envelope xid provenance get $XID_C)
+</code></pre>
+<p>When you compare that with Amira's newest edition provenance mark, you'll see that they're from different chains:</p>
+<pre><code>$ provenance validate $PM_N $PM_2
+Error: Validation failed with issues:
+Total marks: 2
+Chains: 2
+
+Chain 1: 61a8fa60
+  Warning: No genesis mark found
+  2: 0f300aba
+
+Chain 2: ba3c752b
+  0: 95698b96 (genesis mark)
+</code></pre>
+<p>As noted above, this is the most important test. Its failure tells you
+that either you've made a mistake or you're the target of an attack.</p>
+<h2 id="part-ii-verifying-the-github-attestation">Part II: Verifying the GitHub Attestation</h2>
+<p>Now that DevReviewer has verified that BRadvoc8's XID is valid and
+that it's properly linked to their previous XIDs, they can assess
+whether BRadvoc8 has actually established proof of control of the
+BRadvoc8 GitHub account. This is done by extracting and verifying the
+edge that makes the claim of GitHub ownership and then checking that
+its signature was made by a GitHub key.</p>
+<h3 id="step-5-extract-the-github-attachment">Step 5: Extract the GitHub Attachment</h3>
+<p>To verify the signature of an edge first requires extracting the edge
+from the XID. Extrarcting most of the native XID predicates is pretty
+easy, because they're all structured. The <code>xid edge all</code> command will
+extract every edge from a XID.</p>
+<pre><code>XID_EDGE=$(envelope xid edge all $FETCHED_XID)
+</code></pre>
+<p>If you have multiple edges, you'd need to figure out which one to use
+(again, see §4.3), but when you just have one, as is the case here,
+the extraction is all that's required.</p>
+<pre><code>echo &quot;✅ Found edge:&quot;
+envelope format &quot;$XID_EDGE&quot;
+
+| ✅ Found edge:
+| 
+| {
+|     &quot;account-credential-github&quot; [
+|         'isA': &quot;foaf:OnlineAccount&quot;
+|         'source': XID(5f1c3d9e)
+|         'target': XID(5f1c3d9e) [
+|             &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|             &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+|             &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|             &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+|             &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|             'conformsTo': URI(https://github.com)
+|             'date': &quot;2026-03-18T11:55-10:00&quot;
+|             'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+|         ]
+|     ]
+| } [
+|     'signed': Signature(SshEd25519)
+| ]
+</code></pre>
+<p>The edge contains everything DevReviewer needs for verification: the
+claimed GitHub username (<code>"BRadvoc8"</code>), a
+<code>foaf:accountServiceHomepage</code> URL pointing to the GitHub account
+itself, the SSH signing key in text format, the SSH signing key in UR
+format, a timestamp, and a signature from the SSH key itself.  Each
+piece plays a role in the verification chain that they're about to build.</p>
+<h3 id="step-6-extract-the-claimed-ssh-key">Step 6: Extract the Claimed SSH Key</h3>
+<p>DevReviewer now needs to extract the SSH public keys (and other
+information) that they'll use for the purpose of cross-verification.</p>
+<p><a href="../01_4_Making_a_XID_Verifiable/">§1.4</a> briefly talked about how to
+extract data from a XID. Generally, you need to iteratively cut an
+envelope down to the point where you just have a subject and a set of
+assertions, and then pull out the assertions that you want. (Again,
+more on this in <a href="../04_3_Creating_New_Views/">§4.3</a>.)</p>
+<p>To do so here requires stepping down through the envelope three times:</p>
+<pre><code>UNWRAPPED_EDGE=$(envelope extract wrapped &quot;$XID_EDGE&quot;)
+EDGE_TARGET=$(envelope assertion find predicate known 'target' &quot;$UNWRAPPED_EDGE&quot;)
+EDGE_CLAIM=$(envelope extract object $EDGE_TARGET)
+</code></pre>
+<ol>
+<li>We unwrap the edge.</li>
+</ol>
+<pre><code>| &quot;account-credential-github&quot; [
+|     'isA': &quot;foaf:OnlineAccount&quot;
+|     'source': XID(5f1c3d9e)
+|     'target': XID(5f1c3d9e) [
+|         &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|   ...
+|     ]
+| ]    
+</code></pre>
+<ol>
+<li>We find the predicate <code>target</code>.</li>
+</ol>
+<pre><code>| 'target': XID(5f1c3d9e) [
+|     &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|     ...
+| ]
+</code></pre>
+<ol>
+<li>We extract that predicate's object.</li>
+</ol>
+<pre><code>| XID(5f1c3d9e) [
+|     &quot;foaf:accountName&quot;: &quot;BRadvoc8&quot;
+|     &quot;foaf:accountServiceHomepage&quot;: URI(https://github.com/BRadvoc8/BRadvoc8)
+|     &quot;sshSigningKey&quot;: SigningPublicKey(c75b2f19, SSHPublicKey(b3e7a8b0))
+|     &quot;sshSigningKeyText&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net&quot;
+|     &quot;sshSigningKeysURL&quot;: URI(https://api.github.com/users/BRadvoc8/ssh_signing_keys)
+|     'conformsTo': URI(https://github.com)
+|     'date': &quot;2026-03-18T11:55-10:00&quot;
+|     'verifiableAt': URI(https://api.github.com/users/BRadvoc8)
+| ]
+</code></pre>
+<p>That leaves us with a simple subject <code>XID(5f1c3d9e)</code> and its
+assertions, and we can at this point use <code>find</code> to grab any of those
+assertions. We want three of them: the GitHub user name, the UR key,
+and the plain text key.</p>
+<pre><code>USERNAME=$(envelope assertion find predicate string &quot;foaf:accountName&quot; &quot;$EDGE_CLAIM&quot; | envelope extract object | envelope format | tr -d '&quot;')
+CLAIMED_KEY_UR=$(envelope assertion find predicate string &quot;sshSigningKey&quot; &quot;$EDGE_CLAIM&quot;  | envelope extract object | envelope extract ur)
+CLAIMED_KEY_TEXT=$(envelope assertion find predicate string &quot;sshSigningKeyText&quot; &quot;$EDGE_CLAIM&quot; | envelope extract object | envelope format | tr -d '&quot;')
+
+echo &quot;SSH key claimed $USERNAME GitHub account&quot;
+echo &quot;$CLAIMED_KEY_UR&quot;
+echo &quot;$CLAIMED_KEY_TEXT&quot;
+
+│ SSH key claimed BRadvoc8 GitHub account
+| ur:signing-public-key/tanehsksimjkjkisdpihieeyececehescxfpfpfpfpfxeoglknhsfxehjzhtfygaehglghfeecfpfpfpfpgagwingwjykpiyesisktfyfwimglhdkkimkoimfdgtgrihgsgygrkkknghetfliafdeojygskofdglgrjphdgeihcxfwgmhsiekojliaetfzgthsiadmhsjyjyjzjliahsjzdmjtihjyoxjlkbdw
+| ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe BRadvoc8@Mac.attlocal.net
+</code></pre>
+<p>For all three bits of data, we find the appropriate predicate, extract
+its object, and then massage that text as appropriate.</p>
+<p>DevReviewer now has the UR and plain text of the public key that
+BRadvoc8 claims is the same one they used on GitHub.</p>
+<h3 id="step-7-query-githubs-api">Step 7: Query GitHub's API</h3>
+<p>One more puzzle piece is required before we can begin verifying: retrieving the public key from GitHub.</p>
+<pre><code>echo &quot;Querying GitHub API for $USERNAME's signing keys...&quot;
+GITHUB_KEYS=$(curl -s &quot;https://api.github.com/users/$USERNAME/ssh_signing_keys&quot;)
+GITHUB_KEY=$(echo &quot;$GITHUB_KEYS&quot; | jq -r '.[0].key')
+
+echo &quot;GitHub API response:&quot;
+echo &quot;$GITHUB_KEYS&quot; | jq '.[0] | {key, created_at}'
+
+| Querying GitHub API for BRadvoc8's signing keys...
+|
+| GitHub API response:
+| $ echo &quot;$GITHUB_KEYS&quot; | jq '.[0] | {key, created_at}'
+| {
+|   &quot;key&quot;: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe&quot;,
+|   &quot;created_at&quot;: &quot;2025-05-10T02:15:26.791Z&quot;
+| }
+</code></pre>
+<p>DevReviewer now has two pieces of data: the key claimed in the XID (in
+two different forms) and the key registered on GitHub.</p>
+<blockquote>
+<p>⚠️ <strong>API Rate Limits</strong>: GitHub's API allows 60 unauthenticated
+requests per hour per IP. For automated verification, consider using a
+GitHub personal access token to increase the limit to 5,000
+requests/hour. If you receive a 403 response, wait for the rate limit
+to reset.</p>
+</blockquote>
+<h3 id="step-8-compare-keys">Step 8: Compare Keys</h3>
+<p>You can now compare all the keys.</p>
+<blockquote>
+<p>📖 <strong>Why do we have the key in two different forms?</strong> The XID's text
+key can easily be compared to GitHub's key, while the XID's UR key can
+be used to check the edge's signature.</p>
+</blockquote>
+<p>First, does the GitHub key match the plain text version of the public
+key included in the XID?</p>
+<p>Determining this requires converting the two keys into arraies, so
+that we can just check the first two values (the key type and the key)
+and not any notes that might be at the end of the key file.</p>
+<pre><code>GITHUB_KEY_ARRAY=( $GITHUB_KEY )
+CLAIMED_KEY_ARRAY=( $CLAIMED_KEY_TEXT )
+
+echo &quot;Claimed text key: ${CLAIMED_KEY_ARRAY[0]} ${CLAIMED_KEY_ARRAY[1]}&quot;
+echo &quot;GitHub key:       ${GITHUB_KEY_ARRAY[0]} ${GITHUB_KEY_ARRAY[1]}&quot;
+
+if [ &quot;${CLAIMED_KEY_ARRAY[0]}&quot; = &quot;${GITHUB_KEY_ARRAY[0]}&quot; ] &amp;&amp;
+   [ &quot;${CLAIMED_KEY_ARRAY[1]}&quot; = &quot;${GITHUB_KEY_ARRAY[1]}&quot; ]; then
+    echo &quot;&quot;
+    echo &quot;✅ GITHUB KEY MATCHES - XID claim matches GitHub registry&quot;
+else
+    echo &quot;&quot;
+    echo &quot;❌ KEYS DO NOT MATCH - GitHub and XID Text Key Do Not Match&quot;
+fi
+
+| Claimed text key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+| GitHub key:       ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+|
+| ✅ GITHUB KEY MATCHES - XID claim matches GitHub registry
+</code></pre>
+<p>Second, does the plain version of the key in the XID match the UR
+version of the key in the XID?</p>
+<pre><code>EXPORTED_KEY_UR=$(envelope export &quot;$CLAIMED_KEY_UR&quot;)
+EXPORTED_KEY_ARRAY=( $EXPORTED_KEY_UR )
+
+echo &quot;&quot;
+echo &quot;Claimed text key: ${CLAIMED_KEY_ARRAY[0]} ${CLAIMED_KEY_ARRAY[1]}&quot;
+echo &quot;Claimed UR key:   ${EXPORTED_KEY_ARRAY[0]} ${EXPORTED_KEY_ARRAY[1]}&quot;
+
+if [ &quot;${CLAIMED_KEY_ARRAY[0]}&quot; = &quot;${EXPORTED_KEY_ARRAY[0]}&quot; ] &amp;&amp;
+   [ &quot;${CLAIMED_KEY_ARRAY[1]}&quot; = &quot;${EXPORTED_KEY_ARRAY[1]}&quot; ]; then
+    echo &quot;&quot;
+    echo &quot;✅ KEYS MATCH - Both XID keys match &quot;
+else
+    echo &quot;&quot;
+    echo &quot;❌ KEYS DO NOT MATCH - XID keys do not match &quot;
+fi
+
+| Claimed text key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+| Claimed UR key:   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+|
+| ✅ KEYS MATCH - Both XID keys match 
+
+</code></pre>
+<p>At this point you know:</p>
+<p>🔑 GitHub = 🔑 in XID (text) = 🔑 in XID (UR)</p>
+<p>But anyone could publish that GitHub key in their XID, so there's one more step.</p>
+<h4 id="what-if-the-keys-dont-match">What If the Keys Don't Match?</h4>
+<p>What would DevReviewer see if someone created a fake XID with a different key?</p>
+<pre><code>FAKE_KEY=&quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyThatDoesNotMatchGitHub&quot;
+FAKE_KEY_ARRAY=( $FAKE_KEY )
+
+echo &quot;Fake key:   ${FAKE_KEY_ARRAY[0]} ${FAKE_KEY_ARRAY[1]}&quot;
+echo &quot;GitHub key: ${GITHUB_KEY_ARRAY[0]} ${GITHUB_KEY_ARRAY[1]}&quot;
+
+if [ &quot;${FAKE_KEY_ARRAY[0]}&quot; = &quot;${GITHUB_KEY_ARRAY[0]}&quot; ] &amp;&amp;
+   [ &quot;${FAKE_KEY_ARRAY[1]}&quot; = &quot;${GITHUB_KEY_ARRAY[1]}&quot; ]; then
+    echo &quot;&quot;
+    echo &quot;✅ GITHUB KEY MATCHES - XID claim matches GitHub registry&quot;
+else
+    echo &quot;&quot;
+    echo &quot;❌ KEYS DO NOT MATCH - GitHub and XID Text Key Do Not Match&quot;
+fi
+
+| Fake key:   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyThatDoesNotMatchGitHub
+| GitHub key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+|
+| ❌ KEYS DO NOT MATCH - GitHub and XID Text Key Do Not Match
+</code></pre>
+<p>This is why cross-verification matters. An attacker can create a
+self-consistent XID (valid signature), but they can't fake GitHub's
+registry. The mismatch exposes the forgery.</p>
+<p>These scripts would give a similar response if no signing key was
+found in GitHub, because the <code>""</code> key would not be the same as the key
+reported in the XID. So, seeing an error may actually require more
+investigation to determine the root cause.</p>
+<h3 id="step-9-verify-keys">Step 9: Verify Keys</h3>
+<p>One last step is required: BRadvoc8 must prove that they actually
+control the private key that links to the public key on GitHub.</p>
+<p>This is easy. DevReviewer just needs to check that the edge with the
+claim was signed with the linked private key:</p>
+<pre><code>envelope verify --verifier $CLAIMED_KEY_UR -s $XID_EDGE  2&gt;&amp;1 || true
+
+| ✅ (silence means success)
+</code></pre>
+<p>We already know that the claimed key UR matches the claimed key text
+and that the claimed key text matches the GitHub key. Therefore, this
+shows that the controller of the BRadvoc8 XID has the signing key for
+the GitHub account.</p>
+<p>Is this proof of control? It's pretty close. Technically, Amira hasn't
+proven that she controls the account, because she hasn't shown that
+she controls the <em>authentication</em> key that allows logins, but she has
+shown that she controls the GitHub account's registered signing key,
+and at the least that's another strong addition along the path of
+progressive trust ... and one that can be strengthened if we can show
+that the signing key has been in long usage on the GitHub account.</p>
+<blockquote>
+<p>📖 <strong>What is Proof of Control?</strong> You can prove you control an
+account or other resource in multiple ways. Commonly you'll be asked
+to add content to a a resource (e.g., a specific URL). Alternatively,
+as shown here, you can prove that you hold a secret in use by the
+resource.</p>
+</blockquote>
+<h2 id="part-iii-temporal-anchors">Part III: Temporal Anchors</h2>
+<p>DevReviewer has verified the <em>what</em>: the SSH key in BRadvoc8's XID
+matches GitHub's registry. But verification is strengthened if you can
+also show <em>when</em>. Just as with the commitment in
+<a href="../02_2_Managing_Claims_Elision/">§2.2</a>, the longer that signing key
+has been on the GitHub account, the more likely it is to be
+legitimate, and not a latter-day addition.</p>
+<h3 id="step-10-check-githubs-timestamp">Step 10: Check GitHub's Timestamp</h3>
+<p>GitHub records when each signing key was added:</p>
+<pre><code>GITHUB_CREATED=$(echo &quot;$GITHUB_KEYS&quot; | jq -r '.[0].created_at')
+echo &quot;Key registered on GitHub: $GITHUB_CREATED&quot;
+
+│ Key registered on GitHub: 2025-05-10T02:15:26.791Z
+</code></pre>
+<p>This is a temporal anchor from an external source: GitHub's server
+timestamped when BRadvoc8 registered their signing key. DevReviewer
+can trust this more than a XID's internal claim of dating because
+GitHub is an independent party.</p>
+<blockquote>
+<p>📖 <strong>What is a Temporal Anchor?</strong> A temporal anchor is an
+external timestamp that establishes when something occurred. Unlike
+internal claims (which the claimant controls), temporal anchors come
+from independent parties: GitHub's API, commit dates, blockchain
+timestamps, or signed inception commits.</p>
+</blockquote>
+<p>This strengthens Amira's proof of control, because it shows that she
+not only holds the signing key for the GitHub account, but it's been
+the signing key for an extended amount of time.</p>
+<h3 id="step-11-cross-reference-provenance">Step 11: Cross-Reference Provenance</h3>
+<p>To further verify improve the temporal anchor, DevReviewer can also
+compare the GitHub key registration date to the XID edge creation
+date.</p>
+<pre><code>CLAIMED_DATE=$(envelope assertion find predicate known &quot;date&quot; &quot;$EDGE_CLAIM&quot; | envelope extract object | envelope format | tr -d '&quot;')
+
+echo &quot;Timeline analysis:&quot;
+echo &quot;  - GitHub key registered: $GITHUB_CREATED&quot;
+echo &quot;  - XID edge created:      $CLAIMED_DATE&quot;
+
+│ Timeline analysis:
+|   - GitHub key registered: 2025-05-10T02:15:26.791Z
+|   - XID edge created:      2026-03-18T11:55-10:00
+</code></pre>
+<p>This is a less powerful verification because the XID edge's date was a
+self-attestation. Nonetheless, if there was a discrepency (e.g., the
+XID edge was created before the GitHub key was registered, despite
+being a claim about that key's registration), it would set off red
+flags 🚩🚩.</p>
+<h3 id="step-12-check-commit-signatures-optional">Step 12: Check Commit Signatures (Optional)</h3>
+<p>There's one last thing that DevReviewer can do to strengthen the
+temporal ancho: they can look at the commits in the BRadvoc8 account.</p>
+<pre><code>echo &quot;Checking commit signatures...&quot;
+COMMIT_URL=&quot;https://api.github.com/repos/BRadvoc8/BRadvoc8/commits&quot;
+RECENT_COMMIT=$(curl -s &quot;$COMMIT_URL&quot; | jq -r '.[].sha'|head -1)
+OLD_COMMIT=$(curl -s &quot;$COMMIT_URL&quot; | jq -r '.[].sha'|tail -1)
+
+echo &quot;&quot;
+echo &quot;Most recent commit: $RECENT_COMMIT&quot;
+echo &quot;Recent verification status:&quot;
+curl -s &quot;https://api.github.com/repos/BRadvoc8/BRadvoc8/commits/$RECENT_COMMIT&quot; | \
+    jq '{date: .commit.author.date, verified: .commit.verification.verified, reason: .commit.verification.reason}'
+echo &quot;&quot;
+echo &quot;Older commit: $OLD_COMMIT&quot;
+echo &quot;Old verification status:&quot;
+curl -s &quot;https://api.github.com/repos/BRadvoc8/BRadvoc8/commits/$OLD_COMMIT&quot; | \
+    jq '{date: .commit.author.date, verified: .commit.verification.verified, reason: .commit.verification.reason}'
+
+│ Checking commit signatures...
+|
+│ Most recent commit: 26bb956f41c36db7f9f912a4744e224024f404a7
+| {
+|   &quot;date&quot;: &quot;2026-01-21T05:36:11Z&quot;,
+|   &quot;verified&quot;: true,
+|   &quot;reason&quot;: &quot;valid&quot;
+| }
+|
+| Older commit: 1ab31db40e48145c14f19bc735add0d279cdc62d
+│ Older verification status:
+| {
+|   &quot;date&quot;: &quot;2025-05-10T01:25:18Z&quot;,
+|   &quot;verified&quot;: true,
+|   &quot;reason&quot;: &quot;valid&quot;
+| }
+
+</code></pre>
+<p>This provides two more pieces of evidence for the progressive trust of the BRadvoc8 XID.</p>
+<p>It shows:</p>
+<ol>
+<li>That the signing key that is held by the owner of the BRadvoc8 XID
+has been used to sign commits (as shown by <code>verified</code>).</li>
+<li>That the signing key has been used over a wide scope of time, from
+May 2025 to January 2026 (as shown by <code>date</code>).</li>
+</ol>
+<p>DevReviewer could also skim through BRadvoc8's GitHub account and
+check specific PRs, such as that Galaxy Project PR. Every commit or PR
+that is related to the type of work that Amira has previously claimed
+would strengthen her claims that much more, because of her control of
+the signing key tha was used to generate those requests.</p>
+<blockquote>
+<p>🧠 <strong>About Open Integrity.</strong> Blockchain Commons also offers a
+project called <a href="https://github.com/OpenIntegrityProject/core">Open
+Integrity</a> that
+formalizes repository authority through inception commits. An
+inception commit signed with the key BRadvoc8 holds would be even
+stronger proof of control of the GitHub, but that's a topic for
+another chapter.</p>
+</blockquote>
+<h3 id="step-13-assess-your-level-of-trust">Step 13: Assess Your Level of Trust</h3>
+<p>The various claims made in chapter 2 tended to have a medium level of
+trust. Now, that trust level has been upgraded thanks to Amira's
+fairly strong proof that she controls the BRadvoc8 GitHub account.</p>
+<p>This is courtesy of a chain of evidence, much of which was locked down in this section:</p>
+<table>
+<thead>
+<tr>
+<th>⛓️ Evidence</th>
+<th>Verification</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔗 derefenceVia URL</td>
+<td>URL is on GitHub</td>
+<td>§1.4</td>
+</tr>
+<tr>
+<td>🌌 Galaxy PR</td>
+<td>PR Exists</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>👀 Cryptographic Audit Work</td>
+<td>Previous Commitment</td>
+<td>§2.2</td>
+</tr>
+<tr>
+<td>🔐 Security Work for Civil Trust</td>
+<td>Similar PRs</td>
+<td>§2.3</td>
+</tr>
+<tr>
+<td>👩🏽‍💻 GitHub Ownership</td>
+<td>Account Exists</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>🔑 Signing Keys</td>
+<td>Keys Match Account</td>
+<td>§3.1-3.2</td>
+</tr>
+<tr>
+<td>🔑 Signing Keys</td>
+<td>BRadvoc8 Has Private Key</td>
+<td>§3.1-3.2</td>
+</tr>
+<tr>
+<td>🌌 Galaxy PR</td>
+<td>Commit Matches Keys</td>
+<td>§3.2</td>
+</tr>
+<tr>
+<td>💾 Other PRs</td>
+<td>Commit Matches Keys</td>
+<td>§3.2</td>
+</tr>
+<tr>
+<td>🗓️ Dates</td>
+<td>Previous Keys &amp; Commits</td>
+<td>§3.2</td>
+</tr>
+</tbody>
+</table>
+<p>As a result, DevReviewer can make a new assessment of BRadvoc8's trust:</p>
+<table>
+<thead>
+<tr>
+<th>What DevReviewer Can Verify</th>
+<th>What Remains Unproven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ BRadvoc8 controls GitHub signing key</td>
+<td>❓ Who BRadvoc8 is</td>
+</tr>
+<tr>
+<td>✅ GitHub signing key has been used for a year</td>
+<td>❓ BRadvoc8 is original owner of key</td>
+</tr>
+<tr>
+<td>✅ Key signed commits related to expertise</td>
+<td>❓ BRadvoc8 wrote the commits</td>
+</tr>
+</tbody>
+</table>
+<p>To a certain extent, each new bit of evidence just exposes what else
+has <em>not</em> been proven. But they all continue to progress the trust of
+the pseudonymous identity, BRadvoc8. At some point a viewer will
+decide the requirements for their threshold of trust have been
+met.</p>
+<p>For DevReviewer, that threshold of trust has been met now.</p>
+<h2 id="summary-supporting-verification">Summary: Supporting Verification</h2>
+<p>Creating claims is just half the battle. To properly support a
+pseudonymous identity requires creating claims that can be
+verified. Amira has been thinking about that all along, but the
+creation of the GitHub edge really brought it together. Her use of the
+GitHub signing key allowed her to (mostly) prove that she controlled
+the GitHub account, which in turn supported many of the claims made in
+chapter 2.</p>
+<p>When you're thinking about claims, think about how you can actually
+prove what you're saying, without revealing who you actually are.</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> There are no envelopes for this section, since it was all about verification.</p>
+<p><strong>Scripts:</strong> Scripts demonstrating this section are forthcoming.</p>
+<h3 id="exercises">Exercises</h3>
+<p><strong>Verification exercises:</strong></p>
+<ul>
+<li>Compare two versions of an XID with different provenance sequences.</li>
+<li>Extract the proof-of-control from an attachment and verify its signature.</li>
+<li>Tamper with a proof (change one character) and confirm verification fails.</li>
+<li>Extract the SSH signing key text from an attachment and compare it to GitHub's API response.</li>
+</ul>
+<p>Try these to solidify your understanding:</p>
+<p>*<em>GitHub exercises:</em>8</p>
+<ul>
+<li>Fetch the real BRadvoc8 XIDDoc and verify its attestations using the workflow from this tutorial.</li>
+<li>Query GitHub's API directly: <code>curl https://api.github.com/users/BRadvoc8/ssh_signing_keys | jq</code></li>
+<li>Simulate a verification failure by comparing against a fake key and confirm the mismatch is detected.</li>
+<li>Check commit signatures on a repository using <code>curl https://api.github.com/repos/OWNER/REPO/commits/COMMIT_SHA | jq '.commit.verification'</code></li>
+</ul>
+<p><strong>Exploration exercises:</strong></p>
+<ul>
+<li>Create your own GitHub account, register a signing key, and verify the API shows it correctly.</li>
+<li>Think about what additional evidence would strengthen trust beyond what's shown here.</li>
+<li>Research other external sources that could serve as temporal anchors (Twitter/X posts, blockchain timestamps, etc.).</li>
+</ul>
+<h2 id="whats-next">What's Next</h2>
+<p>What else can you put in an edge? How about a peer endorsement that
+has different source and target?. That can be found in <a href="../03_3_Creating_Peer_Endorsements/">§3.3: Creating
+Peer Endorsements</a>.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Credible Pseudonym</strong> - An identity with verified attestations but unknown real-world mapping. Trustworthy for specific purposes, not all purposes.</p>
+<p><strong>Cross-Verification</strong> - Checking claims against multiple independent sources to establish corroboration.</p>
+<p><strong>Progressive Trust</strong> - Building trust incrementally through verification, collaboration, and endorsement rather than upfront credentialing.</p>
+<p><strong>Temporal Anchor</strong> - External timestamp establishing when something occurred. GitHub's <code>created_at</code>, commit dates, and inception commits serve as temporal anchors.</p>
+<p><strong>Verification Chain</strong> - The sequence of checks that link an XID claim to external evidence.</p>
+</blockquote>
+<h2 id="appendix-ii-common-questions">Appendix II: Common Questions</h2>
+<h3 id="q-what-if-the-accounts-signing-key-changes-after-verification">Q: What if the account's signing key changes after verification?</h3>
+<p><strong>A:</strong> Verification is a snapshot, not an ongoing guarantee. If
+BRadvoc8 removes or replaces their SSH key on GitHub, your previous
+verification no longer reflects the current state. For high-stakes
+decisions, re-verify before taking action.</p>
+<h3 id="q-can-i-verify-claims-against-sources-other-than-github">Q: Can I verify claims against sources other than GitHub?</h3>
+<p><strong>A:</strong> Yes. The cross-verification pattern works with any external
+source that provides independent attestation. GitLab, Bitbucket, and
+other forges have similar APIs. For non-code sources (domain
+ownership, social media accounts), you'd adapt the same approach:
+extract the claim from the XID, query the external source, and
+compare. The key is finding an authoritative endpoint that the
+claimant can't easily forge.</p>
+<h3 id="q-what-if-githubs-api-is-unavailable-during-verification">Q: What if GitHub's API is unavailable during verification?</h3>
+<p><strong>A:</strong> Network failures are a real concern. In production, cache API
+responses with timestamps, implement graceful degradation (proceed
+with warning, not hard failure), and consider multiple verification
+methods. An XID with both GitHub and GitLab attestations provides
+redundancy: if one API is down, you can still verify against the other.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
