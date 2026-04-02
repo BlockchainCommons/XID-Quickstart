@@ -129,7 +129,7 @@ described in
 [§2.1](02_1_Creating_Self_Attestations/#step-1-create-an-attestation-key),
 but we're going to keep it simple by not doing so.
 
-### Step 2: Charlene Creates Her Endorsement
+### Step 2: Create Charlene's Endorsement
 
 Charlene applies fair witness principles to create a character endorsement:
 
