@@ -67,8 +67,6 @@ XID=$(envelope xid provenance next \
     --encrypt-password "$PASSWORD" \
     "$XID")
 
-# Step 1: Generate SSH Signing Key
-
 echo ""
 echo "Step 1: Generate SSH Signing Key"
 echo "================================"
