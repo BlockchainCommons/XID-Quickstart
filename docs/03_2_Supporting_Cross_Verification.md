@@ -529,15 +529,14 @@ fi
 ```
 
 At this point you know:
-```
+
 🔑 GitHub = 🔑 in XID (text) = 🔑 in XID (UR)
-```
 
 But anyone could publish that GitHub key in their XID, so there's one more step.
 
 #### What If the Keys Don't Match?
 
-hat would DevReviewer see if someone created a fake XID with a different key?
+What would DevReviewer see if someone created a fake XID with a different key?
 
 ```
 FAKE_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeKeyThatDoesNotMatchGitHub"
