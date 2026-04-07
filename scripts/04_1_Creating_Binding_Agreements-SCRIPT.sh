@@ -37,7 +37,7 @@ if [ "$CONTRACT_PRVKEYS" -a "$CONTRACT_PUBKEYS" ]
 then
   echo "✅ Contract-signing key created (limited to signing only)"
 else
-    echo "❌ Failed to create contarct-signing keys"
+    echo "❌ Failed to create contract-signing keys"
     exit 1;
 fi
 
