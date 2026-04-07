@@ -113,7 +113,7 @@ XID=$(cat envelopes/BRadvoc8-xid-private-4-01.envelope)
 XID_ID=$(envelope xid id $XID)
 PASSWORD="your-password-from-previous-tutorials"
 ATTESTATION_PRVKEYS=$(cat envelopes/key-attestation-private-2-01.ur)
-CLA=$(cat envelopes/cla-bradvoc8-accepted-4-01.envelope)
+SIGNED_ACCEPTED_CLA=$(cat envelopes/cla-bradvoc8-accepted-4-01.envelope)
 ```
 
 

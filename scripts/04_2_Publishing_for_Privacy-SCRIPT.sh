@@ -1,0 +1,170 @@
+#!/bin/bash
+# 04_2_Publishing_for_Privacy-SCRIPT.sh
+#
+# Tests all commands from §4.2, verifying:
+# - Hashing an agreement in a file
+# - Hashing an agreement in a XID
+#
+# Usage: bash 04_2_Publishing_for_Privacy-SCRIPT.sh  
+
+
+set -e
+
+echo "=== LEARNING XIDS §4.2: Publishing for Privacy ==="
+
+# Configuration
+
+# Create output directory
+
+OUTPUT_DIR="output/script-04-2-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$OUTPUT_DIR"
+
+XID_WITH_CONTRACT_KEY="ur:xid/tpsplftpsplttpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoycfaorylftpsplrtpsokseyjoihihjpdpihjtiejljpjkihjnihjtjydpiyjpjljndpieihkojpihkoinihktihjpdpideyeeihehhsieehihemetiyeyehieeeoycfaornlstpsotanshdhdcxhdsfzozcetjkztcmwnvaqzhkdyvlytswpmhttoprrtskioesiyhlkeotjecaknhdoytpsojkjkiaisihjnhsftihjnjojzjlkkihihgmjljzihtpsokscsfdihhsiecxguihiakpjpinjykkcxgdjpjliojphsjnjnihjpoytpsojljkiaisihjnhsftktjljpjejkfgjljptpsojzguinjkjyihjpgujohsiaihjkoycfaorslntpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoytpsojsjpihjzhsjyinjljtjkisinjofwhsjkinjktpsoksiaguihiakpjpinjykkcxiajljzjzhsidjljphsjyinjljtcxjohsjpjyjtihjpcxktisjlcxkoihjpiniyinihiecxiajpihieihjtjyinhsjzjkcxjyisjpjlkpioiscxiajljnjninjydpjpihkoihhsjzcxhsjtiecxihjtiajpkkjojyihiecxjkishsjpinjtiooybetpsokoeydyeyendpdyeedpdyemghehehftehecdpehdyftdydyoytpsojpihjtiejljpjkihjnihjtjyfxjljtjyihksjytpsokshghfihjpiyinihiecxjojpihkoinjlkpjkcxjkihiakpjpinjykkcxihksjoihjpinihjtiaihdwcxktjljpjeihiecxjyjlioihjyisihjpcxjljtcxjkisjljpjycxjojpjlimihiajycxiyjljpcxguinjkjyihjpgujohsiaihjkoytpsojljoihihjpfejtiejljpjkihjnihjtjytpsoksguhgjpinjyihjkcxjkihiakpjpihdwcxktihjzjzdpjyihjkjyihiecxiajlieihcxktinjyiscxiajzihhsjpcxhsjyjyihjtjyinjljtcxjyjlcxjojpinkohsiakkdpjojpihjkihjpkoinjtiocxjohsjyjyihjpjtjkoytpsojoihjtiejljpjkihjnihjtjyguiajljoihtpsoksfeguihiakpjpinjykkcxhsjpiaisinjyihiajykpjpihdwcxiajpkkjojyjliojphsjoisiniacxinjnjojzihjnihjtjyhsjyinjljtdwcxjojpinkohsiakkcxjohsjyjyihjpjtjkoyadtpsojehsjyjyihjkjyhsjyinjljtoyaxtpsotansghlfaohdfznbytwmprtoiegsdekihpltdnrtstcnykzcvaenbkjlpejksbhnatlyontkvotpmosodmfsgajtpmielrlgzowpvevlstveadmknetdrkykbachkindwnrdtisalaltaxoyaylrtpsotansgylftanshflfaohdcxplvdotinmnwensttrtlrtiisqzehrltlnlguhdludywzsebztnqdndwztpdazeqdtansgrhdcxfmlpjkhspautsfmwlndrpavobwpyotsazsdidwrnrpcylfintnwtgrnnhdhhpyjplfoycsfplftansfwlrhdghhkasmurpcezcctjnjtdmmtsafypthpfwgesbpkhsbnkilozswfyketkifsfsdavepfnessfpfnmyrobnzoatrobgahfzzofpcncnbwntieoxfdosmtctlputfwwnetvlndimotrtgmtdsgytaoayjkptrehyhflfqzhhvafrgshlaajocljlrkptlgihhyhkvagddmrdparskptaswztnejpmsamaykelkechddatansfphdcxiopakburhprngowmtshlrswzihbytpflgtrootzosfrpnnfprymuveasenotaeadoybwtpsotanshptansfwlrhdcxmunnosoeensskepychimvtprueseyaynrdcwehvtbtttottbvesebghyhfiedloxgsgshlbscafrqzpmyajnhhvshsgdghecmwntmslgmdaeptgoaaaefzrespvthflfaxtansgmgdtarhlgnedkglfgbnoxlabaynfdihheaxoybstpsotansgmhdcxghchykwlghoxpftljectmyyldyamgycwamfwbnsbjelbsshkbzcnuttyrltlwtgmoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdoycsfzlftpsotngdgmgwhflfaxhdimztfdamfefmvddedalgpdskpldaetfddkjszsftmoasgavdlddlnbguiamugwhhdwjkmhltgajtvewnfztletglfhgraossjzmolebbrsmooepdaobaeoherhmktbenteghoxeeaoftvwidbglybefrttlyhnhewnmkktbbgmqzbtkoyndkhecarkdanbprtalbtninmobahycftaaerdlfoycsfylftansfwlrhdrowylftiolckmwpezoehihiyrlssglhsinflweurbdsekbjypardguttgheniybebecncefxztbgmniecybbwmswbnheghesbgqdbkbtwkwnfsvacplyroykgohyfrstfdfttsgtwngajslgvsdkhefevomtnyecvsolgujzdllautjncfhyclnnfgrlbslnpradctielaammukifmzelohpsoioutlktigttsfxvlidspqzhswsutrffdmdfxotsbcmsfihztylsbhetplyidbsrfwsmhbntyenmdleeylosstdkeguolgewmfthegednhtssfygmcnwdprfphysnhfjyiaiejlbtdkzccpayfsaxbswfgsgegsrlzsnlsgwphysbpedyurgddsnlytfhlanewzytdkdpvymsdnsnsovthddatansfphdcxhtfycaasdyatlprlgspsvalttkfsplyadwksvlvaoslutbztrndstdktfevomyeeoybwtpsotanshptansfwlrhdcxprnlgudnidsfzswnsentiefrdltslsayeowyhlcntotsottnvooywfhykguyloemgscawtcmhsdagawzoyihfgmezogduegmsahgeocanerkyntsftbncxetdychhflfaxtansgmgdfdwpkgjssezchndyytrkdaeegsayntwnoybstpsotansgmhdcxiyvwcpcptddkeemdwfoylrrnspcttebgsbrnfmoetirfmwehhsrehdpmstdadaytoycfaorylftpsplrtpsokscfhsiaiajlkpjtjydpiajpihieihjtjyinhsjzdpioinjyiskpidoyadtpsojpiyjlhsiyftgwjtjzinjtihfpiaiajlkpjtjyoycfaorsldtpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoytpsojsjkjkisguiniojtinjtiogrihkkjkgogmgstpsotpcxksenisjyjyjojkftdldlhsjoindmioinjyiskpiddmiajljndlkpjkihjpjkdlfwgmhsiekojliaetdljkjkishejkiniojtinjtiohejeihkkjkoytpsojoiyjlhsiyfthsiaiajlkpjtjyglhsjnihtpsoisfwgmhsiekojliaetoytpsojnjkjkisguiniojtinjtiogrihkktpsotansgylftanshftanehsksgdjkjkisdpihieeyececehescxfpfpfpfpfxeoglknhsfxehjzhtfygaehglghfeecfpfpfpfpgafdeceyjlgogmjehkkpjpjtihiygojtjlfgiddnfpgsjpjpfxeedlhdihdngdkpgwgmfxfgkninjlgmfyhfjkgmtansgrhdcxfhtkhnmyoeoyvdvdgolosrpfrosnrsaycmiycelnqdjyjzlplpeykgesmnvwoeimoytpsokscwiyjlhsiyfthsiaiajlkpjtjyguihjpkoiniaihfdjljnihjohsioihtpsotpcxksdkisjyjyjojkftdldlioinjyiskpiddmiajljndlfwgmhsiekojliaetdlfwgmhsiekojliaetoycscwtpsotpcxksdaisjyjyjojkftdldlhsjoindmioinjyiskpiddmiajljndlkpjkihjpjkdlfwgmhsiekojliaetoycseetpsotpcxjpisjyjyjojkftdldlioinjyiskpiddmiajljnoytpsojsjkjkisguiniojtinjtiogrihkkghihksjytpsoksgdjkjkisdpihieeyececehescxfpfpfpfpfxeoglknhsfxehjzhtfygaehglghfeecfpfpfpfpgafdeceyjlgogmjehkkpjpjtihiygojtjlfgiddnfpgsjpjpfxeedlhdihdngdkpgwgmfxfgkninjlgmfyhfjkgmoybetpsokoeydyeyendpdyeedpdyehgheheefteeetdpehdyftdydyoycfaorntpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoyaxtpsotansghtaneidkkaddmdpdpdpdpdpfwfeflgaglcxgugufdcxgugaflglfpghgogmfedpdpdpdpdpbkgoehglgagodyjzfdfpfpfpfpfpgyfpfpfpfygtfpfpfpfpgsiaeogljlgshghfjegtimgoehgtghjefpfpfpfpioiyjthsisgmflgminenkpieecesguihiohfkoeefpkpkpjkgsimesbkieemeedneeecfegahdgwgrisfeglhgksfefpfpfpfpgahthgeceyhthgkskoiaflgofpfpfpfpfpfpfpfpfpfwjtgljlhkghgaehgliofpfpfpfggtfpfpfpfpgsiaeogljlgshghfjebkgtimgoehgtghjefpfpfpfwfphkihjeidkpjofxetihiyiejegejzgmeefdkkjpfyjkksgufljlghgtesdleejofdjegsjkghemdletgriygwhskoisecfgjtkkgmemfwkpgyeedlgwfwbkkkgufxghgrghkkhfenghiheefgeofdknhshfjtdldnjyehgwfyfefwiofsfsbkdpdpdpdpdpfeglfycxgugufdcxgugaflglfpghgogmfedpdpdpdpdpbkoyaylrtpsotansgylftanshflfaohdcxonbbaxfdchqzlfcptlbbyachdypehyaxtecavlhymnmyceeekotpcamnamguclmotansgrhdcxcsrnchrnrpbsrnuecwaymoihplfnkgrdaxiefgpyidvysecnluhtwlwmpfwndnctlfoycsfplftansfwlrhdghndwkmwhlfgckmezsuyfheclnuotdmdqzkghsvteejecwhsndidinioctrycwdrbsvlurfxtevehpfwkglkotwzbdfruelnswkshgvydnzmoxiscncxkoqzswfnztcngwmsynlgptdystisfnihmyrtswispdvwzmrptlvdttgsftbbnnpdlujkptwlceiyttwdgdfnpteybbfdpkguwpyahhfrkeaoostdcmhddatansfphdcxjemdmobewtihrohsgaghsglkgepdcmhdflhnamvegwssjzolpsjslesrwypkrydwoybwtpsotanshptansfwlrhdcxolsasoamtppfkttylrvdkilytilsrnwlhscsyklneonbmstkgemehtrdjsglaooygsdnpdbbammnleremkrpjtticngdjeptmopfinlehkprtbcnfekgwnpkdpemhflfaxtansgmgdimlkyncnpdameoptgssnjzjsbkvdldhnoybstpsotansgmhdcxrsfpfpfmldltkbsaamecmogabacsjtdedtsshlmdutaoaoylstndserdwdnedwmnoycscstpsoisfwgmhsiekojliaetoycsfncsfgoyaylrtpsotansgylftanshflfaohdcxlumegtzorkdntkrolkosmyrffndiwkrofhbblfzerodipahhkkcejtatinbsjtintansgrhdcxlnjzbnfwasfshtfgvehhktdschdwttrtctdepkbyhlhkbdsogwashkgobsqzgwjtlfoycsfplftansfwlrhdghwtiottrflrmuiazsfgmtfgbgdndlgscluelgsbwtvaottiyabzsgvaptlgykzmlbloctcsstjynsbybacmzcclryeneyjzvekseymkhgcfpdlkdmjomdatoeonqdvomumkchjnwzrtimjedlgupymddtuyaozospzmpfhnkkgsryjtaovlnbmtuyoxhkyndtcfgdylrsylnndklfgsmwdmdncnfgtpzmfhdyhddatansfphdcxayhkjpidzehpytiesnkofybgbbinntaezozstbctideyykdsbzylimwsvadplnlaoybwtpsotanshptansfwlrhdcxgwjpfwolfzdaehfyatgddejpwnlofslsdpflrouehhrsasmsfwfsfhpsprmtwtesgspdengsfnehcsgyldprgyroasgdlbnehnqdcnmwstoxmwmhhyqzmomnbtdlhflfaxtansgmgdjzlfisbetnrorfmdfzgssatortmursweoybstpsotansgmhdcxyaflntkectinioyttklocelbmhaseswnoeetdmtprnfmytmyhfghimjzhebnctftoycscstpsojziajljtjyjphsiajydpjeihkkoycsfncsfdoyaxtpsotansghlfaohdfziywejsfhlbbzctpttpfsrlqdbkfzrfoeahvtnevalnweayhyfhjkgmpdbsuttburvthpvdlawmiecxfnmhfhvdrhfhhslpwpeylgtemudictsnjespzorebsrnrplobtsorsrsje"
+
+ATTESTATION_PRVKEYS="ur:crypto-prvkeys/lftansgolfaohdcxcyfszmfsrepdpfjepfvwttrdhdhszsjlbdqzdwjliorhckgokpbwdlyakkrfhepttansgehdcxsbmyhehpbnsnasstntbnwnjysbcwfswthhmukolkqdeofmhdnlvtknclqdglntbninprespt"
+ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
+
+XID_ID=$(envelope xid id $XID_WITH_CONTRACT_KEY)
+PASSWORD="test-password-for-tutorial"
+
+SIGNED_ACCEPTED_CLA="ur:envelope/lftpsplstpsplftpspletpsoksdegajtieinkoiniekphsjzcxfxjljtjyjpinidkpjyjljpcxgsiniaihjtjkihcxfpiojpihihjnihjtjyoytpsojtjojpjlimihiajygthsjthsioihjplftpsotanshdhdcxbnfhlncectssvaondsryspythslstaimptoevscwgwsawtlozourwpsfdihgrymdoycscstpsojpfwihjtcxdeguinjkjyihjpgujohsiaihjkdtoytpsojeiajljtjyjpinidkpjyjljplftpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoycscstpsoisfwgmhsiekojliaetoytpsokpiajljtjyjpinidkpjyjljpgmihjojpihjkihjtjyjktpsoksdpjljpinioinjthsjzcxktjljpjecxktinjyiscxhskpjyisjljpinjykkcxjyjlcxiojphsjtjycxjziniaihjtjkihoytpsojejziniaihjtjkihghkkjoihlptpsoimfpjohsiaisihdpeydmdyoyastpsoksdlisjyjyjojkftdldlktktktdmhsjohsiaisihdmjljpiodljziniaihjtjkihjkdlgsgafxfeglgufedpeydmdydmjyksjyoytpsojnishsjkisfpjziojljpinjyisjntpsoinjkishsjkkpjneyecenoytpsojziajljtjyjphsiajyfdhsjkistpsoksfziaiyiaememeeesideseniyeneoidieeoehiaeoiaeeeyideciaeeemehidiyemeceneteheedyeceoiheteeemiaehdyiyeoihiddydyeoeeehemidiaeceyeoieeodyoybetpsokoeydydyeedpdyehdpdydyghdydyftdydydpdydyftdydyoytpsojkiojphsjtjyjkgdhsjyihjtjygsiniaihjtjkihtpsokseyiyjljpcxiajljtjyjpinidkpjyinjljtjkcxiajljtjyhsinjtinjtiocxjohsjyihjtjyhsidjzihcxjyihiaisjtjljzjliokkoybetpsokoeydyeyendpdyeedpdyemgheheyfteyeodpehdyftdydyoytpsokoiojphsjtjyjkfxjljokkjpinioisjygsiniaihjtjkihtpsoksehjoihjpjoihjykphsjzdwcxktjljpjziektinieihdwcxjtjljtdpihksiajzkpjkinkoihdwcxjpjlkkhsjzjykkdpiyjpihihoyadtpsokscwfxjljtjyjpinidkpjyjljpgsiniaihjtjkihfpiojpihihjnihjtjyoytpsoiojojpjlimihiajytpsoksctguinjkjyihjpgujohsiaihjkcxguihiakpjpihfpkpjyiscxgsinidjphsjpkkoyaxtpsotansghlfaohdfzessnnldrjljnfshptipsmowmkityeerhencnytptzspkjzjzjefyotvylywelpaduyhdetdyzoaovlbgcwplytbtgoayhgfnwsuretwyoxbsaalfatstdploehhsspayoytpsoimhsiaiaihjojyihiefwkktpsotanshdhdcxbnfhlncectssvaondsryspythslstaimptoevscwgwsawtlozourwpsfdihgrymdoybetpsokoeydyeyendpdyeedpdyemgheheyfteyeodpehdyftdydyoyaxtpsotansghlfaohdfzrywfmubeesjnssgwcmfgeyemtacfwktdvsvwlgstuomundzskimsjzjechdrnyuyntylderdlsdwhynlcpzmtneohyotmndwcndkbahfzmfztkdygesetkdnpdrewkayzopeplfh"
+
+
+echo ""
+echo "Step 1: Create a Contract Edge"
+echo "=============================="
+
+# Three Edge Requirements
+
+ISA="foaf:Project"
+SOURCE_XID_ID=$XID_ID
+TARGET_XID_ID=$XID_ID
+
+# Digest for CLA
+
+DIGEST_CLA=$(envelope digest "$SIGNED_ACCEPTED_CLA")
+
+# Target Subenvelope
+
+PROJECT_TARGET=$(envelope subject type ur $TARGET_XID_ID)
+PROJECT_TARGET=$(envelope assertion add pred-obj string $ISA string "SisterSpaces" "$PROJECT_TARGET")
+PROJECT_TARGET=$(envelope assertion add pred-obj known verifiableAt string "https://github.com/SisterSpaces/SecureAuth/CLAs/README.md" "$PROJECT_TARGET")
+PROJECT_TARGET=$(envelope assertion add pred-obj string "claDigest" digest "$DIGEST_CLA" "$PROJECT_TARGET")
+
+# Edge Construction
+
+EDGE=$(envelope subject type string "project-sister-spaces-secureauth")
+EDGE=$(envelope assertion add pred-obj known isA string "$ISA" "$EDGE")
+EDGE=$(envelope assertion add pred-obj known source ur "$SOURCE_XID_ID" "$EDGE")
+EDGE=$(envelope assertion add pred-obj known target envelope "$PROJECT_TARGET" "$EDGE")
+
+if [ $EDGE ]
+then
+  echo "✅ Edge created"
+else
+    echo "❌ Failed to create edge"
+    exit 1;
+fi
+
+echo ""
+echo "SisterSpaces edge details:"
+envelope format "$EDGE"
+
+echo ""
+echo "Step 2: Publish Your Contract Edge"
+echo "=================================="
+
+# Sign edge
+
+WRAPPED_EDGE=$(envelope subject type wrapped "$EDGE")
+SIGNED_EDGE=$(envelope sign --signer "$ATTESTATION_PRVKEYS" "$WRAPPED_EDGE")
+
+# Add edge to XID
+
+XID_WITH_CONTRACT_EDGE=$(envelope xid edge add \
+    --verify inception \
+    $SIGNED_EDGE $XID_WITH_CONTRACT_KEY)
+
+EDGE_COUNT=$(envelope xid edge count $XID_WITH_CONTRACT_EDGE)
+
+if [ $EDGE_COUNT -eq 3 ]
+then
+  echo "✅ Third edge (contract) linked to XID"
+else
+    echo "❌ Failed to link edge to XID"
+    exit 1;
+fi    
+
+# Advance PM and Publish
+
+XID_WITH_CONTRACT_EDGE=$(envelope xid provenance next \
+    --password "$PASSWORD" \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password "$PASSWORD" \
+    "$XID_WITH_CONTRACT_EDGE")
+PUBLIC_XID_WITH_CONTRACT_EDGE=$(envelope xid export --private elide --generator elide "$XID_WITH_CONTRACT_EDGE")
+
+echo "$XID_WITH_CONTRACT_EDGE" > $OUTPUT_DIR/01-bradvoc8-xid-private.envelope
+echo "$PUBLIC_XID_WITH_CONTRACT_EDGE" > $OUTPUT_DIR/02-bradvoc8-xid-public.envelope
+
+
+echo ""
+echo "Step 3: Compute the Digests"
+echo "==========================="
+
+echo "# CLA Commitment List" > $OUTPUT_DIR/03-commitment-list.txt
+echo "" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "This is a list of commitments for CLAs guaranteeing rights to work done for SisterSpaces. CLAs are published as envelope-cli digest hashes to preserve privacy. Original CLAs are held by the Project Manager (currently Ben) and can be privately produced if necessary. This list is a living example of the power of herd privacy." >> $OUTPUT_DIR/03-commitment-list.txt
+echo "" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxnydmgooejsgwjywfnbaxotlgaotibdbzynroutlebgditsfrroreisihptytndmtlkhyidfs" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxcaoldkfpisoesfoxdnatamwyytasdwsbuomnkicxlbaavehsfzksmdinrogachhnsolbpahg" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxvwpkrfmokeonsalojefseovliertiykoimzcjkdwkswktiisdloskngokoiakistwnwlhfot" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxzewtfzfxrdndktdpeocwnnttbdoloxeyskyninhtpazehsgsynfpfwgrlbbgdskosefddktp" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxlkdtieyafsbkhdftbdgmztfxmoflgmpmlghladmkutfymundfmdrnbaeatspctclynkgsnen" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxhgfdesknwdrdmusgbspsbdgmjpflfwdafhhybgytdwcklskohpbtdkeskgrfvwaolycesnyn" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxayptgsktmssbhdsnfpetnsrppmsttlahlrtnaeyndloyvawsdmcxdesokgeomknnwfjklpnl" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxcaoldkfpisoesfoxdnatamwyytasdwsbuomnkicxlbaavehsfzksmdinrogachhnsolbpahg" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxvwpkrfmokeonsalojefseovliertiykoimzcjkdwkswktiisdloskngokoiakistwnwlhfot" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxzewtfzfxrdndktdpeocwnnttbdoloxeyskyninhtpazehsgsynfpfwgrlbbgdskosefddktp" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxlkdtieyafsbkhdftbdgmztfxmoflgmpmlghladmkutfymundfmdrnbaeatspctclynkgsnen" >> $OUTPUT_DIR/03-commitment-list.txt
+envelope digest $SIGNED_ACCEPTED_CLA >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxhgfdesknwdrdmusgbspsbdgmjpflfwdafhhybgytdwcklskohpbtdkeskgrfvwaolycesnyn" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxayptgsktmssbhdsnfpetnsrppmsttlahlrtnaeyndloyvawsdmcxdesokgeomknnwfjklpnl" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxinmerocyjzgrmhskpshyrfsnuthhpsjoswbyiyttstldaxytlsiefdcfytdebyhhgwzevwtl" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxsbdsemjtwlrtvwfdetmwenlujndlsbethljzkpnbmsgmchaajolsgekbpypmtijevolukglt" >> $OUTPUT_DIR/03-commitment-list.txt
+echo "ur:digest/hdcxswjzwzjzzopawmieytwpjtgwlsoyfrhlntsghldsrnpstswsknehwsrltpeyonfriouooykp" >> $OUTPUT_DIR/03-commitment-list.txt
+
+if [ -f $OUTPUT_DIR/03-commitment-list.txt ]
+then
+    echo "✅ Published Ben's commitment list."
+else
+    echo "❌ Ben's commitment list failed to save."
+    exit 1;
+fi    
+
+echo ""
+echo "Step 5: Check a Commitment"
+echo "=========================="
+
+BR_CLA_DIGEST=$(envelope digest $SIGNED_ACCEPTED_CLA)
+
+if grep -q $BR_CLA_DIGEST $OUTPUT_DIR/03-commitment-list.txt
+then
+  echo "✅ CLA commitment was in README.md"
+else
+    echo "❌ CLA was not properly commited to"
+    exit 1;
+fi
+
+echo ""
+echo "==============================="
+echo "All Tutorial §4.2 Tests Passed!"
+echo "==============================="
+echo ""
+echo "Output files saved to: $OUTPUT_DIR/"
+ls -la "$OUTPUT_DIR/"
+
+
+
