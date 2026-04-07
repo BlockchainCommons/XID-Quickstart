@@ -201,7 +201,7 @@ read -a PUBKEY <<< $(envelope xid key all "$PUBLIC_XID")
 
 for i in "${PUBKEY[@]}"
   do
-    if envelope verify -v $i $ATTESTATION_SIGNED >/dev/null 2>&1; then
+    if envelope verify -v $i $ATTESTATION_SIGNED >/dev/null; then
       echo "✅ One of the signatures verified"
       j=1
       echo $i
@@ -289,7 +289,7 @@ echo ""
 # Verify retraction signature
 for i in "${PUBKEY[@]}"
   do
-    if envelope verify -v $i $RETRACTION >/dev/null 2>&1; then
+    if envelope verify -v $i $RETRACTION >/dev/null; then
       echo "✅ One of the signatures verified"
       l=1
       echo $i

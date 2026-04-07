@@ -137,7 +137,7 @@ echo ""
 echo "Step 6: Verify the Signature"
 echo "============================"
 
-if envelope verify --verifier "$ATTESTATION_PUBKEYS" "$CIVILTRUST_ATTESTATION_DECRYPTED"; then
+if envelope verify -v "$ATTESTATION_PUBKEYS" "$CIVILTRUST_ATTESTATION_DECRYPTED" > /dev/null; then
     echo "✅ DevReviewer verified the decrypted attestation"
 else
     echo "❌ Verification failed"

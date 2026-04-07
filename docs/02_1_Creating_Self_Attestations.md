@@ -475,7 +475,7 @@ But by having them in an array, Ben can do a quick check to see if any of the si
 ```
 for i in "${PUBKEY[@]}"
   do
-    if envelope verify -v $i $ATTESTATION_SIGNED >/dev/null 2>&1; then
+    if envelope verify -v $i $ATTESTATION_SIGNED >/dev/null; then
       echo "✅ One of the signatures verified! "
       echo $i
     fi

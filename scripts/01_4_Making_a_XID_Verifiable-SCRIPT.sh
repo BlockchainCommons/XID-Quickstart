@@ -155,7 +155,7 @@ echo "========================================="
 
 KEY_OBJECT=$(envelope xid key all "$FETCHED_XID")
 
-if envelope verify -v "$KEY_OBJECT" "$FETCHED_XID" >/dev/null 2>&1; then
+if envelope verify -v "$KEY_OBJECT" "$FETCHED_XID" >/dev/null; then
     echo "✅ Signature verified - XID is self-consistent"
 else
     echo "❌ Signature FAILED - XID may be tampered\!"

@@ -438,7 +438,7 @@ signature and the provenance mark.
 ```
 KEY_OBJECT=$(envelope xid key all "$FETCHED_XID")
 
-if envelope verify -v "$KEY_OBJECT" "$FETCHED_XID" >/dev/null 2>&1; then
+if envelope verify -v "$KEY_OBJECT" "$FETCHED_XID" >/dev/null; then
     echo "✅ Signature verified - XID is self-consistent"
 else
     echo "❌ Signature FAILED - XID may be tampered\!"
@@ -476,7 +476,7 @@ TAMPERED_XID=${FETCHED_XID::-1}
 In either case, the verification would fail because any modification, even a single character, invalidates the signature: the cryptographic hash of the tampered document no longer matches what was signed.
 
 ```
-if envelope verify -v "$PUBLIC_KEYS" "$TAMPERED_XID" >/dev/null 2>&1; then
+if envelope verify -v "$PUBLIC_KEYS" "$TAMPERED_XID" >/dev/null; then
     echo "✅ Signature verified"
 else
     echo "❌ Signature FAILED - tampering detected\!"

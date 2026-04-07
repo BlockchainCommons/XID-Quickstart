@@ -254,7 +254,7 @@ a real platform.
 Finally, DevReviewer can match the signature of the attestation against Amira's public key.
 
 ```
-envelope verify -s --verifier "$ATTESTATION_PUBKEYS" "$CIVILTRUST_ATTESTATION_DECRYPTED"
+envelope verify -s -v "$ATTESTATION_PUBKEYS" "$CIVILTRUST_ATTESTATION_DECRYPTED"
 echo "✅ No response means signature is valid"
 
 

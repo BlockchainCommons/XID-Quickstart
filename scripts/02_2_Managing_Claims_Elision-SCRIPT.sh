@@ -145,7 +145,7 @@ echo ""
 echo "Step 8: Verify the Signature"
 echo "============================"
 
-if envelope verify --verifier "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED"; then
+if envelope verify -v "$ATTESTATION_PUBKEYS" "$AUDIT_SIGNED" > /dev/null; then
     echo "✅ Signature valid"
 else
     echo "❌ Signature verification failed"

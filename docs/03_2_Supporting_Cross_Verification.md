@@ -110,7 +110,7 @@ repeat here:
 read -d '' -r -a PUBKEY <<< $(envelope xid key all "$FETCHED_XID")
 for i in "${PUBKEY[@]}"
   do
-    if envelope verify -v $i $FETCHED_XID >/dev/null 2>&1; then
+    if envelope verify -v $i $FETCHED_XID >/dev/null; then
       echo "✅ One of the signatures verified! "
       echo $i
     fi
@@ -578,7 +578,7 @@ This is easy. DevReviewer just needs to check that the edge with the
 claim was signed with the linked private key:
 
 ```
-envelope verify --verifier $CLAIMED_KEY_UR -s $XID_EDGE  2>&1 || true
+envelope verify -s -v $CLAIMED_KEY_UR $XID_EDGE 
 
 | ✅ (silence means success)
 ```

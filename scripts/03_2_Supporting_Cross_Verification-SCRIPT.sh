@@ -32,7 +32,7 @@ success=0
 read -a PUBKEY <<< $(envelope xid key all "$FETCHED_XID")
 for i in "${PUBKEY[@]}"
 do
-    if envelope verify -v $i $FETCHED_XID >/dev/null 2>&1; then
+    if envelope verify -v $i $FETCHED_XID >/dev/null; then
       echo "✅ One of the signatures verified - XID is self-consistent "
       echo $i
       success=1
@@ -156,7 +156,7 @@ echo ""
 echo "Step 9: Verify Keys"
 echo "==================="
 
-if envelope verify -v "$CLAIMED_KEY_UR" "$XID_EDGE" >/dev/null 2>&1; then
+if envelope verify -v "$CLAIMED_KEY_UR" "$XID_EDGE" >/dev/null; then
   echo "✅ silence means success"
 else
   echo "❌ XID edge signature does not match other keys"

@@ -40,7 +40,6 @@ else
   echo "❌ Error in XID creation"
 fi
 echo ""
-
 echo "Step 2: View Your XID Structure"
 echo "==============================="
 
