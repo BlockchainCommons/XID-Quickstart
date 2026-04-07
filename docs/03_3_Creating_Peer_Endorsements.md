@@ -653,7 +653,7 @@ against a single XID in the past.)
 read -d '' -r -a XID_EDGES <<< $(envelope xid edge all "$PUBLIC_XID_WITH_EDGE")
 for i in "${XID_EDGES[@]}"
   do
-    if envelope verify -v $REVIEWER_PUBKEYS $i >/dev/null; then
+    if envelope verify -v $REVIEWER_PUBKEYS $i >/dev/null 2>&1; then
       echo "✅ The signature verified for: "
       envelope format $i
     fi

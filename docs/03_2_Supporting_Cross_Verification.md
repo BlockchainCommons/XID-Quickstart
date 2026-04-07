@@ -110,7 +110,7 @@ repeat here:
 read -d '' -r -a PUBKEY <<< $(envelope xid key all "$FETCHED_XID")
 for i in "${PUBKEY[@]}"
   do
-    if envelope verify -v $i $FETCHED_XID >/dev/null; then
+    if envelope verify -v $i $FETCHED_XID >/dev/null 2>&1; then
       echo "✅ One of the signatures verified! "
       echo $i
     fi

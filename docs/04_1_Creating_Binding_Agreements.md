@@ -128,7 +128,7 @@ XID_WITH_CONTRACT_KEY=$(envelope xid key add \
     "$CONTRACT_PRVKEYS" \
     "$XID")
 
-echo "✅ Added attestation key to XID"
+echo "✅ Added contract-signing key to XID"
 ```
 
 #### Key Type Comparison
@@ -443,7 +443,7 @@ FETCHED_XID=$PUBLIC_XID_WITH_CONTRACT_KEY
 read -d '' -r -a PUBKEY <<< $(envelope xid key all "$FETCHED_XID")
 for i in "${PUBKEY[@]}"
   do
-    if envelope verify -v $i $SIGNED_CLA >/dev/null; then
+    if envelope verify -v $i $SIGNED_CLA >/dev/null 2>&1; then
       echo "✅ One of the signatures verified! "
       echo $i
     fi

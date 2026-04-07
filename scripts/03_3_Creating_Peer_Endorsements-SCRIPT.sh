@@ -233,7 +233,8 @@ echo ""
 echo "Step 15: Verify All Endorsements"
 echo "================================"
 
-if envelope verify -v "$CHARLENE_PUBKEYS" "$CHARLENE_SIGNED_ENDORSEMENT">/dev/null 2>&1 || true; then
+if envelope verify -v "$CHARLENE_PUBKEYS" "$CHARLENE_SIGNED_ENDORSEMENT">/dev/null
+then   
     echo "✅ Charlene's endorsement verifies"
 else
     echo "❌ ERROR: Charlene's endorsement does not verify"
@@ -266,7 +267,7 @@ FAKE_WRAPPED=$(envelope subject type wrapped $FAKE_ENDORSEMENT)
 ATTACKER_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 FAKE_SIGNED=$(envelope sign --signer "$ATTACKER_PRVKEYS" "$FAKE_WRAPPED")
 
-if envelope verify -s "$CHARLENE_PUBKEYS" "$CHARLENE_SIGNED_ENDORSEMENT">/dev/null 2>&1 || true; then
+if envelope verify -s -v "$CHARLENE_PUBKEYS" "$CHARLENE_SIGNED_ENDORSEMENT">/dev/null 2>&1 || true; then
     echo "✅ Attacker's fake signature did not verify"
 else
     echo "❌ ERROR: Attacker's endorsement verified, but it should not have."
