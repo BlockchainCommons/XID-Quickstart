@@ -779,7 +779,16 @@ prove what you're saying, without revealing who you actually are.
 
 **Envelopes:** There are no envelopes for this section, since it was all about verification.
 
-**Scripts:** Scripts demonstrating this section are forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[03_2_Supporting_Cross_Verification-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/03_2_Supporting_Cross_Verification-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/03_2_Supporting_Cross_Verification-SCRIPT.sh` to test it.
+
 
 ### Exercises
 

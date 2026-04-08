@@ -373,8 +373,15 @@ and
 [public](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-4-02.envelope)
 XIDs as well as [Ben's README](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/cla-readme-4-02.md).
 
-
-**Scripts:** Scripts demonstrating this section are forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[04_2_Publishing_for_Privacy.md](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/04_2_Publishing_for_Privacy.md),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/04_2_Publishing_for_Privacy.md` to test it.
 
 ### Exercises
 

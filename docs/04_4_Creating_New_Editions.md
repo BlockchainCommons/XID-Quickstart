@@ -373,7 +373,15 @@ directory contains data created in this section, including the [seq:
 6](BRadvoc8-xid-s6-public-4-05.envelope) and the [seq:
 7](BRadvoc8-xid-s7-public-4-05.envelope) versions of Amira's envelope.
 
-**Scripts:** Scripts demonstrating this section are forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[04_4_Creating_New_Editions-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/04_4_Creating_New_Editions-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/04_4_Creating_New_Editions-SCRIPT.sh` to test it.
 
 ### Exercises
 
@@ -395,3 +403,4 @@ We'll be returning soon with Chapter Five and keys, but for the moment, this cou
 > **Revocation** - The cancellation of something, here the removal of content from an identity document to say that it's no longer valid, supported, or relevant.
 
 
+  

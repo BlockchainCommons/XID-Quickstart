@@ -671,7 +671,16 @@ correlatable
 XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-s5v3-public-4-03.envelope)
 created in this section.
 
-**Scripts:** Scripts demonstrating this section are forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[04_3_Creating_New_Views-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/04_3_Creating_New_Views-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/04_3_Creating_New_Views-SCRIPT.sh` to test it.
+
 
 ### Exercises
 

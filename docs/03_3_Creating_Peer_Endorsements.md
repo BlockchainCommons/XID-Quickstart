@@ -835,7 +835,15 @@ XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRa
 and [public
 XID](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-3-01.envelope).
 
-**Scripts:** Scripts demonstrating this section are forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[03_3_Creating_Peer_Endorsements-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/03_3_Creating_Peer_Endorsements-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/03_3_Creating_Peer_Endorsements-SCRIPT.sh` to test it.
 
 ### Exercises
 

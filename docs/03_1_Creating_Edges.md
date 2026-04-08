@@ -552,7 +552,16 @@ created in this section as well as the [public
 key](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/key-github-public-3-01.ur)
 that will be needed to verify proof of control of the GitHub account.
 
-**Scripts:** Scripts demonstrating this section are forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[03_1_Creating_Edges-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/03_1_Creating_Edges-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/03_1_Creating_Edges-SCRIPT.sh` to test it.
+
 
 ### Exercises
 

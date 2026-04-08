@@ -573,7 +573,15 @@ and
 XIDs as well as the [accepted
 CLA](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/cla-bradvoc8-accepted-4-01.envelope).
 
-**Scripts:** Scripts demonstrating this section are forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[04_1_Creating_Binding_Agreements-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/04_1_Creating_Binding_Agreements-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/04_1_Creating_Binding_Agreements-SCRIPT.sh` to test it.
 
 ### Exercises
 
