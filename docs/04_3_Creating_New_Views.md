@@ -383,7 +383,7 @@ Start out by generating a list of edges:
 ```
 envelope xid edge all $XID
 ```
-Then use whatever method you prefer to find the right edge.
+Then use whatever method you prefer to edge with DevReviewer's peer endorsement.
 
 It's:
 ```
@@ -638,7 +638,7 @@ commitment edge. They are:
 
 | Description | Notes | Created In |
 |-------------|-------------|------------|
-| 🔒 Private View | §4.2 |
+| 🔒 Private View | | §4.2 |
 | 👁️  Public View | Elided key material | §4.2 |
 | 🔑 Simplified View | Elided contract key | §4.3 |
 | ❗ Non-Correlatable View | Elided correlatable content | §4.3 |
