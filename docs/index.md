@@ -1,4 +1,4 @@
-<img src="https://developer.blockchaincommons.com/assets/badges/xid.png" width=150 style="float: right">
+<img src="https://developer.blockchaincommons.com/assets/badges/xid-quickstart.png" width=150 style="float: right">
 [**Chapter One: Introduction to XIDs**](01_0_Introduction.md)
 
 * [§1.1: Getting Started with SSI & XIDs](01_1_Getting_Started_SSI_XIDs.md)
