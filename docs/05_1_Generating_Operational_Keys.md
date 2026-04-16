@@ -1,47 +1,71 @@
-# Tutorial 10: Multi-Device Identity
+# 5.1: Generating Operational Keys
 
-Your laptop gets stolen. With a single-key identity, the thief now controls your XID—they can sign as you, lock you out, destroy years of reputation. This tutorial shows how to prevent that by adding operational keys with limited permissions.
+To date, we've used a single key to control your XID, the inception
+key. Sure, we've added keys for GitHub, for attestations, and for
+signing contracts, but that one key was still all that lay between a
+XID and the loss of that identifier. Here's where we start to turn
+that around.
 
 **Difficulty**: Intermediate
 **Builds on**: [Tutorial 09 (Binding Agreements)](09-binding-agreements.md)
 
-> **Related Concepts**: After completing this tutorial, explore [Key Management](../concepts/key-management.md) to understand the full key hierarchy model.
+> 🧠 **Related Concepts.** After completing this tutorial, explore
+[Key Management](../concepts/key-management.md) to understand the full
+key hierarchy model.
 
-## Prerequisites
+## Objectives of this Section
 
-- Completed Tutorial 09 (Binding Agreements)
-- The `envelope` CLI tool installed
-- Understanding of XID key structure from Tutorial 01
+After working through this section, a developer will be able to:
 
-## What You'll Learn
+- Add operational keys with limited permissions
+- Set up multiple devices safely
 
-- Why single-key identity is risky for active work
-- How to add operational keys with limited permissions
-- How to set up multiple devices safely
-- How to manage multiple GitHub signing keys
-- How to rotate keys when changing devices
+Supporting objectives include the ability to:
 
-## Step 0: Setting Up Your Workspace
+- Understand why single-key identity is risky for active work
 
-Create a working directory for this tutorial:
+## Amira's Story: The Fragility of Single Keys
+
+We've talked a number of times about maintaining hetergeneous
+keys. Having different keys for different purposes ensures that if a
+key is lost or compromised, the damage is limited.
+
+That's doubly true for your inception key, which controls your entire
+XID. And that's especially important for Amira now that she's been
+accepted to work on SisterSpaces. If she were to lose her BRadvoc8
+XID, she'd be back to square one.
+
+So how does she protect the investment she's made in her pseudonmyous
+identity to this point. She follows the [least and necessary design
+patterns](https://www.blockchaincommons.com/musings/Least-Necessary/)
+which means that she ensures that the keys that she uses every day
+have the least permissions necessary for the work she's doing.
+
+That's a three-step process:
+
+1. Create operational keys (§5.1).
+2. Adjust her operational keys to just the right (necessary) permissions (§5.2).
+3. Backup her inception key separate from her XID (§5.3).
+
+The steps to do so will be the main through-line of this chapter..
+
+## Part 0: Verify Dependencies
+
+Before you get started, you should (as usual) check your `envelope-cli` version:
 
 ```
-mkdir -p output
+envelope --version
+
+│ bc-envelope-cli 0.34.1
 ```
 
-## Building on Tutorial 09
+Then, reload your XID. 
 
-| Tutorial 09 | Tutorial 10 |
-|-------------|-------------|
-| Signed binding agreements | Put that identity to active work |
-| Identity has legal weight | Protect it while using it |
-| Formal commitments | Multi-device collaboration |
-
-**The Bridge**: Amira signed the CLA in Tutorial 09 and is now officially contributing to Ben's SecureAuth Library. She needs to work from her laptop at home and a portable drive when traveling. How does she do this without putting her entire identity at risk?
-
-> **Security Hardening Arc (T10-T12)**: This tutorial begins the security hardening arc. You built a working identity in T01-T09; now you'll protect it from real-world threats: device theft (T10), disaster (T11), and active compromise (T12).
-
----
+```
+XID=$(cat envelopes/BRadvoc8-xid-s7-private-4-04.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD="your-password-from-previous-tutorials"
+```
 
 ## Amira's Challenge: Working Across Devices
 
@@ -53,147 +77,339 @@ Ben sends Amira access to the SecureAuth Library repository. Charlene helps her 
 
 **The solution**: Add operational keys that can sign but can't manage the identity itself.
 
----
+### The Power of Key Permissions
+
+Besides supporting different keys, XIDs also support different key
+permissions. `xid key add --help` will display instructions on how to
+add keys, including information on how to adjust permissions (which
+we've just lightly touched upon before):
+
+```
+envelope xid key add --help
+
+| Add a key to the XID document
+|
+| Usage: envelope xid key add [OPTIONS] [KEYS] [ENVELOPE]
+|
+| ...
+|
+|       --allow <PRIVILEGE>
+|           Grant a specific permission to the key. May be repeated
+| 
+|           Possible values:
+|           - all:      Allow all applicable XID operations
+|           - auth:     Operational: Authenticate as the subject (e.g., log into services)
+|           - sign:     Operational: Sign digital communications as the subject
+|           - encrypt:  Operational: Encrypt messages from the subject
+|           - elide:    Operational: Elide data under the subject's control
+|           - issue:    Operational: Issue or revoke verifiable credentials on the subject's authority
+|           - access:   Operational: Access resources under the subject's control
+|           - delegate: Management: Delegate priviledges to third parties
+|           - verify:   Management: Verify (update) the XID document
+|           - update:   Management: Update service endpoints
+|           - transfer: Management: Remove the inception key from the XID document
+|           - elect:    Management: Add or remove other verifiers (rotate keys)
+|           - burn:     Management: Transition to a new provenance mark chain
+|           - revoke:   Management: Revoke the XID entirely
+|          
+|          [default: all]
+```
+
+As shown, key privileges are widely divided into two
+types. Operational permissions are what are needed for the use of your
+XID, while management permissions are what are needed to update your
+XID. The way to protect a XID is ultimately to store away management
+(especially inception) keys while using operational keys for your
+everyday usage.
 
 ## Part I: Understanding Key Permissions
 
-### Step 1: Review Current State
+Key permissions can be easily checked using the `xid key` commands.
 
+### Step 1: Listing Keys
+
+The first step in dealing with keys is manipulating them.
+
+You can count the keys in a XID with `envelope xid key count`:
 ```
-# Create Amira's XID (simulating state from previous tutorials)
-# Note: --generator include is required for provenance advancement later
-XID=$(envelope generate keypairs --signing ed25519 | \
-    envelope xid new --nickname "BRadvoc8" --generator include --sign inception)
+envelope xid key count $XID
 
-UNWRAPPED_XID=$(envelope extract wrapped "$XID")
-XID_ID=$(envelope xid id "$UNWRAPPED_XID")
-
-# Store the inception private keys for later use (extracted from the signed XID)
-INCEPTION_PRVKEYS=$(envelope extract wrapped "$XID" | envelope xid key all | head -1)
-
-echo "Amira's XID: $XID_ID"
-
-│ Amira's XID: c7e764b7
+| 3
 ```
 
-> :book: **Why --generator include?**
->
-> The provenance generator allows creating successive versions of your XID. Without it, you can't advance provenance when rotating keys (Step 11). Always include the generator when creating XIDs you plan to update.
+You can list them with `envelope xid key all`:
+
+```
+envelope xid key all $XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkkhdcxrkhyhsmobkplkbwpeszsplkoadimgwchceemdngssnjpihcfgwjswnjlchcsdmtyoycsfncsfdeeplrsnn
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfghdcxgwlufzhpbzpkdtwnvwpsctkiemtpmhbkdsgwdteehtnyureygeykcmnstecwoehhsektksqz
+| ur:envelope/lrtpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdhdcxwtbwwmgshninknjypsoyeyaegaiatdetfgchbsnbehtstkihynpmflaxrnsaesssyaamtkhd
+```
+
+If you know what's where in a XID, you can retrieve a specific key with `envelope xid key at`:
+```
+envelope xid key at 0 $XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkkhdcxrkhyhsmobkplkbwpeszsplkoadimgwchceemdngssnjpihcfgwjswnjlchcsdmtyoycsfncsfdeeplrsnn
+```
+Finally, the `envelope xid key find` command can either let you find an inception key:
+
+```
+$ envelope xid key find inception $XID
+ur:envelope/lstpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfgmdzechws
+```
+
+Or a key with a specific name:
+
+```
+envelope xid key find name "attestation-key" $XID
+```
+ur:envelope/lstpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdeymkzopk
+```
+
+(And isn't that a lot easier than finding the assertion as we demonstrated in [§4.3](04_3_Creating_New_Views.md)?)
 
 ### Step 2: Check Current Key Permissions
 
+A simple `for` loop of the sort used before can list exactly what each key in a XID does:
 ```
-envelope format "$UNWRAPPED_XID" | grep -A1 "allow"
-
-│             'allow': 'All'
+read -a KEYLIST <<< $(envelope xid key all "$XID")
+for i in "${KEYLIST[@]}"
+  do
+    envelope format $i
+done
 ```
 
-That `'All'` permission is the problem. This key can:
+This reveals the three keys that we've added over the course of this tutorial: Amira's inception key, and two signing keys, one for attestations and one for contracts:
+```
+PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+    'allow': 'Sign'
+    'nickname': "contract-key"
+    ELIDED
+]
+PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+    'allow': 'All'
+    'nickname': "BRadvoc8"
+    ELIDED
+]
+PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+    'allow': 'Sign'
+    'nickname': "attestation-key"
+    ELIDED
+]
+```
 
-> :warning: **Single Point of Failure**
->
-> A key with `'All'` permissions can do everything—sign, encrypt, add keys, revoke keys. If compromised, an attacker gains complete control of your identity.
+Now we know what we're working with!
 
-| Permission | What It Allows | Risk If Compromised |
-|------------|---------------|---------------------|
-| `sign` | Create signatures | Attacker signs as you |
-| `encrypt` | Decrypt messages | Attacker reads your messages |
-| `auth` | Authenticate identity | Attacker impersonates you |
-| `elect` | Add new keys | Attacker adds their own keys |
-| `revoke` | Remove keys | Attacker locks you out |
+## Part II: Adding Operational Keys
 
-**The insight**: Operational work only needs `sign`. Management operations (`elect`, `revoke`) should require a more protected key.
+Two sorts of protection are required for keys. Obviously, they must be
+protected from loss. That's going to be the topic of §5.3: how to
+ensure that the inception key is always available. However, they also
+have to be protected from compromise: someone stealing them and using
+them without permission.
 
----
-
-## Part II: Adding an Operational Key
-
-You might think: "I'll just back up my key securely." But backups don't help if your key is actively compromised—the attacker has the same key you do. They can use it before you even know it's stolen. The solution isn't better backups; it's limiting what each key can do.
+That's going to be the topic of this chapter, where we practice the
+[least and
+necessary](https://www.blockchaincommons.com/musings/Least-Necessary/)
+design patterns by creating new keys with limited permissions for
+everyday usage, so that if keys are stolen, they're these keys, rather
+than the ones that control the XID.
 
 ### Step 3: Generate a Laptop Key
 
+To start with, Amira is going to generate a new operational key for
+the laptop where she does all of her work for SisterSpaces.
+
 ```
-# Generate key specifically for laptop use
 LAPTOP_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 LAPTOP_PUBKEYS=$(envelope generate pubkeys "$LAPTOP_PRVKEYS")
 
-echo "Generated laptop operational key"
+echo "✅ Generated laptop operational key"
 
-│ Generated laptop operational key
+│ ✅ Generated laptop operational key
 ```
 
 ### Step 4: Add Key with Limited Permissions
 
+The permissions aren't actually in the key, which is just a standard
+ed25519 key, but instead in the XID. As we've seen previously, when we
+added attestation and contract keys for Amira, when you add a key you
+choose the permissions it'll have.
+
 ```
-# Add to XID with sign-only permission
-UPDATED_XID=$(envelope xid key add \
+XID_WITH_OPERATIONAL_KEY_1=$(envelope xid key add \
+    --verify inception \
+    --nickname "laptop-key" \
+    --allow auth \
     --allow sign \
-    --nickname "laptop-jan2026" \
-    "$LAPTOP_PUBKEYS" "$UNWRAPPED_XID")
-
-echo "Key permissions after adding laptop key:"
-envelope format "$UPDATED_XID" | grep -B1 -A1 "allow"
-
-│ Key permissions after adding laptop key:
-│             'allow': 'All'
-│             'nickname': "BRadvoc8"
-│ --
-│             'allow': 'Sign'
-│             'nickname': "laptop-jan2026"
+    --allow encrypt \
+    --allow elide \
+    --allow issue \
+    --allow access \
+    --private encrypt \
+    --encrypt-password "$PASSWORD" \
+    "$LAPTOP_PRVKEYS" \
+    "$XID")
 ```
 
-Now Amira has two keys:
-
-- **BRadvoc8** (original): `'All'` permissions — can manage identity
-- **laptop-jan2026**: `'Sign'` only — can sign, nothing else
-
-> :book: **Operational Key**
->
-> A key with limited permissions (typically sign-only) used for daily work. If compromised, the attacker can sign things but cannot take over the identity.
-
-### Step 5: Test the Operational Key
-
-The operational key should be able to sign:
+`envelope format $XID` reveals a key with a much longer list of permissions than the other keys to date:
 
 ```
-# Sign something with the laptop key
-TEST_CLAIM=$(envelope subject type string "Test signature from laptop key")
-TEST_SIGNED=$(envelope sign --signer "$LAPTOP_PRVKEYS" "$TEST_CLAIM")
-
-# Verify it
-envelope verify --verifier "$LAPTOP_PUBKEYS" "$TEST_SIGNED" >/dev/null && echo "✅ Laptop key can sign"
-
-│ ✅ Laptop key can sign
+| ✅ Added operational (laptop) key to XID
+|
+| ...
+|
+| 'key': PublicKeys(19f38b63, SigningPublicKey(769cfaa0, Ed25519PublicKey(91d00d2e)), EncapsulationPublicKey(66b98378, X25519PublicKey(66b98378))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Access'
+|         'allow': 'Authorize'
+|         'allow': 'Elide'
+|         'allow': 'Encrypt'
+|         'allow': 'Issue'
+|         'allow': 'Sign'
+|         'nickname': "contract-key"
+|    ]
 ```
 
-But it should NOT be able to authorize identity changes. Let's prove that constraint works:
+### Step 5: Generate a Laptop GitHub Key
 
+Best practice is also to have a different GitHub key for each
+device. Because Amira has only been doing SisterSpaces work on her
+laptop, the signing key she created in [§3.1](03_1_Creating_Edges.md)
+is effectively her laptop SSH signing key.
+
+She might want to adjust her labeling of the key now that she's
+thinking about keys on a per-device basis. More importantly, if she
+ever does SisterSpaces GitHub work on a different device, she should
+create another key for use exclusviely on that device.
+
+### Step 6: Add a Portable Drive Key
+
+At a later date, Amira goes on a trip during a time when she's likely
+to need to make some updates to SisterSpaces files using her BRadvoc8
+identity. She doesn't want to bring either her inception key or her
+fully operational laptop key.
+
+Before the trip, she archives everything, with the plan to only use a
+more limited key that she's going to keep on a bootable portable
+drive.
+
+As usual, she creates the keys:
 ```
-# Generate a rogue key an attacker might try to add
-ROGUE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
-ROGUE_PUBKEYS=$(envelope generate pubkeys "$ROGUE_PRVKEYS")
-
-# The attacker CAN modify the XID structure (anyone can modify data)
-TAMPERED_XID=$(envelope xid key add --allow sign --nickname "rogue-key" \
-    "$ROGUE_PUBKEYS" "$UPDATED_XID")
-
-# But they can only sign the modification with the laptop key
-TAMPERED_SIGNED=$(envelope sign --signer "$LAPTOP_PRVKEYS" "$TAMPERED_XID")
-
-# When Ben verifies, he checks: was this signed by a key with 'elect' permission?
-# The laptop key only has 'sign' permission, so this modification is UNAUTHORIZED
-echo "Tampered XID was signed, but by a key without 'elect' permission"
-echo "Verifiers will reject this as an unauthorized identity change"
-
-│ Tampered XID was signed, but by a key without 'elect' permission
-│ Verifiers will reject this as an unauthorized identity change
+PORTABLE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+PORTABLE_PUBKEYS=$(envelope generate pubkeys "$LAPTOP_PRVKEYS")
 ```
 
-This is the protection: an attacker with the laptop key can create modified XIDs, but they can't create *authorized* modifications. Anyone checking the signature will see it wasn't signed by a key with `elect` permission.
+Then adds them to her XID with a different set of permissions. She
+opts to remove the `encrypt` permission and the `issue` permission, so
+that if her key goes stray when she's on the move, an attacker can't
+decrypt her content nor create new credentials. This follows the
+least/necessary pattern: she plans to be working on PRs for
+SisterSpaces, not these other things
+```
+XID_WITH_OPERATIONAL_KEY_2=$(envelope xid key add \
+    --nickname "portable-key" \
+    --allow auth \
+    --allow sign \
+    --allow elide \
+    --allow access \
+    --private encrypt \
+    --encrypt-password "$PASSWORD" \
+    "$PORTABLE_PRVKEYS" \
+    "$XID_WITH_OPERATIONAL_KEY_1")
 
-> :book: **Permission Enforcement**
->
-> Permissions aren't enforced at modification time—anyone can create a modified envelope. They're enforced at verification time. Verifiers check: "Was this change signed by a key that had permission to make it?"
+echo "✅ Generated portable operational key"
+```
+
+Here's the result:
+```
+envelope format $XID_WITH_OPERATIONAL_KEY_2
+
+| XID(5f1c3d9e) [
+|
+| ...
+| 
+|     'key': PublicKeys(19f38b63, SigningPublicKey(769cfaa0, Ed25519PublicKey(91d00d2e)), EncapsulationPublicKey(66b98378, X25519PublicKey(66b98378))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Access'
+|         'allow': 'Authorize'
+|         'allow': 'Elide'
+|         'allow': 'Encrypt'
+|         'allow': 'Issue'
+|         'allow': 'Sign'
+|         'nickname': "laptop-key"
+|     ]
+|     'key': PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+|         'allow': 'Sign'
+|         'nickname': "contract-key"
+|     ]
+|     'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|         'allow': 'Sign'
+|         'nickname': "attestation-key"
+|     ]
+|     'key': PublicKeys(7015dca5, SigningPublicKey(52542a78, Ed25519PublicKey(d4939b2d)), EncapsulationPublicKey(1beeacb5, X25519PublicKey(1beeacb5))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Access'
+|         'allow': 'Authorize'
+|         'allow': 'Elide'
+|         'allow': 'Sign'
+|         'nickname': "portable-key"
+|     ]
+|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|         'allow': 'All'
+|         'nickname': "BRadvoc8"
+|     ]
+|     ...
+| ]
+```
+
+### Step 7: Review and Store
+
+XID_WITH_KEYS=$(envelope xid provenance next \
+    --password "$PASSWORD" \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password "$PASSWORD" \
+    "$XID_WITH_OPERATIONAL_KEY_2")
+echo "✅ Provenance advanced"
+
+PUBLIC_XID_WITH_KEYS=$(envelope xid export --private elide --generator elide "$XID_WITH_KEYS")
+
+echo "$LAPTOP_PRVKEYS" > envelopes/key-laptop-private-5-01.ur
+echo "$LAPTOP_PUBKEYS" > envelopes/key-laopt-public-5-01.ur
+echo "$PORTABLE_PRVKEYS" > envelopes/key-portable-private-5-01.ur
+echo "$PORTABLE_PUBKEYS" > envelopes/key-portable-public-5-01.ur
+
+echo "$PUBLIC_XID_WITH_KEYS" > envelopes/BRadvoc8-xid-public-5-01.envelope
+echo "$XID_WITH_KEYS" > envelopes/BRadvoc8-xid-private-5-01.envelope
+
+
+At this point, Amira can review her XID that now has five keys in it:
+
+[this goes under key structure]
+
+
 
 ### What If Laptop Key Is Compromised?
 
@@ -219,28 +435,6 @@ Amira leaves her laptop at a coffee shop. Someone takes it.
 
 ## Part III: Multiple Devices
 
-### Step 6: Add a Portable Drive Key
-
-Amira also needs to work while traveling, using a bootable portable drive:
-
-```
-# Generate key for portable drive
-PORTABLE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
-PORTABLE_PUBKEYS=$(envelope generate pubkeys "$PORTABLE_PRVKEYS")
-
-# Add to XID with sign-only permission
-UPDATED_XID=$(envelope xid key add \
-    --allow sign \
-    --nickname "portable-jan2026" \
-    "$PORTABLE_PUBKEYS" "$UPDATED_XID")
-
-echo "Keys in XID:"
-envelope xid key all "$UPDATED_XID" | wc -l
-
-│ Keys in XID:
-│ 3
-```
-
 ### Step 7: Review Key Structure
 
 ```
@@ -262,81 +456,13 @@ envelope format "$UPDATED_XID" | grep -E "(nickname|allow)"
 | laptop-jan2026 | Sign | Laptop | Daily work at home |
 | portable-jan2026 | Sign | Portable drive | Work while traveling |
 
----
-
-## Part IV: GitHub Signing Keys
-
-GitHub allows multiple SSH signing keys. Each device should have its own.
-
-### Step 8: Generate SSH Signing Keys Per Device
-
-```
-# Generate SSH signing key for laptop
-ssh-keygen -t ed25519 -C "BRadvoc8-laptop" -f output/laptop_signing_key -N ""
-
-# Generate SSH signing key for portable drive
-ssh-keygen -t ed25519 -C "BRadvoc8-portable" -f output/portable_signing_key -N ""
-
-echo "Generated SSH signing keys for both devices"
-
-│ Generating public/private ed25519 key pair.
-│ Your identification has been saved in output/laptop_signing_key
-│ Your public key has been saved in output/laptop_signing_key.pub
-│ Generating public/private ed25519 key pair.
-│ Your identification has been saved in output/portable_signing_key
-│ Your public key has been saved in output/portable_signing_key.pub
-│ Generated SSH signing keys for both devices
-```
-
-### Step 9: Add Both Keys to GitHub
-
-In GitHub Settings → SSH and GPG keys → New SSH key:
-
-1. Add `laptop_signing_key.pub` with title "BRadvoc8-laptop"
-2. Add `portable_signing_key.pub` with title "BRadvoc8-portable"
-3. Set both as "Signing Key" type
-
-**Why separate keys**: If the portable drive is lost, revoke only that GitHub key. Laptop continues working unaffected.
-
-### Step 10: Link SSH Keys to XID
-
-This step connects your Git identity to your XID identity. Without it, GitHub signatures and XID signatures are two unrelated systems—anyone could claim "BRadvoc8" on GitHub without proving they control the XID.
-
-```
-# Create attestation linking SSH key to XID
-SSH_ATTESTATION=$(envelope subject type string "I control the SSH signing key BRadvoc8-laptop")
-SSH_ATTESTATION=$(envelope assertion add pred-obj string "sshPublicKey" string "$(cat output/laptop_signing_key.pub)" "$SSH_ATTESTATION")
-SSH_ATTESTATION=$(envelope assertion add pred-obj string "purpose" string "Git commit signing on laptop" "$SSH_ATTESTATION")
-
-# Sign with the corresponding XID operational key
-SSH_ATTESTATION=$(envelope sign --signer "$LAPTOP_PRVKEYS" "$SSH_ATTESTATION")
-
-echo "Linked SSH key to XID operational key"
-
-│ Linked SSH key to XID operational key
-```
-
-This creates a verifiable chain: XID → operational key → SSH signing key → Git commits.
-
-Now do the same for the portable key:
-
-```
-# Link portable SSH key to portable XID operational key
-PORTABLE_SSH_ATTESTATION=$(envelope subject type string "I control the SSH signing key BRadvoc8-portable")
-PORTABLE_SSH_ATTESTATION=$(envelope assertion add pred-obj string "sshPublicKey" string "$(cat output/portable_signing_key.pub)" "$PORTABLE_SSH_ATTESTATION")
-PORTABLE_SSH_ATTESTATION=$(envelope assertion add pred-obj string "purpose" string "Git commit signing on portable drive" "$PORTABLE_SSH_ATTESTATION")
-PORTABLE_SSH_ATTESTATION=$(envelope sign --signer "$PORTABLE_PRVKEYS" "$PORTABLE_SSH_ATTESTATION")
-
-echo "Linked portable SSH key to XID operational key"
-
-│ Linked portable SSH key to XID operational key
-```
-
-> :warning: **Match Keys to Keys**
->
-> Each SSH key should be linked to its corresponding XID operational key. The laptop SSH key is signed by the laptop operational key. This way, revoking the XID operational key also invalidates its SSH attestation.
+[add key strucure]
 
 ---
+
+[add: eliding main keys for usage]
+
+[into 5.2]
 
 ## Part V: Key Rotation
 

@@ -75,7 +75,7 @@ information can be found.
 | | `attachment` | `'attachment'` | 📂 Third-party metadata |
 | | `delegate` | `'delegate'` | 👌🏽 Permission delegation | 
 | §3.1-§3.3 | `edge` | `'edge'` | 🗣️  Attestations |
-| §1.3, §2.1 | `key` | `'key'`<br>`'privateKey'` | 🔑 Key pairs |
+| §1.3, §2.1, §5.1-5.4 | `key` | `'key'`<br>`'privateKey'` | 🔑 Key pairs |
 | §1.4 | `method`<br>`resolution` | `'dereferencevia'` | 🧶 Resolution method |
 | | `service` | `'service'` | ☁️  Service delegation |
 | §1.3, §2.1 | `provenance` | `'provenance'` | ⛓️  Provenance mark |
