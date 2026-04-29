@@ -1,4 +1,5 @@
 <img src="https://developer.blockchaincommons.com/assets/badges/xid-quickstart.png" width=150 style="float: right">
+
 See [bcts.dev/xid](https://bcts.dev/xid) for a hands-on, online version of this tutorial.
 
 <table width=100%>
