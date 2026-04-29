@@ -2,15 +2,12 @@
 
 To date, we've used a single key to control your XID, the inception
 key. Sure, we've added keys for GitHub, for attestations, and for
-signing contracts, but that one key was still all that lay between a
-XID and the loss of that identifier. Here's where we start to turn
-that around.
-
-**Difficulty**: Intermediate
-**Builds on**: [Tutorial 09 (Binding Agreements)](09-binding-agreements.md)
+signing contracts, but that singular inception key was still all that
+lay between a XID and the loss of that identifier. Here's where we
+start to turn that around.
 
 > 🧠 **Related Concepts.** After completing this tutorial, explore
-[Key Management](../concepts/key-management.md) to understand the full
+[Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) to understand the full
 key hierarchy model.
 
 ## Objectives of this Section
@@ -36,7 +33,7 @@ accepted to work on SisterSpaces. If she were to lose her BRadvoc8
 XID, she'd be back to square one.
 
 So how does she protect the investment she's made in her pseudonmyous
-identity to this point. She follows the [least and necessary design
+identity to this point? She follows the [least and necessary design
 patterns](https://www.blockchaincommons.com/musings/Least-Necessary/)
 which means that she ensures that the keys that she uses every day
 have the least permissions necessary for the work she's doing.
@@ -47,42 +44,14 @@ That's a three-step process:
 2. Adjust her operational keys to just the right (necessary) permissions (§5.2).
 3. Backup her inception key separate from her XID (§5.3).
 
-The steps to do so will be the main through-line of this chapter..
-
-## Part 0: Verify Dependencies
-
-Before you get started, you should (as usual) check your `envelope-cli` version:
-
-```
-envelope --version
-
-│ bc-envelope-cli 0.34.1
-```
-
-Then, reload your XID. 
-
-```
-XID=$(cat envelopes/BRadvoc8-xid-s7-private-4-04.envelope)
-XID_ID=$(envelope xid id $XID)
-PASSWORD="your-password-from-previous-tutorials"
-```
-
-## Amira's Challenge: Working Across Devices
-
-Ben sends Amira access to the SecureAuth Library repository. Charlene helps her prepare:
-
-> "You'll be working from different machines. Right now your XID has one key that does everything. If your laptop is compromised, an attacker gets full control of your identity—they could lock you out, revoke your keys, destroy your reputation. Let's fix that."
-
-**The problem**: One key with all permissions = single point of failure.
-
-**The solution**: Add operational keys that can sign but can't manage the identity itself.
+The steps to do so will be the main through-line of this chapter.
 
 ### The Power of Key Permissions
 
 Besides supporting different keys, XIDs also support different key
-permissions. `xid key add --help` will display instructions on how to
-add keys, including information on how to adjust permissions (which
-we've just lightly touched upon before):
+permissions. `xid key add --help` displays instructions on how to add
+keys, including information on how to adjust permissions (which we've
+just lightly touched upon before):
 
 ```
 envelope xid key add --help
@@ -122,13 +91,33 @@ XID. The way to protect a XID is ultimately to store away management
 (especially inception) keys while using operational keys for your
 everyday usage.
 
+
+## Part 0: Verify Dependencies
+
+Before you get started, you should (as usual) check your `envelope-cli` version:
+
+```
+envelope --version
+
+│ bc-envelope-cli 0.34.1
+```
+
+Then, reload your XID. 
+
+```
+XID=$(cat envelopes/BRadvoc8-xid-s7-private-4-04.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD="your-password-from-previous-tutorials"
+```
+
 ## Part I: Understanding Key Permissions
 
 Key permissions can be easily checked using the `xid key` commands.
 
 ### Step 1: Listing Keys
 
-The first step in dealing with keys is manipulating them.
+To manage keys first requires understanding how to manipulate
+them. The `envelope` command offers a number of ways to do so.
 
 You can count the keys in a XID with `envelope xid key count`:
 ```
@@ -142,30 +131,32 @@ You can list them with `envelope xid key all`:
 ```
 envelope xid key all $XID
 
-| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkkhdcxrkhyhsmobkplkbwpeszsplkoadimgwchceemdngssnjpihcfgwjswnjlchcsdmtyoycsfncsfdeeplrsnn
-| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfghdcxgwlufzhpbzpkdtwnvwpsctkiemtpmhbkdsgwdteehtnyureygeykcmnstecwoehhsektksqz
-| ur:envelope/lrtpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdhdcxwtbwwmgshninknjypsoyeyaegaiatdetfgchbsnbehtstkihynpmflaxrnsaesssyaamtkhd
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkklfoycsfplftansfwlrhdghvdfmdrhpglmycecpasseyacpehpkticpclutcthnmsbztppmptkitshsotqdnnfzgalazclfjtpfsgjsieolpyvaglwdgaiakkfgstrnolyagmnekisftpbkuraarfrkolpmnsndjyswdlpfioldlersgtjkgazmdnztlflbgstprhcetehpnbgedyfrnshprsgdswaainlbrfmefloteopdfnvlfnwnjnaohddatansfphdcxpavacsswfllernaavopkhgbezcdkfyptldgemygtytdsfrjtpyeekkrplttkfpceoybwtpsotanshptansfwlrhdcxskehfypyjsrltdbgfpvwbwjnfygdqzrllamevtlulgfzprglehencyndwfftaabdgskorhchfzroyakbsfnbolcldsgddrkgghzmdkpfdikplareaxdecfbkbdbshflfaxtansgmgdgatngyzeplasbtjnbkwtylntimbbislroybstpsotansgmhdcxgugwrhwseycsdisbvdzewegrecoykensgrhpglfnfgnyimylchhtgewlaoeslkihoycsfncsfdcefxdems
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfglfoycsfplftansfwlrhdghztsoynoxlshsrpcfdlkggudpskttvypekpjnhljtpsspfsrneyplhhcwlgfmceiokktlrdltfhvyykaostfrdttbehlpwypkiewfwdpetlkgdngrnegeaemdmuqdrpfesbmehgasdwadrdftcnemueimaxisjeeeghksdwwygskirhcylasataytlymsdasfspgdmnoyiddirkmwhsesbgrysnbwmtdpnsgdhddatansfphdcxdtrortsrldkghddybyfdlrlelepmjsprtiaogykgmeoywlhdlysegywprhjtuessoybwtpsotanshptansfwlrhdcxgrbwfrrdbylgpkgovsuevldpmhonzmenbtmttytefsdplbmthlkgjsnlkewlwmcxgspkfsdrlsytismupmgrcagdfzgdmsgysoaxoxcswladrnrdtnrnbgiewduthflfaxtansgmgdiecxisgdrhrhmhvlmkrdgsjkrtlttortoybstpsotansgmhdcxrkkemtyldezmietdspmenscfcpbkfwykketirdolhpadbgylbeesykgufnjlhllfnbylurzm
+| ur:envelope/lrtpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdlfoycsfplftansfwlrhdghsesfgliagewldimenlaebzcfpdlsqztsbsbbroeolfflpeckaegwytlkfdgyynlamnfmahbdtenssgfskpcywpluaefdcxcwidiopamupswpfsldolfssraebnswkipfpktnoxplzcrtdllbndcsseykdlosvatbtnattipegswkvlaaltsbpyoxnyahhkdrcagddtotlpbwvyluhywtenflihhyvtueprbkhddatansfphdcxwyjegooepakobtaxksjlhnfsfdbdhsteynbdvduoztpaoywnkendbzryhhwymstdoybwtpsotanshptansfwlrhdcxuyfxsoqzfxcfsshngopmpkjthndisnfyhysksagltltsnebaluidcxrtfxdibkeegsflldgwurdyjtvejljsfemtcegdmshssnrobdwltewmtptotestistiqzgshflfaxtansgmgdfsjlcxdskpbzswwzswgwfwtockjkynaaoybstpsotansgmhdcxhgatwkkepkgafysffruywegychtbidvejomkhhrlsbidmnftgapehdlbwybemkyttikosest
 ```
 
 If you know what's where in a XID, you can retrieve a specific key with `envelope xid key at`:
 ```
 envelope xid key at 0 $XID
 
-| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkkhdcxrkhyhsmobkplkbwpeszsplkoadimgwchceemdngssnjpihcfgwjswnjlchcsdmtyoycsfncsfdeeplrsnn
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkklfoycsfplftansfwlrhdghvdfmdrhpglmycecpasseyacpehpkticpclutcthnmsbztppmptkitshsotqdnnfzgalazclfjtpfsgjsieolpyvaglwdgaiakkfgstrnolyagmnekisftpbkuraarfrkolpmnsndjyswdlpfioldlersgtjkgazmdnztlflbgstprhcetehpnbgedyfrnshprsgdswaainlbrfmefloteopdfnvlfnwnjnaohddatansfphdcxpavacsswfllernaavopkhgbezcdkfyptldgemygtytdsfrjtpyeekkrplttkfpceoybwtpsotanshptansfwlrhdcxskehfypyjsrltdbgfpvwbwjnfygdqzrllamevtlulgfzprglehencyndwfftaabdgskorhchfzroyakbsfnbolcldsgddrkgghzmdkpfdikplareaxdecfbkbdbshflfaxtansgmgdgatngyzeplasbtjnbkwtylntimbbislroybstpsotansgmhdcxgugwrhwseycsdisbvdzewegrecoykensgrhpglfnfgnyimylchhtgewlaoeslkihoycsfncsfdcefxdems
+
 ```
 Finally, the `envelope xid key find` command can either let you find an inception key:
 
 ```
-$ envelope xid key find inception $XID
-ur:envelope/lstpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfgmdzechws
+envelope xid key find inception $XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfglfoycsfplftansfwlrhdghztsoynoxlshsrpcfdlkggudpskttvypekpjnhljtpsspfsrneyplhhcwlgfmceiokktlrdltfhvyykaostfrdttbehlpwypkiewfwdpetlkgdngrnegeaemdmuqdrpfesbmehgasdwadrdftcnemueimaxisjeeeghksdwwygskirhcylasataytlymsdasfspgdmnoyiddirkmwhsesbgrysnbwmtdpnsgdhddatansfphdcxdtrortsrldkghddybyfdlrlelepmjsprtiaogykgmeoywlhdlysegywprhjtuessoybwtpsotanshptansfwlrhdcxgrbwfrrdbylgpkgovsuevldpmhonzmenbtmttytefsdplbmthlkgjsnlkewlwmcxgspkfsdrlsytismupmgrcagdfzgdmsgysoaxoxcswladrnrdtnrnbgiewduthflfaxtansgmgdiecxisgdrhrhmhvlmkrdgsjkrtlttortoybstpsotansgmhdcxrkkemtyldezmietdspmenscfcpbkfwykketirdolhpadbgylbeesykgufnjlhllfnbylurzm
 ```
 
 Or a key with a specific name:
 
 ```
 envelope xid key find name "attestation-key" $XID
-```
-ur:envelope/lstpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdeymkzopk
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdlfoycsfplftansfwlrhdghsesfgliagewldimenlaebzcfpdlsqztsbsbbroeolfflpeckaegwytlkfdgyynlamnfmahbdtenssgfskpcywpluaefdcxcwidiopamupswpfsldolfssraebnswkipfpktnoxplzcrtdllbndcsseykdlosvatbtnattipegswkvlaaltsbpyoxnyahhkdrcagddtotlpbwvyluhywtenflihhyvtueprbkhddatansfphdcxwyjegooepakobtaxksjlhnfsfdbdhsteynbdvduoztpaoywnkendbzryhhwymstdoybwtpsotanshptansfwlrhdcxuyfxsoqzfxcfsshngopmpkjthndisnfyhysksagltltsnebaluidcxrtfxdibkeegsflldgwurdyjtvejljsfemtcegdmshssnrobdwltewmtptotestistiqzgshflfaxtansgmgdfsjlcxdskpbzswwzswgwfwtockjkynaaoybstpsotansgmhdcxhgatwkkepkgafysffruywegychtbidvejomkhhrlsbidmnftgapehdlbwybemkyttikosest
 ```
 
 (And isn't that a lot easier than finding the assertion as we demonstrated in [§4.3](04_3_Creating_New_Views.md)?)
@@ -173,6 +164,7 @@ ur:envelope/lstpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxgh
 ### Step 2: Check Current Key Permissions
 
 A simple `for` loop of the sort used before can list exactly what each key in a XID does:
+
 ```
 read -a KEYLIST <<< $(envelope xid key all "$XID")
 for i in "${KEYLIST[@]}"
@@ -184,19 +176,37 @@ done
 This reveals the three keys that we've added over the course of this tutorial: Amira's inception key, and two signing keys, one for attestations and one for contracts:
 ```
 PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+    {
+        'privateKey': ENCRYPTED [
+            'hasSecret': EncryptedKey(Argon2id)
+        ]
+    } [
+        'salt': Salt
+    ]
     'allow': 'Sign'
     'nickname': "contract-key"
-    ELIDED
 ]
 PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+    {
+        'privateKey': ENCRYPTED [
+            'hasSecret': EncryptedKey(Argon2id)
+        ]
+    } [
+        'salt': Salt
+    ]
     'allow': 'All'
     'nickname': "BRadvoc8"
-    ELIDED
 ]
 PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+    {
+        'privateKey': ENCRYPTED [
+            'hasSecret': EncryptedKey(Argon2id)
+        ]
+    } [
+        'salt': Salt
+    ]
     'allow': 'Sign'
     'nickname': "attestation-key"
-    ELIDED
 ]
 ```
 
@@ -205,10 +215,11 @@ Now we know what we're working with!
 ## Part II: Adding Operational Keys
 
 Two sorts of protection are required for keys. Obviously, they must be
-protected from loss. That's going to be the topic of §5.3: how to
-ensure that the inception key is always available. However, they also
-have to be protected from compromise: someone stealing them and using
-them without permission.
+protected from loss. That's going to be the topic of
+[§5.3](05_3_Backing_up_Inception_Key.md): how to ensure that the
+inception key is always available. However, they also have to be
+protected from compromise: someone stealing them and using them
+without permission.
 
 That's going to be the topic of this chapter, where we practice the
 [least and
@@ -217,10 +228,11 @@ design patterns by creating new keys with limited permissions for
 everyday usage, so that if keys are stolen, they're these keys, rather
 than the ones that control the XID.
 
-### Step 3: Generate a Laptop Key
+### Step 3: Generate a Laptop XID Key
 
 To start with, Amira is going to generate a new operational key for
-the laptop where she does all of her work for SisterSpaces.
+her XID for the laptop where she does all of her work for
+SisterSpaces.
 
 ```
 LAPTOP_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
@@ -234,9 +246,8 @@ echo "✅ Generated laptop operational key"
 ### Step 4: Add Key with Limited Permissions
 
 The permissions aren't actually in the key, which is just a standard
-ed25519 key, but instead in the XID. As we've seen previously, when we
-added attestation and contract keys for Amira, when you add a key you
-choose the permissions it'll have.
+ed25519 key, but instead in the XID. As we've seen previously, when
+you add a key that's when you choose the permissions it'll have.
 
 ```
 XID_WITH_OPERATIONAL_KEY_1=$(envelope xid key add \
@@ -254,14 +265,16 @@ XID_WITH_OPERATIONAL_KEY_1=$(envelope xid key add \
     "$XID")
 ```
 
-`envelope format $XID` reveals a key with a much longer list of permissions than the other keys to date:
+`envelope format` reveals a key with a much longer list of permissions than the other keys to date:
 
 ```
+envelope format $XID_WITH_OPERATIONAL_KEY_1
+
 | ✅ Added operational (laptop) key to XID
 |
 | ...
 |
-| 'key': PublicKeys(19f38b63, SigningPublicKey(769cfaa0, Ed25519PublicKey(91d00d2e)), EncapsulationPublicKey(66b98378, X25519PublicKey(66b98378))) [
+|     'key': PublicKeys(c32d7426, SigningPublicKey(59e9ad4d, Ed25519PublicKey(425b8e15)), EncapsulationPublicKey(c2b3746b, X25519PublicKey(c2b3746b))) [
 |         {
 |             'privateKey': ENCRYPTED [
 |                 'hasSecret': EncryptedKey(Argon2id)
@@ -275,8 +288,8 @@ XID_WITH_OPERATIONAL_KEY_1=$(envelope xid key add \
 |         'allow': 'Encrypt'
 |         'allow': 'Issue'
 |         'allow': 'Sign'
-|         'nickname': "contract-key"
-|    ]
+|         'nickname': "laptop-key"
+|     ]
 ```
 
 ### Step 5: Generate a Laptop GitHub Key
@@ -291,7 +304,7 @@ thinking about keys on a per-device basis. More importantly, if she
 ever does SisterSpaces GitHub work on a different device, she should
 create another key for use exclusviely on that device.
 
-### Step 6: Add a Portable Drive Key
+### Step 6: Add a Portable Drive XID Key
 
 At a later date, Amira goes on a trip during a time when she's likely
 to need to make some updates to SisterSpaces files using her BRadvoc8
@@ -308,12 +321,13 @@ PORTABLE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 PORTABLE_PUBKEYS=$(envelope generate pubkeys "$LAPTOP_PRVKEYS")
 ```
 
-Then adds them to her XID with a different set of permissions. She
+Then she adds them to her XID with a different set of permissions. She
 opts to remove the `encrypt` permission and the `issue` permission, so
 that if her key goes stray when she's on the move, an attacker can't
 decrypt her content nor create new credentials. This follows the
 least/necessary pattern: she plans to be working on PRs for
 SisterSpaces, not these other things
+
 ```
 XID_WITH_OPERATIONAL_KEY_2=$(envelope xid key add \
     --nickname "portable-key" \
@@ -329,7 +343,7 @@ XID_WITH_OPERATIONAL_KEY_2=$(envelope xid key add \
 echo "✅ Generated portable operational key"
 ```
 
-Here's the result:
+Here's A look at her full set of keys afterward:
 ```
 envelope format $XID_WITH_OPERATIONAL_KEY_2
 
@@ -337,7 +351,40 @@ envelope format $XID_WITH_OPERATIONAL_KEY_2
 |
 | ...
 | 
-|     'key': PublicKeys(19f38b63, SigningPublicKey(769cfaa0, Ed25519PublicKey(91d00d2e)), EncapsulationPublicKey(66b98378, X25519PublicKey(66b98378))) [
+|     'key': PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Sign'
+|         'nickname': "contract-key"
+|     ]
+|     'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Sign'
+|         'nickname': "attestation-key"
+|     ]
+|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'All'
+|         'nickname': "BRadvoc8"
+|     ]
+|     'key': PublicKeys(c32d7426, SigningPublicKey(59e9ad4d, Ed25519PublicKey(425b8e15)),|  EncapsulationPublicKey(c2b3746b, X25519PublicKey(c2b3746b))) [
 |         {
 |             'privateKey': ENCRYPTED [
 |                 'hasSecret': EncryptedKey(Argon2id)
@@ -353,15 +400,7 @@ envelope format $XID_WITH_OPERATIONAL_KEY_2
 |         'allow': 'Sign'
 |         'nickname': "laptop-key"
 |     ]
-|     'key': PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
-|         'allow': 'Sign'
-|         'nickname': "contract-key"
-|     ]
-|     'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
-|         'allow': 'Sign'
-|         'nickname': "attestation-key"
-|     ]
-|     'key': PublicKeys(7015dca5, SigningPublicKey(52542a78, Ed25519PublicKey(d4939b2d)), EncapsulationPublicKey(1beeacb5, X25519PublicKey(1beeacb5))) [
+|     'key': PublicKeys(d930b267, SigningPublicKey(5f6630d7, Ed25519PublicKey(d72a49de)), EncapsulationPublicKey(ae36f917, X25519PublicKey(ae36f917))) [
 |         {
 |             'privateKey': ENCRYPTED [
 |                 'hasSecret': EncryptedKey(Argon2id)
@@ -375,15 +414,16 @@ envelope format $XID_WITH_OPERATIONAL_KEY_2
 |         'allow': 'Sign'
 |         'nickname': "portable-key"
 |     ]
-|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
-|         'allow': 'All'
-|         'nickname': "BRadvoc8"
-|     ]
 |     ...
 | ]
 ```
 
 ### Step 7: Review and Store
+
+You've now made the full updates to your XID and should store it all away.
+
+As usual, first update your provenance mark:
+```
 
 XID_WITH_KEYS=$(envelope xid provenance next \
     --password "$PASSWORD" \
@@ -392,10 +432,18 @@ XID_WITH_KEYS=$(envelope xid provenance next \
     --generator encrypt \
     --encrypt-password "$PASSWORD" \
     "$XID_WITH_OPERATIONAL_KEY_2")
-echo "✅ Provenance advanced"
 
+| echo "✅ Provenance advanced"
+```
+
+Then, make a public version:
+
+```
 PUBLIC_XID_WITH_KEYS=$(envelope xid export --private elide --generator elide "$XID_WITH_KEYS")
+```
 
+Finally, save everything away:
+```
 echo "$LAPTOP_PRVKEYS" > envelopes/key-laptop-private-5-01.ur
 echo "$LAPTOP_PUBKEYS" > envelopes/key-laopt-public-5-01.ur
 echo "$PORTABLE_PRVKEYS" > envelopes/key-portable-private-5-01.ur
@@ -403,17 +451,28 @@ echo "$PORTABLE_PUBKEYS" > envelopes/key-portable-public-5-01.ur
 
 echo "$PUBLIC_XID_WITH_KEYS" > envelopes/BRadvoc8-xid-public-5-01.envelope
 echo "$XID_WITH_KEYS" > envelopes/BRadvoc8-xid-private-5-01.envelope
+```
 
+#### Key Type Comparison
 
 At this point, Amira can review her XID that now has five keys in it:
 
-[this goes under key structure]
+| Key Type | Purpose | Verified Against | Added In |
+|----------|---------|------------------|----------|
+| 👤 XID inception key | Signs XID document updates | XID itself | §1.3 |
+| 🗣️  Attestation key | Signs attestations | XID key list | §2.1 |
+| 🖋️  SSH signing key | Signs Git commits | GitHub account | §3.1 |
+| 📄️  Contract signing key | Signs contracts | XID key list | §4.1 |
+| 💻 Laptop Key | Operational Key | XID key list | §5.1 |
+| ⏏️ Portable Key | Limited Operational Key | XID key list | §5.1 |
 
 
+#### Key Protection Comparison
 
-### What If Laptop Key Is Compromised?
+The following chart shows why having an operational key is safer than
+just using an inception key for everything.
 
-| Scenario | With All-Permission Key | With Sign-Only Key |
+| Scenario | With Inception Key | With Operational Key |
 |----------|------------------------|-------------------|
 | Attacker signs things | Yes | Yes |
 | Attacker adds their key | Yes | **No** |
@@ -423,246 +482,167 @@ At this point, Amira can review her XID that now has five keys in it:
 
 The operational key limits the blast radius of a compromise.
 
-### Concrete Scenario: Amira's Laptop Is Stolen
+The following concrete situation, where Amira leaves her laptop at a
+coffee shop and someone takes it demonstrates this:
 
-Amira leaves her laptop at a coffee shop. Someone takes it.
+**With inception key**: The thief extracts Amira's inception key, adds
+their own key with `'All'` permissions, then removes Amira's key. By
+the time Amira realizes what happened, her identity belongs to someone
+else. Her endorsements, her CLA signature, and her reputation
+are now all controlled by a stranger.
 
-**Without operational keys**: The thief extracts her all-permission key, adds their own key with `'All'` permissions, then removes Amira's key. By the time Amira realizes what happened, her identity belongs to someone else. Her endorsements from Charlene, her CLA signature, her reputation—all now controlled by a stranger.
+**With operational keys**: The thief gets `laptop-jan2026`, which can
+only engage in operational activities. They might sign some things
+before Amira notices, but they cannot add their own keys or remove
+hers. Amira uses her inception key (stored securely elsewhere) to
+revoke `laptop-jan2026` and add a new operational key. Her identity
+remains intact. The damage is contained to a few potentially
+fraudulent signatures that she can publicly disavow.
 
-**With operational keys**: The thief gets `laptop-jan2026`, which can only sign. They might sign some things before Amira notices, but they cannot add their own keys or remove hers. Amira uses her inception key (stored securely elsewhere) to revoke `laptop-jan2026` and add a new operational key. Her identity remains intact. The damage is contained to a few potentially fraudulent signatures that she can publicly disavow.
+## Part III: Eliding Keys
 
----
+In order for an operational key to be meaningful, the inception key
+must not also be available. Obviously, you don't want to just delete
+it, however, or you can't modify your XID either, so you must
+undertake a two part process:
 
-## Part III: Multiple Devices
+1. Store your inception key.
+2. Elide your inception key.
 
-### Step 7: Review Key Structure
+### Step 8: Store Your Inception Key
 
-```
-envelope format "$UPDATED_XID" | grep -E "(nickname|allow)"
-
-│             'allow': 'All'
-│             'nickname': "BRadvoc8"
-│             'allow': 'Sign'
-│             'nickname': "laptop-jan2026"
-│             'allow': 'Sign'
-│             'nickname': "portable-jan2026"
-```
-
-**Amira's key structure now:**
-
-| Key | Permissions | Location | Purpose |
-|-----|-------------|----------|---------|
-| BRadvoc8 | All | Laptop (for now) | Identity management |
-| laptop-jan2026 | Sign | Laptop | Daily work at home |
-| portable-jan2026 | Sign | Portable drive | Work while traveling |
-
-[add key strucure]
-
----
-
-[add: eliding main keys for usage]
-
-[into 5.2]
-
-## Part V: Key Rotation
-
-### Step 11: When Amira Gets a New Laptop
-
-Devices change. Here's the rotation pattern:
+The easiest way to store your inception key is to store the full,
+current copy of your XID. Just place it in offline-storage and check
+it occasionally to make sure it's still there.
 
 ```
-# 1. Generate key for new laptop
-NEW_LAPTOP_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
-NEW_LAPTOP_PUBKEYS=$(envelope generate pubkeys "$NEW_LAPTOP_PRVKEYS")
-
-# 2. Add new key (requires inception key with 'elect' permission)
-ROTATED_XID=$(envelope xid key add \
-    --allow sign \
-    --nickname "laptop-feb2026" \
-    "$NEW_LAPTOP_PUBKEYS" "$UPDATED_XID")
-
-# 3. Verify new key works
-TEST=$(envelope subject type string "Test")
-TEST=$(envelope sign --signer "$NEW_LAPTOP_PRVKEYS" "$TEST")
-envelope verify --verifier "$NEW_LAPTOP_PUBKEYS" "$TEST" >/dev/null && echo "✅ New key verified"
-
-# 4. Remove old laptop key (requires inception key with 'elect' permission)
-ROTATED_XID=$(envelope xid key remove "$LAPTOP_PUBKEYS" "$ROTATED_XID")
-
-# 5. Verify old key is gone
-envelope format "$ROTATED_XID" | grep "laptop-jan2026" || echo "✅ Old key removed"
-
-# 6. Advance provenance to record this change
-ROTATED_XID=$(envelope xid provenance next "$ROTATED_XID")
-
-echo "Rotated laptop key (provenance advanced)"
-
-│ ✅ New key verified
-│ ✅ Old key removed
-│ Rotated laptop key (provenance advanced)
+cp envelopes/BRadvoc8-xid-private-5-01.envelope OFFLINE-STORAGE
 ```
 
-> :book: **Key Rotation**
->
-> Replacing an old key with a new one. Always follow the pattern: add new, verify, remove old, verify removal, advance provenance. Never remove before adding or you risk losing access.
+Only bring the full XID online when you need to make updates to it.
 
-**The pattern**: Add new → verify → remove old → verify removal → advance provenance. The provenance update signals to verifiers that this XID has changed.
-
-### Step 12: Update GitHub Keys and SSH Attestation
-
-When rotating keys, you also need to update the SSH signing key and its attestation:
+Alternatively, or in addition, you can choose to just store your inception key.
 
 ```
-# Generate new SSH signing key for the new laptop
-ssh-keygen -t ed25519 -C "BRadvoc8-laptop-new" -f output/new_laptop_signing_key -N ""
-
-# Create new attestation linking SSH key to the NEW XID operational key
-NEW_SSH_ATTESTATION=$(envelope subject type string "I control the SSH signing key BRadvoc8-laptop-new")
-NEW_SSH_ATTESTATION=$(envelope assertion add pred-obj string "sshPublicKey" string "$(cat output/new_laptop_signing_key.pub)" "$NEW_SSH_ATTESTATION")
-NEW_SSH_ATTESTATION=$(envelope assertion add pred-obj string "purpose" string "Git commit signing on laptop" "$NEW_SSH_ATTESTATION")
-NEW_SSH_ATTESTATION=$(envelope sign --signer "$NEW_LAPTOP_PRVKEYS" "$NEW_SSH_ATTESTATION")
-
-echo "New SSH attestation created"
-echo "Next: In GitHub, remove old laptop SSH key, add new_laptop_signing_key.pub"
-
-│ Generating public/private ed25519 key pair.
-│ Your identification has been saved in output/new_laptop_signing_key
-│ New SSH attestation created
-│ Next: In GitHub, remove old laptop SSH key, add new_laptop_signing_key.pub
+INCEPTION_PRVKEYS=$(envelope xid key find inception $XID_WITH_KEYS)
+echo $INCEPTION_PRVKEYS > OFFLINE-STORE/xid-inception-key.envelope
 ```
 
-The old SSH attestation (signed by `laptop-jan2026`) is now orphaned—the key that signed it has been revoked. This is correct: old attestations from revoked keys should no longer be trusted for new operations.
+You generally want your backups to be more resilient than this for
+something as important as an inception key, and we'll talk about how
+to manage that in [§5.3](05_3_Backing_up_Inception_Key.md). But for
+now, the backup is a fine first step.
 
----
+### Step 9: Elide Your Inception Key
 
-## Part VI: Verification and Wrap-Up
+With a backup copy of your XID (or at least the inception key) made,
+you can now safely elide the key from your operational XID.
 
-### Step 13: Ben Verifies the SSH Chain
-
-When Ben reviews a commit signed by BRadvoc8, he can verify the complete chain:
-
+This is easily done with the new commands from this section that
+detailed how to find a specific key and the lessons learned from
+[§4.3](04_3_Creating_New_Views.md).
 ```
-# Ben has: the commit signature, Amira's public XID, and her SSH attestation
-
-# 1. Verify the SSH attestation is signed by an operational key in the XID
-echo "Verifying SSH attestation..."
-envelope verify --verifier "$LAPTOP_PUBKEYS" "$SSH_ATTESTATION" >/dev/null && \
-    echo "✅ SSH attestation signed by laptop operational key"
-
-# 2. Check that the operational key is in Amira's XID with 'sign' permission
-envelope format "$UPDATED_XID" | grep -A2 "laptop-jan2026" | grep -q "Sign" && \
-    echo "✅ Laptop key has 'Sign' permission in XID"
-
-# 3. The commit signature (verified by GitHub) matches the SSH key in the attestation
-echo "✅ Chain verified: XID → operational key → SSH key → commit"
-
-│ Verifying SSH attestation...
-│ ✅ SSH attestation signed by laptop operational key
-│ ✅ Laptop key has 'Sign' permission in XID
-│ ✅ Chain verified: XID → operational key → SSH key → commit
+INCEPTION_PRVKEYS=$(envelope xid key find inception $XID_WITH_KEYS)
+INCEPTION_DIGEST=$(envelope digest $INCEPTION_PRVKEYS)
+OPERATIONAL_XID=$(envelope elide removing $INCEPTION_DIGEST $XID_WITH_KEYS)
 ```
 
-This verification proves: the commit was signed by an SSH key that is attested to by an XID operational key that has signing permission. The identity chain is intact.
+Amira should now use the `$OPERATIONAL_XID` on her laptop while
+keeping the original XID in an offline storage. When she goes
+traveling, she would additionally elide the `laptop-key`, so that only
+the less powerful `portable-key` is available.
 
-### Save Your Work
+echo "$OPERATIONAL_XID" > envelopes/BRadvoc8-xid-operational-5-01.envelope
 
-```
-OUTPUT_DIR="output/xid-tutorial10-$(date +%Y%m%d%H%M%S)"
-mkdir -p "$OUTPUT_DIR"
+#### XID 📄 `seq: 8` View Comparison
 
-# Save updated XID
-echo "$UPDATED_XID" > "$OUTPUT_DIR/BRadvoc8-xid-multidevice.envelope"
+In this section, Amira produced a new `seq 8` for her XID, but made a
+number of views, showing again the power of elision to make
+appropriate views of a XID for different purposes.
 
-# Save operational keys (in practice, these stay on their respective devices)
-echo "$LAPTOP_PRVKEYS" > "$OUTPUT_DIR/laptop-prvkeys.envelope"
-echo "$PORTABLE_PRVKEYS" > "$OUTPUT_DIR/portable-prvkeys.envelope"
+| Description | Notes | Created In |
+|-------------|-------------|------------|
+| 🔒 Private View | | §5.1 |
+| 👁️  Public View | Elided key material | §5.1 |
+| 💻 Operational View | Removed inception key | §5.1 |
+| ⏏️ Portable View | Removed two keys | |
 
-# Save SSH attestations (these prove the link between XID keys and SSH keys)
-echo "$SSH_ATTESTATION" > "$OUTPUT_DIR/laptop-ssh-attestation.envelope"
-echo "$PORTABLE_SSH_ATTESTATION" > "$OUTPUT_DIR/portable-ssh-attestation.envelope"
+## Summary: Generating Operational Keys
 
-echo "Saved to $OUTPUT_DIR"
-ls "$OUTPUT_DIR"
+You don't need to keep your inception key in your XID, and in fact
+doing so is a security threat. The XID keys system supports improved
+security by allowing you to create a key with lesser permissions, such
+as a key that only has operational permissions. You can then store
+copies of your full XID offline and remove the inception key from your
+in-use copy.
 
-│ Saved to output/xid-tutorial10-20260123120000
-│ BRadvoc8-xid-multidevice.envelope
-│ laptop-prvkeys.envelope
-│ laptop-ssh-attestation.envelope
-│ portable-prvkeys.envelope
-│ portable-ssh-attestation.envelope
-```
+### Additional Files
 
-> :warning: **Operational Keys Stay on Their Devices**
->
-> In practice, you wouldn't save all operational keys in one place. The laptop key stays on the laptop, the portable key stays on the portable drive. Only the inception key (with full permissions) needs secure backup. The SSH attestations can be published—they're signed and contain no secrets.
+**Envelopes:** The
+[envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
+directory contains numerous data created in this section, including
+the
+[private](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-private-5-01.envelope),
+[public](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-public-5-01.envelope),
+and
+[operational](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-operational-5-01.envelope)
+views of Amira's new XID.
 
-### What Amira Has Now
+**Scripts:** Forthcoming.
 
-**Multi-device setup**:
-
-- Inception key with full permissions (still on laptop—we'll fix this in Tutorial 11)
-- Laptop operational key (sign only)
-- Portable drive operational key (sign only)
-- Per-device GitHub signing keys
-
-**Reduced risk**:
-
-- Compromise of operational key ≠ identity takeover
-- Can revoke individual device keys without affecting others
-- Identity persists across device changes
-
-### The Gap Charlene Notices
-
-> "This is better—if your laptop is compromised, you don't lose everything. But your inception key is still on your laptop. If that's compromised, the attacker can add their own keys and lock you out. That key should never be on any computer."
-
----
-
-## Common Questions
-
-**Can I have multiple inception keys?**
-
-No. Each XID has exactly one key with full permissions (the inception key). This is by design—multiple "master" keys would create ambiguity about who controls the identity. If you need backup access, Tutorial 11 shows how to use SSKR to shard the inception key across multiple locations.
-
-**What if I lose my inception key?**
-
-Without the inception key, you cannot add or remove keys from your XID. The identity becomes frozen—existing operational keys keep working, but you can't recover if they're compromised. This is why Tutorial 11 focuses on offline backup. Never keep your inception key only on a device that could be lost or stolen.
-
-**How many operational keys is too many?**
-
-It depends on your threat model. More keys means more flexibility but also more to track. A typical setup might have 2-4 operational keys (primary device, backup device, maybe a hardware token). If you're managing more than 5-6 operational keys, consider whether you really need that many active signing contexts.
-
-**Do old signatures become invalid when I rotate keys?**
-
-No. Signatures made with an old key remain valid—the signature proves the document was signed at a time when that key was authorized. Rotation only affects new signatures. If you want to invalidate old signatures (e.g., after a compromise), you need to publicly disavow them.
-
----
-
-## Exercises
+### Exercises
 
 These exercises test your understanding of the permission model:
 
-1. **Negative permission test**: Try to use an operational key to revoke another key. What happens? Why?
+1. **Negative permission test**: Try to use an operational key to
+revoke another key. What happens? Why?
+2. **Compromise simulation**: Revoke the laptop key using the
+inception key. Then verify that documents signed with the old laptop
+key still validate (signatures are historical) but the key is no
+longer in the XID.
+3. **Permission escalation**: Create a key with `sign` and `encrypt`
+permissions but not `elect`. What can this key do that a sign-only key
+cannot?
 
-2. **Compromise simulation**: Revoke `laptop-jan2026` using the inception key. Then verify that documents signed with the old laptop key still validate (signatures are historical) but the key is no longer in the XID.
+## What's Next
 
-3. **Permission escalation**: Create a key with `sign` and `encrypt` permissions but not `elect`. What can this key do that a sign-only key cannot?
+You've now successfully added and elided keys, but what if you want to
+change or rotate keys? That's the top of [§5.2](05_2_Updating_Keys.md).
 
----
+## Appendix I: Key Terminology
 
-## Appendix: Key Terminology
-
-> **Operational Key**: A key with limited permissions (typically sign-only) used for daily work. Compromise is contained.
->
 > **Inception Key**: The original key created when the XID was established, typically with full permissions (elect, revoke). Should be highly protected. Also called the "private key base" in technical documentation.
 >
-> **Key Rotation**: Replacing an old key with a new one. Pattern: add new, verify, remove old.
->
 > **Permission Scope**: The specific operations a key is allowed to perform (`sign`, `encrypt`, `elect`, `revoke`, etc.).
-
-> :brain: **Learn more**
 >
-> The [Key Management](../concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
+> **Operational Key**: A key with limited permissions (typically sign-only) used for daily work. Compromise is contained.
 
----
 
-[Previous: Binding Agreements](09-binding-agreements.md) | [Next: Offline Inception Key](11-offline-inception-key.md)
+> :brain: **Learn more.** The [Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
+
+
+## Appendix II: Common Questions
+
+### Q: Can I have multiple inception keys?
+
+**A:** No. Each XID should have exactly one key with full permissions
+(the inception key). Multiple "master" keys would create ambiguity
+about who controls the identity.
+
+### Q: What if I lose my inception key?
+
+**A:** Without the inception key, you cannot add or remove keys from
+your XID. The identity becomes frozen: existing operational keys keep
+working, but you can't recover if they're compromised. This is why
+[§5.3](05_3_Backing_up_Inception_Key.md) focuses on more robust
+offline backup. Never keep your inception key only on a device that
+could be lost or stolen.
+
+### Q: How many operational keys is too many?
+
+**A:** It depends on your threat model. More keys means more
+flexibility but also more to track. A typical setup might have 2-4
+operational keys (primary device, backup device, maybe a hardware
+token). If you're managing more than 5-6 operational keys, consider
+whether you really need that many active signing contexts.
+
