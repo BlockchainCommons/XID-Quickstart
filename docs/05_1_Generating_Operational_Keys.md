@@ -625,17 +625,9 @@ views of Amira's updated XID.
 
 ### Exercises
 
-These exercises test your understanding of the permission model:
-
-1. **Negative permission test**: Try to use an operational key to
-revoke another key. What happens? Why?
-2. **Compromise simulation**: Revoke the laptop key using the
-inception key. Then verify that documents signed with the old laptop
-key still validate (signatures are historical) but the key is no
-longer in the XID.
-3. **Permission escalation**: Create a key with `sign` and `encrypt`
-permissions but not `elect`. What can this key do that a sign-only key
-cannot?
+1. Create a new XID key and give it operational permissions.
+2. Create another XID key with even fewer permissions.
+3. Create an operational version of your XID.
 
 ## What's Next
 
@@ -645,11 +637,11 @@ change or rotate keys? That's the top of
 
 ## Appendix I: Key Terminology
 
-> **Inception Key**: The original key created when the XID was established, typically with full permissions. Should be highly protected. Also called the "private key base" in technical documentation.
+> **Inception Key** - The original key created when the XID was established, typically with full permissions. Should be highly protected. Also called the "private key base" in technical documentation.
 >
-> **Permission Scope**: The specific operations a key is allowed to perform (`sign`, `encrypt`, `elect`, `revoke`, etc.).
+> **Permission Scope** - The specific operations a key is allowed to perform (`sign`, `encrypt`, `elect`, `revoke`, etc.).
 >
-> **Operational Key**: A key with limited permissions (typically sign-only) used for daily work. Compromise is contained.
+> **Operational Key** - A key with limited permissions (typically sign-only) used for daily work. Compromise is contained.
 
 
 > :brain: **Learn more.** The [Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
