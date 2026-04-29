@@ -1,0 +1,2252 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/04_1_Creating_Binding_Agreements/">
+      
+      
+        <link rel="prev" href="../04_0_Advanced/">
+      
+      
+        <link rel="next" href="../04_2_Publishing_for_Privacy/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>4.1: Creating Binding Agreements - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#41-creating-binding-agreements" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4.1: Creating Binding Agreements
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-giving-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Giving Permission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-clas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of CLAs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Power of CLAs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-cla-typically-grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a CLA Typically Grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-preparing-for-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Preparing for a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Preparing for a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-a-purpose-specific-contract-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create a Purpose-Specific Contract Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-contract-key-in-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register Contract Key in XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Register Contract Key in XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-publish-new-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Publish New XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Publish New XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-preparing-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Preparing a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Preparing a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-bens-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create Ben's Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-the-cla-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create the CLA Document
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-signing-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Signing a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Signing a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-sign-with-contract-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Sign with Contract Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-verifying-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Verifying a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Verifying a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify CLA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-accept-and-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Accept and Record
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-first-arc-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: First Arc Complete
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: First Arc Complete">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-is-a-pseudonymous-cla-legally-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Is a pseudonymous CLA legally binding?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-my-employer-owns-my-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if my employer owns my contributions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-access-be-revoked-what-if-i-stop-contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can access be revoked? What if I stop contributing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-why-not-just-use-a-real-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why not just use a real name?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_3_Creating_New_Views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_4_Creating_New_Editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-giving-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: Giving Permission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-power-of-clas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of CLAs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Power of CLAs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-cla-typically-grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a CLA Typically Grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-preparing-for-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Preparing for a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Preparing for a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-a-purpose-specific-contract-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create a Purpose-Specific Contract Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-contract-key-in-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register Contract Key in XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Register Contract Key in XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-publish-new-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Publish New XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Publish New XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-preparing-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Preparing a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Preparing a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-bens-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create Ben's Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-create-the-cla-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Create the CLA Document
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-signing-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Signing a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Signing a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-sign-with-contract-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Sign with Contract Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-verifying-a-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Verifying a CLA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Verifying a CLA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-cla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify CLA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-accept-and-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Accept and Record
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-first-arc-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: First Arc Complete
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: First Arc Complete">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-is-a-pseudonymous-cla-legally-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Is a pseudonymous CLA legally binding?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-my-employer-owns-my-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if my employer owns my contributions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-access-be-revoked-what-if-i-stop-contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can access be revoked? What if I stop contributing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-why-not-just-use-a-real-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why not just use a real name?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="41-creating-binding-agreements">4.1: Creating Binding Agreements</h1>
+<p>In order to contribute to a project, open-source developers should
+sign binding agreements allowing use of their code. Amira doing so is
+the culmination of an identity journey from pseudonymous phantom to
+trusted contributor.</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> After completing this tutorial, explore
+<a href="../concepts/progressive-trust.md">Progressive Trust</a>.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Create contract-signing keys with limited permissions.</li>
+<li>Create a verification workflow for accepting contributions.</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand what a CLA is.</li>
+<li>Know the structure of a pseudonymous CLA.</li>
+<li>Understand why CLAs require a different approach than attestations.</li>
+</ul>
+<h2 id="amiras-story-giving-permission">Amira's Story: Giving Permission</h2>
+<p>Amira has made a minor contribution to a project for
+SisterSpaces. DevReviewer likes the PR and just as importantly is
+convinced now that BRadvoc8 is someone with the right credentials to
+do positive work on the project in a bigger role.</p>
+<p>DevReviewer tells Ben that he needs to paper BRadvoc8's contributions
+with a Contributor License Agreement, or CLA, so that SisterSpaces has
+clear right to the code. Afterward, they'll be able to merge Amira's
+work.</p>
+<p>Amira will support this by pseudonymously (but legally) signing the
+CLA, then both parties will record it.</p>
+<h2 id="the-power-of-clas">The Power of CLAs</h2>
+<p>The Web of Trust is all about edges: who interacts with whom in what
+way. To date, we've investigated unilateral edges: you say something
+about yourself ↩️ or you say something about someone else ➡️️. A CLA
+offers a third model for Web of Trust interaction: you and someone
+else make an agreement ↔️.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Who Signs</th>
+<th>Obligations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>↩️  Self-attestation</td>
+<td>You</td>
+<td>One-way claim about yourself</td>
+</tr>
+<tr>
+<td>➡️ Peer endorsement</td>
+<td>Someone else</td>
+<td>One-way claim about someone else</td>
+</tr>
+<tr>
+<td>↔️ CLA</td>
+<td>Both parties</td>
+<td>Bilateral agreement between two parties</td>
+</tr>
+</tbody>
+</table>
+<p>The bilateral nature of contracts such as CLAs requires more careful
+handling.</p>
+<blockquote>
+<p>📖 <strong>What is a Contributor License Agreement (CLA)?</strong> A CLA is a
+bilateral contract where contributors grant projects license to use
+their contributions under open source terms. Unlike attestations
+(one-way claims), CLAs create mutual obligations.</p>
+</blockquote>
+<h3 id="what-a-cla-typically-grants">What a CLA Typically Grants</h3>
+<p>A CLA usually contains the following terms:</p>
+<table>
+<thead>
+<tr>
+<th>Provision</th>
+<th>What It Means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authority representation</td>
+<td>You have the legal right to grant these licenses</td>
+</tr>
+<tr>
+<td>Copyright license</td>
+<td>You grant perpetual, worldwide, non-exclusive license to use your contributions</td>
+</tr>
+<tr>
+<td>Patent license</td>
+<td>You grant license to any patented technology in your contributions</td>
+</tr>
+<tr>
+<td>Original work representation</td>
+<td>Your contributions are original (or properly attributed)</td>
+</tr>
+</tbody>
+</table>
+<p>Amira reads these terms carefully. She understands what she's agreeing to before signing.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID.</p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-3-03.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<h2 id="part-i-preparing-for-a-cla">Part I: Preparing for a CLA</h2>
+<p>Key heterogeneity remains a best practice. As a result, if Amira is
+going to sign contracts, she should do so with a specific contract
+signing key. This follows the same methodology as creating an
+attestation key in
+<a href="02_1_Creating_Self_Attestations/#part-i-adding-an-attestation-key">§2.1</a>.</p>
+<h3 id="step-1-create-a-purpose-specific-contract-key">Step 1: Create a Purpose-Specific Contract Key</h3>
+<p>For signing contracts, Amira creates a key with limited
+permissions. This follows the principle of least authority: her
+identity key can do anything, but her contract key can only sign.</p>
+<pre><code>CONTRACT_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+CONTRACT_PUBKEYS=$(envelope generate pubkeys &quot;$CONTRACT_PRVKEYS&quot;)
+
+echo &quot;✅ Contract-signing key created (limited to signing only)&quot;
+
+│ ✅ Contract-signing key created (limited to signing only)
+</code></pre>
+<p>As we wrote previously: creating separate keys for separate purposes
+limits the exposure if any key is compromised. Though it might usually
+be difficult to manage a "bag of keys," XIDs make it easy because you
+can register your keys there.</p>
+<h3 id="step-2-register-contract-key-in-xid">Step 2: Register Contract Key in XID</h3>
+<p>You can register Amira's new key with <code>xid key add</code>.</p>
+<pre><code>XID_WITH_CONTRACT_KEY=$(envelope xid key add \
+    --verify inception \
+    --nickname &quot;contract-key&quot; \
+    --allow sign \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$CONTRACT_PRVKEYS&quot; \
+    &quot;$XID&quot;)
+
+echo &quot;✅ Added contract-signing key to XID&quot;
+</code></pre>
+<h4 id="key-type-comparison">Key Type Comparison</h4>
+<p>This of course expands the set of keys that Amira has in use.</p>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Purpose</th>
+<th>Verified Against</th>
+<th>Added In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👤 XID inception key</td>
+<td>Signs XID document updates</td>
+<td>XID itself</td>
+<td>§1.3</td>
+</tr>
+<tr>
+<td>🗣️  Attestation key</td>
+<td>Signs attestations</td>
+<td>XID key list</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>🖋️  SSH signing key</td>
+<td>Signs Git commits</td>
+<td>GitHub account</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>📄️  Contract signing key</td>
+<td>Signs contracts</td>
+<td>XID key list</td>
+<td>§4.1</td>
+</tr>
+</tbody>
+</table>
+<p>Remember that you can always access just your keys with <code>xid key all</code>,
+which we've previously used to extract keys to check signatures. But
+you can also use it to view your keys, which makes it much easier to
+maintain this "bag of keys".</p>
+<pre><code>read -d '' -r -a KEYLIST &lt;&lt;&lt; $(envelope xid key all &quot;$XID_WITH_CONTRACT_KEY&quot;)
+for i in &quot;${KEYLIST[@]}&quot;
+  do
+    envelope format $i
+done
+
+| PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|     {
+|         'privateKey': ENCRYPTED [
+|             'hasSecret': EncryptedKey(Argon2id)
+|         ]
+|     } [
+|         'salt': Salt
+|     ]
+|     'allow': 'All'
+|     'nickname': &quot;BRadvoc8&quot;
+| ]
+| 
+| PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|     {
+|         'privateKey': ENCRYPTED [
+|             'hasSecret': EncryptedKey(Argon2id)
+|         ]
+|     } [
+|         'salt': Salt
+|     ]
+|     'allow': 'Sign'
+|     'nickname': &quot;attestation-key&quot;
+| ]
+|
+| PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+|     {
+|         'privateKey': ENCRYPTED [
+|             'hasSecret': EncryptedKey(Argon2id)
+|         ]
+|     } [
+|         'salt': Salt
+|     ]
+|     'allow': 'Sign'
+|     'nickname': &quot;contract-key&quot;
+| ]
+</code></pre>
+<p>Accurately labeling your keys is a must to ensure they remain manageable!</p>
+<h3 id="step-3-publish-new-xid">Step 3: Publish New XID</h3>
+<p>Amira now needs to publish her XID, so that everyone knows about her
+new legal signing key. This should definitely happen before she signs
+with it, to create a temporal anchor (key existence before signing).</p>
+<p>The three steps of publishing a XID have gotten pretty standard:</p>
+<ol>
+<li>Advance the provenance mark &amp; sign the full XID.</li>
+</ol>
+<pre><code>XID_WITH_CONTRACT_KEY=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$XID_WITH_CONTRACT_KEY&quot;)
+echo &quot;✅ Provenance advanced&quot;
+
+| ✅ Provenance advanced
+</code></pre>
+<ol>
+<li>Create a public view.</li>
+</ol>
+<pre><code>PUBLIC_XID_WITH_CONTRACT_KEY=$(envelope xid export --private elide --generator elide &quot;$XID_WITH_CONTRACT_KEY&quot;)
+</code></pre>
+<ol>
+<li>Store local copies.</li>
+</ol>
+<pre><code>echo &quot;$PUBLIC_XID_WITH_CONTRACT_KEY&quot; &gt; envelopes/BRadvoc8-xid-public-4-01.envelope
+echo &quot;$XID_WITH_CONTRACT_KEY&quot; &gt; envelopes/BRadvoc8-xid-private-4-01.envelope
+echo &quot;$CONTRACT_PRVKEYS&quot; &gt; envelopes/key-contract-private-4-01.ur
+echo &quot;$CONTRACT_PUBKEYS&quot; &gt; envelopes/key-contract-public-4-01.ur
+</code></pre>
+<h4 id="xid-version-comparison">XID Version Comparison</h4>
+<p>The fifth edition of Amira's XID adds another key, mirroring the work
+in <a href="../02_1_Creating_Self_Attestations/">§2.1</a>.</p>
+<table>
+<thead>
+<tr>
+<th>XID Version</th>
+<th>New Content</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seq 0</td>
+<td>👤 Identity</td>
+<td>§1.3+§1.4</td>
+</tr>
+<tr>
+<td>seq 1</td>
+<td>🔑 Attestation Key</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>seq 2</td>
+<td>🗣️ GitHub Edge</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>seq 3</td>
+<td>🗣️ Endorsement Edge</td>
+<td>§3.3</td>
+</tr>
+<tr>
+<td>seq 4</td>
+<td>🔑 Contract Key</td>
+<td>§4.1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="part-ii-preparing-a-cla">Part II: Preparing a CLA</h2>
+<p>Meanwhile, Ben is preparing the CLA itself. </p>
+<h3 id="step-4-create-bens-identity">Step 4: Create Ben's Identity</h3>
+<p>Obviously, Ben has a XID like everyone else. Much as with Charlene's
+XID in §3.3, we're going to short-hand its creation. In real-life, Ben
+would have a much more complex XID and using best practices, he'd
+have a contract-signing key, just like Amira does. But, we're going to
+keep things simple and just create and use a single inception key.</p>
+<pre><code>BEN_PASSWORD=&quot;bens-own-password&quot;
+BEN_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+BEN_PUBKEYS=$(envelope generate pubkeys &quot;$BEN_PRVKEYS&quot;)
+BEN_XID=$(echo $BEN_PRVKEYS | \
+    envelope xid new \
+    --private encrypt \
+    --encrypt-password &quot;$BEN_PASSWORD&quot; \
+    --nickname &quot;Ben (SisterSpaces)&quot; \
+    --generator encrypt \
+    --sign inception)
+BEN_XID_ID=$(envelope xid id &quot;$BEN_XID&quot;)
+
+echo &quot;✅ Ben's XID created: $BEN_XID_ID&quot;
+</code></pre>
+<p>You should of course save a copy of Ben's materials:</p>
+<pre><code>echo &quot;$BEN_XID&quot; &gt; envelopes/Ben-xid-private-4-01.envelope
+echo &quot;$BEN_PRVKEYS&quot; &gt; envelopes/key-ben-private-4-01.ur
+echo &quot;$BEN_PUBKEYS&quot; &gt; envelopes/key-ben-public-4-01.ur
+</code></pre>
+<h3 id="step-5-create-the-cla-document">Step 5: Create the CLA Document</h3>
+<p>Today, CLAs are often signed as text files with GPG, but Gordian
+Envelope offers better integration of the signing process, which is
+why Ben uses it.</p>
+<p>Ben's projects uses a standard Individual CLA basd on the Apache 2.0
+license that he generates from a shell script for each individual
+contributor. Ben keeps a local copy of the Apache 2.0 license that
+he's referencing and has also created a hash of it.</p>
+<pre><code>curl -q https://www.apache.org/licenses/LICENSE-2.0.txt &gt; envelopes/license-apache-4-01.txt
+shasum -a 256 envelopes/license-apache-4-01.txt &gt; envelopes/license-apache-4-01-hash.txt
+</code></pre>
+<p>That hash is essentially a proof of the license: Ben can later offer
+the license and show it hashes to the shasum he incudes in the
+CLA. It's the same methodology as used to created commitments, but in
+˜this case Ben is committing to the text of a file, mainly for legal
+clarity. (More on that in §4.2.)</p>
+<p>Ben's CLA includes a subenvelope with a clear definition of the
+license. (Remember, envelopes are usually built from the inside out.)</p>
+<pre><code>read hash filename &lt; envelopes/license-apache-4-01-hash.txt 
+LICENSE=$(envelope subject type string &quot;Apache-2.0&quot;)
+LICENSE=$(envelope assertion add pred-obj known 'dereferenceVia' string &quot;https://www.apache.org/licenses/LICENSE-2.0.txt&quot; $LICENSE)
+LICENSE=$(envelope assertion add pred-obj known 'date' string &quot;2004-01-00T00:00-00:00&quot; $LICENSE)
+LICENSE=$(envelope assertion add pred-obj string &quot;contractHash&quot; string $hash $LICENSE)
+LICENSE=$(envelope assertion add pred-obj string &quot;hashAlgorithm&quot; string &quot;shasum256&quot; $LICENSE)
+</code></pre>
+<p>He also creates subenvelopes to provide details on both himself and BRadvoc8:</p>
+<pre><code>PM=$(envelope subject type ur $BEN_XID_ID)
+PM=$(envelope assertion add pred-obj known 'nickname' string &quot;Ben (SisterSpaces)&quot; $PM)
+CONTRIBUTOR=$(envelope subject type ur $XID_ID)
+CONTRIBUTOR=$(envelope assertion add pred-obj known 'nickname' string &quot;BRadvoc8&quot; $CONTRIBUTOR)
+</code></pre>
+<p>We're now ready to build the main CLA envelope. It starts by defining
+one of the modules for SisterSpaces:</p>
+<pre><code>CLA=$(envelope subject type string &quot;Individual Contributor License Agreement&quot;)
+CLA=$(envelope assertion add pred-obj string &quot;project&quot; string &quot;SisterSpaces SecureAuth Library&quot; &quot;$CLA&quot;)
+</code></pre>
+<p>It includes the grants and represtations typical for a CLA:</p>
+<pre><code>CLA=$(envelope assertion add pred-obj known isA string &quot;ContributorLicenseAgreement&quot; &quot;$CLA&quot;)
+CLA=$(envelope assertion add pred-obj string &quot;grantsCopyrightLicense&quot; string &quot;perpetual, worldwide, non-exclusive, royalty-free&quot; &quot;$CLA&quot;)
+CLA=$(envelope assertion add pred-obj string &quot;grantsPatentLicense&quot; string &quot;for contributions containing patentable technology&quot; &quot;$CLA&quot;)
+CLA=$(envelope assertion add pred-obj string &quot;contributorRepresents&quot; string &quot;original work with authority to grant license&quot; &quot;$CLA&quot;)
+</code></pre>
+<p>It also incorporates the subenvelopes that Ben's script created:</p>
+<pre><code>CLA=$(envelope assertion add pred-obj string &quot;licenseType&quot; envelope &quot;$LICENSE&quot; &quot;$CLA&quot;)
+CLA=$(envelope assertion add pred-obj string &quot;projectManager&quot; envelope &quot;$PM&quot; &quot;$CLA&quot;)
+CLA=$(envelope assertion add pred-obj string &quot;contributor&quot; envelope &quot;$CONTRIBUTOR&quot; &quot;$CLA&quot;)
+</code></pre>
+<p>With that final step, Ben has put the entire (unsigned) CLA together:</p>
+<pre><code>echo &quot;✅ CLA document created:&quot;
+envelope format &quot;$CLA&quot;
+
+| ✅ CLA document created:
+|
+| &quot;Individual Contributor License Agreement&quot; [
+|     'isA': &quot;ContributorLicenseAgreement&quot;
+|     &quot;contributor&quot;: XID(5f1c3d9e) [
+|         'nickname': &quot;BRadvoc8&quot;
+|     ]
+|     &quot;contributorRepresents&quot;: &quot;original work with authority to grant license&quot;
+|     &quot;grantsCopyrightLicense&quot;: &quot;perpetual, worldwide, non-exclusive, royalty-free&quot;
+|     &quot;grantsPatentLicense&quot;: &quot;for contributions containing patentable technology&quot;
+|     &quot;licenseType&quot;: &quot;Apache-2.0&quot; [
+|         &quot;contractHash&quot;: &quot;cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30&quot;
+|         &quot;hashAlgorithm&quot;: &quot;shasum256&quot;
+|         'date': &quot;2004-01-00T00:00-00:00&quot;
+|         'dereferenceVia': &quot;https://www.apache.org/licenses/LICENSE-2.0.txt&quot;
+|     ]
+|     &quot;project&quot;: &quot;SisterSpaces SecureAuth Library&quot;
+|     &quot;projectManager&quot;: XID(a80e2c23) [
+|         'nickname': &quot;Ben (SisterSpaces)&quot;
+|     ]
+| ]
+</code></pre>
+<h2 id="part-iii-signing-a-cla">Part III: Signing a CLA</h2>
+<p>For Amira, signing the contract is a simple application of her new contract key.</p>
+<h3 id="step-6-sign-with-contract-key">Step 6: Sign with Contract Key</h3>
+<p>Amira starts out by dating her signing of the contract.  The date isn't
+verifiable, but it will be assured by BRadvoc8's signature. Afterward,
+she wraps and signs as usual.</p>
+<pre><code>CLA_WITH_DATE=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$CLA&quot;)
+WRAPPED_CLA=$(envelope subject type wrapped $CLA_WITH_DATE)
+SIGNED_CLA=$(envelope sign --signer &quot;$CONTRACT_PRVKEYS&quot; &quot;$WRAPPED_CLA&quot;)
+</code></pre>
+<p>The signed CLA is now a binding commitment from BRadvoc8 to grant the
+specified licenses for any contributions to the SecureAuth Library
+project.</p>
+<blockquote>
+<p>📖 <strong>How do you date a signature?</strong> Dating a signature isn't as easy
+as you think. There are several methods:</p>
+<p>(1) you can date the content before you wrap and sign it. This may
+be undesirable in some situations, if the content should not be
+changed (e.g., if it's already been hashed for a commitment, or if a
+date just muddles the content). Otherwise, it's a great solution, as
+it ensures the date is part of what's signed, and so part of a claim
+that the signer is making.</p>
+<p>(2) You can date the content after wrapping and signing. This is
+very clean-looking as the date and signature are sitting right next to
+each other, as they would be in a paper document. But it's also
+misleading because it makes it look like the signer has agreed to the
+date, when in actuality <em>anyone</em> could have added (or changed) the date after the
+signer signed.</p>
+<p>(3) You can wrap, sign, date, wrap, and sign again. This
+"double-signing" pattern is complex, and results in twice as many
+signatures, but it keeps the original document clean while
+simultaneously locking in the date as assured by the signer.</p>
+</blockquote>
+<h2 id="part-iv-verifying-a-cla">Part IV: Verifying a CLA</h2>
+<p>Maintaining a standard workflow for a CLA ensures the maintenance of
+rights necessary to support open software. Here, we return to Ben's
+point of view as he receives Amira's signed CLA and verifies that it's
+OK.</p>
+<h3 id="step-7-verify-cla">Step 7: Verify CLA</h3>
+<p>To verify Amira's CLA, Ben walks through several steps:</p>
+<ol>
+<li>Retrieve newest version of BRadvoc8's XID (per <a href="../01_4_Making_a_XID_Verifiable/">§1.4</a></li>
+</ol>
+<pre><code>FETCHED_XID=$PUBLIC_XID_WITH_CONTRACT_KEY
+</code></pre>
+<ol>
+<li>Check signature of XID</li>
+</ol>
+<pre><code>read -d '' -r -a PUBKEY &lt;&lt;&lt; $(envelope xid key all &quot;$FETCHED_XID&quot;)
+for i in &quot;${PUBKEY[@]}&quot;
+  do
+    if envelope verify -v $i $SIGNED_CLA &gt;/dev/null 2&gt;&amp;1; then
+      echo &quot;✅ One of the signatures verified! &quot;
+      echo $i
+    fi
+done
+
+| ✅ One of the signatures verified! 
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkkhdcxrfdnqztslsdelyrsttvlcwbsnnsscfnlzeuekscyjsssbyneehgtjncsmkinhpsfoycsfncsfdoefnmnhd
+</code></pre>
+<ol>
+<li>Review contributor reputation (optional)</li>
+</ol>
+<p>If a PR came in over the transom, Ben might spend time trying to
+verify the reputation of the contributor. In this case, DevReviewer
+has already done the work for him.</p>
+<h3 id="step-8-accept-and-record">Step 8: Accept and Record</h3>
+<p>Satisfied with the verification, Ben accepts the CLA and records it.</p>
+<ol>
+<li>Add acceptance to envelope</li>
+</ol>
+<p>Ben could note acceptance of Amira's CLA using a separate acceptance
+envelope, but he chooses to add the acceptance to the envelope as
+another layer of an onion. He does so by wrapping Amira's copy of the
+envelope, adding his acceptance, and wrapping and signing that.</p>
+<pre><code>WRAPPED_SIGNED_CLA=$(envelope subject type wrapped &quot;$SIGNED_CLA&quot;)
+ACCEPTED_CLA=$(envelope assertion add pred-obj string &quot;acceptedBy&quot; ur $BEN_XID_ID &quot;$WRAPPED_SIGNED_CLA&quot;)
+ACCEPTED_CLA=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` &quot;$ACCEPTED_CLA&quot;)
+WRAPPED_ACCEPTED_CLA=$(envelope subject type wrapped &quot;$ACCEPTED_CLA&quot;)
+SIGNED_ACCEPTED_CLA=$(envelope sign --signer &quot;$BEN_PRVKEYS&quot; &quot;$WRAPPED_ACCEPTED_CLA&quot;)
+
+echo &quot;✅ CLA accepted&quot;
+envelope format $SIGNED_ACCEPTED_CLA
+
+| ✅ CLA accepted
+| 
+| {
+|     {
+|         {
+|             &quot;Individual Contributor License Agreement&quot; [
+|                 'isA': &quot;ContributorLicenseAgreement&quot;
+|                 &quot;contributor&quot;: XID(5f1c3d9e) [
+|                     'nickname': &quot;BRadvoc8&quot;
+|                 ]
+|                 &quot;contributorRepresents&quot;: &quot;original work with authority to grant license&quot;
+|                 &quot;grantsCopyrightLicense&quot;: &quot;perpetual, worldwide, non-exclusive, royalty-free&quot;
+|                 &quot;grantsPatentLicense&quot;: &quot;for contributions containing patentable technology&quot;
+|                 &quot;licenseType&quot;: &quot;Apache-2.0&quot; [
+|                     &quot;contractHash&quot;: &quot;cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30&quot;
+|                     &quot;hashAlgorithm&quot;: &quot;shasum256&quot;
+|                     'date': &quot;2004-01-00T00:00-00:00&quot;
+|                     'dereferenceVia': &quot;https://www.apache.org/licenses/LICENSE-2.0.txt&quot;
+|                 ]
+|                 &quot;project&quot;: &quot;SisterSpaces SecureAuth Library&quot;
+|                 &quot;projectManager&quot;: XID(a80e2c23) [
+|                     'nickname': &quot;Ben (SisterSpaces)&quot;
+|                 ]
+|                 'date': &quot;2026-03-31T08:23-10:00&quot;
+|             ]
+|         } [
+|             'signed': Signature(Ed25519)
+|         ]
+|     } [
+|         &quot;acceptedBy&quot;: XID(a80e2c23)
+|         'date': &quot;2026-03-31T08:27-10:00&quot;
+|     ]
+| } [
+|     'signed': Signature(Ed25519)
+| ]
+
+</code></pre>
+<p>The final steps are bureaucratic:</p>
+<ol>
+<li>Send CLA Back to Contributor</li>
+</ol>
+<p>Ben sends the approved CLA back to Amira at this point, so that she has a record of it too.</p>
+<p>That's our sign to make a copy of the CLA in our storage:</p>
+<pre><code>echo &quot;$SIGNED_CLA&quot; &gt; envelopes/cla-bradvoc8-signed-4-01.envelope
+echo &quot;$SIGNED_ACCEPTED_CLA&quot; &gt; envelopes/cla-bradvoc8-accepted-4-01.envelope
+</code></pre>
+<ol>
+<li>Update permissions</li>
+</ol>
+<p>With the CLA accepted, Ben grants BRadvoc8 limited repository access:
+push to feature branches, but not main. He can do so confidently
+because DevReviewer explained to him her cross-verification of the
+BRadvoc8 GitHub account and the BRadvoc8 XID. He also gives BRadvoc8
+the OK to merge Amira's PR (and to do so in the future at her own
+perogative).</p>
+<p>The next step would be "7. Publish the CLA" but there are some complexities here that are going to await
+<a href="../04_2_Publishing_for_Privacy/">§4.2</a>.</p>
+<h2 id="summary-first-arc-complete">Summary: First Arc Complete</h2>
+<p>In <a href="../03_3_Creating_Peer_Endorsements/">§3.3</a>, Amira put a capstone on
+her progressive trust journey when she acquired peer endorsements for
+her BRadvoc8 pseudonymous identity. Here, in §4.1 that paid out with
+her work being accepted for use in SisterSpaces.</p>
+<p>This completes the first arc of Amira's story, from anonymous person
+to trusted contributor. Amira now has everything she needs to
+participate in open source projects while protecting her real-world
+identity.</p>
+<p>The rest of this chapter will spin out the results of this conclusion:
+how Amira's contract can be published in privacy protecting ways and
+how she can keep her growing XID clean and accessible. Future arcs
+will then cover advanced topics such as security hardening and
+advanced collaboration.</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains numerous data created in this section, the most
+important of which are Amira's final
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-private-4-01.envelope">private</a>
+and
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/BRadvoc8-xid-public-4-01.envelope">public</a>
+XIDs as well as the <a href="https://github.com/BlockchainCommons/XID-Quickstart/blob/main/envelopes/cla-bradvoc8-accepted-4-01.envelope">accepted
+CLA</a>.</p>
+<p><strong>Scripts:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts">scripts</a>
+directory contains
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/04_1_Creating_Binding_Agreements-SCRIPT.sh">04_1_Creating_Binding_Agreements-SCRIPT.sh</a>,
+which runs through all the commands in this section. From the command
+line, <code>git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git</code>, then <code>cd
+XID-Quickstart</code>, then <code>bash
+scripts/04_1_Creating_Binding_Agreements-SCRIPT.sh</code> to test it.</p>
+<h3 id="exercises">Exercises</h3>
+<ol>
+<li>Create a CLA for a fictional project you maintain, specifying what license terms you'd require.</li>
+<li>Design a key hierarchy with separate keys for: identity management, attestation signing, and contract signing.</li>
+<li>Research how major open source projects (Apache, Linux Foundation) handle CLAs. What terms do they include?</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>We've complete Amira's first arc, but there are two open
+questions. First, how can that contract be published in a maximally
+private way? <a href="../04_2_Publishing_for_Privacy/">§4.2: Publishing for
+Privacy</a> discusses concerns and how
+hashing can be used to protect content.  Second, has Amira's XID
+gotten too big? <a href="../04_3_Creating_New_Views/">§4.3: Creating New Views</a>
+and <a href="04_4_Creating_New_editions.md">§4.4: Creating New Editions</a> talk
+about how to clean it up.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Contract-Signing Key</strong>: A purpose-limited key designated for signing legal documents, following the principle of least authority.</p>
+<p><strong>Bilateral Agreement</strong>: A contract where both parties have obligations, unlike unilateral attestations or endorsements.</p>
+</blockquote>
+<h2 id="appendix-ii-common-questions">Appendix II: Common Questions</h2>
+<h3 id="q-is-a-pseudonymous-cla-legally-binding">Q: Is a pseudonymous CLA legally binding?</h3>
+<p><strong>A:</strong> Yes, in most jurisdictions. What matters legally is that the
+signer intended to be bound and had capacity to contract. The
+signature doesn't need to be a legal name, it needs to be attributable
+to a specific entity making a commitment. Cryptographic signatures
+from a persistent pseudonymous identity satisfy this requirement.</p>
+<h3 id="q-what-if-my-employer-owns-my-contributions">Q: What if my employer owns my contributions?</h3>
+<p><strong>A:</strong> The CLA includes a representation that you have authority to
+grant the license. If your employment agreement assigns your work to
+your employer, you may need employer approval before
+contributing. This applies equally to pseudonymous and real-name
+contributors.</p>
+<blockquote>
+<p>⚠️ <strong>Employment Agreements</strong>: Many tech employment contracts
+include IP assignment clauses. Review your agreement before
+contributing: the CLA representation of authority is legally binding.</p>
+</blockquote>
+<h3 id="q-can-access-be-revoked-what-if-i-stop-contributing">Q: Can access be revoked? What if I stop contributing?</h3>
+<p><strong>A:</strong> Repository access and the CLA license are separate. A repo
+owner can revoke access if you violate project policies, but your
+existing contributions remain licensed. Conversely, you can stop
+contributing anytime: the CLA covers past contributions, not future
+obligations.</p>
+<h3 id="q-why-not-just-use-a-real-name">Q: Why not just use a real name?</h3>
+<p><strong>A:</strong> For Amira, revealing her real name could endanger her or her
+family. For others, it might affect employment, invite harassment, or
+simply be unnecessary. Pseudonymous contribution lets people
+participate based on the quality of their work, not their real-world
+identity.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
