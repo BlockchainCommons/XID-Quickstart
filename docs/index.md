@@ -1,4 +1,7 @@
 <img src="https://developer.blockchaincommons.com/assets/badges/xid-quickstart.png" width=150 style="float: right">
+
+See [bcts.dev/xid](https://bcts.dev/xid) for a hands-on, online version of this tutorial.
+
 [**Chapter One: Introduction to XIDs**](01_0_Introduction.md)
 
 * [§1.1: Getting Started with SSI & XIDs](01_1_Getting_Started_SSI_XIDs.md)
