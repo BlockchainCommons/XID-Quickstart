@@ -473,7 +473,7 @@ PUBLIC_XID_WITH_KEYS=$(envelope xid export --private elide --generator elide "$X
 Finally, save everything away:
 ```
 echo "$LAPTOP_PRVKEYS" > envelopes/key-laptop-private-5-01.ur
-echo "$LAPTOP_PUBKEYS" > envelopes/key-laopt-public-5-01.ur
+echo "$LAPTOP_PUBKEYS" > envelopes/key-laptop-public-5-01.ur
 echo "$PORTABLE_PRVKEYS" > envelopes/key-portable-private-5-01.ur
 echo "$PORTABLE_PUBKEYS" > envelopes/key-portable-public-5-01.ur
 
