@@ -1,6 +1,10 @@
 <img src="https://developer.blockchaincommons.com/assets/badges/xid-quickstart.png" width=150 style="float: right">
 See [bcts.dev/xid](https://bcts.dev/xid) for a hands-on, online version of this tutorial.
 
+<table width=100%>
+<tr>
+<td width="50%">
+
 [**Chapter One: Introduction to XIDs**](01_0_Introduction.md)
 
 * [§1.1: Getting Started with SSI & XIDs](01_1_Getting_Started_SSI_XIDs.md)
@@ -20,12 +24,19 @@ See [bcts.dev/xid](https://bcts.dev/xid) for a hands-on, online version of this 
 * [§3.2: Supporting Cross Verification](03_2_Supporting_Cross_Verification.md)
 * [§3.3: Creating Peer Endorsements](03_3_Creating_Peer_Endorsements.md)
 
+</td>
+<td width=50%>
+
 [**Chapter Four: Managing Your XIDs**](04_0_Advanced.md)
 
 * [§4.1: Creating Binding Agreements](04_1_Creating_Binding_Agreements.md)
 * [§4.2: Publishing Commitments for Privacy](04_2_Publishing_for_Privacy.md)
 * [§4.3: Creating New Views](04_3_Creating_New_Views.md)
 * [§4.4: Creating New Editions](04_4_Creating_New_Editions.md)
+
+</td>
+</tr>
+</table>
 
 ---
 
