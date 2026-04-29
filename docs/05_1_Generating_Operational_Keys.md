@@ -169,6 +169,18 @@ envelope xid key find name "attestation-key" $XID
 (And isn't that a lot easier than finding the assertion as we
 demonstrated in [§4.3](04_3_Creating_New_Views.md)?)
 
+These examples all reveal envelopes, and the keys are encrypted. Which
+is great when you're doing elision and just need a digest. If you
+instead need to extract the private key, you can do so by adding the
+`--private` flag and if the XID's private keys are encrypted, also the
+`--password` flag.
+
+```
+envelope xid key find name --private --password "$PASSWORD" "attestation-key" $XID
+
+| ur:crypto-prvkeys/lftansgolfaohdcxtbveutjzcehdgwhenbonmecedrmktkiojkrpbtmnrhbsttuozeeocfhlvybzvaoltansgehdcxgelkclzsfrmnfllgeoeonykoatdmdszcvwcxndfyaynemyhdlusklyeswtonhlnngmhnspnd
+```
+
 ### Step 2: Check Current Key Permissions
 
 A simple `for` loop of the sort that we've used before can list
@@ -543,7 +555,7 @@ Only bring the full XID online when you need to make updates to it.
 Alternatively, or in addition, you can choose to just store your inception key.
 
 ```
-INCEPTION_PRVKEYS=$(envelope xid key find inception $XID_WITH_KEYS)
+INCEPTION_PRVKEYS=$(envelope xid key find inception --private --password "$PASSWORD" $XID_WITH_KEYS)
 echo $INCEPTION_PRVKEYS > OFFLINE-STORE/xid-inception-key.envelope
 ```
 
