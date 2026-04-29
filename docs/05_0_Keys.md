@@ -2,7 +2,7 @@
 
 The XID is your identity online; if you lose your XID, the identity is
 gone. That means that it's very important to protect your XID, and
-moreso, and that means protecting the keys that control your XID.
+that means protecting the keys that control your XID.
 
 This chapter addresses that problem by talking about how to create
 less-vulnerable keys for usage in your XID, how to protect your
