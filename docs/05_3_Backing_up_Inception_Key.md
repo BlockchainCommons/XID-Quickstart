@@ -1,173 +1,225 @@
-# Tutorial 11: Offline Inception Key
+# 5.3: Backing Up Your Inception Key
 
-Your house burns down. Your laptop, your backup drive, your phone—all gone. If your inception key was only on those devices, your identity is gone too. No one can help you recover it. This tutorial shows how to prevent that catastrophe using SSKR (Sharded Secret Key Reconstruction).
+Your house burns down. Your laptop, your backup drive, and your phone
+are all gone. If your inception key was only on those devices, your
+identity is gone too. No one can help you recover it. This tutorial
+shows how to prevent that catastrophe using SSKR (Sharded Secret Key
+Reconstruction) and also discusses the power of an offline inception
+key.
 
-**Difficulty**: Intermediate
-**Builds on**: [Tutorial 10 (Multi-Device Identity)](10-multi-device-identity.md)
+> 🧠 **Related Concepts.** After completing this tutorial, explore
+[Key
+Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md)
+to understand the full key hierarchy model.
 
-> **Related Concepts**: After completing this tutorial, explore [Key Management](../concepts/key-management.md) for the full key hierarchy model.
+## Objectives of this Section
 
-## Prerequisites
+After working through this section, a developer will be able to:
 
-- Completed Tutorial 10 (Multi-Device Identity)
-- The `envelope` CLI tool installed
-- Understanding of operational vs inception keys from Tutorial 10
+- Create SSKR backup shares
+- Distribute shares safely
 
-## What You'll Learn
+Supporting objectives include the ability to:
 
-- Why inception keys need special protection
-- How to create SSKR backup shares
-- How to distribute shares safely
-- How to test recovery before going offline
-- How to take your inception key offline
+- Understand why inception keys need special protection
 
-## Step 0: Setting Up Your Workspace
+## Amira's Story: The Fragility of Identity
 
-Create a working directory for this tutorial:
+Amira is thrilled that she's now protecting her BRadvoc8 identity from
+compromise by mainly using the operational version of her XID. But,
+it's made her feel more paranoid about the inception key, since it's
+now only in a single backup.
+
+You might think: "I'll just make copies of my inception key and store
+them in different places." But copies create copies of the risk: if
+any copy is stolen, your identity is compromised.
+
+Amira needs a more robust way to protect the backup of her full
+XID. That's where SSKR comes in.
+
+### The Power of SSKR
+
+SSKR (Sharded Secret Key Reconstruction) splits a secret into multiple
+shares using Shamir's Secret Sharing. 
+
+- Any single share reveals nothing about the original.
+- A threshold number of shares can reconstructs the original.
+
+Common schemes for SSKR include 2-of-3, 3-of-5, 2-of-2, which
+designate how many keys (a "threshold") are necessary to reconstruct a
+key out of the total set.
+
+> :book: **What is a threshold scheme?** A threshold scheme allows you
+to recover original data from some subset of shares of that data.  A
+"2-of-3" scheme means you create 3 shares and need only 2 to
+recover. You can lose 1 share and still reconstruct your
+key. Meanwhile, an attacker who steals 1 share learns nothing.
+
+SSKR solves the two major problems with keys. It defeats the
+single-point-of-compromise (SPOC) and the
+single-point-of-failure. That is, it does as long as you create a
+rational threshold scheme: a 1-of-1 scheme clearly does nothing, and a
+2-of-2 scheme just multiplies the threat unless you redunantly backup
+your shares. But a scheme like 2-of-3 or 3-of-5 can allow you to
+reconstruct a key even if you lose some of your SSKR shares!
+
+## Part 0: Verify Dependencies
+
+Before you get started, you should (as usual) check your `envelope-cli` version:
 
 ```
-mkdir -p output
+envelope --version
+
+│ bc-envelope-cli 0.34.1
 ```
 
-## Building on Tutorial 10
-
-| Tutorial 10 | Tutorial 11 |
-|-------------|-------------|
-| Added operational keys | Protect the inception key |
-| Multiple devices working | Inception key goes offline |
-| Compromise contained to device | Inception key survives disasters |
-
-**The Bridge**: At the end of Tutorial 10, Charlene noticed a gap: Amira's operational keys limit compromise damage, but her inception key is still on her laptop. "That key should never be on any computer," Charlene warned. This tutorial addresses that gap—taking the inception key offline while keeping it recoverable.
-
----
-
-## Part I: Key Hierarchy Concept
-
-### Why Inception Keys Are Different
-
-Not all keys are equal. Understanding the hierarchy is essential:
-
-| Key Type | Permissions | Risk If Compromised | Should Be |
-|----------|-------------|---------------------|-----------|
-| Inception | elect, revoke, all | Identity takeover | Offline |
-| Operational | sign only | Attacker can sign | On devices |
-| Per-service | varies | Service-specific damage | Service-controlled |
-
-**The principle**: The key that controls your identity should have the minimum possible exposure.
-
-> :book: **Inception Key**
->
-> The original key created when your XID was established. It has full permissions (`elect`, `revoke`) and controls who can manage your identity. Also called the "private key base" in technical documentation.
-
-### Step 1: Review Current State
+Then, reload your XID. 
 
 ```
-# Create Amira's XID with inception key and operational keys
-XID=$(envelope generate keypairs --signing ed25519 | \
-    envelope xid new --nickname "BRadvoc8" --generator include --sign inception)
-
-UNWRAPPED_XID=$(envelope extract wrapped "$XID")
-XID_ID=$(envelope xid id "$UNWRAPPED_XID")
-
-# Add an operational key
-LAPTOP_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
-LAPTOP_PUBKEYS=$(envelope generate pubkeys "$LAPTOP_PRVKEYS")
-
-UPDATED_XID=$(envelope xid key add \
-    --allow sign \
-    --nickname "laptop-2026" \
-    "$LAPTOP_PUBKEYS" "$UNWRAPPED_XID")
-
-echo "XID: $XID_ID"
-echo "Inception key: 'All' permissions (currently on device)"
-echo "Laptop key: 'Sign' only"
-
-│ XID: c7e764b7
-│ Inception key: 'All' permissions (currently on device)
-│ Laptop key: 'Sign' only
+XID=$(cat envelopes/BRadvoc8-xid-s10-private-5-02.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD="your-password-from-previous-tutorials"
 ```
 
-Right now, the inception key exists in two places:
+## Part I: Creating a Backup
 
-1. Inside the XID envelope (encrypted with password)
-2. Potentially in memory while Amira is using it
+SSKR is built into envelope, making it easy to back up your keys and
+your full XIDs.
 
-If her laptop is compromised while the XID is loaded, an attacker could extract the inception key. And if her laptop is destroyed, the inception key is gone forever.
+### Step 1: Design Your Threshold Scheme
 
-> :warning: **Two Threats, One Solution**
->
-> Your inception key faces two threats: theft (someone copies it) and loss (it's destroyed). SSKR solves both—shares distributed across locations survive theft of any single location AND destruction of any single location.
+The most important part of using SSKR may be figuring out your
+threshold scheme. You need to decide:
 
----
+1. How many shares to create.
+2. How many shares will be necessary to reconstruct (the "threshold").
+3. Where and how the shares will be store.
 
-## Part II: SSKR Backup
+These decisions are all interrelated: you'll often decide how many
+shares to create based on how many secure locations you have. It's
+often good to have a threshold of 60% or 70% of that, so that you can
+afford to lose a share or maybe more, but there you have to consider
+how widely separated the shares are: you don't want to create a
+situation where it's easy to combine enough shares to reconstruct your
+secret and steal your XID!
 
-You might think: "I'll just make copies of my inception key and store them in different places." But copies create copies of the risk—if any copy is stolen, your identity is compromised. SSKR is different: each share alone is useless.
+Ultimately you want to think about context: how can you separate your
+shares geographically (so that they're not all threatened by the same
+physical disaster) and socially (so they're not easy to collect).
 
-### What Is SSKR?
+Amira decides that she can manage three different secure locations
+that are geographically and socially distinct. This will allow her to
+create a 2-of-3 SSKR share where she can lose one share and still
+reconstruct her XID.
 
-SSKR (Sharded Secret Key Reconstruction) splits a secret into multiple shares using Shamir's Secret Sharing. Key properties:
+You also need to decide if you're creating a fully offline inception
+key. In this model, you don't keep a singular copy of your inception
+key (or rather your full, management XID, which contains your
+inception key). Instead, whenever you need to manage your XID, you
+reconstruct from your SSKR shares to do so. It's important to think
+about this now, because having an offline inception key probably means
+that you need to make it a little less cumbersome to reconstruct, and
+that might affect where your shares are located and ultimately what
+your threshold scheme is.
 
-- Any single share reveals nothing about the original
-- A threshold number of shares reconstructs the original
-- Common schemes: 2-of-3, 3-of-5, 2-of-2
+| Share | Location | Rationale |
+|-------|----------|-----------|
+| Share 1 | Safety deposit box | Secure, requires physical access |
+| Share 2 | Charlene (trusted friend) | Geographic distribution, in-person recovery |
+| Share 3 | Encrypted cloud backup | Accessible remotely if needed |
 
-> :book: **Threshold Scheme**
->
-> A "2-of-3" scheme means you create 3 shares and need any 2 to recover. You can lose 1 share and still recover. An attacker who steals 1 share learns nothing.
+This distribution is robust because:
+
+- Geographic distribution protects against local disasters
+- No single location compromise reveals the key
+- Charlene can help with in-person recovery
+- 2-of-3 means losing one share is survivable
+
+["Designing SSKR Sharing
+Scenarios"](https://github.com/BlockchainCommons/SmartCustody/blob/master/Docs/SSKR-Sharing.md)
+offers much more extensive discussions on planning out a robust SSKR
+threshold scheme.
+
+> 📖 **Are they shares or shards?** The most proper usage when talking
+about SSKR is use "shard" as a verb and "share" as a noun. That is,
+you "shard" a secret (a seed, a key, or in this case a XID) and that
+produces "shares".
+
+> 📖 **Is it reconstruct, recover, or restore?** Reconstruct is the
+most precise verb to use when you're talking about gathering together
+SSKR shares and using them to bring the original secret back into
+existence. Recover is a more general verb for bringing back something
+that's lost and restore is usually used as a verb for resurrecting
+something from backup.
+
+> 📖 **Is it SSKR or Shamir's Secret Sharing?** Shamir's Secret
+Sharing is a general algorithm. SSKR is Blockchain Commons' specific
+implementation of that algorithm, which also allows for multi-level
+thresholds (e.g., the ability to reconstruct from a threshold of
+groups each of which have a threshold of users).
 
 ### Step 2: Create Backup Shares
 
+The command `envelope sskr split` allows you to shard any Gordian
+Envelope, including a XID into a number of shares. You just give it
+the `--group` flag, which allows you to define a threshold scheme.
+
 ```
-# Split the XID into 2-of-3 shares
 SHARES=$(envelope sskr split --group "2-of-3" "$XID")
+SHARE_ARRAY=( $SHARES )
 
-# Parse into individual shares (space-separated output)
-SHARE1=$(echo "$SHARES" | awk '{print $1}')
-SHARE2=$(echo "$SHARES" | awk '{print $2}')
-SHARE3=$(echo "$SHARES" | awk '{print $3}')
+echo "✅ Created 3 shares (any 2 can recover):"
+echo "  Share 1: ${SHARE_ARRAY[0]:0:50}..."
+echo "  Share 2: ${SHARE_ARRAY[1]:0:50}..."
+echo "  Share 3: ${SHARE_ARRAY[2]:0:50}..."
 
-echo "Created 3 shares (any 2 can recover):"
-echo "  Share 1: ${SHARE1:0:50}..."
-echo "  Share 2: ${SHARE2:0:50}..."
-echo "  Share 3: ${SHARE3:0:50}..."
-
-│ Created 3 shares (any 2 can recover):
-│   Share 1: ur:envelope/lftpsplftpsotansgshdcxuestrkbzce...
-│   Share 2: ur:envelope/lftpsplftpsotansgshdcxidolotkpve...
-│   Share 3: ur:envelope/lftpsplftpsotansgshdcxjnsapyjlbt...
+| ✅ Created 3 shares (any 2 can recover):
+|   Share 1: ur:envelope/lftansfwlrhkbwhyhpfscfleytrfmssgtdfwjn...
+|   Share 2: ur:envelope/lftansfwlrhkbwhyhpfscfleytrfmssgtdfwjn...
+|   Share 3: ur:envelope/lftansfwlrhkbwhyhpfscfleytrfmssgtdfwjn...
 ```
 
-Each share is a complete envelope containing a fragment of the secret. The threshold (2-of-3) means:
-
-- Any 2 shares can reconstruct the original
-- 1 share alone reveals nothing
-- Losing 1 share still allows recovery
+Each share is a complete envelope containing a fragment of the
+full XID.
 
 ### Step 3: Prove One Share Is Useless
 
-Before trusting SSKR, let's prove that a single share really reveals nothing:
+The `sskr join` command is used to reconstruct a Gordian Envelope from
+shares. Trying it with just one share suggests that having a single
+share is useless.
 
 ```
-# Try to recover with only one share (should fail)
-envelope sskr join "$SHARE1" 2>&1 || echo "❌ Cannot recover with 1 share (as expected)"
+envelope sskr join "${SHARE_ARRAY[0]}" 2>&1 || echo "❌ Cannot recover with 1 share (as expected)"
 
-│ ❌ Cannot recover with 1 share (as expected)
+| Error: invalid SSKR shares
+| ❌ Cannot recover with 1 share (as expected)
 ```
 
-This is the key security property: an attacker who steals one share from Charlene's house learns nothing about your inception key.
+This is the key security property: an attacker who stole one share of
+Amira's SSKR from Charlene's house would learn nothing about your
+inception key.
 
 ### Step 4: Test Recovery Before Distribution
 
-> :warning: **Test Before You Trust**
->
-> Always test recovery before distributing shares or deleting the original. If something went wrong during splitting, you want to know now—not when your house burns down.
+Before you distribute your SSKR shares, you should always test them to
+make sure that they really do allow you to reconstruct your XID (or
+whatever other Gordian Envelope you sharded).
+
+Based on the threshold scheme we designed for Amira, `envelope` should
+be able to reconstruct the XID from any two out of three shares:
 
 ```
-# Test recovery with shares 1 and 2
-RECOVERED=$(envelope sskr join "$SHARE1" "$SHARE2")
+RECOVERED=$(envelope sskr join "${SHARE_ARRAY[1]}" "${SHARE_ARRAY[2]}")
+```
 
-# Verify it matches the original
+The mere fact that the recovery works without errors is a good
+sign. You could also use `envelope format` to look at it to see that
+everything is there as expected.
+
+One programmatic way to test your reconstruction is to compare the digest
+of your original and recovered XID:
+
+```
 ORIGINAL_DIGEST=$(envelope digest "$XID")
 RECOVERED_DIGEST=$(envelope digest "$RECOVERED")
 
@@ -177,305 +229,221 @@ else
     echo "❌ Recovery failed - DO NOT proceed"
     exit 1
 fi
+```
 
-# Test other combinations
-RECOVERED_23=$(envelope sskr join "$SHARE2" "$SHARE3")
-RECOVERED_13=$(envelope sskr join "$SHARE1" "$SHARE3")
+You should repeat this on all the combinations of two shares (1+2,2+3, and 1+3):
+```
+RECOVERED_23=$(envelope sskr join "${SHARE_ARRAY[1]}" "${SHARE_ARRAY[2]}")
+RECOVERED_13=$(envelope sskr join "${SHARE_ARRAY[0]}" "${SHARE_ARRAY[2]}")
+DIGEST_23=$(envelope digest $RECOVERED_23)
+DIGEST_13=$(envelope digest $RECOVERED_13)
 
-echo "✅ All share combinations verified"
+if [ "$ORIGINAL_DIGEST" = "$RECOVERED_DIGEST" -a "$ORIGINAL_DIGEST" = "$DIGEST_23" -a "$ORIGINAL_DIGEST" = "$DIGEST_13" ]; then
+    echo "✅ All share combinations verified"
+else
+    echo "❌ Additional recoveries failed - DO NOT proceed"
+    exit 1
+fi
 
 │ ✅ Recovery test passed (shares 1+2)
 │ ✅ All share combinations verified
 ```
 
----
+> ⚠️ **Test Before You Trust.** Always test recovery before
+distributing shares or deleting the original. If something went wrong
+during splitting, you want to know now—not when your house burns down.
 
 ## Part III: Distributing Shares
 
-### Step 5: Plan Share Distribution
-
-Amira distributes her shares across different contexts:
-
-| Share | Location | Rationale |
-|-------|----------|-----------|
-| Share 1 | Safety deposit box | Secure, requires physical access |
-| Share 2 | Charlene (trusted friend) | Geographic distribution, in-person recovery |
-| Share 3 | Encrypted cloud backup | Accessible remotely if needed |
-
-**Why this distribution**:
-
-- No single location compromise reveals the key
-- Charlene can help with in-person recovery
-- Geographic distribution protects against local disasters
-- 2-of-3 means losing one share is survivable
+Since you've already planned your threshold scheme and sharded your
+XID, distributing the shares is simple.
 
 ### Step 6: Save Shares
 
-```
-OUTPUT_DIR="output/xid-tutorial11-$(date +%Y%m%d%H%M%S)"
-mkdir -p "$OUTPUT_DIR"
-
-# Save shares (in practice, distribute to different locations)
-echo "$SHARE1" > "$OUTPUT_DIR/share1-safety-deposit.txt"
-echo "$SHARE2" > "$OUTPUT_DIR/share2-charlene.txt"
-echo "$SHARE3" > "$OUTPUT_DIR/share3-cloud-encrypted.txt"
-
-echo "Shares saved to $OUTPUT_DIR"
-echo "In practice:"
-echo "  - Print share1, store in safety deposit box"
-echo "  - Give share2 to Charlene in person"
-echo "  - Encrypt share3, upload to cloud storage"
-
-│ Shares saved to output/xid-tutorial11-20260123120000
-│ In practice:
-│   - Print share1, store in safety deposit box
-│   - Give share2 to Charlene in person
-│   - Encrypt share3, upload to cloud storage
-```
-
-> :warning: **Defense in Depth**
->
-> Even though each share alone reveals nothing, encrypt share3 before uploading to cloud storage. If SSKR ever had a vulnerability, your encrypted share would still be protected.
-
----
-
-## Part IV: Going Offline
-
-### Step 7: Verify Operational Keys Work
-
-Before taking the inception key offline, confirm operational keys work:
+Obviously, command-line variables won't do the trick, you need to output your shares to files. Here, we've going to put them in our standard directory:
 
 ```
-# Sign something with the laptop operational key
-TEST=$(envelope subject type string "Test from operational key")
-TEST_SIGNED=$(envelope sign --signer "$LAPTOP_PRVKEYS" "$TEST")
-
-envelope verify --verifier "$LAPTOP_PUBKEYS" "$TEST_SIGNED" >/dev/null && echo "✅ Operational key works for signing"
-
-│ ✅ Operational key works for signing
+echo "${SHARE_ARRAY[0]}" > "envelopes/BRadvoc8-xid-share1-safety-deposit-5-03.envelope"
+echo "${SHARE_ARRAY[1]}" > "envelopes/BRadvoc8-xid-share2-charlene-5-03.envelope"
+echo "${SHARE_ARRAY[2]}" > "envelopes/BRadvoc8-xid-share3-cloud-5-03.envelope"
 ```
 
-### Step 8: Delete Inception Key from Device
+In practice, you might then do something like:
 
-> :warning: **Point of No Return**
->
-> Once you delete the inception key from your device, it exists only in distributed SSKR shares. Make absolutely sure you've tested recovery and distributed shares before proceeding.
+- Print share1, store in safety deposit box
+- Give share2 to Charlene in person
+- Encrypt share3, upload to cloud storage
 
-```
-# In practice, you would:
-# 1. Securely delete the XID file containing the inception key
-# 2. Clear any backups that contain it
-# 3. The inception key now exists only in SSKR shares
+> ⚠️ **Defense in Depth.** Even though each share alone reveals
+> nothing, encrypt share3 before uploading to cloud storage. If SSKR
+> ever had a vulnerability, your encrypted share would still be
+> protected.
 
-echo "Inception key deletion steps:"
-echo "  1. rm -P \$HOME/.xid/BRadvoc8-inception.envelope  # Secure delete"
-echo "  2. Clear from any backup systems"
-echo "  3. Inception key now exists only in distributed shares"
+### Step 7: Take Your Management XID Offline
 
-# For this tutorial, we simulate by clearing the variable
-unset XID
-echo "✅ Inception key removed from device (simulated)"
+This would be the point where you could take your management XID (with
+the inception key) offline with assurance, as was first suggested in
+[§5.1](05_1_Generating_Operational_Keys.md). For the best security,
+you don't even keep a copy yourself, you just reconstruct your XID
+from the cloud and your safety deposit box shares if you ever want to
+make changes.
 
-│ Inception key deletion steps:
-│   1. rm -P $HOME/.xid/BRadvoc8-inception.envelope  # Secure delete
-│   2. Clear from any backup systems
-│   3. Inception key now exists only in distributed shares
-│ ✅ Inception key removed from device (simulated)
-```
+#### How Much is Too Much?
 
-### What Amira Can Now Do
+[#SmartCustody](https://www.smartcustody.com/) lists many threats to
+keys, one of which is "Process Fatigue": if a security process is too
+complex, the user will give up on it, and so they'll lose the security.
 
-| Operation | Can Do? | How |
-|-----------|---------|-----|
-| Sign attestations | Yes | Laptop operational key |
-| Sign endorsements | Yes | Laptop operational key |
-| Encrypt messages | Yes | If operational key has encrypt permission |
-| Add new device | No | Needs inception key reconstruction |
-| Revoke compromised key | No | Needs inception key reconstruction |
-| Rotate keys | No | Needs inception key reconstruction |
+Consider that when you're deciding what to do with your management
+XID, with the inception key. You _definitely_ want to shard it and
+store it remotely, because that protects against loss. But maybe you
+decide that it's too much nuisance to reconstruct it every time you
+want to manage your XID. In that case you might keep copies of the
+shares locally, but offline, or you might keep the full XID locally
+but offline, both allowing easy access while still providing
+protection against compromise.
 
-**Most daily operations work without the inception key.** Identity management requires reconstruction.
+You need to find the security scenario that fits you: maximizing
+protection against loss and against compromise, while still keeping
+things simple enough that you're willing to go through the process,
+and not abandon it entirely.
 
----
+## Part IV: Reconstructing Your XID
 
-## Part V: Reconstruction (When Needed)
+At some point in the future, Amira decides she needs to make updates
+to her XID. She does so by reconstructing the XID with the
 
-### Step 9: Reconstruct Inception Key
+### Step 8: Reconstruct Your Management XID
 
-When Amira needs to add a new device or revoke a key:
-
-```
-# Amira retrieves share1 from safety deposit box
-# Amira contacts Charlene for share2
-# (She doesn't need share3)
-
-# Reconstruct the inception key
-RECONSTRUCTED=$(envelope sskr join "$SHARE1" "$SHARE2")
-
-echo "Inception key reconstructed for identity management"
-envelope format "$RECONSTRUCTED" | head -5
-
-│ Inception key reconstructed for identity management
-│ {
-│     XID(c7e764b7) [
-│         'key': PublicKeys [...]
-│         ...
-```
-
-### Step 10: Perform Management Operation
+Reconstructing your XID at this point is easy: you've already done it
+while testing! You just need to gather your shares (whichever two are
+easiest to access), then use `envelope sskr join`. 
 
 ```
-# Example: Add a key for a new device
-NEW_DEVICE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
-NEW_DEVICE_PUBKEYS=$(envelope generate pubkeys "$NEW_DEVICE_PRVKEYS")
-
-RECONSTRUCTED_UNWRAPPED=$(envelope extract wrapped "$RECONSTRUCTED")
-UPDATED=$(envelope xid key add \
-    --allow sign \
-    --nickname "new-device-2026" \
-    "$NEW_DEVICE_PUBKEYS" "$RECONSTRUCTED_UNWRAPPED")
-
-# Advance provenance to record this change
-UPDATED=$(envelope xid provenance next "$UPDATED")
-
-echo "✅ New device key added"
-
-│ ✅ New device key added
+RECOVERED_13=$(envelope sskr join "${SHARE_ARRAY[0]}" "${SHARE_ARRAY[2]}")
 ```
 
-### Step 11: Re-split and Go Offline Again
+### Step 9: Perform Management Operation
 
-After any management operation, re-split and go offline:
+At this point, you can conduct new management operations, such as
+adding a key for a new device.
 
-```
-# Re-wrap and sign the updated XID with inception key
-# (The inception key is inside RECONSTRUCTED, accessed via --sign inception)
-UPDATED_XID=$(envelope sign --signer "$RECONSTRUCTED" "$UPDATED")
+### Step 10: Re-split & Go Offline Again
 
-# Create new SSKR shares
-NEW_SHARES=$(envelope sskr split --group "2-of-3" "$UPDATED_XID")
-NEW_SHARE1=$(echo "$NEW_SHARES" | awk '{print $1}')
-NEW_SHARE2=$(echo "$NEW_SHARES" | awk '{print $2}')
-NEW_SHARE3=$(echo "$NEW_SHARES" | awk '{print $3}')
+Here's the important step: afterward you need to make sure that go
+through all of the usual rigamarole (advancing your provenance mark
+and making a public version), but you should also go through the
+security steps that you now use to keep your key safe:
 
-# Redistribute shares
-echo "New shares created - redistribute to:"
-echo "  - Safety deposit box (replace old share1)"
-echo "  - Charlene (replace old share2)"
-echo "  - Cloud backup (replace old share3)"
+1. Reshard your XID.
+2. Redistribute the shares & make sure all sites remove the old shares.
+3. Create a new operational XID by removing the inception key.
 
-# Delete reconstructed inception key from device
-unset RECONSTRUCTED UPDATED_XID
-echo "✅ Inception key offline again"
+#### Key Type Comparison
 
-│ New shares created - redistribute to:
-│   - Safety deposit box (replace old share1)
-│   - Charlene (replace old share2)
-│   - Cloud backup (replace old share3)
-│ ✅ Inception key offline again
-```
+The crucial change you've made here is that you've changed where the
+inception key is in your bag of keys:
 
-> :warning: **Replace Old Shares**
->
-> After updating your XID, the old shares reconstruct the old version. Replace all distributed shares with the new ones, or you'll reconstruct outdated information.
+| Key Type | Purpose | Verified Against | Added In |
+|----------|---------|------------------|----------|
+| 👤 XID inception key | Signs XID document updates | SSKR Shares | §1.3,§5.1,§5.3 |
+| 🗣️  Attestation key | Signs attestations | XID key list | §2.1 |
+| 🖋️  SSH signing key | Signs Git commits | GitHub account | §3.1 |
+| 📄️  Contract signing key | Signs contracts | XID key list | §4.1 |
+| 💻 Laptop Key | Operational Key | XID key list | §5.1 |
+| ⏏️ Portable Key | Limited Operational Key | XID key list | §5.1 |
 
----
-
-## Part VI: Wrap-Up
-
-### Save Your Work
-
-```
-# Save operational keys (these stay on devices)
-echo "$LAPTOP_PRVKEYS" > "$OUTPUT_DIR/laptop-operational-key.envelope"
-
-echo "Saved to $OUTPUT_DIR"
-ls "$OUTPUT_DIR"
-
-│ Saved to output/xid-tutorial11-20260123120000
-│ laptop-operational-key.envelope
-│ share1-safety-deposit.txt
-│ share2-charlene.txt
-│ share3-cloud-encrypted.txt
-```
-
-### What Amira Has Now
-
-**Key hierarchy secured**:
+This has created a hierarchy of keys:
 
 - Inception key: Offline, split into 2-of-3 SSKR shares
-- Operational keys: On devices, sign-only permissions
-- Recovery path: Charlene + safety deposit (or any 2 shares)
+- Operational keys: On devices, operation-only permissions
 
-**The security model**: Even if Amira's laptop is completely compromised, the attacker:
+## Summary: Backing Up Your Inception Key
 
-- Can sign things with operational key ✓
-- Cannot add their own keys ✗
-- Cannot lock Amira out ✗
-- Cannot access SSKR shares ✗
+[§5.1](05_1_Generating_Operational_Keys.md) laid out the model of
+removing your inception key from your XID as using an operational key
+for day-to-day usage. But, you want to make sure your inception key is
+safe. One of the best ways to do so is to maintain your off-line copy
+of your inception key with SSKR, which allows you to shard it into
+shares.
 
-Amira retains control because her inception key was never on the compromised device.
+### Additional Files
 
-### The Scenario Charlene Celebrates
+**Envelopes:** The
+[envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
+directory contains the shares created in this exercise, if you want to
+sample putting them back together.
 
-> "If someone compromises your laptop now, they get your operational key. They can sign things as you. But they can't lock you out, they can't add their keys, and they can't stop you from revoking their access. Your identity survives. And if your house burns down, you call me, we get your share from the bank, and you're back in business."
+**Scripts:** Forthcoming.
 
----
-
-## Common Questions
-
-**Why not just encrypt the inception key and store copies?**
-
-Copies create copies of the risk. If you store encrypted copies in three places and any one is breached (and the attacker cracks the encryption), your identity is compromised. With SSKR, breaching one location reveals nothing—mathematically nothing, not "hard to decrypt" nothing.
-
-**What if Charlene loses her share?**
-
-With 2-of-3, you can still recover using shares 1 and 3 (safety deposit + cloud). You should then create new shares and give Charlene a replacement. The old shares are now useless since you've re-split.
-
-**What if I need to revoke a key while traveling?**
-
-This is the tradeoff of offline inception keys: emergency management requires physical access to shares. If you travel frequently, consider keeping one share in a location you can access remotely (like an encrypted cloud backup) while ensuring the combination still requires physical presence for at least one share.
-
-**Can I use 3-of-5 instead of 2-of-3?**
-
-Yes. 3-of-5 is more resilient (can lose 2 shares) but requires coordinating more locations. Choose based on your threat model: how likely is loss vs. how likely is theft? More shares protect against loss; higher thresholds protect against theft.
-
----
-
-## Exercises
+### Exercises
 
 These exercises test your understanding of SSKR security properties:
 
-1. **Threshold exploration**: Create a 3-of-5 scheme. Verify that 2 shares fail to recover but any 3 succeed. How many combinations can recover?
+1. Design a share distribution strategy for your own life. Consider:
+trusted people, geographic diversity, accessibility during
+emergencies, and what happens if relationships change.
+2.Create a 3-of-5 scheme. Verify that 2 shares fail to recover but any
+3 succeed. How many combinations are there?
+3.Practice the complete cycle: split → distribute → reconstruct → add
+a new key → re-split → redistribute. Time yourself: this is your
+"identity recovery time."
 
-2. **Distribution planning**: Design a share distribution strategy for your own life. Consider: trusted people, geographic diversity, accessibility during emergencies, and what happens if relationships change.
+## What's Next
 
-3. **Full lifecycle**: Practice the complete cycle: split → distribute → reconstruct → add a new key → re-split → redistribute. Time yourself—this is your "identity recovery time."
+We've protected Amira's identity as best as possible, but what is the
+worst occurs? We're going to close out this chapter with [§5.4:
+Responding to Key Compromise](05_4_Responding_to_Key_Compromise.md).
 
----
+## Appendix I: Key Terminology
 
-## Appendix: Key Terminology
-
-> **Key Hierarchy**: The structure of keys with different permission levels—inception keys control the identity, operational keys perform daily tasks.
+> **Key Hierarchy**: The structure of keys with different permission levels: inception keys control the identity, operational keys perform daily tasks.
 >
-> **SSKR**: Sharded Secret Key Reconstruction—splitting a secret into shares where a threshold can reconstruct it.
+> **Offline Inception Key**: An inception key that exists only in distributed SSKR shares, never on an active computer.
+>
+> **Reconstruct:** Rebuilding a secret from shares using SSKR.
+>
+> **Shard**: The act of splitting up a secret using SSKR.
+>
+> **Share**: A portion of a secret, split up by SSKR.
+>
+> **SSKR**: Sharded Secret Key Reconstruction, which supports splitting a secret into shares where a threshold can reconstruct it. It's built on the Shamir's Secret Sharing algorithm, with additional ability to reconstruct from a threshold of groups.
 >
 > **Threshold Scheme**: The number of shares required for reconstruction (e.g., 2-of-3 means any 2 of 3 shares can recover the secret).
 >
-> **Offline Inception Key**: An inception key that exists only in distributed SSKR shares, never on an active computer.
 
-> :brain: **Learn more**
->
-> The [SSKR specification](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-011-sskr.md) explains the cryptographic details of Shamir's Secret Sharing and how SSKR extends it.
+> 🧠 **Learn More.** The [SSKR specification](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-011-sskr.md) explains the cryptographic details of Shamir's Secret Sharing and how SSKR extends it.
 
----
+## Appendix II: Common Questions
 
-## What If Compromise Happens?
+### Q: Why not just encrypt the inception key and store copies?
 
-Charlene's celebration assumes Amira detects compromise and responds in time. But what if an attacker actually uses the stolen operational key? Can Amira really recover?
+**A:** Copies create copies of the risk. If you store encrypted copies
+in three places and any one is breached (and the attacker cracks the
+encryption), your identity is compromised. With SSKR, breaching one
+location reveals nothing. That's mathematically nothing, not "hard to decrypt"
+nothing.
 
-Tutorial 12 proves this setup works under fire—walking through detection, revocation, and recovery when compromise actually occurs.
+### Q: What if Charlene loses her share?
 
----
+**A:** With 2-of-3, you can still recover using shares 1 and 3 (safety
+deposit + cloud). You should then create new shares and give Charlene
+a replacement. The old shares are now useless since you've re-split.
 
-[Previous: Multi-Device Identity](10-multi-device-identity.md) | [Next: Compromise Response](12-compromise-response.md)
+### Q: What if I need to revoke a key while traveling?
+
+**A:** This is the tradeoff of offline inception keys: emergency management
+requires physical access to shares. If you travel frequently, consider
+keeping one share in a location you can access remotely (like an
+encrypted cloud backup) while ensuring the combination still requires
+physical presence for at least one share.
+
+### Q: Can I use 3-of-5 instead of 2-of-3?
+
+**A:** Yes. 3-of-5 is more resilient (you can lose 2 shares) but
+requires coordinating more locations. Choose based on your threat
+model: how likely is loss vs. how likely is theft? More shares protect
+against loss; higher thresholds protect against theft. See ["Designing
+SSKR Share
+Scenarios"](https://github.com/BlockchainCommons/SmartCustody/blob/master/Docs/SSKR-Sharing.md)
+for more on different threshold scenarios.
