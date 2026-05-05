@@ -143,10 +143,10 @@ SSH_EXPORT=$(envelope export "$SSH_PUBKEYS")
 
 echo "✅ Generated SSH signing key:"
 echo "$SSH_EXPORT"
-```
 
 │ ✅ Generated SSH signing key:
 │ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOiOtuf9hwDBjNXyjvjHMKeLQKyzT8GcH3tLvHNKrXJe
+```
 
 ### Step 2: Upload Keys to GitHub
 
