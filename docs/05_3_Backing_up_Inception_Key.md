@@ -211,7 +211,7 @@ Based on the threshold scheme we designed for Amira, `envelope` should
 be able to reconstruct the XID from any two out of three shares:
 
 ```
-RECOVERED=$(envelope sskr join "${SHARE_ARRAY[1]}" "${SHARE_ARRAY[2]}")
+RECOVERED=$(envelope sskr join "${SHARE_ARRAY[0]}" "${SHARE_ARRAY[1]}")
 ```
 
 The mere fact that the recovery works without errors is a good
@@ -257,7 +257,7 @@ during splitting, you want to know now, not when your house burns down
 (and not when you try to reconstruct a fully offline inception key for
 usage).
 
-## Part III: Distributing Shares
+## Part II: Distributing Shares
 
 Since you've already planned your threshold scheme and sharded your
 XID, distributing the shares is simple.
@@ -314,7 +314,7 @@ protection against loss and against compromise, while still keeping
 things simple enough that you're willing to go through the process and
 not abandon it entirely.
 
-## Part IV: Reconstructing Your XID
+## Part III: Reconstructing Your XID
 
 At some point in the future, Amira decides she needs to make updates
 to her XID. She does so by reconstructing the XID with the
@@ -411,9 +411,8 @@ back up the SSH key that Amira uses on GitHub? We cover that in [§5.4:
 Backing Up Your SSH Key](05_4_Backing_up_SSH_Key.md).
 
 But if that adjacent activity is not important to you, you can skip
-ahead. We've protected Amira's identity as best as possible, but what
-if the worst occurs? We're going to close out this chapter with [§5.5:
-Responding to Key Compromise](05_5_Responding_to_Key_Compromise.md).
+ahead to our discussion of [§5.5: Responding to Key
+Compromise](05_5_Responding_to_Key_Compromise.md).
 
 ## Appendix I: Key Terminology
 
@@ -476,3 +475,4 @@ against loss; higher thresholds protect against theft. See ["Designing
 SSKR Share
 Scenarios"](https://github.com/BlockchainCommons/SmartCustody/blob/master/Docs/SSKR-Sharing.md)
 for more on different threshold scenarios.
+
