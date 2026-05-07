@@ -639,6 +639,10 @@ change or rotate keys? That's the top of
 
 > **Inception Key** - The original key created when the XID was established, typically with full permissions. Should be highly protected. Also called the "private key base" in technical documentation.
 >
+> **Management XID** - A XID with management keys such as the inception key.
+>
+> **Operational XID** - A XID without management keys, including the inception key.
+>
 > **Permission Scope** - The specific operations a key is allowed to perform (`sign`, `encrypt`, `elect`, `revoke`, etc.).
 >
 > **Operational Key** - A key with limited permissions (typically sign-only) used for daily work. Compromise is contained.

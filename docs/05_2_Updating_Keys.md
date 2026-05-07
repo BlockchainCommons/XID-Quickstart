@@ -351,7 +351,7 @@ they reveal which one is the current one.
 | seq 7 | 🗣️ Endorsement Replacement | §4.4 |
 | seq 8 | 💻 Operational Keys | §5.1 |
 | seq 9 | 💻 Laptop Key Change | §5.2 |
-| seq 10 | 💻 Laptop Key Replacmeent | §5.2 |
+| seq 10 | 💻 Laptop Key Replacment | §5.2 |
 
 ## Summary: Updating Keys
 
