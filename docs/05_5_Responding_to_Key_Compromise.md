@@ -834,7 +834,7 @@ nception key, (2) remove the compromised key so verifiers know not to
 trust new signatures, and (3) timestamp when you detected the
 compromise.
 
-### Q: What if I can't reach Charlene?**
+### Q: What if I can't reach Charlene?
 
 **A:** With 2-of-3 SSKR, you need any two shares. If Charlene is
 unavailable, use your safety deposit share plus your cloud backup
@@ -843,7 +843,7 @@ matters: you're not dependent on any single person or location. (But
 it would have been a problem for Amira when she was far from her
 safety deposit box.)
 
-### How quickly should I respond?**
+### How quickly should I respond?
 
 **A:** As fast as possible. Every hour the compromised key remains
 "valid" in your published XID is an hour the attacker can sign
