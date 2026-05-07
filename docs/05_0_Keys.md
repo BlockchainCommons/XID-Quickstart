@@ -28,7 +28,7 @@ Supporting objectives include the ability to:
 ## Table of Contents
 
 * [Section One: Generating Operational Keys](05_1_Generating_Operational_Keys.md)
-* [Section Two: Updating Keys](05_2_Updating_keys.md)
+* [Section Two: Updating Keys](05_2_Updating_Keys.md)
 * [Section Three: Backing Up Your Inception Key](05_3_Backing_up_Inception_Key.md)
 * [Section Four: Backing Up Your SSH Key](05_4_Backing_up_SSH_Key.md)
 * [Section Five: Responding to Key Compromise](05_5_Responding_to_Key_Compromise.md)

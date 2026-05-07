@@ -38,7 +38,7 @@ See [bcts.dev/xid](https://bcts.dev/xid) for a hands-on, online version of this 
 [**Chapter Five: Managing Your Keys**](05_0_Keys.md)
 
 * [§5.1: Generating Operational Keys](05_1_Generating_Operational_Keys.md)
-* [§5.2: Updating Keys](05_2_Updating_keys.md)
+* [§5.2: Updating Keys](05_2_Updating_Keys.md)
 * [§5.3: Backing Up Your Inception Key](05_3_Backing_up_Inception_Key.md)
 * [§5.4: Backing Up Your SSH Key](05_4_Backing_up_SSH_Key.md)
 * [§5.5: Responding to Key Compromise](05_5_Responding_to_Key_Compromise.md)
