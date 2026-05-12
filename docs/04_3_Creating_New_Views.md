@@ -289,6 +289,12 @@ For easy access, we can put that in a variable:
 CONTRACTKEY=$(for i in "${KEYS[@]}"; do   if [[ -n `envelope assertion find object string "contract-key" $i` ]];   then     echo $i;   fi; done)
 ```
 
+(As it happens, there's also a special command to find a key by name,
+which we'll encounter in [§5.1](05_1_Generating_Operational_Keys.md),
+but since we're talking about the general practice of elision here, we
+wanted to demonstrate a method that could be used for finding
+_anything_.)
+
 ### Step 3: Digest a Key
 
 Now that you have the key that you want to elide, you can output its digest:
