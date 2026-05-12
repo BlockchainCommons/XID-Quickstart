@@ -676,7 +676,7 @@ resilient techniques for backing up your inception key.
 >
 > **Permission Scope** - The specific operations a key is allowed to perform (`sign`, `encrypt`, `elect`, `revoke`, etc.).
 
-> :brain: **Learn more.** The [Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
+> 🧠 **Learn more.** The [Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
 
 
 ## Appendix II: Common Questions

@@ -403,7 +403,7 @@ how to do so in a robust, resilient way.
 
 > **Key Rotation** - Replacing an out-of-date key (possibly one that's been lost or compromised) with a new key.
 
-> :brain: **Learn more.** The [Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
+> 🧠 **Learn more.** The [Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
 
 ## Appendix II: Common Questions
 
