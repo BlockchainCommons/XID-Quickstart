@@ -1,8 +1,8 @@
 # 5.5: Responding to Key Compromise
 
 Your operational key is compromised. This tutorial shows how to
-detect, revoke, and recover, proving that the key hierarchy of this
-chapter works when it matter.
+detect, revoke, and recover, proving that the key hierarchy developed
+in this chapter works when it matters.
 
 > 🧠 **Related Concepts.** After completing this tutorial, explore
 [Key
@@ -45,11 +45,11 @@ That means they have complete access to her XID.
 ### The Power of Hierarchy
 
 Fortunately, Amira is now following the best practice of using an
-operational version of her XID. In particular, she was using the
-portable version of her XID, which only contained her three least
-powerful keys: her `attestation-key`, her `contract-key`, and her
+Operational View of her XID. In particular, she was using the Portable
+View of her XID, which only contained her three least powerful keys:
+her `attestation-key`, her `contract-key`, and her
 `portable-key`. Unfortunately, the attacker can use any of the three
-keys to `sign` (as they have been)m they can use `auth` permissions to
+keys to `sign` (as they have been), they can use `auth` permissions to
 log in to RISK (which accepts XID logins), and they can access a few
 other resources that Amira has permissioned with her XID.
 
@@ -66,8 +66,8 @@ need to be rotated.)
 |--------|-----------|-----|
 | Sign attestations | Yes | attestation-key present |
 | Sign contracts | Yes | contract-key present |
-| Impersonate temporarily | Yes | XID with sign permissions present |
-| Login to XID services | Yes |  XID with auth permissions present |
+| Impersonate temporarily | Yes | `sign` permissions present |
+| Login to XID services | Yes |  `auth` permissions present |
 
 **What the Attacker Could Not Do:**
 
@@ -82,7 +82,7 @@ need to be rotated.)
 Though Amira will be able to recover her XID, this is still a big
 problem: if Amira doesn't control the problem quickly, the trust she's
 carefully created for her pseudonymous identity could be destroyed, as
-it endorses accounts that are then used for scams.
+it's now being used to endorse accounts that are then used for scams.
 
 ### How Do You Detect a Compromise?
 
@@ -95,7 +95,7 @@ the best way to make a compromise detectable.
 That's because compromise is often detected through behavioral
 anomalies, not cryptographic failures. Signatures and authentication
 are valid because the attacker has the real keys. So instead you have
-to Look for unusual commit times, unexpected code changes, activity
+to look for unusual commit times, unexpected code changes, activity
 during known offline periods, incorrect use of keys, or stakeholder
 alerts.
 
@@ -104,7 +104,7 @@ digital identifier ecosystem evolves. We should be thinking about
 creating ways to notify users when a new endorsement is created with
 their signature or when their auth accesses a new site. This type of
 notification could be supported by notification links within a XID
-itself, we just have to decide they're priorities and specify them.
+itself; we just have to decide they're priorities and specify them.
 
 ## Step 0: Setting Up Your Workspace
 
@@ -125,8 +125,8 @@ PASSWORD="your-password-from-previous-tutorials"
 ```
 ## Part I: Reconstructing a Management XID
 
-To recover from a attack on your operational XID, the first thing you
-have to do is reconstruct your management XID, which gives you the
+To recover from a attack on your Operational XID, the first thing you
+have to do is reconstruct your Management XID, which gives you the
 ability to rotate your keys, so that you can replace compromised keys
 with new ones.
 
@@ -139,7 +139,7 @@ Amira immediately buys a new laptop and then begins this process.
 Amira really doesn't want to reconstruct her management XID while out
 of country, but she has little choice: the danger of letting her
 compromised XID remain in use is worse than the danger of her
-management XID being stolen. (She just won't take it out to a café!)
+Management XID being stolen. (She just won't take it out to a café!)
 
 She needs two shares to reconstruct.  She pulls the first one down
 from the cloud:
@@ -161,8 +161,7 @@ Amira asking for the share. (This is generally a best practice when
 helping someone reconstruct their identity: initiate the contact, talk
 to them verbally or by video, and in the age of LLM fraud, also ask
 them a few questions that wouldn't be in an AI script.) Afterward,
-Charlene and Amira arrange a secure way to get Amira the share that
-won't have been compromised by the theft of the laptop.
+Charlene and Amira arrange a secure way to get Amira the share.
 
 ```
 SHARE2=$(cat envelopes/BRadvoc8-xid-share2-charlene-5-03.envelope)
@@ -170,7 +169,7 @@ SHARE2=$(cat envelopes/BRadvoc8-xid-share2-charlene-5-03.envelope)
 
 ### Step 2: Reconstruct the Management XID
 
-Amira can now reconstruct her management XID with a simple `join` command.
+Amira can now reconstruct her Management XID with a simple `join` command.
 
 ```
 XID=$(envelope sskr join $SHARE1 $SHARE2)
@@ -179,7 +178,9 @@ XID_ID=$(envelope xid id $XID)
 
 ### Step 3: Verify the Management XID
 
-Before doing any serious work, Amira needs to make sure her reconstructed XID is as expected.
+
+Before doing any serious work, Amira needs to make sure her
+reconstructed XID is as expected.
 
 She looks it over, and it all seems to be in order:
 
@@ -344,7 +345,7 @@ All looks in order, so Amira can get to work.
 Amira now needs to update her XID. That means that she needs to rotate
 all of her compromised keys: removing the old keys and replacing them
 with new ones. When she publishes her new XID, this will offer
-implicit revocation.
+implicit revocation of the compromised keys.
 
 ### Step 4: Revoke the Compromised Keys
 
@@ -356,8 +357,9 @@ stolen laptop, so obviously she should rotate it as well.
 
 To start with, she lists out all three keys, for each one recording
 the `'key'` assertion, its digest, the private key, and the public
-key. (She'll want to hold on to this, because some of this data will
-be useful for the disavowal, later.)
+key. (She'll want to hold on to these variables, because some of this
+data will be useful for the disavowal, later.)
+
 
 ```
 ATTESTATION_ASSERTION=$(envelope xid key find name "attestation-key" "$XID")
@@ -376,7 +378,9 @@ PORTABLE_PRVKEYS=$(envelope xid key find name --private --password "$PASSWORD" "
 PORTABLE_PUBKEYS=$(envelope generate pubkeys "$PORTABLE_PRVKEYS")
 ```
 
-Now Amira can remove the three keys from her XID using the process in [§5.2](05_2_Updating_Keys.md).
+Now Amira can remove the three keys from her XID using the process
+from [§5.2](05_2_Updating_Keys.md).
+
 
 ```
 KEYLESS_XID=$(envelope xid key remove "$ATTESTATION_PUBKEYS" "$XID")
@@ -386,7 +390,7 @@ KEYLESS_XID=$(envelope xid key remove "$PORTABLE_PUBKEYS" "$KEYLESS_XID")
 
 Examining her `KEYLESS_XID`, Amira verifies that the only keys left
 are her `laptop-key` and her inception key, neither of which was in
-the operational XID that she had on her laptop.
+the Operational XID that she had on her laptop.
 
 ```
 envelope format $KEYLESS_XID | grep -e portable-key -e attestation-key -e contract-key || echo "✅ Compromised keys removed"
@@ -407,8 +411,7 @@ need to publicly disavow signatures from the compromise window.
 
 ### Step 5: Replace Compromised Keys
 
-Amira now needs to replace all those keys. She does so, using the same
-permissions as previous.
+Amira now needs to replace all those keys.
 
 First, she creates the keys and sets a new password for encrypting
 everything (since she suspects that was compromised too):
@@ -420,9 +423,10 @@ NEW_CONTRACT_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 NEW_PASSWORD="new-noncompromised-password"
 ```
 
-Then she adds her three new keys to her XID. The first time, she
-decrypts everything from her old `$PASSWORD`, and from there on she
-uses her `$NEW_PASSWORD` for decryption and encryption.
+Then she adds her three new keys to her XID, registering the same
+permissions as previous. The first time, she decrypts everything from
+her old `$PASSWORD`, and from there on she uses her `$NEW_PASSWORD`
+for decryption and encryption.
 
 ```
 REKEYED_XID=$(envelope xid key add \
@@ -483,7 +487,8 @@ REKEYED_XID=$(envelope xid provenance next \
 PUBLIC_REKEYED_XID=$(envelope xid export --private elide --generator elide "$REKEYED_XID")
 ```
 
-As soon as the public XID goes onto GitHub, validators will start seeing the updates.
+As soon as the public XID goes onto GitHub, validators will start
+seeing the updates.
 
 We'll of course save everything at this point:
 
@@ -497,12 +502,12 @@ echo "$PUBLIC_REKEYED_XID" > envelopes/BRadvoc8-xid-public-5-05.envelope
 
 ### Step 7: Re-Create Operational XID
 
-Though Amira temporarily reconstructed her management XID, she wants
-to maintain security by returning to the use of her operational XID
+Though Amira temporarily reconstructed her Management XID, she wants
+to maintain security by returning to the use of her Operational XID
 ... because it's already proven useful once.
 
-After double-checking the copy she just made of her management XID,
-Amira elides her inception key and her laptop key from her operational XID.
+After double-checking the copy she just made of her Management XID,
+Amira elides her inception key and her laptop key from her Operational XID.
 
 ```
 INCEPTION_PRVKEYS=$(envelope xid key find inception "$REKEYED_XID")
@@ -514,7 +519,7 @@ LAPTOP_DIGEST=$(envelope digest "$LAPTOP_PRVKEYS")
 OPERATIONAL_XID=$(envelope elide removing "$LAPTOP_DIGEST" "$OPERATIONAL_XID")
 ```
 
-She now once more has an operational XID that does not include her
+She now once more has an Operational XID that does not include her
 inception key (or her laptop key, which she isn't using while out of
 country).
 
@@ -524,8 +529,8 @@ echo "$OPERATIONAL_XID" > envelopes/BRadvoc8-xid-operational-5-05.envelope
 
 ### Step 8: Re-Shard Management XID
 
-Creating an operational XID doesn't do a lot of good if Amira keeps
-that full copy of her management XID on her computer. She can use SSKR
+Creating an Operational XID doesn't do a lot of good if Amira keeps
+that full copy of her Management XID on her computer. She can use SSKR
 to split it using the same commands she used in
 [§5.3](05_3_Backing_up_Inception_Key.md).
 
@@ -551,11 +556,11 @@ to recover one of the others.
 
 After making very sure that Charlene received her share and that the
 others are stored correctly, Amira deletes her copy of the complete
-management XID.
+Management XID.
 
 She's now back in a secure state again: her compromised keys are
 rotated, her compromised passwords are changed, and she's back to
-using her operational XID.
+using her Operational XID.
 
 #### XID Version Comparison
 
@@ -616,9 +621,11 @@ Then she lists out each of the keys:
 KEY1=$(envelope subject type ur "$ATTESTATION_PUBKEYS")
 KEY1=$(envelope assertion add pred-obj known 'nickname' string "attestation-key" "$KEY1")
 KEY1=$(envelope assertion add pred-obj string "xidKeyDigest" digest "$ATTESTATION_DIGEST" "$KEY1")
+
 KEY2=$(envelope subject type ur "$CONTRACT_PUBKEYS")
 KEY2=$(envelope assertion add pred-obj known 'nickname' string "contract-key" "$KEY2")
 KEY2=$(envelope assertion add pred-obj string "xidKeyDigest" digest "$CONTRACT_DIGEST" "$KEY2")
+
 KEY3=$(envelope subject type ur "$PORTABLE_PUBKEYS")
 KEY3=$(envelope assertion add pred-obj known 'nickname' string "portable-key" "$KEY3")
 KEY3=$(envelope assertion add pred-obj string "xidKeyDigest" digest "$PORTABLE_DIGEST" "$KEY3")
@@ -639,7 +646,7 @@ subject, as well as an `isA`, a `source`, and a `target`.
 DISAVOWAL_EDGE=$(envelope subject type string "disavowal-statement-20260505")
 DISAVOWAL_EDGE=$(envelope assertion add pred-obj known 'isA' string "signature-disavowal" "$DISAVOWAL_EDGE")
 DISAVOWAL_EDGE=$(envelope assertion add pred-obj known 'source' ur "$XID_ID" "$DISAVOWAL_EDGE")
-DISAVOWAL_EDGE=$(envelope assertion add pred-obj known 'target' envelope "$DISAVOWALQ" "$DISAVOWAL_EDGE")
+DISAVOWAL_EDGE=$(envelope assertion add pred-obj known 'target' envelope "$DISAVOWAL" "$DISAVOWAL_EDGE")
 ```
 
 Amira closes things out by wrapping and signing her self-attestation:
@@ -693,7 +700,7 @@ set to May 5th and 6th, they might go back and create new endorsements
 in the future with older dates.
 
 This means that _anything_ Amira signed using the revoked keys is in
-doubt, unless it had a third party timestamp that provably put it
+doubt unless it had a third-party timestamp that provably puts it
 outside the disavowal window.
 
 Though Amira doesn't need to worry about it while out of town, longer
@@ -713,7 +720,7 @@ fine, because they're in Amira's XID with provenance marks predating
 the change of the keys ... but Amira might want to change them anyway
 so that their signatures match keys now present in her XID. Otherwise,
 the validator has to dig back through her XID to prove the signatures
-were valid at the time they were added to the XID.
+were valid at the time they were added to the XID. (But an automated validator should take care of that!)
 3. The CLA that Amira signed in
 [§4.1](04_1_Creating_Binding_Agreements.md) is fine because Ben
 created a public commitment of the contract, dating it with a GitHub
@@ -737,8 +744,8 @@ her identity survived.
 
 Without this setup:
 
-- The Attacker could add their own key with full permissions.
-- The Attacker could remove all of Amira's keys.
+- The attacker could add their own key with full permissions.
+- The attacker could remove all of Amira's keys.
 - All endorsements, attestations, and reputation would be lost.
 - Amira would need to start over with a new XID.
 
@@ -748,7 +755,7 @@ and created some issues with past signatures, but kept her identity.
 Some lessons learned include:
 
 - **Preparation matters.** The key hierarchy and SSKR distribution enabled quick recovery.
-- **Damage was contained**: The attacker could and access sign things but couldn't branch the identity or destroy Amira's reputation.
+- **Damage was contained**: The attacker could access and sign things but couldn't branch the identity or destroy Amira's reputation.
 - **Web of trust helped**: Charlene's relationship with Amira helped identify the issue and enabled trusted recovery.
 - **Identity is resilient**: When properly structured, a compromise is a setback, not a catastrophe.
 
@@ -756,23 +763,24 @@ Some lessons learned include:
 
 After a compromise, Amira:
 
-1. ✅ Detected compromise (Charlene's helped verify).
+1. ✅ Detected compromise (Charlene's helped.)
 2. ✅ Reconstructed inception key from SSKR shares.
 3. ✅ Revoked compromised operational keys.
 4. ✅ Added new operational keys.
 5. ✅ Advanced provenance to signal update.
 6. ✅ Published updated XID to `dereferenceVia` locations
-7. ✅ Re-split management XID into new SSKR shares.
-8. ✅ Removed the full management XID from her drive.
-9. ✅ Created and published disavowal statement
+7. ✅ Re-split Management XID into new SSKR shares.
+8. ✅ Produced new Operational XID without excess keys.
+9. ✅ Removed the full Management XID from her drive.
+10. ✅ Created and published disavowal statement
 
 ## Summary: Responding to Key Compromise
 
 The compromise of your XID is definitely a bad thing. But, if you've
 planned ahead, it's not a disaster. The simple use of a password to
 protect your keys through encryption may be enough, but it's good to
-have a second layer of security on top of that, by regularly using an
-operational XID that doesn't contain your management (inception) key,
+have a second layer of security on top of that by regularly using an
+Operational XID that doesn't contain your management (inception) key,
 especially if you're working outside of your home or office.
 
 You'll have to do some work rebuilding your keys and you may need to
@@ -828,11 +836,11 @@ require more ecosystem support.
 ### Q: What if the attacker already signed something malicious?
 
 **A:** Those signatures are valid: the key was legitimate when it
-signed. You can't cryptographically invalidate them. What you can do:
-(1) publicly disavow the signatures with a signed statement from your
-nception key, (2) remove the compromised key so verifiers know not to
-trust new signatures, and (3) timestamp when you detected the
-compromise.
+signed. You can't cryptographically invalidate them. What you can do
+is: (1) publicly disavow the signatures with a signed statement from
+your inception key, (2) remove the compromised key from your XID so
+verifiers know not to trust new signatures, and (3) timestamp when you
+detected the compromise.
 
 ### Q: What if I can't reach Charlene?
 
@@ -853,13 +861,4 @@ bottleneck is usually physical access to shares.
 ### Should I change my inception key too?
 
 No. The inception key wasn't compromised (it was offline in SSKR
-shares). Changing it would mean creating a new XID and losing your
-reputation history. The whole point of the key hierarchy is that
-operational key compromise doesn't require identity restart. (With
-that said, there is a danger because of the compromised password. As
-long as Amira has never published her private, management XID, which
-is the only one that contains a non-elided version of her inception
-private key, she's fine. But if she had, then someone could use the
-password with any old version of her XID to access that inception
-key. That's why it's important to make private, operational, and
-public versions of your XID, each with decreasing levels of secret content).
+shares).

@@ -4,18 +4,18 @@ The XID is your identity online; if you lose your XID, the identity is
 gone. That means that it's very important to protect your XID, and
 that means protecting the keys that control your XID.
 
-This chapter addresses that problem by talking about how to create
-less-vulnerable keys for usage in your XID, how to protect your
-inception key, how to change things over time, and ultimately how to
-use this more secure setup to recover if required.
+This chapter addresses that problem by demonstrating how to create a
+less vulnerable copy of your XID with less powerful keys and then how
+to properly archive your more most powerful keys.  It also more
+generally discusses how to manage keys in your XID through additions,
+removals, and updates.
 
 ## Major Objectives for this Chapter
 
 After working through this chapter, a developer will be able to:
 
-- Add keys to a XID.
-- Update keys in a XID.
-- Remove keys from a XID.
+- Create a less vulnerable XID.
+- Safely archive their master XID.
 - Backup keys with Shamir's Secret Sharing.
 - Rotate keys if required by a compromise.
 

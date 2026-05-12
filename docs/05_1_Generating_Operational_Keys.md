@@ -3,7 +3,7 @@
 To date, we've used a single key to control your XID, the inception
 key. Sure, we've added keys for GitHub, for attestations, and for
 signing contracts, but that singular inception key was still what was
-used to control your XID itself.  That means that it's all that lays
+used to control your XID itself.  That means that it's all that lies
 between your XID and the loss of that identifier. Here's where we
 start to turn that around.
 
@@ -43,8 +43,16 @@ have the least permissions necessary for the work she's doing.
 That's a three-step process:
 
 1. Create operational keys (§5.1).
-2. Adjust operational keys to just the right (necessary) permissions (§5.2).
-3. Backup her inception key separate from the XID (§5.3).
+2. Backup inception key separate from XID (§5.1).
+3. Remove inception key from XID (§5.1).
+
+The main through-line of this chapter will continue to iterate this
+process with additional steps to improve security and resilience:
+
+1. Adjust operational permissions ([§5.2](05_2_Updating_Keys.md)).
+2. Improve resilience of backup ([§5.3](05_3_Backing_up_Inception_Key.md)).
+3. Backup other keys ([§5.4](05_4_Backing_up_SSH_Key.md)).
+4. Restore inception key to respond to operational compromise ([§5.5](05_5_Responding_to_Key_Compromise.md)).
 
 The steps to do so will be the main through-line of this chapter.
 
@@ -95,7 +103,8 @@ everyday usage.
 
 ## Part 0: Verify Dependencies
 
-Before you get started, you should (as usual) check your `envelope-cli` version:
+Before you get started, you should (as usual) check your
+`envelope-cli` version:
 
 ```
 envelope --version
@@ -170,10 +179,10 @@ envelope xid key find name "attestation-key" $XID
 demonstrated in [§4.3](04_3_Creating_New_Views.md)?)
 
 These examples all reveal envelopes, and the keys are encrypted. Which
-is great when you're doing elision and just need a digest. If you
-instead need to extract the private key, you can do so by adding the
-`--private` flag and if the XID's private keys are encrypted, also the
-`--password` flag.
+is great when you're doing elision of an envelope leaf and just need a
+digest to do so. If you instead need to extract the private key, you
+can do so by adding the `--private` flag and if the XID's private keys
+are encrypted, also the `--password` flag.
 
 ```
 envelope xid key find name --private --password "$PASSWORD" "attestation-key" $XID
@@ -195,7 +204,7 @@ done
 ```
 
 This reveals the three keys that we've added over the course of this
-tutorial: Amira's inception key, and two signing keys, one for
+tutorial: Amira's inception key and two signing keys, one for
 attestations and one for contracts:
 
 ```
@@ -241,7 +250,7 @@ Now we know what we're working with!
 Two sorts of protection are required for keys. Obviously, they must be
 protected from loss. That's going to be the topic of
 [§5.3](05_3_Backing_up_Inception_Key.md): how to ensure that the
-inception key is always available. However, they also have to be
+inception key doesn't go missing. However, they also have to be
 protected from compromise: someone stealing them and using them
 without permission.
 
@@ -293,7 +302,8 @@ XID_WITH_OPERATIONAL_KEY_1=$(envelope xid key add \
 ```
 
 `envelope format` reveals a key with a much longer list of permissions
-than the other keys to date:
+than the other keys to date (but less than the `'All'` permissions of
+the inception key):
 
 ```
 envelope format $XID_WITH_OPERATIONAL_KEY_1
@@ -371,7 +381,8 @@ XID_WITH_OPERATIONAL_KEY_2=$(envelope xid key add \
 echo "✅ Generated portable operational key"
 ```
 
-Here's A look at her full set of keys afterward:
+Here's a look at her full set of keys afterward:
+
 ```
 envelope format $XID_WITH_OPERATIONAL_KEY_2
 
@@ -448,7 +459,7 @@ envelope format $XID_WITH_OPERATIONAL_KEY_2
 
 ### Step 7: Review and Store
 
-You've now made the full updates to your XID and should store it all away.
+You're now ready to create a new edition of your XID that announces your new operational keys.
 
 As usual, first update your provenance mark:
 ```
@@ -481,6 +492,10 @@ echo "$PUBLIC_XID_WITH_KEYS" > envelopes/BRadvoc8-xid-public-5-01.envelope
 echo "$XID_WITH_KEYS" > envelopes/BRadvoc8-xid-private-5-01.envelope
 ```
 
+Note that you haven't actually increased your security yet! Though you
+now have new, operational keys, the inception key is still there as
+well! We'll get to that ...
+
 #### Key Type Comparison
 
 At this point, Amira can review her set of six total keys (five of
@@ -496,46 +511,12 @@ which are in her XID):
 | ⏏️ Portable Key | Limited Operational Key | XID key list | §5.1 |
 
 
-#### Key Protection Comparison
-
-The following chart shows why having an operational key is safer than
-just using an inception key for everything.
-
-| Scenario | With Inception Key | With Operational Key |
-|----------|------------------------|-------------------|
-| Attacker signs things | Yes | Yes |
-| Attacker adds their key | Yes | **No** |
-| Attacker removes your keys | Yes | **No** |
-| You can revoke attacker's access | Sort of (XIDs branch) | **Yes** (you still have inception key) |
-| Identity recovery | Difficult | Straightforward |
-
-The operational key limits the blast radius of a compromise.
-
-The following concrete situation, where Amira leaves her laptop at a
-coffee shop and someone takes it, demonstrates this:
-
-**With inception key**: The thief extracts Amira's inception key, adds
-their own key with `'All'` permissions, then removes Amira's key. By
-the time Amira realizes what happened, her identity belongs to someone
-else. Her endorsements, her CLA signature, and her reputation are now
-all controlled by a stranger. Sure, she could create her own copy of
-the XID with a new inception key, but no one can now say which one is
-the real one.
-
-**With operational keys**: The thief gets `laptop-key`, which can only
-engage in operational activities. They might sign some things before
-Amira notices, but they cannot add their own keys or remove
-hers. Amira uses her inception key (stored securely elsewhere) to
-revoke `laptop-key` and add a new operational key. Her identity
-remains intact. The damage is contained to a few potentially
-fraudulent signatures that she can publicly disavow.
-
 ## Part III: Eliding Keys
 
 In order for the use of an operational key to be meaningful, the
 inception key must not also be available. Obviously, you don't want to
-just delete it, however, or you can't modify your XID either, so you
-must undertake a two part process:
+just delete it, or you can't modify your XID either, so you must
+undertake a two part process:
 
 1. Store your inception key.
 2. Elide your inception key.
@@ -547,7 +528,7 @@ current copy of your XID. Just place it in offline-storage and check
 it occasionally to make sure it's still there.
 
 ```
-cp envelopes/BRadvoc8-xid-private-5-01.envelope OFFLINE-STORAGE
+cp envelopes/BRadvoc8-xid-private-5-01.envelope <OFFLINE-STORAGE>
 ```
 
 Only bring the full XID online when you need to make updates to it.
@@ -556,7 +537,7 @@ Alternatively, or in addition, you can choose to just store your inception key.
 
 ```
 INCEPTION_PRVKEYS=$(envelope xid key find inception --private --password "$PASSWORD" $XID_WITH_KEYS)
-echo $INCEPTION_PRVKEYS > OFFLINE-STORE/xid-inception-key.envelope
+echo $INCEPTION_PRVKEYS > <OFFLINE-STORAGE>/xid-inception-key.envelope
 ```
 
 You generally want your backups to be more resilient than this for
@@ -572,16 +553,18 @@ you can now safely elide the key from your operational XID.
 This is easily done with the new commands from this section that
 detailed how to find a specific key and the lessons learned from
 [§4.3](04_3_Creating_New_Views.md).
+
 ```
 INCEPTION_PRVKEYS=$(envelope xid key find inception $XID_WITH_KEYS)
 INCEPTION_DIGEST=$(envelope digest $INCEPTION_PRVKEYS)
 OPERATIONAL_XID=$(envelope elide removing $INCEPTION_DIGEST $XID_WITH_KEYS)
 ```
 
-Amira should now use the `$OPERATIONAL_XID` on her laptop while
-keeping the original XID in an offline storage. When she goes
-traveling, she would additionally elide the `laptop-key` from her XID,
-so that only the less powerful `portable-key` is available.
+Amira should now use the `$OPERATIONAL_XID` (really an Operational
+View of her XID) on her laptop while keeping the original XID in an
+offline storage. When she goes traveling, she would additionally elide
+the `laptop-key` from her XID, so that only the less powerful
+`portable-key` is available.
 
 ```
 echo "$OPERATIONAL_XID" > envelopes/BRadvoc8-xid-operational-5-01.envelope
@@ -600,6 +583,44 @@ appropriate views of a XID for different purposes.
 | 💻 Operational View | Removed inception key | §5.1 |
 | ⏏️ Portable View | Removed two keys | |
 
+#### Key Protection Comparison
+
+The following chart shows why using the Operational View of your XID is safer than using the full Private View.
+
+| Scenario | Private View (Management XID) | Operational View (Operational XID) |
+|----------|------------------------|-------------------|
+| Attacker signs things | Yes | Yes |
+| Attacker adds their key | Yes | **No** |
+| Attacker removes your keys | Yes | **No** |
+| You can revoke attacker's access | Sort of (XIDs branch) | **Yes** (only you have inception key) |
+| Identity recovery | Difficult | Straightforward |
+
+Using the Opertional View limits the blast radius of a compromise.
+
+The following concrete situation, where Amira's laptop is snatched
+from a café and the keys were visible, demonstrates the differential
+damage.
+
+**Private View.** The thief extracts Amira's inception key, adds their
+own key with `'All'` permissions, then removes Amira's key. By the
+time Amira realizes what happened, her identity belongs to someone
+else. Her endorsements, her CLA signature, and her reputation are now
+all controlled by a stranger. Sure, she could create her own copy of
+the XID with a new inception key, but no one can now say which one is
+the real one.
+
+**Operational View.** The thief gets `portable-key`, which can only
+engage in limited operational activities. They might sign some things
+before Amira notices, but they cannot add their own keys or remove
+hers. Amira uses her inception key (stored securely elsewhere) to
+revoke `laptop-key` and add a new operational key. Her identity
+remains intact. The damage is contained to a few potentially
+fraudulent signatures that she can publicly disavow.
+
+We'll return to this scenario in
+[§5.5](05_5_Responding_to_Key_Compromise.md) and see how Amira
+recovers from the compromise of her Operational View XID.
+
 ## Summary: Generating Operational Keys
 
 You don't need to keep your inception key in your XID, and in fact
@@ -607,7 +628,7 @@ doing so is a security risk. The XID keys system supports improved
 security by allowing you to create a key with lesser permissions, such
 as a key that only has operational permissions. You can then store
 copies of your full XID offline and remove the inception key from your
-in-use copy.
+in-use view.
 
 ### Additional Files
 
@@ -632,21 +653,28 @@ views of Amira's updated XID.
 ## What's Next
 
 You've now successfully added and elided keys, but what if you want to
-change or rotate keys? That's the top of
+change or rotate keys? That's the topic of
 [§5.2](05_2_Updating_Keys.md).
+
+Alternative, you may want to jump to
+[§5.3](05_3_Backing_up_Inception_Key.md), which discusses more
+resilient techniques for backing up your inception key.
 
 ## Appendix I: Key Terminology
 
-> **Inception Key** - The original key created when the XID was established, typically with full permissions. Should be highly protected. Also called the "private key base" in technical documentation.
+> **Inception Key** - The original key created when the XID was established, typically with full management and operational permissions. Should be highly protected. Also called the "private key base" in technical documentation.
 >
-> **Management XID** - A XID with management keys such as the inception key.
+> **Management Key** - Any XID key with management permissions, including the Inception Key.
 >
-> **Operational XID** - A XID without management keys, including the inception key.
+> **Management XID** - A XID with Management Keys such as the Inception Key.
 >
-> **Permission Scope** - The specific operations a key is allowed to perform (`sign`, `encrypt`, `elect`, `revoke`, etc.).
+> **Operational View** - An elided view of a XID that removes any management keys.
 >
 > **Operational Key** - A key with limited permissions (typically sign-only) used for daily work. Compromise is contained.
-
+>
+> **Operational XID** - A XID without Management Keys, including the Inception Key. Really, an Operational View.
+>
+> **Permission Scope** - The specific operations a key is allowed to perform (`sign`, `encrypt`, `elect`, `revoke`, etc.).
 
 > :brain: **Learn more.** The [Key Management](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md) concept doc explains the full key hierarchy model and permission system.
 

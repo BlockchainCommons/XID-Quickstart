@@ -1,8 +1,8 @@
 # 5.2: Updating Keys
 
 Keys aren't forever. They may need to be rotated due to loss or
-compromise. And in the world of XIDs, you can also change the
-permissions associated with a key.
+compromise. In the world of XIDs, you can also change the permissions
+associated with a key.
 
 > 🧠 **Related Concepts.** After completing this tutorial, explore
 [Key
@@ -35,7 +35,9 @@ Fortunately, XIDs have her back. They're built to allow both a
 transition of keys over time and also a transition of key
 permissions. This chapter describes some easy key manipulation, where
 Amira modifies and rotates some of the operational keys that she
-created in [§5.1](05_1_Generating_Operational_Keys.md).
+created in [§5.1](05_1_Generating_Operational_Keys.md). We'll then
+talk about more serious problems with the theft of keys in
+[§5.5](05_5_Responding_to_Key_Compromise.md).
 
 ## Part 0: Verify Dependencies
 
@@ -71,12 +73,13 @@ key to change and modifying the permission on it.
 ### Step 1: Find the Key to Change
 
 As we saw in [§5.1](05_1_Generating_Operational_Keys.md), it's trivial
-to extract a key from a XID: you just use `envelope xid key find`:
+to find a key within a XID: you just use `envelope xid key find`:
+
 ```
 LAPTOP_PRVKEYS=$(envelope xid key find name --private --password "$PASSWORD" "laptop-key" $XID)
 ```
 
-As it happens, changing is done using the pubkeys, so you'll need to
+As it happens, key change is done using the pubkeys, so you'll need to
 generate those once you extract the private keys:
 
 ```
@@ -103,7 +106,9 @@ XID_WITH_UPDATED_KEY=$(envelope xid key update \
     "$XID")
 ```
 
-If you look at the XID afterward, you'll see that it's properly updated: there's ony one version of the `laptop-key` and it now has the permissions without `access`:
+If you look at the XID afterward, you'll see that it's properly
+updated: there's ony one version of the `laptop-key` and it now has
+the permissions without `access`:
 
 ```
 envelope format $XID_WITH_UPDATED_KEY
@@ -137,7 +142,7 @@ that removing your inception key from your XID would keep it safe
 because people couldn't manipulate the keys.
 
 We can now prove that fact by instead trying to do this work with the
-operational view of the XID that we created in the last chapter:
+Operational View of the XID that we created in the last chapter:
 
 ```
 OP_XID=$(cat envelopes/BRadvoc8-xid-operational-5-01.envelope)
@@ -145,6 +150,7 @@ OP_XID=$(cat envelopes/BRadvoc8-xid-operational-5-01.envelope)
 
 We exactly duplicate the previous command, except with the operational
 XID, and without verifying the inception key (because it isn't there):
+
 
 ```
 envelope xid key update \
@@ -166,10 +172,9 @@ envelope xid key update \
 ```
 
 It doesn't work! Granted, the error message is unintuitive, but the
-fact remains that our creation of an operational version of the XID
-has secured our identity. (We just need to remember to always
-unarchive the original version of the XID when we want to make
-changes.)
+fact remains that our creation of an Operational View of Amira's XID
+has secured her identity. (We just need to remember to always
+unarchive the Private View of the XID when we want to make changes.)
 
 ### Step 3: Update & Store
 
@@ -215,6 +220,9 @@ was used for various activities. (It's always best practice to link
 specific keys to specific devices like this, exactly for the reason of
 identification.)
 
+(We'll talk about the more active compromise situation in
+[§5.5](05_5_Responding_to_Key_Compromise.md).)
+
 ## Step 4: Generate a New Key
 
 Adding a key to your XID always starts with its generation:
@@ -249,8 +257,9 @@ Before you remove the old key from your XID, you should make sure you
 have a full backup of the XID, in case there's a problem and you need
 to revert.
 
-Afterward, you need to find the key you want to remove, which is just
-the same as when you found a key to change its permissions:
+Afterward, you need to find the key you want to remove, which uses
+`envelope xid find` just like when you found a key to change its
+permissions:
 
 ```
 LAPTOP_PRVKEYS=$(envelope xid key find name --private --password "$PASSWORD" "laptop-key" $XID_WITH_ROTATED_KEY)
@@ -278,22 +287,22 @@ normally do with your XID, and verify that it still works. If there
 was a problem, you'd need to step back to that backup copy you made of
 your XID.
 
-Generally, this procedure should be followed for any key rotation:
+This general procedure should be followed for any key rotation:
 
-1. Generate new key
-2. Add new key to XID
-3. Find old key
-4. Remove old key from XID
-5. Verify old key was removed from XID
-6. Verify XID still has needed permissions
+1. Generate new key.
+2. Add new key to XID.
+3. Find old key.
+4. Remove old key from XID.
+5. Verify old key was removed from XID.
+6. Verify XID still has needed permissions.
 
 ## Step 8: Rotate Other Keys
 
 It's best practice to link your GitHub SSH signing keys to individual
 devices too, so you can always see what device a commit came from. The
 process of linking a key to GitHub was described in
-[§3.1](03_1_Creating_Edges/#step-1-generate-ssh-signing-key) and would
-require rebuilding your GitHub edge, with
+[§3.1](03_1_Creating_Edges/#step-1-generate-ssh-signing-key). Rotating
+it would also require rebuilding your GitHub edge, with
 [§4.4](04_4_Creating_New_Editions/#part-iii-replacing-xid-objects)
 demonstrating how to do so.
 
@@ -359,11 +368,11 @@ XID keys can be updated in two ways: their permissions can be changed
 and the key can be rotated. In both cases, it's important that your
 XIDs contain a `dereferenceVia`, so that people always know where to
 get the newest version of your XID, and that you publish an updated
-XID promptly. Those are what's required to ensure that everyone knows
-that your old keys have been changed. (Even then, changing the keys
-isn't a guarante that everyone will respect that; you're depending on
-the larger ecosystem following the same rules, but that's true of most
-key rotations.)
+XID promptly. Those steps are what's required to ensure that everyone
+knows that your old keys have been changed. (Even then, changing the
+keys isn't a guarantee that everyone will respect that; you're
+depending on the larger ecosystem following the same rules, but that's
+true of most key rotations.)
 
 ### Additional Files
 
@@ -386,9 +395,9 @@ These exercises test your understanding of the permission model:
 
 ## What's Next
 
-In §5.1, we said you should backup your XID. [§5.3: Backing Up Your
-Inception Key](05_3_Backing_up_Inception_Key.md) talks about how to do
-so in a robust, resilient way.
+In §5.1, we said you should backup your Management XID. [§5.3: Backing
+Up Your Inception Key](05_3_Backing_up_Inception_Key.md) talks about
+how to do so in a robust, resilient way.
 
 ## Appendix I: Key Terminology
 
@@ -401,7 +410,8 @@ so in a robust, resilient way.
 ### Q: Do old signatures become invalid when I rotate keys?
 
 **A:** No. Signatures made with an old key remain valid. The signature
-proves the document was signed at a time when that key was
-authorized. Rotation only affects new signatures. If you want to
+proves the document was signed at a time when that key was authorized.
+
+Ultimately, rotation only affects new signatures. If you want to
 invalidate old signatures (e.g., after a compromise), you need to
 publicly disavow them.

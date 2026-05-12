@@ -1,8 +1,8 @@
 # 5.4: Backing Up Your SSH Key
 
 Your house burns down. Your identity is safe because you backed up the
-management version of your XID with SSKR. But what about those other
-keys that you didn't keep in your XID?
+Private View of your XID with SSKR. But what about those other keys
+that you didn't keep in your XID?
 
 > 🧠 **Related Concepts.** After completing this tutorial, explore
 [Key
@@ -24,7 +24,7 @@ Supporting objectives include the ability to:
 ## Amira's Story: The Fragility of Detached Keys
 
 Backing up your management XID is a great way to ensure that all of
-the most important parts of your XID are protected. But, Amira chose
+the most important parts of your XID are protected. But Amira chose
 not to store everything in her XID. She has SSH keys that she uses for
 GitHub that she maintained as "detached keys" rather than including
 them in her XID.
@@ -84,10 +84,11 @@ If you have your SSH key in UR format, you can directly import it into
 a variable:
 
 ```
-SSH_PRVKEYS=$(cat your-envelope-file)
+SSH_PRVKEYS=$(cat your-ssh-envelope-ur-file)
 ```
 
-If you don't yet have a SSH key for this tutorial, you can create one:
+If you don't an SSH key in any form, you can create one as follows for
+use in this tutorial:
 
 ```
 SSH_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
@@ -129,6 +130,8 @@ rather than as a bare UR is that you can add metadata, which could
 help you (or possibly an heir or executor) to figure out what a key is
 when they retrieve it.
 
+Here's some metadata to add to Amira's key, to define what it's for:
+
 ```
 GH_NAME="BRadvoc8"
 SSH_ENVELOPE=$(envelope assertion add pred-obj string "keyType" string "signingKey" "$SSH_ENVELOPE")
@@ -159,9 +162,10 @@ password) on top that just creates a new Single Point of Failure
 (SPOF), something that you're trying to avoid by using SSKR to protect
 your key.
 
-With that all said, if you choose to encrypt, a simple well-known
-password is probably the answer to provide a tiny bit of additional
-protection:
+With that all said, if you choose to encrypt, use a simple well-known
+password to provide a tiny bit of additional protection while still
+ensuring the right person can retrieve the key:
+
 ```
 SSH_ENCRYPTED=$(envelope encrypt --password amira $SSH_ENVELOPE)
 ```
@@ -185,13 +189,14 @@ hide secrets while maintaining metadata that helps to identify what
 the secret is.
 
 In fact, this same technique of creating metadata can be used to help
-the future decryption of the envelope:
+the future decryption of the envelope by adding a password hint:
 
 ```
 SSH_ENCRYPTED=$(envelope assertion add pred-obj string "encryptionPasswordhint" string "real first name" "$SSH_ENCRYPTED")
 ```
 
-That'll show up with the rest of the metadata:
+It will show up with the rest of the metadata:
+
 ```
 $ envelope format $SSH_ENCRYPTED
 
@@ -205,12 +210,12 @@ $ envelope format $SSH_ENCRYPTED
 | ]
 ```
 
-(There still might be amiguity, like "Was the password 'amira' or
+(There still might be amiguity, like "Was the password "amira" or
 "Amira" or maybe even "Better World", but the point of a hint is to
 give the user, or some other valid person, enough to figure it out,
 even if it takes a few tries.)
 
-## Part II: Creating a Backup
+## Part III: Creating a Backup
 
 As with any SSKR distribution, you must create a [threshold
 scheme](https://github.com/BlockchainCommons/SmartCustody/blob/master/Docs/SSKR-Sharing.md),
@@ -219,11 +224,12 @@ for reconstruction, and where to distribute them. But, you probably
 already did this when you distributed your XID, and you'll just want
 to shard and distribute your SSH key in the same way.
 
-Which means that all is required is to use `envelope` to create your shares.
+Which means that you can quickly move on to use `envelope` to create your shares.
 
 ### Step 5: Split Your Key
 
-This is the same process as in [§5.3](05_3_Backing_up_Inception_Key.md).
+This is the same process as in
+[§5.3](05_3_Backing_up_Inception_Key.md).
 
 ```
 SHARES=$(envelope sskr split --group "2-of-3" "$SSH_ENCRYPTED")
