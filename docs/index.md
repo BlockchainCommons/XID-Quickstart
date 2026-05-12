@@ -6,7 +6,7 @@ See [bcts.dev/xid](https://bcts.dev/xid) for a hands-on, online version of this 
 <tr>
 <td width="50%">
 
-[**Chapter One: Introduction to XIDs**](01_0_Introduction.md)
+  [**Chapter One: Introduction to XIDs**](01_0_Introduction.md)
 
 * [§1.1: Getting Started with SSI & XIDs](01_1_Getting_Started_SSI_XIDs.md)
 * [§1.2: Understanding Core Concepts](01_2_Core_Concepts.md)
