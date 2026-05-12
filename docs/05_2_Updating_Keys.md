@@ -223,7 +223,7 @@ identification.)
 (We'll talk about the more active compromise situation in
 [§5.5](05_5_Responding_to_Key_Compromise.md).)
 
-## Step 4: Generate a New Key
+### Step 4: Generate a New Key
 
 Adding a key to your XID always starts with its generation:
 
@@ -232,7 +232,7 @@ NEW_LAPTOP_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
 NEW_LAPTOP_PUBKEYS=$(envelope generate pubkeys "$NEW_LAPTOP_PRVKEYS")
 ```
 
-## Step 5: Add the New Key to Your XID
+### Step 5: Add the New Key to Your XID
 
 You can then add the key to Amira's XID with appropriate permissions:
 
@@ -251,7 +251,7 @@ XID_WITH_ROTATED_KEY=$(envelope xid key add \
     "$XID_WITH_UPDATED_KEY")
 ```
 
-## Step 6: Remove the Old Key from Your XID
+### Step 6: Remove the Old Key from Your XID
 
 Before you remove the old key from your XID, you should make sure you
 have a full backup of the XID, in case there's a problem and you need
@@ -280,7 +280,7 @@ envelope format "$FULLY_ROTATED_XID" | grep -v "laptop-key-v2" | grep "laptop-ke
 | ✅ Old key removed
 ```
 
-## Step 7: Verify Your XID Works
+### Step 7: Verify Your XID Works
 
 At this point, you should engage in the operational work that you
 normally do with your XID, and verify that it still works. If there
@@ -296,7 +296,7 @@ This general procedure should be followed for any key rotation:
 5. Verify old key was removed from XID.
 6. Verify XID still has needed permissions.
 
-## Step 8: Rotate Other Keys
+### Step 8: Rotate Other Keys
 
 It's best practice to link your GitHub SSH signing keys to individual
 devices too, so you can always see what device a commit came from. The
@@ -314,7 +314,7 @@ We're going to leave the rest of Amira's keys the same, rather than
 redundantly doing all of that work, but be aware that in the real
 world it might be worthwhile to update them to maintain your security.
 
-## Step 9: Update & Store (Again)
+### Step 9: Update & Store (Again)
 
 Just as with the permission update for your key, it's very important
 to get this XID with the rotated key out to the public. Until you do,
