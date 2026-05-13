@@ -1,0 +1,130 @@
+#!/bin/bash
+# 05_4_Backing_up_SSH_Key-SCRIPT.sh
+#
+# Tests all commands from §5.3, verifying:
+# - Reconstruction of sharded SSH key
+#
+# Usage: bash 05_4_Backing_up_SSH_Key-SCRIPT.sh
+
+set -e
+
+echo "=== LEARNING XIDS §5.4: Backing Up Your SSH Key ==="
+
+# Configuration
+
+# Create output directory
+
+OUTPUT_DIR="output/script-05-4-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$OUTPUT_DIR"
+
+XID="ur:xid/tpsplftpspletpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoyaylrtpsotansgylftanshflfaohdcxlumegtzorkdntkrolkosmyrffndiwkrofhbblfzerodipahhkkcejtatinbsjtintansgrhdcxlnjzbnfwasfshtfgvehhktdschdwttrtctdepkbyhlhkbdsogwashkgobsqzgwjtlfoycsfplftansfwlrhdghnejkhycajyhdseahmkpaylgdlfkklouotylujyhpjslobspmhhkolbcsuotstyaxkpmtoxssnyhdgachtypagdvedtytltvduetloyiojnpkssgusolpzeaepehhtpdmatlgtavostdifraeclfncnmomonldldssenblotngsbawentcydmecpdprdeotsabsgdnydrwsrlsatahkftaokebyjzmtieaolghddatansfphdcxayhkjpidzehpytiesnkofybgbbinntaezozstbctideyykdsbzylimwsvadplnlaoybwtpsotanshptansfwlrhdcxbtttfdutjsgopeptdsteioaasrrobtyladcwzmmsdicmfmmejymkprrnfraafxghgsrkyncyoypefgkihptihdgecxgdhemohhlgberkdsytsooepebtvwuewtbahflfaxtansgmgdjkdkueasinfmuohdlskejllfpddruoisoybstpsotansgmhdcxyaflntkectinioyttklocelbmhaseswnoeetdmtprnfmytmyhfghimjzhebnctftoycscstpsojziajljtjyjphsiajydpjeihkkoycsfncsfdoyaylttpsotansgylftanshflfaohdcxdncafzgdssbkftdpadrlgulgimbapdfgvtskwflsuyfnsgntcwdwidvyztdeaduttansgrhdcximsaoslsnlpsyafsdpfnsnfgoxnngdcfiezmlpeotifecnieprlgbbuocpvydlbklfoycsfplftansfwlrhdghescluyktcakgnynlzmotbnfrwywpihsgkiolkecxbzjkhlatsrpelknsgegsjkwpbboldasgsnbwssbtreutwessjnnsgdrhrlswtyhpyljpfwprvyrftngatsvwreclematgtfpfhbgrpmynefhdewkgrjyrptlwsvyrkongsaxhdsnsemoaatszteydydrlagdrpfdyadldsytisnywmspoeftnbwpcmlphddatansfphdcxgteojzfhbeynssmdvtzesernidsekpfwtbjlgmjneyhnolkbwnrhbbdssomkonguoybwtpsotanshptansfwlrhdcxkbpaaoahylolmtpduoltinldfsjydrtbstkiwedllumdtlkesaceytsrdandprlsgszspsmnweuecelnbyflvdidvsgdollgcxmdcewktkjplnftuefrtiloztfphflfaxtansgmgdfhylfspytkamieidnblyhkdahlfeossboybstpsotansgmhdcxhnpffrtokgrfleoeaxleimdigdoesgtkwmdpiapebgamckglndaefrrordwdswwdoycsfncsgeoycsfncsfloycsfncsfdoycsfncsgsoycscstpsojzjojljpjyhsidjzihdpjeihkkoyaylotpsotansgylftanshflfaohdcxwdolbgahbakkldwdfylkwfpagohkjetldmwyclmsvolsckftatjkjlptrdgmbybttansgrhdcxoxstsbuepsjlmtpkjpswcycsnydyemwfltdsrpsocwaminlohyfzbykeisuycfieoycsfncsgelfoycsfplftansfwlrhdghwplavlvadmnlfxbzhpambkpfzesbisreplnykpwpcsluaximmontcpfxrdrtftluvomdtlintiknsncahnfdndbsttmeaybsntsnrpkgaxztkkryjloxiypeglmwjtispfkedmvlkgfgwecslthkmkeeetuybbasjnfpiycegsnsttstpdwfdkwzfecpfepkbagdrfrfwttdknatwllridzsbswfnnctfzlfhddatansfphdcxhppmdplunnryeodsfnteaxesswehleghvlyadrbwfhihfgmubwfwfwolyajnbsieoybwtpsotanshptansfwlrhdcxgasawssomsgundwdlrmefnaewsmovlmwfteywpfymsswcxhlldgepteclyhhvtfmgskslspaspsppmhydwtdmwbyvlgdgtoewydwdrjolowlwdgytsamiagwpeaehflfaxtansgmgdwezmfyloimtaisgautmntioyaahfgssaoybstpsotansgmhdcxcavehnettizssaytfrbtdsroclurkpdnhdvseylfzskkbtwkessgvwtslgcwiazmoycsfncsfloycsfncsgroycsfncsfdoycsfncsgaoycscstpsojnjzhsjojyjljodpjeihkkdpkoeyoyaylrtpsotansgylftanshflfaohdcxonbbaxfdchqzlfcptlbbyachdypehyaxtecavlhymnmyceeekotpcamnamguclmotansgrhdcxcsrnchrnrpbsrnuecwaymoihplfnkgrdaxiefgpyidvysecnluhtwlwmpfwndnctoycscstpsoisfwgmhsiekojliaetoycsfncsfglfoycsfplftansfwlrhdghbzecvsspostkmylrprbazcistttkbdioatmeoxzoqzlejtbwvopknbkngustmotdykldgdbbgubgmntiateeaynbmulyykiasoinrdimmdwsqdsohdoletwngsrlnslbospdbaoyinenhknljetklpcxcmdtweoxcacekgutgseynlidfseejndeztlobsdlatgdpfftyaesdkcwmhrketsbcpldpejnehprhddatansfphdcxjemdmobewtihrohsgaghsglkgepdcmhdflhnamvegwssjzolpsjslesrwypkrydwoybwtpsotanshptansfwlrhdcxdteocmclktflvswzlpjzseqdhnjsinbgzetymefltsfmengyfpoxbsynoyfhtndigsgmfefrglmusoamwycetpctongdotimrohgrfoltsbyfmeeylmwbbhybdayhflfaxtansgmgdatbbwflplprkylglsbotloskuoidhplooybstpsotansgmhdcxrsfpfpfmldltkbsaamecmogabacsjtdedtsshlmdutaoaoylstndserdwdnedwmnoycsfzlftpsotngdgmgwhflfaxhdimemrfbyropanbtbvwstdwhywfldrfnlmtbylnihgwrlgwkbsnoleelumhmhtpvyluswptwyoyfygeahtkosgysfbwbdcmcsielunyytgmploxrdpymwhsoxfhkprnnspssepdhyssiytdhlatsgzsvwcxtdievtemgdjyweherntpltdsbbdypfbebafsnbiotkkbonwdktbbtlrtfskglfoycsfylftansfwlrhdropkhphfbesbwfmtaohgdslydlktattssgdmoxsgosasvyvlwdurjniylewewztkbyfhrnaabsemvwssimbzghfpcwtsprdkwybybtkgintkwkmontfwinhpfhlfcezsfzqzotpmotoldpftoyfeeobakpfddphtvdingtwswllecycxserkrytnltglrshffszoadoejnfdaahtnekpgwnbotdmjsfeztlgutayemguwsgyathdqdrywekgurwzhglolsoxpaempswzpywywnylpdenmshgeebajejymwjnfwhylgbzguhgndqzashklstittcluefhtpgmbswfgmmtpfpyhekpbgenkbjtmddygufldngsyttipfkkzeoxtdtidtmnbbkggdvskoisgdeornhnjzhgchtsjktoplgowmhddatansfphdcxiygoeedkoecsadztzcwtwtamreesfrvlenqzctwmdnfsptgswslghseyaafgpkaooybwtpsotanshptansfwlrhdcxglvalrhewsiegstkfxgatplgndlgolfgdmwllfzsyksnktwtinenenbwhfjsurktgsstcxcyhfzmeyaminrotyiyghgdvotdfylyasdpsswyndahlaclwlgmsnlahflfaxtansgmgdhgrsfemklbndmejtrdzthsgrutuykpnboybstpsotansgmhdcxiyvwcpcptddkeemdwfoylrrnspcttebgsbrnfmoetirfmwehhsrehdpmstdadaytoycfaorylftpsplrtpsokscfhsiaiajlkpjtjydpiajpihieihjtjyinhsjzdpioinjyiskpidoyadtpsojpiyjlhsiyftgwjtjzinjtihfpiaiajlkpjtjyoycfaorsldtpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoytpsojsjkjkisguiniojtinjtiogrihkkjkgogmgstpsotpcxksenisjyjyjojkftdldlhsjoindmioinjyiskpiddmiajljndlkpjkihjpjkdlfwgmhsiekojliaetdljkjkishejkiniojtinjtiohejeihkkjkoytpsojoiyjlhsiyfthsiaiajlkpjtjyglhsjnihtpsoisfwgmhsiekojliaetoytpsojnjkjkisguiniojtinjtiogrihkktpsotansgylftanshftanehsksgdjkjkisdpihieeyececehescxfpfpfpfpfxeoglknhsfxehjzhtfygaehglghfeecfpfpfpfpgafdeceyjlgogmjehkkpjpjtihiygojtjlfgiddnfpgsjpjpfxeedlhdihdngdkpgwgmfxfgkninjlgmfyhfjkgmtansgrhdcxfhtkhnmyoeoyvdvdgolosrpfrosnrsaycmiycelnqdjyjzlplpeykgesmnvwoeimoytpsokscwiyjlhsiyfthsiaiajlkpjtjyguihjpkoiniaihfdjljnihjohsioihtpsotpcxksdkisjyjyjojkftdldlioinjyiskpiddmiajljndlfwgmhsiekojliaetdlfwgmhsiekojliaetoycscwtpsotpcxksdaisjyjyjojkftdldlhsjoindmioinjyiskpiddmiajljndlkpjkihjpjkdlfwgmhsiekojliaetoycseetpsotpcxjpisjyjyjojkftdldlioinjyiskpiddmiajljnoytpsojsjkjkisguiniojtinjtiogrihkkghihksjytpsoksgdjkjkisdpihieeyececehescxfpfpfpfpfxeoglknhsfxehjzhtfygaehglghfeecfpfpfpfpgafdeceyjlgogmjehkkpjpjtihiygojtjlfgiddnfpgsjpjpfxeedlhdihdngdkpgwgmfxfgkninjlgmfyhfjkgmoybetpsokoeydyeyendpdyeedpdyehgheheefteeetdpehdyftdydyoycfaorntpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoyaxtpsotansghtaneidkkaddmdpdpdpdpdpfwfeflgaglcxgugufdcxgugaflglfpghgogmfedpdpdpdpdpbkgoehglgagodyjzfdfpfpfpfpfpgyfpfpfpfygtfpfpfpfpgsiaeogljlgshghfjegtimgoehgtghjefpfpfpfpioiyjthsisgmflgminenkpieecesguihiohfkoeefpkpkpjkgsimesbkieemeedneeecfegahdgwgrisfeglhgksfefpfpfpfpgahthgeceyhthgkskoiaflgofpfpfpfpfpfpfpfpfpfwjtgljlhkghgaehgliofpfpfpfggtfpfpfpfpgsiaeogljlgshghfjebkgtimgoehgtghjefpfpfpfwfphkihjeidkpjofxetihiyiejegejzgmeefdkkjpfyjkksgufljlghgtesdleejofdjegsjkghemdletgriygwhskoisecfgjtkkgmemfwkpgyeedlgwfwbkkkgufxghgrghkkhfenghiheefgeofdknhshfjtdldnjyehgwfyfefwiofsfsbkdpdpdpdpdpfeglfycxgugufdcxgugaflglfpghgogmfedpdpdpdpdpbkoycfaorylftpsplrtpsokscxjojpjlimihiajydpjkinjkjyihjpdpjkjohsiaihjkdpjkihiakpjpihhskpjyisoycfaorslrtpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoytpsoiniajzhsfyinioihjkjytpsotansfphdcxhkrsoyhnoyuodrnsjewsylmybwmouonbtkglbbaxyakilfmnlaptpkjkiepszsdmoycscwtpsoksesisjyjyjojkftdldlioinjyiskpiddmiajljndlguinjkjyihjpgujohsiaihjkdlguihiakpjpihfpkpjyisdlfxgsfpjkdlgmfefpfygtfedmjnieoytpsojziyjlhsiyftgdjpjlimihiajytpsojzguinjkjyihjpgujohsiaihjkoyadtpsojziyjlhsiyftgdjpjlimihiajyoycfaorntpsotanshdhdcxnsvelewdmugsjksomhcsdngumosodnlffnlpcxfeylutcseeluatlyihdphyieadoyaxtpsotansghlfaohdfzmtiniolbreytcnyncnwmsoeyvtlkwzjzprlupebbbzghdnmnoyprenmdlflucaonsffelpfehkaaiyguzttartsfhdvtwfwdsboxfdlfbtwmwekbimdtemftatmhttbsoyaylrtpsotansgylftanshflfaohdcxplvdotinmnwensttrtlrtiisqzehrltlnlguhdludywzsebztnqdndwztpdazeqdtansgrhdcxfmlpjkhspautsfmwlndrpavobwpyotsazsdidwrnrpcylfintnwtgrnnhdhhpyjpoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdlfoycsfplftansfwlrhdghdrdlgahpvleoesuywkzsiyfwsbwnhnbsmwpavaiovaftykcplgoyettklgrkuemdenwlimidktoewlnnylrltszccxdiktaywkfdzejsrdrorkzsdrmowtjoimyngeveonnlimgdfhdshtqzvestbzinhsrhmytpstcxjnbtgsgllewfdremfeihdskooecngogdrtbksgndwyhedtlugmahcktscmnegwylhddatansfphdcxiopakburhprngowmtshlrswzihbytpflgtrootzosfrpnnfprymuveasenotaeadoybwtpsotanshptansfwlrhdcxcfdaynjomwosutflfhchttsrcsadynmwpaftvwhfdkfrrtjncswtrhpynymdatrogsrfrytdflgaplnndkonpdcfvtgdiyzowsvlemheaynldpoxseqzcydmgtylhflfaxtansgmgdntpehhfxdlasbndrhlzteccletlbvevyoybstpsotansgmhdcxghchykwlghoxpftljectmyyldyamgycwamfwbnsbjelbsshkbzcnuttyrltlwtgmoycfaorylftpsplrtpsokseyjoihihjpdpihjtiejljpjkihjnihjtjydpiyjpjljndpieihkojpihkoinihktihjpdpeeehiaeshsenieehidehhseyihiyesenoycfaornlstpsotanshdhdcximprmsaylgfwcyjzzcamzmdrbdetjsrngamnbsfptbwtksihrhzonsahuthydwtboytpsojkjkiaisihjnhsftihjnjojzjlkkihihgmjljzihtpsokscsfdihhsiecxguihiakpjpinjykkcxgdjpjliojphsjnjnihjpoytpsojljkiaisihjnhsftktjljpjejkfgjljptpsojzguinjkjyihjpgujohsiaihjkoycfaorslntpsotanshdhdcxhecefsnnionspljpftktetwymnfmcyecveuotktpwenlhyhdpmpykpchcmzchywzoytpsojpihjtiejljpjkihjnihjtjyfxjljtjyihksjytpsoksglhfihjpiyinihiecxjojpihkoinjlkpjkcxihksjoihjpinihjtiaihdwcxktjljpjeihiecxjyjlioihjyisihjpcxjljtcxjkisjljpjycxjojpjlimihiajycxiyjljpcxguinjkjyihjpgujohsiaihjkoybetpsokoeydyeyendpdyeedpdyehghdyetfteyecdpehdyftdydyoytpsojsjpihjzhsjyinjljtjkisinjofwhsjkinjktpsoksiaguihiakpjpinjykkcxiajljzjzhsidjljphsjyinjljtcxjohsjpjyjtihjpcxktisjlcxkoihjpiniyinihiecxiajpihieihjtjyinhsjzjkcxjyisjpjlkpioiscxiajljnjninjydpjpihkoihhsjzcxhsjtiecxihjtiajpkkjojyihiecxjkishsjpinjtiooytpsojljoihihjpfejtiejljpjkihjnihjtjytpsoksguhgjpinjyihjkcxjkihiakpjpihdwcxktihjzjzdpjyihjkjyihiecxiajlieihcxktinjyiscxiajzihhsjpcxhsjyjyihjtjyinjljtcxjyjlcxjojpinkohsiakkdpjojpihjkihjpkoinjtiocxjohsjyjyihjpjtjkoytpsojoihjtiejljpjkihjnihjtjyguiajljoihtpsoksfeguihiakpjpinjykkcxhsjpiaisinjyihiajykpjpihdwcxiajpkkjojyjliojphsjoisiniacxinjnjojzihjnihjtjyhsjyinjljtdwcxjojpinkohsiakkcxjohsjyjyihjpjtjkoyadtpsojehsjyjyihjkjyhsjyinjljtoyaxtpsotansghlfaohdfzbzfslnetykknhplpwmhhcmcnwtfrwftogtrdadjtaxbsjkptmsmesbotldcstngyteisfhrntecemkoxtpueinjtmtfdrtvebwvtasbdcxeclafphthtfylfhgrhlabnoyaxtpsotansghlfaohdfzadpremeodpyteyknkoiavlwmntvddeeoosrphnylykfzstqdptguswfrtbpktpwnwlpteobzrnclvaadfmlthdoyguvarphgmuryjtkeeyimwdtyengrhdmepdbdbdbdtnenprrt"
+
+XID_ID=$(envelope xid id $XID)
+PASSWORD="test-password-for-tutorial"
+
+echo ""
+echo "Step 1: (Three Ways to) Read In Your SSH Key"
+echo "============================================"
+
+SSH_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+
+if [ "$SSH_PRVKEYS" ]
+then   
+    echo "✅ Generated SSH keys"
+else
+    echo "❌ Failed to generate SSH keys"
+    exit 1;
+fi
+
+echo ""
+echo "Step 2: Set Your Key as the Subject"
+echo "==================================="
+
+SSH_ENVELOPE=$(envelope subject type ur $SSH_PRVKEYS)
+
+echo ""
+echo "Step 3: Add Metadata about the Key"
+echo "=================================="
+
+GH_NAME="BRadvoc8"
+SSH_ENVELOPE=$(envelope assertion add pred-obj string "keyType" string "signingKey" "$SSH_ENVELOPE")
+SSH_ENVELOPE=$(envelope assertion add pred-obj known 'conformsTo' uri "https://github.com" "$SSH_ENVELOPE")
+SSH_ENVELOPE=$(envelope assertion add pred-obj known 'verifiableAt' uri "https://api.github.com/users/$GH_NAME" "$SSH_ENVELOPE")
+SSH_ENVELOPE=$(envelope assertion add pred-obj string accountName string "$GH_NAME" "$SSH_ENVELOPE")
+
+if [ "$SSH_ENVELOPE" ]
+then   
+    echo "✅ Generated envelope for SSH Keys"
+else
+    echo "❌ Failed to generate envelope for SSH keys"
+    exit 1;
+fi
+
+if envelope format "$SSH_ENVELOPE" | grep -q "PrivateKeys"
+then
+  echo "✅ Keys found in envelope"
+else
+    echo "❌ But the keys are not in the envelope!"
+    exit 1;
+fi
+
+echo ""
+echo "Key Envelope:"
+envelope format $SSH_ENVELOPE
+
+echo ""
+echo "Step 4: Encrypt Your Key"
+echo "========================"
+
+SSH_ENCRYPTED=$(envelope encrypt --password amira $SSH_ENVELOPE)
+
+if envelope format "$SSH_ENCRYPTED" | grep -q "ENCRYPTED"
+then
+  echo "✅ Keys encrypted in envelope"
+else
+    echo "❌ Keys failed to encrypt"
+    exit 1;
+fi
+
+echo ""
+echo "Step 5: Split Your Key"
+echo "======================"
+
+SHARES=$(envelope sskr split --group "2-of-3" "$SSH_ENCRYPTED")
+SHARE_ARRAY=( $SHARES )
+
+echo "✅ Created 3 shares (any 2 can recover):"
+echo "  Share 1: ${SHARE_ARRAY[0]:0:50}..."
+echo "  Share 2: ${SHARE_ARRAY[1]:0:50}..."
+echo "  Share 3: ${SHARE_ARRAY[2]:0:50}..."
+
+echo ""
+echo "Step 6: Test Recovery & Distribute"
+echo "=================================="
+
+DIGEST_OR=$(envelope digest $SSH_ENCRYPTED)
+RECOVERED_12=$(envelope sskr join "${SHARE_ARRAY[0]}" "${SHARE_ARRAY[1]}")
+RECOVERED_23=$(envelope sskr join "${SHARE_ARRAY[1]}" "${SHARE_ARRAY[2]}")
+RECOVERED_13=$(envelope sskr join "${SHARE_ARRAY[0]}" "${SHARE_ARRAY[2]}")
+DIGEST_12=$(envelope digest $RECOVERED_12)
+DIGEST_23=$(envelope digest $RECOVERED_23)
+DIGEST_13=$(envelope digest $RECOVERED_13)
+
+if [ "$DIGEST_OR" = "$DIGEST_12" -a "$DIGEST_OR" = "$DIGEST_23" -a "$DIGEST_OR" = "$DIGEST_13" ]; then
+    echo "✅ All share combinations verified"
+else
+    echo "❌ Additional recoveries failed - DO NOT proceed"
+    exit 1
+fi
+
+echo "${SHARE_ARRAY[0]}" > $OUTPUT_DIR/01-ssh-share1.ur
+echo "${SHARE_ARRAY[1]}" > $OUTPUT_DIR/02-ssh-share2.ur
+echo "${SHARE_ARRAY[2]}" > $OUTPUT_DIR/03-ssh-share3.ur
+
+echo ""
+echo "==============================="
+echo "All Tutorial §5.3 Tests Passed!"
+echo "==============================="
+echo ""
+echo "Output files saved to: $OUTPUT_DIR/"
+ls -la "$OUTPUT_DIR/"
