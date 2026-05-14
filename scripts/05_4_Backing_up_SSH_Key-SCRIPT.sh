@@ -123,7 +123,7 @@ echo "${SHARE_ARRAY[2]}" > $OUTPUT_DIR/03-ssh-share3.ur
 
 echo ""
 echo "==============================="
-echo "All Tutorial §5.3 Tests Passed!"
+echo "All Tutorial §5.4 Tests Passed!"
 echo "==============================="
 echo ""
 echo "Output files saved to: $OUTPUT_DIR/"

@@ -1,0 +1,296 @@
+#!/bin/bash
+# 05_5_Responding_to_Key_Compromise-SCRIPT.sh
+#
+# Tests all commands from §5.5, verifying:
+# - Reconstruction of XID
+# - Rotation of keys
+#
+# Usage: bash 05_5_Responding_to_Key_Compromise-SCRIPT.sh
+
+set -e
+
+echo "=== LEARNING XIDS §5.5: Responding to Key Compromise ==="
+
+# Configuration
+
+PASSWORD="test-password-for-tutorial"
+
+# Create output directory
+
+OUTPUT_DIR="output/script-05-5-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$OUTPUT_DIR"
+
+echo ""
+echo "Step 1: Collect the Shares"
+echo "=========================="
+
+SHARE1="ur:envelope/lftansfwlrhkbwcmjymoaeeoyluohydrknfebelniardmntkemfeaofpswtyfebntajpbsflsrkbuofxhgkntotoguehrypabzkntlpssepfcagygogrprsridfsdtlajkiyceyaghtdcemhgmhlimzebgbbimueemdtiaimsgbnolhkcsbyaodyyaosgypeinjockftmetojyrtwmtkykdyrkndwseeckkspdiytbdsoteszspftknbylvwnnahwljznnurdteyaxgamylgdldkfdtnglqdprhgpkbkgdaybzrpjnvwfpcprofgpdmnenksoxzmrogugmrhjkjsaxjyflfpytgeeebwjocpqdgutpbsayntvefgehhfwdflecadghwtcmsownswvyfwbkfrmyswtiecsbkbtldnwefrlunytskogdsosgdlbzchbwspveqdfeisfhrhamyklntdfluyjnlkyluynyioplhfmhgspsgwhfrdlazttljzzoinfxnbrdutykeckttewyctwzmwaoishprntybtwmasvooepronimdrgtldoytovwkbkkmhlekimoloadmkmnskaykejomnyaonfnlnfsisftbbjyhpzekglfhnspgeaxfwbemkhnaxwktncklefnstksrneezsisrsrftnnnpktanbzmqzfgglpfayttcecsytdnspcyyklschihyamduohhdmndpylnaxclmtvlbwwykswlhsdtcysajyhhglntsrrhrkkknyryoxzosrmkvadkwfsktdfpwzatwytletechkmwbkmdjnrtvlpmdlvdswuoaaganbhfloutnsfshgdpmdtscwnttsqdlbbbgwdihppktpuypmrtiapkktlpsffhvdlnregdwdrfglcwvtkpqzcwnnsnskdykksodlmsoeluwminlbhlrkdeneenhyhdfrfrdtsfotdkwsdtderdfrlpdwtifljybgberkdniepediehzmrdehatvseesedraacyenuyiyglkedmnyoeaakiiajzlttsbsadckpaaxrspyjehptthnolotfrfdgmplwdltrnplntlfnlhsemgsdkzccplaoedeeygalthgwlplcxbawnsnmnrstncldpmtwsgemkrnbsoyswwfdilplbtdjlndnsjtdkfycmjsteynmestontbhdiacwwnvtaeiosapetnlnsbrkbtpyfxvsledmesvoghlpasdplduywplnneglluguverevownwphyvwonfekgnsecskjettjnhffzfswtctlkhetesncecatagdlskttecnnlmkvysgdmsazezmisbymnssceptpeutlkpseniasnmndwuesbkifzsaiaflfpfdqznnhyaaueprspghpkhhpahfselupfhpckdshptlglwycsbeceayheknbwrtrfflguluihlbzcjzenytfxhfotgdpryldsmoprjtkkjtrfrtstwfdskbfnnljprtindrbngtzmgoaakojyflpllbpkzoktpsktadswatsnfzetnemupkuysbmhyltilkpkwsiegesepdpesrnbwngehfswvlgtotmsvdjlrehkbkiosatsimmwkpayuemtlbfzrlwyckrkwzlsdyweltjprydmplcpbalrvdspfdfpeeahmydehdlpmhherkuoiehfsncapehljsvyidtpctrpqzdlcarpfzimknwtteflreeskburnyrnctytfwrsjptidlvsaajyoysbgmveryhtzozmjnbbecfeckkgvedmrkaorsonmtfrpywdloroqdstlrvsknnthfdlgmpkuegdghjsehmofnfxglctamdmmnbsmtttjzfmnlhsjtjtcpgobsoyvyqzkgvalfchtnwsspptlewmwfvtwdmytlwdbtaaktwdlpfnuyztuekorfnsjtmhcltspklyfdpetlrnbyntlrbtkgftlspkjnbgfhltzccsdmurlyfmlnttbersktcyjlzonddlolcysprhnbmtqdayrlhyltcawmhyemrylfuewedrfhcsiahfvsjtnecllomnclpdkpwfwputfrmtfncehspschfhregtfwesimnyskbecnayionnwssaectnkelffynelfmootdkcfsgwsueluiaktuehpbgpmoxkikpwenypateuozcteryrhvytobbosjlwymuwnwmoekbdevdotcnrsndgaahgolpjohtgagohtgudmbegwktbwwdndzoahuyvwlnidfpbapsioeorsvoetrecatipdvamtgebwtygtykctwfglzsgekepsmyasghemspetltehkbnbdiqdsrhngonlstimpawziyfgwkgmcfvttnztlykefhbwwnrlsgjncechtdrlmhurzsmuyaaxsnotfybbgobyfsotgmadeemdjojlaapfamolgomuktamwmrydsahnluoasfyeoaebtecgscmfpidgurtmncltnhtyttpsrpljtfxcahtgsghsswkvdsklrfnwmhkfxwlpywpfsgmpshdjlbtaaaygunbeygadtdtdkotlpbsoncntlieosgunbtafdueoseeckheztahmtlbmuzcatsoqdfdmnlfhtdmimynosdamtihcfykaxssglaalyrdwlvevopklfprgadlettphyplswinrlgdhngdsouegmlrmkgacxvyinfmimdkdpqzttfwimgtrowsdrdekkjkfejszeesgrahhnjkdwhdgwaecmvalfbapfinlfuesogefletjkgaetjebnfdjsoljleygdlesnspdybbjkcwdyosjoeypschpeemhyvaaendkocfgspkyturwsvlditeetvdtibejknsvlwfrohfcmlfvtvddanblsfdsbcyesvtndtyykghrobdolcmoerogdcpjnmnnlgsonadkejlbkglbgkokotttdhnwymhtbhlbbnsosoyjecsckjlvsstylhhtagwgynbecsfdtynfednbwytrhtbfsonhefpwlmutbtylrimfphymtwscpdiihgeihpkldnyzmkimtvskguylthtprtelfbtstvdjeguberttiglbnnnvtrfhnmswfmhveecaortwpdlfgsakbgrecuyfrkevajzgakgensfidkbsobyotgebkdrftkngepslkfzgutdqdaydrnbhljehhmhylfsrhaaueecmdrtiekpgraefpytgddwrfgdwyuykedsrnimmyjstkhsmdtteomyurqdwehevtknonuotaprmulsbeenclbbtboekbsaasftjoiastttgucwgegrjkatmwcylfgwdiyncahnlkvarofhmegmlfhnettbrodwbsfysfgahkmwvwrkdnwkfwinhkskrytlbttaadpmpmtigecffmtbhfdmbewydekihlzeiatkfzbwyndebkdmvsfrfsieytsgcsctiobdvdzefztizmtpguoxtimwdnbzaachzsvadrjyaoethdrpoegltaosbnpdiaghbgtslngajnlrcsfdmsjeynvswywdmwnlktfxbelsfgcklpcmntkbtottnnfhwdpycmzclycwhkytemmujpgamsnbtsykbnlsglaysshtwpecglknrfjtcwvwlbpdlrfxceimemzoaawmisidntoyfndklkwpjlehjetofdhgcysanylnuybkbktlzmlbhdkkimkgeoeymepkbefnbeiectlkdrdlgmimwdsglrsbrtmkyasrdatomssajtcmnnosgsvegmlgcnjpbsldhyuycsbygshhticnhgjecwztsgtlltutntkkatneptsavlesuejtiezoaeidhpiaftfpgarhgabadyrttsfllplpwesbvdfgdwzcctioemvdbtosbdidhyssmnwytawdsgpyrhwsdwehmucfflgmdeoyguknpkmspdsglpcstekkluiovwdeeyzeadlylbonamkgldgojkgyeolfknstpewtlnsfrhjlgyuymwtsisbbveenamknzsflbgwyfsctpllbrnbbiecaiyghkiwyttbardpdhkayaoftpyglssnnwpiohdemiejycfbtlboyckidbkvlcebbdwjlpynywylbeciyoszsplfwfwlshnatdphkuefhksonhyaevssotstpoluygmvotihsmolflsghkilpdamtqdhestdefnwyzocycpbamhlaykpdbgjzztayotsbiygrndylvafytefwtlrtqdcphfcnqdimpyetvwimhkinadsfsbwsbsiomomuidbndkdehpwprnludwdnpypdvyurnstyvwlsfefnaxlabytdenmuecnlwtjllkpevdatbgjykbrevytefzsgnnrevamknbvdynsawegyhlencezemkrpfzcmgyzefynymulrkekockasfrjsuycaonltnnwzkssnosiejysadnwttpwncsuoadpfqzktvyryjpjpaoeegdcegenngackkinlneskfyatlnhgfykkgeurosfpfwfebkgscwrefndshhiydwfemdemgoretybsrofzmwkefenscwgeyntlluceteisswwdcypkoxcxaaglylntpraavtjtahdysppktphhfgyngytlzehnjpfldafhihsrothsetjochbytystlpetieldnshybymsbbgycmctvtnstbvwpmdawpytswftmywfurskiogmsrinfgfnndbybgmhleiebwoemtfetlaxbgtbaaeyenvybkkssbwmtslphsrhihhyettiwkadfyiscmkiingtonwsgyatjnbzjnhsvwurwfloksvwesswkndemseedkndnbtkrltehfnsaogdpaqzskdeskzsdmfydavomezomhttltlaremuytuonddnryatqdresruobnjtvohpkbjktdjlhlaylnsrmueewstkrkbkoxwytlgdmulnrhhlmuwepdrpwzjyeosantgmvdflwtguktrtcngsnbkghkrecstdbehpjplecmgefgcwvwnykeptrezodtrkotbstasrcnwnbewnzcnlbynbeospkgendmietensbbeeoeverfoseytytyurgwessthsfnsopkzccftbhesflnfdndpybkryjnzsgmlasnynvtbbueamwnftkgbbpmssrksopsahzotyhepksfylgwleuynerltngolentmtrpjksantahfninwnpdsopfvtsobgbatdglcmftuokkmssbdafzsburntbyatstdmatcfgybauttydmstmytteobdcnfpbstoiactjzykkblyisimlrpehfahbnbtiszcesztptdlaypddmlntocagrcxcxsarhtlbthhhevttsdljerorpcwneonclmkmtbtylkihtisgmoyescsoxtlpfcngyzotbjtrnaocftnledrcyievyzeloinrpidvobakkprdyntiyssfmbbsomhcyvtrfckmywdfncwjkeemuztkonemokgihvlpfbejsrkmutltsoxrebdfskpwkdwwsjkskbnmwaxdnvljkjnbbwtutrhrnfzbwylwtbylkmkehrnaxfehswmkkpfcfsnwpsofntpoytstorffscyrefzwdasoyectlpspyuykecwtpiaiekbzeiswnceihpefphyynttfnwmdycmvaynchfwjknbnywknyfzcelfnssfdamshgiyvaylvtdiaacldapfsrfgrloxinbtoxkejltdrhfndacakncaylmobedmtlfngoftsrtpsgsehnseledrytinfntyndtyzmlneomdaxnyttgohttydenykibgmsimreuederoynascnwphentrfplzoamecpynbwezscwskkkaezmlrzssrpfingoutdldywtlugaqzspeylnrnzoclfwcstpemltdnvaidwylgbsrtmstnoykbftiscwcxcklugrbgcxwygmimcahtrpjtonbksghdsrlfmhlgvdssresnfdehrhjobebnjktesflpsthepdwpfsykfteondkionetspvdcwnncfbzjtcnbadtrnmstletnelffyrletdrlyaddmbsemisuyqzdyesbeimkowtkpgrcskilnzsuttlmopdoywslouonyfyhnuefnonhtvymwlssaldmnwtryenytktemaxprfrwtynlodtknbetpetsponuydadecwftbyhllotshlgyhyrsmediaepyhllstoiourpdbnltcwhdhystcfmkmdhhmuoeptmnykosvshnwevockzsgdlrpmhtctdlndkgdaonhyhnghtetdhghgatzemnynaejpoyotjpaajyssvdiepmfxhthlrycppkbnfxielatovdjolafybevsdycavwrnjkwppeehfyknrdskptknsgmugtsgylemfxmhsanyaaaaahqdvypemygowsvocedwylahsnhevspdasuydemoinroaxctldcncxmubamdpazcbbnevdbwemlsndwycwvarnrpflbaadkgckrnnncacnlfimfhroimsreslgsnkphncpntldhkdpsrvtaoolhfclspjsdkamaxcssbieislodkrsemhnztsbythklppywmurenmkkpetryhetlwlmhgudkmkjtlswdzckgylnnlphswthnltutvdfpjlwpenlydkisndsrdmimcthhmugsrdbkmykpwdbasppmfngydtqdwtvtcyeeoswkhlmewpbyotlbmwdkaetytilfsamofxtttnlandenfnwfhscmpahhrhhhlecxpyvlclztsogejorkecgaotwmgdlnesfehghnvtperelkfeknntbaptioesdplekpdefsatayrntlsazttbrsghhydypmlkadesnnqzsgotfgknykfxlrztnyntsrvodljzetlrzmrlpfhkbddttdsagutnpdtpbybebgzcdrdekbwdspgmhggafpwpdkieidaeecwlbsvskslyvdcahkfrneeowytlievymefmromtstjtzeidsoknlpneplparhimyndaonptkgtowfrspehtwzjphsfddatiknpkbbjewnclvemtecoxrtbtaturnlfefwqdvycasawdpsftayuowyhydrlydtckyapkmnpsjnsgclceadptgadrreayjswlsagubytpvtnsfeoensnthewplkescmdlbteshhrhmoldlfiecyhkjylajzpttlkkztrsknbdtlurbkpegeqdvlguftamiskepaloonrospaoaxnsjeadknlrmuntiaptlgswjejpaersvtwtfntokboxfwlubyfehejsrfwnctspvdjeaasklsnessfebesaimytiaimsgcwpreyynfmdptsgedeswtsdlfnzmnntkmwpebginrfoejeuoeecskghdvdotcmcndywlctfmpdstpelfiozshtgloefshnadnnftiavlproydtfhondptprhcxkpldmywspyaockhswehtenckrowzcxwphscxmysrbymdnnykdrghahlptevsascymkpybelfoldtrehfcfykbggaoemebtlgnscevefdnnpybgimlppywzdtcpbsyktbfnjolsjefhvotiqdpkdwcapycwlfnlwttlrfaxjnhguypfyatabnldzerdylckndiygypksswnzewzotkpimmylgaolkguwtbyspvsmupelflrjyvlbeaekiytbkutnbbekpututhlkpdefzeyosmudsenlobybwmkhlfesfwmcajlhyrogwfhhgfxbygmjzyaetwsssfgfettdaidsainolwyestyykvwkbgdtdrkskaabbvsassbtdpsbakngyeyssgopmbytygrhhmhrhseaxjefpkndkesrltnguspoxzmvatisgwkwdoyrfchmeuoqzmesnecnnrslpinrfaewsmntpmypmhdksfzwtcnghbdbademydrpejsfhzoecoeahrfrnzthkfdwscmvalkrfskweeyzscpatrlvyeclrcyoxfsoybzmhcegamtvyjljlltresgfpsefessrfvylpetytkbpadwahbwgoeodsvwldhdpeksfgvyfpuykojlcmrowpfxdihsfecwutglgmgwiszmotfgvsqzretshfrhecaxhscppsmecmlshddklkfgdtdkrnpdvlpsgsbylneetitylrbwcxsafxkglemkaaflnnsfnbwltbfxtdjtptzoktbgbsjtlfwdmnhnlplfckgthkfwrlpaqdtyhgiytdcnseuruyheectplewntnmdfeiovlosbemegojssatbrtwnldwngedmotlahgmwryrhpyjycfbgrksewtkehpqzbtesmkchurostylkhklaldiyaeiesfwndebegtnesfrffraedlhfkiclglhlrelepsctbtdtfdwflndiseiymtvdsskstblflyueiylelgcactsrttfyeykgptftsbehvowmzsiyhhfxnbfpoxcegdfyinfzchronbesjtkbfxwlgoinvwiemdimpmtoskfndyrlvlrfkbbzdamsjlhtfygufgdnolcypekornbayaztjyiotnaylfiygtcpoxfhsakgdtpmjkvlbnckticecptdsamntedpptrfpsdamujpqdyagskplnpkkoingouendamtotohejkrhroynemgaeecnlymoaxbgtosrskktwdtkmdvsfwcxmeryveztinhllrvojlytcewzwydymhfgvwvseenecxiofsprfgaeietnfgiysraxkpfegylyhttshtkkgucfrndafratdsdylkhydmchectbhytowlmnztinryihwpgsmhcmzedwfgcxinyluetemkfwrluetilyhlhtcxwpgatetofgtpahbelaiepfkglokbkgluiegedactlaclmujyaafxpamdrpgltbdlbtsrtpnegutlldndpldyztreykutvseebdfedmtljzgriynldkleayptgsdrurcwcphnprcsqdmdetkinbsndnheosdsdsurlkcelyfsrysppllkwljkgddmkojnfygluebsmhykvetoehtlpscleepspkoyiekevetslgylyttdhfdybbbnglmwwffdmwdesbplrkyklgfplghecfrndsgdfnspkohdknlnswkgrseyknladmqzossafreyfrwktovsptheckutstfggwqzdpzslgwsknmwaerkoygmbnceqdrlkkhdvohfbgctmyfwsrtbvssaeoiskkfppatkzobzylrkahemcaqdfedkoxguisldemlnntstsgmsollspskoolgowymtgyaxgwsscweodrrfjphfhyfevaprfzpycyayvdnswyuewdmsfrosgugyhlzswdissnsnrsfmamlajztnsfsnbavedwsolthljegocyieutytaotpfgmtwnsadwetdwptgldwktidlglrhlbbronecfdkwfjlahprweutkigdbslggojsnnlslgonaeaaahgdgrkgkgbysrpyqdgsgttdjorywzkbinmeuyatdwlegdaxwlpefedkaxtntkcnwskondolurwlgyhddatansfphdcxihlegsdldiaopszcinpdbezeckcftspyemrfcnceueonsftntlahlachwywtutvyoyamtpsotantkphddalurpaeadaegstlwpotadsrihrpdkcwkngmpeoshttidpkkbbpaveinamdwbkjykbjtttjywshdvsvehkem"
+
+SHARE2="ur:envelope/lftansfwlrhkbwcmjymoaeeoyluohydrknfebelniardmntkemfeaofpswtyfebntajpbsflsrkbuofxhgkntotoguehrypabzkntlpssepfcagygogrprsridfsdtlajkiyceyaghtdcemhgmhlimzebgbbimueemdtiaimsgbnolhkcsbyaodyyaosgypeinjockftmetojyrtwmtkykdyrkndwseeckkspdiytbdsoteszspftknbylvwnnahwljznnurdteyaxgamylgdldkfdtnglqdprhgpkbkgdaybzrpjnvwfpcprofgpdmnenksoxzmrogugmrhjkjsaxjyflfpytgeeebwjocpqdgutpbsayntvefgehhfwdflecadghwtcmsownswvyfwbkfrmyswtiecsbkbtldnwefrlunytskogdsosgdlbzchbwspveqdfeisfhrhamyklntdfluyjnlkyluynyioplhfmhgspsgwhfrdlazttljzzoinfxnbrdutykeckttewyctwzmwaoishprntybtwmasvooepronimdrgtldoytovwkbkkmhlekimoloadmkmnskaykejomnyaonfnlnfsisftbbjyhpzekglfhnspgeaxfwbemkhnaxwktncklefnstksrneezsisrsrftnnnpktanbzmqzfgglpfayttcecsytdnspcyyklschihyamduohhdmndpylnaxclmtvlbwwykswlhsdtcysajyhhglntsrrhrkkknyryoxzosrmkvadkwfsktdfpwzatwytletechkmwbkmdjnrtvlpmdlvdswuoaaganbhfloutnsfshgdpmdtscwnttsqdlbbbgwdihppktpuypmrtiapkktlpsffhvdlnregdwdrfglcwvtkpqzcwnnsnskdykksodlmsoeluwminlbhlrkdeneenhyhdfrfrdtsfotdkwsdtderdfrlpdwtifljybgberkdniepediehzmrdehatvseesedraacyenuyiyglkedmnyoeaakiiajzlttsbsadckpaaxrspyjehptthnolotfrfdgmplwdltrnplntlfnlhsemgsdkzccplaoedeeygalthgwlplcxbawnsnmnrstncldpmtwsgemkrnbsoyswwfdilplbtdjlndnsjtdkfycmjsteynmestontbhdiacwwnvtaeiosapetnlnsbrkbtpyfxvsledmesvoghlpasdplduywplnneglluguverevownwphyvwonfekgnsecskjettjnhffzfswtctlkhetesncecatagdlskttecnnlmkvysgdmsazezmisbymnssceptpeutlkpseniasnmndwuesbkifzsaiaflfpfdqznnhyaaueprspghpkhhpahfselupfhpckdshptlglwycsbeceayheknbwrtrfflguluihlbzcjzenytfxhfotgdpryldsmoprjtkkjtrfrtstwfdskbfnnljprtindrbngtzmgoaakojyflpllbpkzoktpsktadswatsnfzetnemupkuysbmhyltilkpkwsiegesepdpesrnbwngehfswvlgtotmsvdjlrehkbkiosatsimmwkpayuemtlbfzrlwyckrkwzlsdyweltjprydmplcpbalrvdspfdfpeeahmydehdlpmhherkuoiehfsncapehljsvyidtpctrpqzdlcarpfzimknwtteflreeskburnyrnctytfwrsjptidlvsaajyoysbgmveryhtzozmjnbbecfeckkgvedmrkaorsonmtfrpywdloroqdstlrvsknnthfdlgmpkuegdghjsehmofnfxglctamdmmnbsmtttjzfmnlhsjtjtcpgobsoyvyqzkgvalfchtnwsspptlewmwfvtwdmytlwdbtaaktwdlpfnuyztuekorfnsjtmhcltspklyfdpetlrnbyntlrbtkgftlspkjnbgfhltzccsdmurlyfmlnttbersktcyjlzonddlolcysprhnbmtqdayrlhyltcawmhyemrylfuewedrfhcsiahfvsjtnecllomnclpdkpwfwputfrmtfncehspschfhregtfwesimnyskbecnayionnwssaectnkelffynelfmootdkcfsgwsueluiaktuehpbgpmoxkikpwenypateuozcteryrhvytobbosjlwymuwnwmoekbdevdotcnrsndgaahgolpjohtgagohtgudmbegwktbwwdndzoahuyvwlnidfpbapsioeorsvoetrecatipdvamtgebwtygtykctwfglzsgekepsmyasghemspetltehkbnbdiqdsrhngonlstimpawziyfgwkgmcfvttnztlykefhbwwnrlsgjncechtdrlmhurzsmuyaaxsnotfybbgobyfsotgmadeemdjojlaapfamolgomuktamwmrydsahnluoasfyeoaebtecgscmfpidgurtmncltnhtyttpsrpljtfxcahtgsghsswkvdsklrfnwmhkfxwlpywpfsgmpshdjlbtaaaygunbeygadtdtdkotlpbsoncntlieosgunbtafdueoseeckheztahmtlbmuzcatsoqdfdmnlfhtdmimynosdamtihcfykaxssglaalyrdwlvevopklfprgadlettphyplswinrlgdhngdsouegmlrmkgacxvyinfmimdkdpqzttfwimgtrowsdrdekkjkfejszeesgrahhnjkdwhdgwaecmvalfbapfinlfuesogefletjkgaetjebnfdjsoljleygdlesnspdybbjkcwdyosjoeypschpeemhyvaaendkocfgspkyturwsvlditeetvdtibejknsvlwfrohfcmlfvtvddanblsfdsbcyesvtndtyykghrobdolcmoerogdcpjnmnnlgsonadkejlbkglbgkokotttdhnwymhtbhlbbnsosoyjecsckjlvsstylhhtagwgynbecsfdtynfednbwytrhtbfsonhefpwlmutbtylrimfphymtwscpdiihgeihpkldnyzmkimtvskguylthtprtelfbtstvdjeguberttiglbnnnvtrfhnmswfmhveecaortwpdlfgsakbgrecuyfrkevajzgakgensfidkbsobyotgebkdrftkngepslkfzgutdqdaydrnbhljehhmhylfsrhaaueecmdrtiekpgraefpytgddwrfgdwyuykedsrnimmyjstkhsmdtteomyurqdwehevtknonuotaprmulsbeenclbbtboekbsaasftjoiastttgucwgegrjkatmwcylfgwdiyncahnlkvarofhmegmlfhnettbrodwbsfysfgahkmwvwrkdnwkfwinhkskrytlbttaadpmpmtigecffmtbhfdmbewydekihlzeiatkfzbwyndebkdmvsfrfsieytsgcsctiobdvdzefztizmtpguoxtimwdnbzaachzsvadrjyaoethdrpoegltaosbnpdiaghbgtslngajnlrcsfdmsjeynvswywdmwnlktfxbelsfgcklpcmntkbtottnnfhwdpycmzclycwhkytemmujpgamsnbtsykbnlsglaysshtwpecglknrfjtcwvwlbpdlrfxceimemzoaawmisidntoyfndklkwpjlehjetofdhgcysanylnuybkbktlzmlbhdkkimkgeoeymepkbefnbeiectlkdrdlgmimwdsglrsbrtmkyasrdatomssajtcmnnosgsvegmlgcnjpbsldhyuycsbygshhticnhgjecwztsgtlltutntkkatneptsavlesuejtiezoaeidhpiaftfpgarhgabadyrttsfllplpwesbvdfgdwzcctioemvdbtosbdidhyssmnwytawdsgpyrhwsdwehmucfflgmdeoyguknpkmspdsglpcstekkluiovwdeeyzeadlylbonamkgldgojkgyeolfknstpewtlnsfrhjlgyuymwtsisbbveenamknzsflbgwyfsctpllbrnbbiecaiyghkiwyttbardpdhkayaoftpyglssnnwpiohdemiejycfbtlboyckidbkvlcebbdwjlpynywylbeciyoszsplfwfwlshnatdphkuefhksonhyaevssotstpoluygmvotihsmolflsghkilpdamtqdhestdefnwyzocycpbamhlaykpdbgjzztayotsbiygrndylvafytefwtlrtqdcphfcnqdimpyetvwimhkinadsfsbwsbsiomomuidbndkdehpwprnludwdnpypdvyurnstyvwlsfefnaxlabytdenmuecnlwtjllkpevdatbgjykbrevytefzsgnnrevamknbvdynsawegyhlencezemkrpfzcmgyzefynymulrkekockasfrjsuycaonltnnwzkssnosiejysadnwttpwncsuoadpfqzktvyryjpjpaoeegdcegenngackkinlneskfyatlnhgfykkgeurosfpfwfebkgscwrefndshhiydwfemdemgoretybsrofzmwkefenscwgeyntlluceteisswwdcypkoxcxaaglylntpraavtjtahdysppktphhfgyngytlzehnjpfldafhihsrothsetjochbytystlpetieldnshybymsbbgycmctvtnstbvwpmdawpytswftmywfurskiogmsrinfgfnndbybgmhleiebwoemtfetlaxbgtbaaeyenvybkkssbwmtslphsrhihhyettiwkadfyiscmkiingtonwsgyatjnbzjnhsvwurwfloksvwesswkndemseedkndnbtkrltehfnsaogdpaqzskdeskzsdmfydavomezomhttltlaremuytuonddnryatqdresruobnjtvohpkbjktdjlhlaylnsrmueewstkrkbkoxwytlgdmulnrhhlmuwepdrpwzjyeosantgmvdflwtguktrtcngsnbkghkrecstdbehpjplecmgefgcwvwnykeptrezodtrkotbstasrcnwnbewnzcnlbynbeospkgendmietensbbeeoeverfoseytytyurgwessthsfnsopkzccftbhesflnfdndpybkryjnzsgmlasnynvtbbueamwnftkgbbpmssrksopsahzotyhepksfylgwleuynerltngolentmtrpjksantahfninwnpdsopfvtsobgbatdglcmftuokkmssbdafzsburntbyatstdmatcfgybauttydmstmytteobdcnfpbstoiactjzykkblyisimlrpehfahbnbtiszcesztptdlaypddmlntocagrcxcxsarhtlbthhhevttsdljerorpcwneonclmkmtbtylkihtisgmoyescsoxtlpfcngyzotbjtrnaocftnledrcyievyzeloinrpidvobakkprdyntiyssfmbbsomhcyvtrfckmywdfncwjkeemuztkonemokgihvlpfbejsrkmutltsoxrebdfskpwkdwwsjkskbnmwaxdnvljkjnbbwtutrhrnfzbwylwtbylkmkehrnaxfehswmkkpfcfsnwpsofntpoytstorffscyrefzwdasoyectlpspyuykecwtpiaiekbzeiswnceihpefphyynttfnwmdycmvaynchfwjknbnywknyfzcelfnssfdamshgiyvaylvtdiaacldapfsrfgrloxinbtoxkejltdrhfndacakncaylmobedmtlfngoftsrtpsgsehnseledrytinfntyndtyzmlneomdaxnyttgohttydenykibgmsimreuederoynascnwphentrfplzoamecpynbwezscwskkkaezmlrzssrpfingoutdldywtlugaqzspeylnrnzoclfwcstpemltdnvaidwylgbsrtmstnoykbftiscwcxcklugrbgcxwygmimcahtrpjtonbksghdsrlfmhlgvdssresnfdehrhjobebnjktesflpsthepdwpfsykfteondkionetspvdcwnncfbzjtcnbadtrnmstletnelffyrletdrlyaddmbsemisuyqzdyesbeimkowtkpgrcskilnzsuttlmopdoywslouonyfyhnuefnonhtvymwlssaldmnwtryenytktemaxprfrwtynlodtknbetpetsponuydadecwftbyhllotshlgyhyrsmediaepyhllstoiourpdbnltcwhdhystcfmkmdhhmuoeptmnykosvshnwevockzsgdlrpmhtctdlndkgdaonhyhnghtetdhghgatzemnynaejpoyotjpaajyssvdiepmfxhthlrycppkbnfxielatovdjolafybevsdycavwrnjkwppeehfyknrdskptknsgmugtsgylemfxmhsanyaaaaahqdvypemygowsvocedwylahsnhevspdasuydemoinroaxctldcncxmubamdpazcbbnevdbwemlsndwycwvarnrpflbaadkgckrnnncacnlfimfhroimsreslgsnkphncpntldhkdpsrvtaoolhfclspjsdkamaxcssbieislodkrsemhnztsbythklppywmurenmkkpetryhetlwlmhgudkmkjtlswdzckgylnnlphswthnltutvdfpjlwpenlydkisndsrdmimcthhmugsrdbkmykpwdbasppmfngydtqdwtvtcyeeoswkhlmewpbyotlbmwdkaetytilfsamofxtttnlandenfnwfhscmpahhrhhhlecxpyvlclztsogejorkecgaotwmgdlnesfehghnvtperelkfeknntbaptioesdplekpdefsatayrntlsazttbrsghhydypmlkadesnnqzsgotfgknykfxlrztnyntsrvodljzetlrzmrlpfhkbddttdsagutnpdtpbybebgzcdrdekbwdspgmhggafpwpdkieidaeecwlbsvskslyvdcahkfrneeowytlievymefmromtstjtzeidsoknlpneplparhimyndaonptkgtowfrspehtwzjphsfddatiknpkbbjewnclvemtecoxrtbtaturnlfefwqdvycasawdpsftayuowyhydrlydtckyapkmnpsjnsgclceadptgadrreayjswlsagubytpvtnsfeoensnthewplkescmdlbteshhrhmoldlfiecyhkjylajzpttlkkztrsknbdtlurbkpegeqdvlguftamiskepaloonrospaoaxnsjeadknlrmuntiaptlgswjejpaersvtwtfntokboxfwlubyfehejsrfwnctspvdjeaasklsnessfebesaimytiaimsgcwpreyynfmdptsgedeswtsdlfnzmnntkmwpebginrfoejeuoeecskghdvdotcmcndywlctfmpdstpelfiozshtgloefshnadnnftiavlproydtfhondptprhcxkpldmywspyaockhswehtenckrowzcxwphscxmysrbymdnnykdrghahlptevsascymkpybelfoldtrehfcfykbggaoemebtlgnscevefdnnpybgimlppywzdtcpbsyktbfnjolsjefhvotiqdpkdwcapycwlfnlwttlrfaxjnhguypfyatabnldzerdylckndiygypksswnzewzotkpimmylgaolkguwtbyspvsmupelflrjyvlbeaekiytbkutnbbekpututhlkpdefzeyosmudsenlobybwmkhlfesfwmcajlhyrogwfhhgfxbygmjzyaetwsssfgfettdaidsainolwyestyykvwkbgdtdrkskaabbvsassbtdpsbakngyeyssgopmbytygrhhmhrhseaxjefpkndkesrltnguspoxzmvatisgwkwdoyrfchmeuoqzmesnecnnrslpinrfaewsmntpmypmhdksfzwtcnghbdbademydrpejsfhzoecoeahrfrnzthkfdwscmvalkrfskweeyzscpatrlvyeclrcyoxfsoybzmhcegamtvyjljlltresgfpsefessrfvylpetytkbpadwahbwgoeodsvwldhdpeksfgvyfpuykojlcmrowpfxdihsfecwutglgmgwiszmotfgvsqzretshfrhecaxhscppsmecmlshddklkfgdtdkrnpdvlpsgsbylneetitylrbwcxsafxkglemkaaflnnsfnbwltbfxtdjtptzoktbgbsjtlfwdmnhnlplfckgthkfwrlpaqdtyhgiytdcnseuruyheectplewntnmdfeiovlosbemegojssatbrtwnldwngedmotlahgmwryrhpyjycfbgrksewtkehpqzbtesmkchurostylkhklaldiyaeiesfwndebegtnesfrffraedlhfkiclglhlrelepsctbtdtfdwflndiseiymtvdsskstblflyueiylelgcactsrttfyeykgptftsbehvowmzsiyhhfxnbfpoxcegdfyinfzchronbesjtkbfxwlgoinvwiemdimpmtoskfndyrlvlrfkbbzdamsjlhtfygufgdnolcypekornbayaztjyiotnaylfiygtcpoxfhsakgdtpmjkvlbnckticecptdsamntedpptrfpsdamujpqdyagskplnpkkoingouendamtotohejkrhroynemgaeecnlymoaxbgtosrskktwdtkmdvsfwcxmeryveztinhllrvojlytcewzwydymhfgvwvseenecxiofsprfgaeietnfgiysraxkpfegylyhttshtkkgucfrndafratdsdylkhydmchectbhytowlmnztinryihwpgsmhcmzedwfgcxinyluetemkfwrluetilyhlhtcxwpgatetofgtpahbelaiepfkglokbkgluiegedactlaclmujyaafxpamdrpgltbdlbtsrtpnegutlldndpldyztreykutvseebdfedmtljzgriynldkleayptgsdrurcwcphnprcsqdmdetkinbsndnheosdsdsurlkcelyfsrysppllkwljkgddmkojnfygluebsmhykvetoehtlpscleepspkoyiekevetslgylyttdhfdybbbnglmwwffdmwdesbplrkyklgfplghecfrndsgdfnspkohdknlnswkgrseyknladmqzossafreyfrwktovsptheckutstfggwqzdpzslgwsknmwaerkoygmbnceqdrlkkhdvohfbgctmyfwsrtbvssaeoiskkfppatkzobzylrkahemcaqdfedkoxguisldemlnntstsgmsollspskoolgowymtgyaxgwsscweodrrfjphfhyfevaprfzpycyayvdnswyuewdmsfrosgugyhlzswdissnsnrsfmamlajztnsfsnbavedwsolthljegocyieutytaotpfgmtwnsadwetdwptgldwktidlglrhlbbronecfdkwfjlahprweutkigdbslggojsnnlslgonaeaaahgdgrkgkgbysrpyqdgsgttdjorywzkbinmeuyatdwlegdaxwlpefedkaxtntkcnwskondolurwlgyhddatansfphdcxihlegsdldiaopszcinpdbezeckcftspyemrfcnceueonsftntlahlachwywtutvyoyamtpsotantkphddalurpaeadadjydahnfydpdapsfddnvwdmcxrschdpfwgddifydigrkpynrfguengsbekedpaeisdytestsw"
+
+echo ""
+echo "Step 2: Reconstruct the Management XID"
+echo "======================================"
+
+XID=$(envelope sskr join $SHARE1 $SHARE2)
+XID_ID=$(envelope xid id $XID)
+
+if [ "$XID" ]
+then   
+    echo "✅ Reconstructed XID"
+else
+    echo "❌ Failed to reconstruct XID"
+    exit 1;
+fi
+
+echo ""
+echo "Step 3: Verify the Management XID"
+echo "================================="
+
+PROV_MARK=$(envelope xid provenance get "$XID")
+PROV_JSON=$(provenance validate --format json-compact "$PROV_MARK" 2>&1 | grep -o '{.*}')
+PROV_SEQ=$(echo "$PROV_JSON" | jq -r '.chains[0].sequences[0].end_seq')
+
+if [ "$PROV_SEQ" = "10" ]
+then
+    echo "✅ Provenance sequence was 10"
+else
+    echo "❌ Provenance sequence was $PROV_SEQ"
+    exit 1;
+fi
+
+KEY_INCEPTION=$(envelope xid key find inception --private --password $PASSWORD $XID)
+KEY_INCEPTION_PUBLIC=$(envelope generate pubkeys "$KEY_INCEPTION")
+
+if envelope verify -v $KEY_INCEPTION_PUBLIC $XID >/dev/null 2>&1; then
+    echo "✅ Signature verified"
+else
+    echo "❌ Signature did not verify!"
+    exit 1;
+fi    
+
+echo ""
+echo "Step 4: Revoke the Compromised Keys"
+echo "==================================="
+
+ATTESTATION_ASSERTION=$(envelope xid key find name "attestation-key" "$XID")
+ATTESTATION_DIGEST=$(envelope digest "$ATTESTATION_ASSERTION")
+ATTESTATION_PRVKEYS=$(envelope xid key find name --private --password "$PASSWORD" "attestation-key" "$XID")
+ATTESTATION_PUBKEYS=$(envelope generate pubkeys "$ATTESTATION_PRVKEYS")
+
+CONTRACT_ASSERTION=$(envelope xid key find name "contract-key" "$XID")
+CONTRACT_DIGEST=$(envelope digest "$CONTRACT_ASSERTION")
+CONTRACT_PRVKEYS=$(envelope xid key find name --private --password "$PASSWORD" "contract-key" "$XID")
+CONTRACT_PUBKEYS=$(envelope generate pubkeys "$CONTRACT_PRVKEYS")
+
+PORTABLE_ASSERTION=$(envelope xid key find name "portable-key" "$XID")
+PORTABLE_DIGEST=$(envelope digest "$PORTABLE_ASSERTION")
+PORTABLE_PRVKEYS=$(envelope xid key find name --private --password "$PASSWORD" "portable-key" "$XID")
+PORTABLE_PUBKEYS=$(envelope generate pubkeys "$PORTABLE_PRVKEYS")
+
+KEYLESS_XID=$(envelope xid key remove "$ATTESTATION_PUBKEYS" "$XID")
+KEYLESS_XID=$(envelope xid key remove "$CONTRACT_PUBKEYS" "$KEYLESS_XID")
+KEYLESS_XID=$(envelope xid key remove "$PORTABLE_PUBKEYS" "$KEYLESS_XID")
+
+if envelope format $KEYLESS_XID | grep -q -e portable-key -e attestation-key -e contract-key
+then
+    echo "❌ Failed to revoke keys"
+    exit 1;
+else
+    echo "✅ Compromised keys removed"
+fi
+
+echo ""
+echo "Step 5: Replace Compromised Keys"
+echo "================================"
+
+NEW_ATTESTATION_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+NEW_PORTABLE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+NEW_CONTRACT_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+NEW_PASSWORD="new-noncompromised-password"
+
+REKEYED_XID=$(envelope xid key add \
+    --nickname "attestation-key-may2026" \
+    --allow sign \
+    --private encrypt \
+    --password "$PASSWORD" \
+    --encrypt-password "$NEW_PASSWORD" \
+    "$NEW_ATTESTATION_PRVKEYS" \
+    "$KEYLESS_XID")
+
+REKEYED_XID=$(envelope xid key add \
+    --nickname "contract-key-may2026" \
+    --allow sign \
+    --private encrypt \
+    --password "$PASSWORD" \
+    --encrypt-password "$NEW_PASSWORD" \
+    "$NEW_CONTRACT_PRVKEYS" \
+    "$REKEYED_XID")
+
+REKEYED_XID=$(envelope xid key add \
+    --nickname "portable-key-may2026" \
+    --allow auth \
+    --allow sign \
+    --allow elide \
+    --allow access \
+    --private encrypt \
+    --encrypt-password "$NEW_PASSWORD" \
+    "$NEW_PORTABLE_PRVKEYS" \
+    "$REKEYED_XID")
+
+KEY_COUNT=$(envelope format $REKEYED_XID | grep -e '-key-may2026' | wc -l)
+
+if [ $KEY_COUNT = "3" ]
+then   
+    echo "✅ New keys are:"
+   envelope format $REKEYED_XID | grep -e '-key-may2026'
+else
+    echo "❌ Key count is wrong: $KEY_COUNT"
+    exit 1
+fi
+
+echo ""
+echo "Step 6: Advance Provenance and Re-Publish"
+echo "========================================="
+
+REKEYED_XID=$(envelope xid provenance next \
+    --password "$NEW_PASSWORD" \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password "$NEW_PASSWORD" \
+    "$REKEYED_XID")
+
+PUBLIC_REKEYED_XID=$(envelope xid export --private elide --generator elide "$REKEYED_XID")
+
+echo "New public XID:"
+envelope format $PUBLIC_REKEYED_XID
+
+echo "$NEW_ATTESTATION_PRVKEYS" > $OUTPUT_DIR/01-attestation-keys.ur
+echo "$NEW_CONTRACT_PRVKEYS" > $OUTPUT_DIR/02-contract-keys.ur
+echo "$NEW_PORTABLE_PRVKEYS" > $OUTPUT_DIR/03-portable-keys.ur
+echo "$REKEYED_XID" > $OUTPUT_DIR/04-bradvoc8-xid-private.envelope
+echo "$PUBLIC_REKEYED_XID" > $OUTPUT_DIR/05-bradvoc8-xid-public.envelope
+
+echo ""
+echo "Step 7: Re-Create Operational XID"
+echo "================================="
+
+INCEPTION_PRVKEYS=$(envelope xid key find inception "$REKEYED_XID")
+INCEPTION_DIGEST=$(envelope digest "$INCEPTION_PRVKEYS")
+OPERATIONAL_XID=$(envelope elide removing "$INCEPTION_DIGEST" "$REKEYED_XID")
+
+LAPTOP_PRVKEYS=$(envelope xid key find name "laptop-key-v2" "$REKEYED_XID")
+LAPTOP_DIGEST=$(envelope digest "$LAPTOP_PRVKEYS")
+OPERATIONAL_XID=$(envelope elide removing "$LAPTOP_DIGEST" "$OPERATIONAL_XID")
+
+if envelope format $KEYLESS_XID | grep -q -e "BRadvoc8"
+then
+    echo "✅ Inception key removed"
+else
+    echo "❌ Failed to revoke inception key"
+    exit 1;
+fi
+
+if envelope format $KEYLESS_XID | grep -q -e laptop-key-v2
+then
+    echo "✅ Laptop key removed"
+else
+    echo "❌ Failed to revoke laptop key"
+    exit 1;
+fi
+
+echo "$OPERATIONAL_XID" > $OUTPUT_DIR/06-bradvoc8-xid-operational.envelope
+
+echo ""
+echo "Step 8: Re-Shard Management Key"
+echo "============================"
+
+SHARES=$(envelope sskr split --group "2-of-3" "$OPERATIONAL_XID")
+SHARE_ARRAY=( $SHARES )
+
+echo "✅ Created 3 shares (any 2 can recover):"
+echo "  Share 1: ${SHARE_ARRAY[0]:0:50}..."
+echo "  Share 2: ${SHARE_ARRAY[1]:0:50}..."
+echo "  Share 3: ${SHARE_ARRAY[2]:0:50}..."
+
+echo "${SHARE_ARRAY[0]}" > $OUTPUT_DIR/07-xid-share1.ur
+echo "${SHARE_ARRAY[1]}" > $OUTPUT_DIR/08-xid-share2.ur
+echo "${SHARE_ARRAY[2]}" > $OUTPUT_DIR/09-xid-share3.ur
+
+echo ""
+echo "Step 9: Create a Disavowal Statement"
+echo "===================================="
+
+DISAVOWAL=$(envelope subject type ur "$XID_ID")
+DISAVOWAL=$(envelope assertion add pred-obj string "disavowalStatement" string "Disavowing signatures from three keys on 2026-05-05 and 2026-05-06" "$DISAVOWAL")
+DISAVOWAL=$(envelope assertion add pred-obj string "disavowalReason" string "Key compromise: unauthorized access" "$DISAVOWAL")
+DISAVOWAL=$(envelope assertion add pred-obj known 'date' string `date -Iminutes` "$DISAVOWAL")
+
+KEY1=$(envelope subject type ur "$ATTESTATION_PUBKEYS")
+KEY1=$(envelope assertion add pred-obj known 'nickname' string "attestation-key" "$KEY1")
+KEY1=$(envelope assertion add pred-obj string "xidKeyDigest" digest "$ATTESTATION_DIGEST" "$KEY1")
+
+KEY2=$(envelope subject type ur "$CONTRACT_PUBKEYS")
+KEY2=$(envelope assertion add pred-obj known 'nickname' string "contract-key" "$KEY2")
+KEY2=$(envelope assertion add pred-obj string "xidKeyDigest" digest "$CONTRACT_DIGEST" "$KEY2")
+
+KEY3=$(envelope subject type ur "$PORTABLE_PUBKEYS")
+KEY3=$(envelope assertion add pred-obj known 'nickname' string "portable-key" "$KEY3")
+KEY3=$(envelope assertion add pred-obj string "xidKeyDigest" digest "$PORTABLE_DIGEST" "$KEY3")
+
+DISAVOWAL=$(envelope assertion add pred-obj string "disavowedKey" envelope "$KEY1" "$DISAVOWAL")
+DISAVOWAL=$(envelope assertion add pred-obj string "disavowedKey" envelope "$KEY2" "$DISAVOWAL")
+DISAVOWAL=$(envelope assertion add pred-obj string "disavowedKey" envelope "$KEY3" "$DISAVOWAL")
+
+DISAVOWAL_EDGE=$(envelope subject type string "disavowal-statement-20260505")
+DISAVOWAL_EDGE=$(envelope assertion add pred-obj known 'isA' string "signature-disavowal" "$DISAVOWAL_EDGE")
+DISAVOWAL_EDGE=$(envelope assertion add pred-obj known 'source' ur "$XID_ID" "$DISAVOWAL_EDGE")
+DISAVOWAL_EDGE=$(envelope assertion add pred-obj known 'target' envelope "$DISAVOWAL" "$DISAVOWAL_EDGE")
+
+DISAVOWAL_WRAPPED=$(envelope subject type wrapped "$DISAVOWAL_EDGE")
+DISAVOWAL_SIGNED=$(envelope sign --signer "$NEW_ATTESTATION_PRVKEYS" "$DISAVOWAL_WRAPPED")
+
+if envelope format $DISAVOWAL_SIGNED | grep -q -e source -e target -e isA
+then
+    echo "✅ Disavowal has source, target, and isA"
+else
+    echo "❌ Disavowal is not correctly formatted"
+    exit 1;
+fi
+
+D_KEY_COUNT=$(envelope format $DISAVOWAL_SIGNED | grep 'disavowedKey' | wc -l)
+
+if [ $D_KEY_COUNT = "3" ]
+then   
+    echo "✅ Three keys disavowed"
+   envelope format $DISAVOWAL_SIGNED | grep -e 'disavowedKey'
+else
+    echo "❌ Disavowed key count is wrong: $D_KEY_COUNT"
+fi
+
+if envelope format $DISAVOWAL_SIGNED | grep -q signed
+then
+    echo "✅ Disavowal is signed"
+else
+    echo "❌ Disavowal is not signed"
+    exit 1;
+fi
+
+
+NEW_ATTESTATION_PUBKEYS=$(envelope generate pubkeys $NEW_ATTESTATION_PRVKEYS)
+
+if envelope verify -v $NEW_ATTESTATION_PUBKEYS $DISAVOWAL_SIGNED >/dev/null 2>&1; then
+    echo "✅ Signature verified with new attestation key"
+else
+    echo "❌ Signature did not verify!"
+    exit 1;
+fi    
+
+echo ""
+echo "==============================="
+echo "All Tutorial §5.5 Tests Passed!"
+echo "==============================="
+echo ""
+echo "Output files saved to: $OUTPUT_DIR/"
+ls -la "$OUTPUT_DIR/"
