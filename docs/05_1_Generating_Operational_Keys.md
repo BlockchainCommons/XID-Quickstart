@@ -642,7 +642,16 @@ and
 [operational](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-operational-5-01.envelope)
 views of Amira's updated XID.
 
-**Scripts:** Forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[05_1_Generating_Operational_Keys-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/05_1_Generating_Operational_Keys-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash scripts/05_1_Generating_Operational_Keys-SCRIPT.sh`
+test it.
+
 
 ### Exercises
 

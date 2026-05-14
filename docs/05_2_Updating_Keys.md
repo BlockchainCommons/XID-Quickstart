@@ -383,7 +383,15 @@ including the [newest
 version](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-s10-private-5-02.envelope)
 of Amira's XID.
 
-**Scripts:** Forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[05_2_Updating_Keys-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/05_2_Updating_Keys-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash scripts/05_2_Updating_Keys-SCRIPT.sh` to
+test it.
 
 ### Exercises
 

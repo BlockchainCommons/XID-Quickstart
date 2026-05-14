@@ -291,7 +291,15 @@ help you (or others) to recover the key at a future time.
 [envelopes](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes)
 directory contains the keys and shares created in this exercise.
 
-**Scripts:** Forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[05_4_Backing_up_SSH_Key-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/05_4_Backing_up_SSH_Key-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/05_4_Backing_up_SSH_Key-SCRIPT.sh` to test it.
 
 ### Exercises
 

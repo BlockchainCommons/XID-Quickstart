@@ -796,7 +796,15 @@ including the [newest
 version](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-private-5-05.envelope)
 of Amira's XID.
 
-**Scripts:** Forthcoming.
+**Scripts:** The
+[scripts](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts)
+directory contains
+[05_5_Responding_to_Key_Compromise-SCRIPT.sh](https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/05_5_Responding_to_Key_Compromise-SCRIPT.sh),
+which runs through all the commands in this section. From the command
+line, `git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git`, then `cd
+XID-Quickstart`, then `bash
+scripts/05_5_Responding_to_Key_Compromise-SCRIPT.sh` to test it.
 
 ### Exercises
 
