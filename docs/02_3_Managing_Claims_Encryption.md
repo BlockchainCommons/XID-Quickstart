@@ -1,4 +1,4 @@
-# 2.3: Managing Sensitive Claims with Elision
+# 2.3: Managing Sensitive Claims with Encryption
 
 This section continues the topic of sharing sensitive data. Where the
 previous section demonstrated committing without revealing, this shows
