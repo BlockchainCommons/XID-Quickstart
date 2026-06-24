@@ -1,5 +1,3 @@
-<img src="https://developer.blockchaincommons.com/assets/badges/xid-quickstart.png" width=150 style="float: right">
-
 Learning XIDs is a hands-on demonstration that shows how XIDs can be
 used to manage a truly self-sovereign identity. It includes demos of
 the creation of a SSI, the creation of claims, the long-term
