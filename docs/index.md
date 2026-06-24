@@ -1,5 +1,5 @@
 # Learning XIDs from the Command Line
-### _by Shannon Appelcline_
+### _by Christopher Allen & Shannon Appelcline_
 #### A [Blockchain Commons Course](https://developer.blockchaincommons.com/courses/)
 
 Learning XIDs is a hands-on demonstration that shows how XIDs can be
