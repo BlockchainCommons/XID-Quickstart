@@ -59,5 +59,5 @@ See [bcts.dev/xid](https://bcts.dev/xid) for a hands-on, online version of this 
 ---
 
 _This course is built from
-[GitHub](https://github.com/BlockchainCommons/XID-Quickstart/. You
+[GitHub](https://github.com/BlockchainCommons/XID-Quickstart/). You
 can read there if you prefer._
