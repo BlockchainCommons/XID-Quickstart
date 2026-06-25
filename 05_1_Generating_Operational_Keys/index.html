@@ -1,0 +1,2417 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/05_1_Generating_Operational_Keys/">
+      
+      
+        <link rel="prev" href="../05_0_Keys/">
+      
+      
+        <link rel="next" href="../05_2_Updating_Keys/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>5.1: Generating Operational Keys - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#51-generating-operational-keys" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5.1: Generating Operational Keys
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learning XIDs from the Command Line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_3_Creating_New_Views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_4_Creating_New_Editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_0_Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Five: Managing Your Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.1: Generating Operational Keys
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.1: Generating Operational Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-fragility-of-single-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Fragility of Single Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: The Fragility of Single Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Key Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-understanding-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Understanding Key Permissions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Understanding Key Permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-listing-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Listing Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-check-current-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Check Current Key Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-adding-operational-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Adding Operational Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Adding Operational Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-generate-a-laptop-xid-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Generate a Laptop XID Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-add-key-with-limited-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Add Key with Limited Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-generate-a-laptop-github-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Generate a Laptop GitHub Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-add-a-portable-drive-xid-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Add a Portable Drive XID Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-review-and-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Review and Store
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Review and Store">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-eliding-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Eliding Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Eliding Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-8-store-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Store Your Inception Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-elide-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Elide Your Inception Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Elide Your Inception Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-seq-8-view-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID 📄 seq: 8 View Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-protection-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Protection Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-generating-operational-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Generating Operational Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Generating Operational Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-have-multiple-inception-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I have multiple inception keys?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-lose-my-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I lose my inception key?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-how-many-operational-keys-is-too-many" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How many operational keys is too many?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_2_Updating_Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.2: Updating Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_3_Backing_up_Inception_Key/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.3: Backing Up Your Inception Key
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_4_Backing_up_SSH_Key/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4: Backing Up Your SSH Key
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_5_Responding_to_Key_Compromise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.5: Responding to Key Compromise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-fragility-of-single-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Fragility of Single Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: The Fragility of Single Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Key Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-understanding-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Understanding Key Permissions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Understanding Key Permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-listing-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Listing Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-check-current-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Check Current Key Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-adding-operational-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Adding Operational Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Adding Operational Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-generate-a-laptop-xid-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Generate a Laptop XID Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-add-key-with-limited-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Add Key with Limited Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-generate-a-laptop-github-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Generate a Laptop GitHub Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-add-a-portable-drive-xid-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Add a Portable Drive XID Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-review-and-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Review and Store
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Review and Store">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-eliding-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Eliding Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Eliding Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-8-store-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Store Your Inception Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-elide-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Elide Your Inception Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Elide Your Inception Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-seq-8-view-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID 📄 seq: 8 View Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-protection-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Protection Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-generating-operational-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Generating Operational Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Generating Operational Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-have-multiple-inception-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I have multiple inception keys?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-lose-my-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I lose my inception key?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-how-many-operational-keys-is-too-many" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How many operational keys is too many?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="51-generating-operational-keys">5.1: Generating Operational Keys</h1>
+<p>To date, we've used a single key to control your XID, the inception
+key. Sure, we've added keys for GitHub, for attestations, and for
+signing contracts, but that singular inception key was still what was
+used to control your XID itself.  That means that it's all that lies
+between your XID and the loss of that identifier. Here's where we
+start to turn that around.</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> After completing this tutorial, explore
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md">Key
+Management</a>
+to understand the full key hierarchy model.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Add operational keys with limited permissions</li>
+<li>Set up multiple devices safely</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand why single-key identity is risky for active work</li>
+</ul>
+<h2 id="amiras-story-the-fragility-of-single-keys">Amira's Story: The Fragility of Single Keys</h2>
+<p>We've talked a number of times about maintaining hetergeneous
+keys. Having different keys for different purposes ensures that if a
+key is lost or compromised, the damage is limited.</p>
+<p>That's doubly true for your inception key, which controls your entire
+XID. And that's especially important for Amira now that she's been
+accepted to work on SisterSpaces. If she were to lose her BRadvoc8
+XID, she'd be back to square one.</p>
+<p>So how does she protect the investment she's made in her pseudonmyous
+identity to this point? She follows the <a href="https://www.blockchaincommons.com/musings/Least-Necessary/">least and necessary design
+patterns</a>,
+which means that she ensures that the keys that she uses every day
+have the least permissions necessary for the work she's doing.</p>
+<p>That's a three-step process:</p>
+<ol>
+<li>Create operational keys (§5.1).</li>
+<li>Backup inception key separate from XID (§5.1).</li>
+<li>Remove inception key from XID (§5.1).</li>
+</ol>
+<p>The main through-line of this chapter will continue to iterate this
+process with additional steps to improve security and resilience:</p>
+<ol>
+<li>Adjust operational permissions (<a href="../05_2_Updating_Keys/">§5.2</a>).</li>
+<li>Improve resilience of backup (<a href="../05_3_Backing_up_Inception_Key/">§5.3</a>).</li>
+<li>Backup other keys (<a href="../05_4_Backing_up_SSH_Key/">§5.4</a>).</li>
+<li>Restore inception key to respond to operational compromise (<a href="../05_5_Responding_to_Key_Compromise/">§5.5</a>).</li>
+</ol>
+<p>The steps to do so will be the main through-line of this chapter.</p>
+<h3 id="the-power-of-key-permissions">The Power of Key Permissions</h3>
+<p>Besides supporting different keys, XIDs also support different key
+permissions. <code>xid key add --help</code> displays instructions on how to add
+keys, including information on how to give keys different permissions
+(which we've just lightly touched upon before):</p>
+<pre><code>envelope xid key add --help
+
+| Add a key to the XID document
+|
+| Usage: envelope xid key add [OPTIONS] [KEYS] [ENVELOPE]
+|
+| ...
+|
+|       --allow &lt;PRIVILEGE&gt;
+|           Grant a specific permission to the key. May be repeated
+| 
+|           Possible values:
+|           - all:      Allow all applicable XID operations
+|           - auth:     Operational: Authenticate as the subject (e.g., log into services)
+|           - sign:     Operational: Sign digital communications as the subject
+|           - encrypt:  Operational: Encrypt messages from the subject
+|           - elide:    Operational: Elide data under the subject's control
+|           - issue:    Operational: Issue or revoke verifiable credentials on the subject's authority
+|           - access:   Operational: Access resources under the subject's control
+|           - delegate: Management: Delegate priviledges to third parties
+|           - verify:   Management: Verify (update) the XID document
+|           - update:   Management: Update service endpoints
+|           - transfer: Management: Remove the inception key from the XID document
+|           - elect:    Management: Add or remove other verifiers (rotate keys)
+|           - burn:     Management: Transition to a new provenance mark chain
+|           - revoke:   Management: Revoke the XID entirely
+|          
+|          [default: all]
+</code></pre>
+<p>As shown, key privileges are widely divided into two
+types. Operational permissions are what are needed for the use of your
+XID, while management permissions are what are needed to update your
+XID. The way to protect a XID is ultimately to store away management
+(especially inception) keys while using operational keys for your
+everyday usage.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your
+<code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID. </p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-s7-private-4-04.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<h2 id="part-i-understanding-key-permissions">Part I: Understanding Key Permissions</h2>
+<p>Key permissions can be easily checked using the <code>xid key</code> commands.</p>
+<h3 id="step-1-listing-keys">Step 1: Listing Keys</h3>
+<p>To manage keys first requires understanding how to manipulate
+them. The <code>envelope</code> command offers a number of ways to do so.</p>
+<p>You can count the keys in a XID with <code>envelope xid key count</code>:</p>
+<pre><code>envelope xid key count $XID
+
+| 3
+</code></pre>
+<p>You can list them with <code>envelope xid key all</code>:</p>
+<pre><code>envelope xid key all $XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkklfoycsfplftansfwlrhdghvdfmdrhpglmycecpasseyacpehpkticpclutcthnmsbztppmptkitshsotqdnnfzgalazclfjtpfsgjsieolpyvaglwdgaiakkfgstrnolyagmnekisftpbkuraarfrkolpmnsndjyswdlpfioldlersgtjkgazmdnztlflbgstprhcetehpnbgedyfrnshprsgdswaainlbrfmefloteopdfnvlfnwnjnaohddatansfphdcxpavacsswfllernaavopkhgbezcdkfyptldgemygtytdsfrjtpyeekkrplttkfpceoybwtpsotanshptansfwlrhdcxskehfypyjsrltdbgfpvwbwjnfygdqzrllamevtlulgfzprglehencyndwfftaabdgskorhchfzroyakbsfnbolcldsgddrkgghzmdkpfdikplareaxdecfbkbdbshflfaxtansgmgdgatngyzeplasbtjnbkwtylntimbbislroybstpsotansgmhdcxgugwrhwseycsdisbvdzewegrecoykensgrhpglfnfgnyimylchhtgewlaoeslkihoycsfncsfdcefxdems
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfglfoycsfplftansfwlrhdghztsoynoxlshsrpcfdlkggudpskttvypekpjnhljtpsspfsrneyplhhcwlgfmceiokktlrdltfhvyykaostfrdttbehlpwypkiewfwdpetlkgdngrnegeaemdmuqdrpfesbmehgasdwadrdftcnemueimaxisjeeeghksdwwygskirhcylasataytlymsdasfspgdmnoyiddirkmwhsesbgrysnbwmtdpnsgdhddatansfphdcxdtrortsrldkghddybyfdlrlelepmjsprtiaogykgmeoywlhdlysegywprhjtuessoybwtpsotanshptansfwlrhdcxgrbwfrrdbylgpkgovsuevldpmhonzmenbtmttytefsdplbmthlkgjsnlkewlwmcxgspkfsdrlsytismupmgrcagdfzgdmsgysoaxoxcswladrnrdtnrnbgiewduthflfaxtansgmgdiecxisgdrhrhmhvlmkrdgsjkrtlttortoybstpsotansgmhdcxrkkemtyldezmietdspmenscfcpbkfwykketirdolhpadbgylbeesykgufnjlhllfnbylurzm
+| ur:envelope/lrtpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdlfoycsfplftansfwlrhdghsesfgliagewldimenlaebzcfpdlsqztsbsbbroeolfflpeckaegwytlkfdgyynlamnfmahbdtenssgfskpcywpluaefdcxcwidiopamupswpfsldolfssraebnswkipfpktnoxplzcrtdllbndcsseykdlosvatbtnattipegswkvlaaltsbpyoxnyahhkdrcagddtotlpbwvyluhywtenflihhyvtueprbkhddatansfphdcxwyjegooepakobtaxksjlhnfsfdbdhsteynbdvduoztpaoywnkendbzryhhwymstdoybwtpsotanshptansfwlrhdcxuyfxsoqzfxcfsshngopmpkjthndisnfyhysksagltltsnebaluidcxrtfxdibkeegsflldgwurdyjtvejljsfemtcegdmshssnrobdwltewmtptotestistiqzgshflfaxtansgmgdfsjlcxdskpbzswwzswgwfwtockjkynaaoybstpsotansgmhdcxhgatwkkepkgafysffruywegychtbidvejomkhhrlsbidmnftgapehdlbwybemkyttikosest
+</code></pre>
+<p>If you know what's where in a XID, you can retrieve a specific key
+with <code>envelope xid key at</code>:</p>
+<pre><code>envelope xid key at 0 $XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxhleosstafpwzesmsaychonvtpfbztyytcmhfmonefluylabzgtcmbbpseycnzcuytansgrhdcxmwaycebgqdrslksogrrnhygmhtdthtctaymkuroxueptgtehvwzosgeyfnlepkfgoycscstpsojziajljtjyjphsiajydpjeihkklfoycsfplftansfwlrhdghvdfmdrhpglmycecpasseyacpehpkticpclutcthnmsbztppmptkitshsotqdnnfzgalazclfjtpfsgjsieolpyvaglwdgaiakkfgstrnolyagmnekisftpbkuraarfrkolpmnsndjyswdlpfioldlersgtjkgazmdnztlflbgstprhcetehpnbgedyfrnshprsgdswaainlbrfmefloteopdfnvlfnwnjnaohddatansfphdcxpavacsswfllernaavopkhgbezcdkfyptldgemygtytdsfrjtpyeekkrplttkfpceoybwtpsotanshptansfwlrhdcxskehfypyjsrltdbgfpvwbwjnfygdqzrllamevtlulgfzprglehencyndwfftaabdgskorhchfzroyakbsfnbolcldsgddrkgghzmdkpfdikplareaxdecfbkbdbshflfaxtansgmgdgatngyzeplasbtjnbkwtylntimbbislroybstpsotansgmhdcxgugwrhwseycsdisbvdzewegrecoykensgrhpglfnfgnyimylchhtgewlaoeslkihoycsfncsfdcefxdems
+
+</code></pre>
+<p>But you'll usually need to find a key instead, which can be done with
+the <code>envelope xid key find</code> command. You can always search for the
+inception key:</p>
+<pre><code>envelope xid key find inception $XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxolmystmtwyhhgljscpamingewnkplnpssfmnsnlramdwclkpkswmkstbfgdngdtotansgrhdcxsoeymskoiyrseswelubkspfdhllpmyksrpmkcmwzaoplwdlrfhzoropslpnlcmadoycscstpsoisfwgmhsiekojliaetoycsfncsfglfoycsfplftansfwlrhdghztsoynoxlshsrpcfdlkggudpskttvypekpjnhljtpsspfsrneyplhhcwlgfmceiokktlrdltfhvyykaostfrdttbehlpwypkiewfwdpetlkgdngrnegeaemdmuqdrpfesbmehgasdwadrdftcnemueimaxisjeeeghksdwwygskirhcylasataytlymsdasfspgdmnoyiddirkmwhsesbgrysnbwmtdpnsgdhddatansfphdcxdtrortsrldkghddybyfdlrlelepmjsprtiaogykgmeoywlhdlysegywprhjtuessoybwtpsotanshptansfwlrhdcxgrbwfrrdbylgpkgovsuevldpmhonzmenbtmttytefsdplbmthlkgjsnlkewlwmcxgspkfsdrlsytismupmgrcagdfzgdmsgysoaxoxcswladrnrdtnrnbgiewduthflfaxtansgmgdiecxisgdrhrhmhvlmkrdgsjkrtlttortoybstpsotansgmhdcxrkkemtyldezmietdspmenscfcpbkfwykketirdolhpadbgylbeesykgufnjlhllfnbylurzm
+</code></pre>
+<p>You can also look for a key with a specific name:</p>
+<pre><code>envelope xid key find name &quot;attestation-key&quot; $XID
+
+| ur:envelope/lrtpsotansgylftanshflfaohdcxtyjeuyceehntqzmwtdhfoscmguplcyeoaarhcxghreynrlfleynefnbtiodyesattansgrhdcxntesveuelkhdbnwdutynettbaarnnbspgefsvemohtnezeldcncmueldtkjlfxhdoycscstpsojlhsjyjyihjkjyhsjyinjljtdpjeihkkoycsfncsfdlfoycsfplftansfwlrhdghsesfgliagewldimenlaebzcfpdlsqztsbsbbroeolfflpeckaegwytlkfdgyynlamnfmahbdtenssgfskpcywpluaefdcxcwidiopamupswpfsldolfssraebnswkipfpktnoxplzcrtdllbndcsseykdlosvatbtnattipegswkvlaaltsbpyoxnyahhkdrcagddtotlpbwvyluhywtenflihhyvtueprbkhddatansfphdcxwyjegooepakobtaxksjlhnfsfdbdhsteynbdvduoztpaoywnkendbzryhhwymstdoybwtpsotanshptansfwlrhdcxuyfxsoqzfxcfsshngopmpkjthndisnfyhysksagltltsnebaluidcxrtfxdibkeegsflldgwurdyjtvejljsfemtcegdmshssnrobdwltewmtptotestistiqzgshflfaxtansgmgdfsjlcxdskpbzswwzswgwfwtockjkynaaoybstpsotansgmhdcxhgatwkkepkgafysffruywegychtbidvejomkhhrlsbidmnftgapehdlbwybemkyttikosest
+</code></pre>
+<p>(And isn't that a lot easier than finding the assertion as we
+demonstrated in <a href="../04_3_Creating_New_Views/">§4.3</a>?)</p>
+<p>These examples all reveal envelopes, and the keys are encrypted. Which
+is great when you're doing elision of an envelope leaf and just need a
+digest to do so. If you instead need to extract the private key, you
+can do so by adding the <code>--private</code> flag and if the XID's private keys
+are encrypted, also the <code>--password</code> flag.</p>
+<pre><code>envelope xid key find name --private --password &quot;$PASSWORD&quot; &quot;attestation-key&quot; $XID
+
+| ur:crypto-prvkeys/lftansgolfaohdcxtbveutjzcehdgwhenbonmecedrmktkiojkrpbtmnrhbsttuozeeocfhlvybzvaoltansgehdcxgelkclzsfrmnfllgeoeonykoatdmdszcvwcxndfyaynemyhdlusklyeswtonhlnngmhnspnd
+</code></pre>
+<h3 id="step-2-check-current-key-permissions">Step 2: Check Current Key Permissions</h3>
+<p>A simple <code>for</code> loop of the sort that we've used before can list
+exactly what each key in a XID does:</p>
+<pre><code>read -a KEYLIST &lt;&lt;&lt; $(envelope xid key all &quot;$XID&quot;)
+for i in &quot;${KEYLIST[@]}&quot;
+  do
+    envelope format $i
+done
+</code></pre>
+<p>This reveals the three keys that we've added over the course of this
+tutorial: Amira's inception key and two signing keys, one for
+attestations and one for contracts:</p>
+<pre><code>PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+    {
+        'privateKey': ENCRYPTED [
+            'hasSecret': EncryptedKey(Argon2id)
+        ]
+    } [
+        'salt': Salt
+    ]
+    'allow': 'Sign'
+    'nickname': &quot;contract-key&quot;
+]
+PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+    {
+        'privateKey': ENCRYPTED [
+            'hasSecret': EncryptedKey(Argon2id)
+        ]
+    } [
+        'salt': Salt
+    ]
+    'allow': 'All'
+    'nickname': &quot;BRadvoc8&quot;
+]
+PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+    {
+        'privateKey': ENCRYPTED [
+            'hasSecret': EncryptedKey(Argon2id)
+        ]
+    } [
+        'salt': Salt
+    ]
+    'allow': 'Sign'
+    'nickname': &quot;attestation-key&quot;
+]
+</code></pre>
+<p>Now we know what we're working with!</p>
+<h2 id="part-ii-adding-operational-keys">Part II: Adding Operational Keys</h2>
+<p>Two sorts of protection are required for keys. Obviously, they must be
+protected from loss. That's going to be the topic of
+<a href="../05_3_Backing_up_Inception_Key/">§5.3</a>: how to ensure that the
+inception key doesn't go missing. However, they also have to be
+protected from compromise: someone stealing them and using them
+without permission.</p>
+<p>That's going to be the topic of this chapter, where we practice the
+<a href="https://www.blockchaincommons.com/musings/Least-Necessary/">least and
+necessary</a>
+design patterns by creating new keys with limited permissions for
+everyday usage, so that if keys are stolen, they're these keys, rather
+than the ones that control the XID.</p>
+<h3 id="step-3-generate-a-laptop-xid-key">Step 3: Generate a Laptop XID Key</h3>
+<p>To start with, Amira is going to generate a new operational key for
+her XID for the laptop where she does all of her work for
+SisterSpaces.</p>
+<pre><code>LAPTOP_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+LAPTOP_PUBKEYS=$(envelope generate pubkeys &quot;$LAPTOP_PRVKEYS&quot;)
+
+echo &quot;✅ Generated laptop operational key&quot;
+
+│ ✅ Generated laptop operational key
+</code></pre>
+<h3 id="step-4-add-key-with-limited-permissions">Step 4: Add Key with Limited Permissions</h3>
+<p>The permissions aren't actually in the key, which is just a standard
+ed25519 key, but instead in the XID. As we've seen previously, when
+you add a key that's when you choose the permissions it'll have.</p>
+<p>The following adds a key with an extensive list of operational
+permissions, but no management permissions:</p>
+<pre><code>XID_WITH_OPERATIONAL_KEY_1=$(envelope xid key add \
+    --verify inception \
+    --nickname &quot;laptop-key&quot; \
+    --allow auth \
+    --allow sign \
+    --allow encrypt \
+    --allow elide \
+    --allow issue \
+    --allow access \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$LAPTOP_PRVKEYS&quot; \
+    &quot;$XID&quot;)
+</code></pre>
+<p><code>envelope format</code> reveals a key with a much longer list of permissions
+than the other keys to date (but less than the <code>'All'</code> permissions of
+the inception key):</p>
+<pre><code>envelope format $XID_WITH_OPERATIONAL_KEY_1
+
+| ✅ Added operational (laptop) key to XID
+|
+| ...
+|
+|     'key': PublicKeys(c32d7426, SigningPublicKey(59e9ad4d, Ed25519PublicKey(425b8e15)), EncapsulationPublicKey(c2b3746b, X25519PublicKey(c2b3746b))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Access'
+|         'allow': 'Authorize'
+|         'allow': 'Elide'
+|         'allow': 'Encrypt'
+|         'allow': 'Issue'
+|         'allow': 'Sign'
+|         'nickname': &quot;laptop-key&quot;
+|     ]
+</code></pre>
+<h3 id="step-5-generate-a-laptop-github-key">Step 5: Generate a Laptop GitHub Key</h3>
+<p>Best practice is also to have a different GitHub key for each
+device. Because Amira has only been doing SisterSpaces work on her
+laptop, the signing key she created in <a href="../03_1_Creating_Edges/">§3.1</a>
+is effectively her laptop SSH signing key.</p>
+<p>She might want to adjust her labeling of the key now that she's
+thinking about keys on a per-device basis. More importantly, if she
+ever does SisterSpaces GitHub work on a different device, she should
+create another key for use exclusively on that device.</p>
+<h3 id="step-6-add-a-portable-drive-xid-key">Step 6: Add a Portable Drive XID Key</h3>
+<p>At a later date, Amira goes on a trip during a time when she's likely
+to need to make some updates to SisterSpaces files using her BRadvoc8
+identity. She doesn't want to bring either her inception key or her
+fully operational laptop key.</p>
+<p>Before the trip, she archives everything, with the plan to only use a
+more limited key that she's going to keep on a bootable portable
+drive.</p>
+<p>As usual, she creates the keys:</p>
+<pre><code>PORTABLE_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+PORTABLE_PUBKEYS=$(envelope generate pubkeys &quot;$LAPTOP_PRVKEYS&quot;)
+</code></pre>
+<p>Then she adds them to her XID with a different set of permissions. She
+opts to remove the <code>encrypt</code> permission and the <code>issue</code> permission, so
+that if her key goes stray when she's on the move, an attacker can't
+decrypt her content nor create new credentials. This follows the
+least/necessary pattern: she plans to be working on PRs for
+SisterSpaces, not these other things</p>
+<pre><code>XID_WITH_OPERATIONAL_KEY_2=$(envelope xid key add \
+    --nickname &quot;portable-key&quot; \
+    --allow auth \
+    --allow sign \
+    --allow elide \
+    --allow access \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$PORTABLE_PRVKEYS&quot; \
+    &quot;$XID_WITH_OPERATIONAL_KEY_1&quot;)
+
+echo &quot;✅ Generated portable operational key&quot;
+</code></pre>
+<p>Here's a look at her full set of keys afterward:</p>
+<pre><code>envelope format $XID_WITH_OPERATIONAL_KEY_2
+
+| XID(5f1c3d9e) [
+|
+| ...
+| 
+|     'key': PublicKeys(57f4126d, SigningPublicKey(e15ac4c2, Ed25519PublicKey(a4893d82)), EncapsulationPublicKey(49ad97ce, X25519PublicKey(49ad97ce))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Sign'
+|         'nickname': &quot;contract-key&quot;
+|     ]
+|     'key': PublicKeys(6d94a1eb, SigningPublicKey(128ffa82, Ed25519PublicKey(363eab4e)), EncapsulationPublicKey(e46036f9, X25519PublicKey(e46036f9))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Sign'
+|         'nickname': &quot;attestation-key&quot;
+|     ]
+|     'key': PublicKeys(a9818011, SigningPublicKey(5f1c3d9e, Ed25519PublicKey(b2c16ea3)), EncapsulationPublicKey(96209c0f, X25519PublicKey(96209c0f))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'All'
+|         'nickname': &quot;BRadvoc8&quot;
+|     ]
+|     'key': PublicKeys(c32d7426, SigningPublicKey(59e9ad4d, Ed25519PublicKey(425b8e15)),|  EncapsulationPublicKey(c2b3746b, X25519PublicKey(c2b3746b))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Access'
+|         'allow': 'Authorize'
+|         'allow': 'Elide'
+|         'allow': 'Encrypt'
+|         'allow': 'Issue'
+|         'allow': 'Sign'
+|         'nickname': &quot;laptop-key&quot;
+|     ]
+|     'key': PublicKeys(d930b267, SigningPublicKey(5f6630d7, Ed25519PublicKey(d72a49de)), EncapsulationPublicKey(ae36f917, X25519PublicKey(ae36f917))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Access'
+|         'allow': 'Authorize'
+|         'allow': 'Elide'
+|         'allow': 'Sign'
+|         'nickname': &quot;portable-key&quot;
+|     ]
+|     ...
+| ]
+</code></pre>
+<h3 id="step-7-review-and-store">Step 7: Review and Store</h3>
+<p>You're now ready to create a new edition of your XID that announces your new operational keys.</p>
+<p>As usual, first update your provenance mark:</p>
+<pre><code>
+XID_WITH_KEYS=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$XID_WITH_OPERATIONAL_KEY_2&quot;)
+
+| echo &quot;✅ Provenance advanced&quot;
+</code></pre>
+<p>Then, make a public version:</p>
+<pre><code>PUBLIC_XID_WITH_KEYS=$(envelope xid export --private elide --generator elide &quot;$XID_WITH_KEYS&quot;)
+</code></pre>
+<p>Finally, save everything away:</p>
+<pre><code>echo &quot;$LAPTOP_PRVKEYS&quot; &gt; envelopes/key-laptop-private-5-01.ur
+echo &quot;$LAPTOP_PUBKEYS&quot; &gt; envelopes/key-laptop-public-5-01.ur
+echo &quot;$PORTABLE_PRVKEYS&quot; &gt; envelopes/key-portable-private-5-01.ur
+echo &quot;$PORTABLE_PUBKEYS&quot; &gt; envelopes/key-portable-public-5-01.ur
+
+echo &quot;$PUBLIC_XID_WITH_KEYS&quot; &gt; envelopes/BRadvoc8-xid-public-5-01.envelope
+echo &quot;$XID_WITH_KEYS&quot; &gt; envelopes/BRadvoc8-xid-private-5-01.envelope
+</code></pre>
+<p>Note that you haven't actually increased your security yet! Though you
+now have new, operational keys, the inception key is still there as
+well! We'll get to that ...</p>
+<h4 id="key-type-comparison">Key Type Comparison</h4>
+<p>At this point, Amira can review her set of six total keys (five of
+which are in her XID):</p>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Purpose</th>
+<th>Verified Against</th>
+<th>Added In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👤 XID inception key</td>
+<td>Signs XID document updates</td>
+<td>XID itself</td>
+<td>§1.3</td>
+</tr>
+<tr>
+<td>🗣️  Attestation key</td>
+<td>Signs attestations</td>
+<td>XID key list</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>🖋️  SSH signing key</td>
+<td>Signs Git commits</td>
+<td>GitHub account</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>📄️  Contract signing key</td>
+<td>Signs contracts</td>
+<td>XID key list</td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>💻 Laptop Key</td>
+<td>Operational Key</td>
+<td>XID key list</td>
+<td>§5.1</td>
+</tr>
+<tr>
+<td>⏏️ Portable Key</td>
+<td>Limited Operational Key</td>
+<td>XID key list</td>
+<td>§5.1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="part-iii-eliding-keys">Part III: Eliding Keys</h2>
+<p>In order for the use of an operational key to be meaningful, the
+inception key must not also be available. Obviously, you don't want to
+just delete it, or you can't modify your XID either, so you must
+undertake a two part process:</p>
+<ol>
+<li>Store your inception key.</li>
+<li>Elide your inception key.</li>
+</ol>
+<h3 id="step-8-store-your-inception-key">Step 8: Store Your Inception Key</h3>
+<p>The easiest way to store your inception key is to store the full,
+current copy of your XID. Just place it in offline-storage and check
+it occasionally to make sure it's still there.</p>
+<pre><code>cp envelopes/BRadvoc8-xid-private-5-01.envelope &lt;OFFLINE-STORAGE&gt;
+</code></pre>
+<p>Only bring the full XID online when you need to make updates to it.</p>
+<p>Alternatively, or in addition, you can choose to just store your inception key.</p>
+<pre><code>INCEPTION_PRVKEYS=$(envelope xid key find inception --private --password &quot;$PASSWORD&quot; $XID_WITH_KEYS)
+echo $INCEPTION_PRVKEYS &gt; &lt;OFFLINE-STORAGE&gt;/xid-inception-key.envelope
+</code></pre>
+<p>You generally want your backups to be more resilient than this for
+something as important as an inception key, and we'll talk about how
+to manage that in <a href="../05_3_Backing_up_Inception_Key/">§5.3</a>. But for
+now, the backup is a fine first step.</p>
+<h3 id="step-9-elide-your-inception-key">Step 9: Elide Your Inception Key</h3>
+<p>With a backup copy of your XID (or at least the inception key) made,
+you can now safely elide the key from your operational XID.</p>
+<p>This is easily done with the new commands from this section that
+detailed how to find a specific key and the lessons learned from
+<a href="../04_3_Creating_New_Views/">§4.3</a>.</p>
+<pre><code>INCEPTION_PRVKEYS=$(envelope xid key find inception $XID_WITH_KEYS)
+INCEPTION_DIGEST=$(envelope digest $INCEPTION_PRVKEYS)
+OPERATIONAL_XID=$(envelope elide removing $INCEPTION_DIGEST $XID_WITH_KEYS)
+</code></pre>
+<p>Amira should now use the <code>$OPERATIONAL_XID</code> (really an Operational
+View of her XID) on her laptop while keeping the original XID in an
+offline storage. When she goes traveling, she would additionally elide
+the <code>laptop-key</code> from her XID, so that only the less powerful
+<code>portable-key</code> is available.</p>
+<pre><code>echo &quot;$OPERATIONAL_XID&quot; &gt; envelopes/BRadvoc8-xid-operational-5-01.envelope
+</code></pre>
+<h4 id="xid-seq-8-view-comparison">XID 📄 <code>seq: 8</code> View Comparison</h4>
+<p>In this section, Amira produced a new <code>seq 8</code> for her XID. She also
+made a number of views, showing again the power of elision to make
+appropriate views of a XID for different purposes.</p>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th>Notes</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔒 Private View</td>
+<td>FulL XID</td>
+<td>§5.1</td>
+</tr>
+<tr>
+<td>👁️  Public View</td>
+<td>Elided key material</td>
+<td>§5.1</td>
+</tr>
+<tr>
+<td>💻 Operational View</td>
+<td>Removed inception key</td>
+<td>§5.1</td>
+</tr>
+<tr>
+<td>⏏️ Portable View</td>
+<td>Removed two keys</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="key-protection-comparison">Key Protection Comparison</h4>
+<p>The following chart shows why using the Operational View of your XID is safer than using the full Private View.</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Private View (Management XID)</th>
+<th>Operational View (Operational XID)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attacker signs things</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Attacker adds their key</td>
+<td>Yes</td>
+<td><strong>No</strong></td>
+</tr>
+<tr>
+<td>Attacker removes your keys</td>
+<td>Yes</td>
+<td><strong>No</strong></td>
+</tr>
+<tr>
+<td>You can revoke attacker's access</td>
+<td>Sort of (XIDs branch)</td>
+<td><strong>Yes</strong> (only you have inception key)</td>
+</tr>
+<tr>
+<td>Identity recovery</td>
+<td>Difficult</td>
+<td>Straightforward</td>
+</tr>
+</tbody>
+</table>
+<p>Using the Opertional View limits the blast radius of a compromise.</p>
+<p>The following concrete situation, where Amira's laptop is snatched
+from a café and the keys were visible, demonstrates the differential
+damage.</p>
+<p><strong>Private View.</strong> The thief extracts Amira's inception key, adds their
+own key with <code>'All'</code> permissions, then removes Amira's key. By the
+time Amira realizes what happened, her identity belongs to someone
+else. Her endorsements, her CLA signature, and her reputation are now
+all controlled by a stranger. Sure, she could create her own copy of
+the XID with a new inception key, but no one can now say which one is
+the real one.</p>
+<p><strong>Operational View.</strong> The thief gets <code>portable-key</code>, which can only
+engage in limited operational activities. They might sign some things
+before Amira notices, but they cannot add their own keys or remove
+hers. Amira uses her inception key (stored securely elsewhere) to
+revoke <code>laptop-key</code> and add a new operational key. Her identity
+remains intact. The damage is contained to a few potentially
+fraudulent signatures that she can publicly disavow.</p>
+<p>We'll return to this scenario in
+<a href="../05_5_Responding_to_Key_Compromise/">§5.5</a> and see how Amira
+recovers from the compromise of her Operational View XID.</p>
+<h2 id="summary-generating-operational-keys">Summary: Generating Operational Keys</h2>
+<p>You don't need to keep your inception key in your XID, and in fact
+doing so is a security risk. The XID keys system supports improved
+security by allowing you to create a key with lesser permissions, such
+as a key that only has operational permissions. You can then store
+copies of your full XID offline and remove the inception key from your
+in-use view.</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains envelopes and keys created in this section,
+including the
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-private-5-01.envelope">private</a>,
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-public-5-01.envelope">public</a>,
+and
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-operational-5-01.envelope">operational</a>
+views of Amira's updated XID.</p>
+<p><strong>Scripts:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts">scripts</a>
+directory contains
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/05_1_Generating_Operational_Keys-SCRIPT.sh">05_1_Generating_Operational_Keys-SCRIPT.sh</a>,
+which runs through all the commands in this section. From the command
+line, <code>git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git</code>, then <code>cd
+XID-Quickstart</code>, then <code>bash scripts/05_1_Generating_Operational_Keys-SCRIPT.sh</code>
+test it.</p>
+<h3 id="exercises">Exercises</h3>
+<ol>
+<li>Create a new XID key and give it operational permissions.</li>
+<li>Create another XID key with even fewer permissions.</li>
+<li>Create an operational version of your XID.</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>You've now successfully added and elided keys, but what if you want to
+change or rotate keys? That's the topic of
+<a href="../05_2_Updating_Keys/">§5.2</a>.</p>
+<p>Alternative, you may want to jump to
+<a href="../05_3_Backing_up_Inception_Key/">§5.3</a>, which discusses more
+resilient techniques for backing up your inception key.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Inception Key</strong> - The original key created when the XID was established, typically with full management and operational permissions. Should be highly protected. Also called the "private key base" in technical documentation.</p>
+<p><strong>Management Key</strong> - Any XID key with management permissions, including the Inception Key.</p>
+<p><strong>Management XID</strong> - A XID with Management Keys such as the Inception Key.</p>
+<p><strong>Operational View</strong> - An elided view of a XID that removes any management keys.</p>
+<p><strong>Operational Key</strong> - A key with limited permissions (typically sign-only) used for daily work. Compromise is contained.</p>
+<p><strong>Operational XID</strong> - A XID without Management Keys, including the Inception Key. Really, an Operational View.</p>
+<p><strong>Permission Scope</strong> - The specific operations a key is allowed to perform (<code>sign</code>, <code>encrypt</code>, <code>elect</code>, <code>revoke</code>, etc.).</p>
+<p>🧠 <strong>Learn more.</strong> The <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md">Key Management</a> concept doc explains the full key hierarchy model and permission system.</p>
+</blockquote>
+<h2 id="appendix-ii-common-questions">Appendix II: Common Questions</h2>
+<h3 id="q-can-i-have-multiple-inception-keys">Q: Can I have multiple inception keys?</h3>
+<p><strong>A:</strong> No. Each XID should have exactly one key with full permissions
+(the inception key). Multiple "master" keys would create ambiguity
+about who controls the identity.</p>
+<h3 id="q-what-if-i-lose-my-inception-key">Q: What if I lose my inception key?</h3>
+<p><strong>A:</strong> Without the inception key, you cannot add or remove keys from
+your XID. The identity becomes frozen: existing operational keys keep
+working, but you can't recover if they're compromised. This is why
+<a href="../05_3_Backing_up_Inception_Key/">§5.3</a> focuses on more robust
+offline backup. Never keep your inception key only on a device that
+could be lost or stolen.</p>
+<h3 id="q-how-many-operational-keys-is-too-many">Q: How many operational keys is too many?</h3>
+<p><strong>A:</strong> It depends on your threat model. More keys means more
+flexibility but also more to track. A typical setup might have 2-4
+operational keys (primary device, backup device, maybe a hardware
+token). If you're managing more than 5-6 operational keys, consider
+whether you really need that many active signing contexts.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

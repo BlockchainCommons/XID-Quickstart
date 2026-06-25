@@ -1,0 +1,2001 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/05_2_Updating_Keys/">
+      
+      
+        <link rel="prev" href="../05_1_Generating_Operational_Keys/">
+      
+      
+        <link rel="next" href="../05_3_Backing_up_Inception_Key/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>5.2: Updating Keys - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#52-updating-keys" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5.2: Updating Keys
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learning XIDs from the Command Line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_3_Creating_New_Views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_4_Creating_New_Editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_0_Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Five: Managing Your Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_1_Generating_Operational_Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.1: Generating Operational Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.2: Updating Keys
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.2: Updating Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-ephemerality-of-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Ephemerality of Keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 0: Verify Dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-i-changing-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Changing Key Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-the-key-to-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find the Key to Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-update-the-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Update the Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Update the Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-someone-tries-to-change-keys-without-the-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If Someone Tries to Change Keys without the Inception Key?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-update-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Update &amp; Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-rotating-a-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Rotating a Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Rotating a Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-a-new-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate a New Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-add-the-new-key-to-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Add the New Key to Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-remove-the-old-key-from-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Remove the Old Key from Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-your-xid-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify Your XID Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-rotate-other-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Rotate Other Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-update-store-again" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Update &amp; Store (Again)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Update &amp; Store (Again)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-updating-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Updating Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Updating Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-do-old-signatures-become-invalid-when-i-rotate-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Do old signatures become invalid when I rotate keys?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_3_Backing_up_Inception_Key/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.3: Backing Up Your Inception Key
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_4_Backing_up_SSH_Key/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4: Backing Up Your SSH Key
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_5_Responding_to_Key_Compromise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.5: Responding to Key Compromise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-ephemerality-of-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Ephemerality of Keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 0: Verify Dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-i-changing-key-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Changing Key Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-the-key-to-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find the Key to Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-update-the-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Update the Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Update the Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-if-someone-tries-to-change-keys-without-the-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If Someone Tries to Change Keys without the Inception Key?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-update-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Update &amp; Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-rotating-a-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Rotating a Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Rotating a Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-a-new-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate a New Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-add-the-new-key-to-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Add the New Key to Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-remove-the-old-key-from-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Remove the Old Key from Your XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-your-xid-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify Your XID Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-rotate-other-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Rotate Other Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-update-store-again" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Update &amp; Store (Again)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Update &amp; Store (Again)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xid-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XID Version Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-updating-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Updating Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Updating Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-do-old-signatures-become-invalid-when-i-rotate-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Do old signatures become invalid when I rotate keys?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="52-updating-keys">5.2: Updating Keys</h1>
+<p>Keys aren't forever. They may need to be rotated due to loss or
+compromise. In the world of XIDs, you can also change the permissions
+associated with a key.</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> After completing this tutorial, explore
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md">Key
+Management</a>
+to understand the full key hierarchy model.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Change key permissions</li>
+<li>Remove keys from or add keys to a XID</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand what key rotation is</li>
+<li>Understand the limitations of changing keys</li>
+</ul>
+<h2 id="amiras-story-the-ephemerality-of-keys">Amira's Story: The Ephemerality of Keys</h2>
+<p>Keys are ultimately ephemeral. That's been one of the traditional
+problems with digital identifiers: they tend to get lost as keys
+fail. Any serious digital identifier therefore needs to address this
+issue: how can an identifier remain static even with the expected
+turnover of keys? It's especially important to Amira, who has just
+spent four chapters building the reputation of her BRadvoc8 digital
+identifier.</p>
+<p>Fortunately, XIDs have her back. They're built to allow both a
+transition of keys over time and also a transition of key
+permissions. This chapter describes some easy key manipulation, where
+Amira modifies and rotates some of the operational keys that she
+created in <a href="../05_1_Generating_Operational_Keys/">§5.1</a>. We'll then
+talk about more serious problems with the theft of keys in
+<a href="../05_5_Responding_to_Key_Compromise/">§5.5</a>.</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your <code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID. </p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-private-5-01.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<h3 id="part-i-changing-key-permissions">Part I: Changing Key Permissions</h3>
+<p>Amira realizes that she overpowered her laptop key. She doesn't need
+it to have <code>access</code> permission because she's never designated any
+resources to be under her XID's control. Though this seems irrelevent
+at the moment, the <a href="https://www.blockchaincommons.com/musings/Least-Necessary/">least and
+necessary</a>
+design pattern says to remove permissions from keys if they're not
+needed.</p>
+<p>Changing a key's permissions is very simple: it requires finding the
+key to change and modifying the permission on it.</p>
+<h3 id="step-1-find-the-key-to-change">Step 1: Find the Key to Change</h3>
+<p>As we saw in <a href="../05_1_Generating_Operational_Keys/">§5.1</a>, it's trivial
+to find a key within a XID: you just use <code>envelope xid key find</code>:</p>
+<pre><code>LAPTOP_PRVKEYS=$(envelope xid key find name --private --password &quot;$PASSWORD&quot; &quot;laptop-key&quot; $XID)
+</code></pre>
+<p>As it happens, key change is done using the pubkeys, so you'll need to
+generate those once you extract the private keys:</p>
+<pre><code>LAPTOP_PUBKEYS=$(envelope generate pubkeys $LAPTOP_PRVKEYS)
+</code></pre>
+<h3 id="step-2-update-the-key">Step 2: Update the Key</h3>
+<p>You then use <code>envelope xid key update</code> with the pubkey of the pair you
+want to change, and give it a new list of permissions:</p>
+<pre><code>XID_WITH_UPDATED_KEY=$(envelope xid key update \
+    --verify inception \
+    --nickname &quot;laptop-key&quot; \
+    --allow auth \
+    --allow sign \
+    --allow encrypt \
+    --allow elide \
+    --allow issue \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$LAPTOP_PUBKEYS&quot; \
+    &quot;$XID&quot;)
+</code></pre>
+<p>If you look at the XID afterward, you'll see that it's properly
+updated: there's ony one version of the <code>laptop-key</code> and it now has
+the permissions without <code>access</code>:</p>
+<pre><code>envelope format $XID_WITH_UPDATED_KEY
+
+| XID(5f1c3d9e) [
+|
+| ...
+|
+|     'key': PublicKeys(c32d7426, SigningPublicKey(59e9ad4d, Ed25519PublicKey(425b8e15)), EncapsulationPublicKey(c2b3746b, X25519PublicKey(c2b3746b))) [
+|         {
+|             'privateKey': ENCRYPTED [
+|                 'hasSecret': EncryptedKey(Argon2id)
+|             ]
+|         } [
+|             'salt': Salt
+|         ]
+|         'allow': 'Authorize'
+|         'allow': 'Elide'
+|         'allow': 'Encrypt'
+|         'allow': 'Issue'
+|         'allow': 'Sign'
+|         'nickname': &quot;laptop-key&quot;
+|     ]
+| ...
+| ]
+</code></pre>
+<h4 id="what-if-someone-tries-to-change-keys-without-the-inception-key">What If Someone Tries to Change Keys without the Inception Key?</h4>
+<p>The whole point of <a href="../05_1_Generating_Operational_Keys/">§5.1</a> was
+that removing your inception key from your XID would keep it safe
+because people couldn't manipulate the keys.</p>
+<p>We can now prove that fact by instead trying to do this work with the
+Operational View of the XID that we created in the last chapter:</p>
+<pre><code>OP_XID=$(cat envelopes/BRadvoc8-xid-operational-5-01.envelope)
+</code></pre>
+<p>We exactly duplicate the previous command, except with the operational
+XID, and without verifying the inception key (because it isn't there):</p>
+<pre><code>envelope xid key update \
+    --nickname &quot;laptop-key&quot; \
+    --allow auth \
+    --allow sign \
+    --allow encrypt \
+    --allow elide \
+    --allow issue \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$LAPTOP_PUBKEYS&quot; \
+    &quot;$OP_XID&quot;
+
+| Error: envelope parsing error
+| 
+| Caused by:
+|     the envelope's subject is not a leaf
+</code></pre>
+<p>It doesn't work! Granted, the error message is unintuitive, but the
+fact remains that our creation of an Operational View of Amira's XID
+has secured her identity. (We just need to remember to always
+unarchive the Private View of the XID when we want to make changes.)</p>
+<h3 id="step-3-update-store">Step 3: Update &amp; Store</h3>
+<p>It's more important than ever to update your XID at this point. That's
+because the implicit revocation that occurs when you release a new
+edition of your XID is the only way for people to know that you've
+changed permissions on your key.</p>
+<p>Until that point, the old version of your XID could still be used,
+with all the old permissions. (And yes, that could still be the case
+<em>after</em> you update, but best practice is to always to dereference a
+XID and check the newest version. Hopefully any services you're
+working with does so!)</p>
+<pre><code>XID_WITH_UPDATED_KEY=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$XID_WITH_UPDATED_KEY&quot;)
+
+PUBLIC_XID_WITH_UPDATED_KEY=$(envelope xid export --private elide --generator elide &quot;$XID_WITH_UPDATED_KEY&quot;)
+</code></pre>
+<p>And of course store everything:</p>
+<pre><code>echo &quot;$XID_WITH_UPDATED_KEY&quot; &gt; envelopes/BRadvoc8-xid-s9-private-5-02.envelope
+echo &quot;$PUBLIC_XID_WITH_UPDATED_KEY&quot; &gt; envelopes/BRadvoc8-xid-s9-public-5-02.envelope
+</code></pre>
+<h2 id="part-ii-rotating-a-key">Part II: Rotating a Key</h2>
+<p>Changing a key's permissions is one side of the equation, but you
+might also need to change the key itself. This could happen because
+your previous key was compromised or lost or for some other reason.</p>
+<p>In Amira's case, she gets a new laptop, and she decides it's a good
+time to change her keys because that'll help her identify which laptop
+was used for various activities. (It's always best practice to link
+specific keys to specific devices like this, exactly for the reason of
+identification.)</p>
+<p>(We'll talk about the more active compromise situation in
+<a href="../05_5_Responding_to_Key_Compromise/">§5.5</a>.)</p>
+<h3 id="step-4-generate-a-new-key">Step 4: Generate a New Key</h3>
+<p>Adding a key to your XID always starts with its generation:</p>
+<pre><code>NEW_LAPTOP_PRVKEYS=$(envelope generate prvkeys --signing ed25519)
+NEW_LAPTOP_PUBKEYS=$(envelope generate pubkeys &quot;$NEW_LAPTOP_PRVKEYS&quot;)
+</code></pre>
+<h3 id="step-5-add-the-new-key-to-your-xid">Step 5: Add the New Key to Your XID</h3>
+<p>You can then add the key to Amira's XID with appropriate permissions:</p>
+<pre><code>XID_WITH_ROTATED_KEY=$(envelope xid key add \
+    --verify inception \
+    --nickname &quot;laptop-key-v2&quot; \
+    --allow auth \
+    --allow sign \
+    --allow encrypt \
+    --allow elide \
+    --allow issue \
+    --private encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$NEW_LAPTOP_PRVKEYS&quot; \
+    &quot;$XID_WITH_UPDATED_KEY&quot;)
+</code></pre>
+<h3 id="step-6-remove-the-old-key-from-your-xid">Step 6: Remove the Old Key from Your XID</h3>
+<p>Before you remove the old key from your XID, you should make sure you
+have a full backup of the XID, in case there's a problem and you need
+to revert.</p>
+<p>Afterward, you need to find the key you want to remove, which uses
+<code>envelope xid find</code> just like when you found a key to change its
+permissions:</p>
+<pre><code>LAPTOP_PRVKEYS=$(envelope xid key find name --private --password &quot;$PASSWORD&quot; &quot;laptop-key&quot; $XID_WITH_ROTATED_KEY)
+LAPTOP_PUBKEYS=$(envelope generate pubkeys $LAPTOP_PRVKEYS)
+</code></pre>
+<p>Then you remove it with the <code>envelope xid key remove</code> command:</p>
+<pre><code>FULLY_ROTATED_XID=$(envelope xid key remove &quot;$LAPTOP_PUBKEYS&quot; &quot;$XID_WITH_ROTATED_KEY&quot;)
+</code></pre>
+<p>You at this point can verify that your old key was removed:</p>
+<pre><code>envelope format &quot;$FULLY_ROTATED_XID&quot; | grep -v &quot;laptop-key-v2&quot; | grep &quot;laptop-key&quot; || echo &quot;✅ Old key removed&quot;
+
+| ✅ Old key removed
+</code></pre>
+<h3 id="step-7-verify-your-xid-works">Step 7: Verify Your XID Works</h3>
+<p>At this point, you should engage in the operational work that you
+normally do with your XID, and verify that it still works. If there
+was a problem, you'd need to step back to that backup copy you made of
+your XID.</p>
+<p>This general procedure should be followed for any key rotation:</p>
+<ol>
+<li>Generate new key.</li>
+<li>Add new key to XID.</li>
+<li>Find old key.</li>
+<li>Remove old key from XID.</li>
+<li>Verify old key was removed from XID.</li>
+<li>Verify XID still has needed permissions.</li>
+</ol>
+<h3 id="step-8-rotate-other-keys">Step 8: Rotate Other Keys</h3>
+<p>It's best practice to link your GitHub SSH signing keys to individual
+devices too, so you can always see what device a commit came from. The
+process of linking a key to GitHub was described in
+<a href="03_1_Creating_Edges/#step-1-generate-ssh-signing-key">§3.1</a>. Rotating
+it would also require rebuilding your GitHub edge, with
+<a href="04_4_Creating_New_Editions/#part-iii-replacing-xid-objects">§4.4</a>
+demonstrating how to do so.</p>
+<p>You might also want to link other keys such as attestation keys and
+contract keys to specific machines. They could be rotated using the
+exact same process described here.</p>
+<p>We're going to leave the rest of Amira's keys the same, rather than
+redundantly doing all of that work, but be aware that in the real
+world it might be worthwhile to update them to maintain your security.</p>
+<h3 id="step-9-update-store-again">Step 9: Update &amp; Store (Again)</h3>
+<p>Just as with the permission update for your key, it's very important
+to get this XID with the rotated key out to the public. Until you do,
+that old key remains valid.</p>
+<p>Here's the standard commands for doing so:</p>
+<pre><code>FULLY_ROTATED_XID=$(envelope xid provenance next \
+    --password &quot;$PASSWORD&quot; \
+    --sign inception \
+    --private encrypt \
+    --generator encrypt \
+    --encrypt-password &quot;$PASSWORD&quot; \
+    &quot;$FULLY_ROTATED_XID&quot;)
+
+PUBLIC_FULLY_ROTATED_XID=$(envelope xid export --private elide --generator elide &quot;$FULLY_ROTATED_XID&quot;)
+</code></pre>
+<p>We're of course going to end by making some final stores:</p>
+<pre><code>echo &quot;$NEW_LAPTOP_PRVKEYS&quot; &gt; envelopes/key-laptopv2-private-5-02.ur
+echo &quot;$NEW_LAPTOP_PUBKEYS&quot; &gt; envelopes/key-laptopv2-public-5-02.ur
+echo &quot;$FULLY_ROTATED_XID&quot; &gt; envelopes/BRadvoc8-xid-s10-private-5-02.envelope
+echo &quot;$PUBLIC_FULLY_ROTATED_XID&quot; &gt; envelopes/BRadvoc8-xid-s10-public-5-02.envelope
+</code></pre>
+<h4 id="xid-version-comparison">XID Version Comparison</h4>
+<p>XIDs will continue to grow and change over time. That's why provenance
+marks are so important: out of this set of not-quite a dozen XIDs,
+they reveal which one is the current one.</p>
+<table>
+<thead>
+<tr>
+<th>XID Version</th>
+<th>New Content</th>
+<th>Created In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seq 0</td>
+<td>👤 Identity</td>
+<td>§1.3+§1.4</td>
+</tr>
+<tr>
+<td>seq 1</td>
+<td>🔑 Attestation Key</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>seq 2</td>
+<td>🗣️ GitHub Edge</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>seq 3</td>
+<td>🗣️ Endorsement Edge</td>
+<td>§3.3</td>
+</tr>
+<tr>
+<td>seq 4</td>
+<td>🔑 Contract Key</td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>seq 5</td>
+<td>📄 Contract Commitment</td>
+<td>§4.2</td>
+</tr>
+<tr>
+<td>seq 6</td>
+<td>❌ Endorsement Removal</td>
+<td>§4.4</td>
+</tr>
+<tr>
+<td>seq 7</td>
+<td>🗣️ Endorsement Replacement</td>
+<td>§4.4</td>
+</tr>
+<tr>
+<td>seq 8</td>
+<td>💻 Operational Keys</td>
+<td>§5.1</td>
+</tr>
+<tr>
+<td>seq 9</td>
+<td>💻 Laptop Key Change</td>
+<td>§5.2</td>
+</tr>
+<tr>
+<td>seq 10</td>
+<td>💻 Laptop Key Replacment</td>
+<td>§5.2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="summary-updating-keys">Summary: Updating Keys</h2>
+<p>XID keys can be updated in two ways: their permissions can be changed
+and the key can be rotated. In both cases, it's important that your
+XIDs contain a <code>dereferenceVia</code>, so that people always know where to
+get the newest version of your XID, and that you publish an updated
+XID promptly. Those steps are what's required to ensure that everyone
+knows that your old keys have been changed. (Even then, changing the
+keys isn't a guarantee that everyone will respect that; you're
+depending on the larger ecosystem following the same rules, but that's
+true of most key rotations.)</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains all the keys and updated XIDs from this section,
+including the <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes/BRadvoc8-xid-s10-private-5-02.envelope">newest
+version</a>
+of Amira's XID.</p>
+<p><strong>Scripts:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts">scripts</a>
+directory contains
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/05_2_Updating_Keys-SCRIPT.sh">05_2_Updating_Keys-SCRIPT.sh</a>,
+which runs through all the commands in this section. From the command
+line, <code>git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git</code>, then <code>cd
+XID-Quickstart</code>, then <code>bash scripts/05_2_Updating_Keys-SCRIPT.sh</code> to
+test it.</p>
+<h3 id="exercises">Exercises</h3>
+<p>These exercises test your understanding of the permission model:</p>
+<ol>
+<li>Change the permissions on a key in your XID.</li>
+<li>Try to change permissions using an operational version of a XID.</li>
+<li>Rotate a key in your XID.</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>In §5.1, we said you should backup your Management XID. <a href="../05_3_Backing_up_Inception_Key/">§5.3: Backing
+Up Your Inception Key</a> talks about
+how to do so in a robust, resilient way.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Key Rotation</strong> - Replacing an out-of-date key (possibly one that's been lost or compromised) with a new key.</p>
+<p>🧠 <strong>Learn more.</strong> The <a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md">Key Management</a> concept doc explains the full key hierarchy model and permission system.</p>
+</blockquote>
+<h2 id="appendix-ii-common-questions">Appendix II: Common Questions</h2>
+<h3 id="q-do-old-signatures-become-invalid-when-i-rotate-keys">Q: Do old signatures become invalid when I rotate keys?</h3>
+<p><strong>A:</strong> No. Signatures made with an old key remain valid. The signature
+proves the document was signed at a time when that key was authorized.</p>
+<p>Ultimately, rotation only affects new signatures. If you want to
+invalidate old signatures (e.g., after a compromise), you need to
+publicly disavow them.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

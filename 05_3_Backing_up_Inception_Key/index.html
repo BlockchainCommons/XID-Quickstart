@@ -1,0 +1,2265 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://learningxids.blockchaincommons.com/05_3_Backing_up_Inception_Key/">
+      
+      
+        <link rel="prev" href="../05_2_Updating_Keys/">
+      
+      
+        <link rel="next" href="../05_4_Backing_up_SSH_Key/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>5.3: Backing Up Your Inception Key - Learning XIDs from the Command Line</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#53-backing-up-your-inception-key" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-header__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learning XIDs from the Command Line
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5.3: Backing Up Your Inception Key
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Learning XIDs from the Command Line" class="md-nav__button md-logo" aria-label="Learning XIDs from the Command Line" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6zm0 2v1h8V8zm0 2v1h7v-1zm-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3"/></svg>
+
+    </a>
+    Learning XIDs from the Command Line
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/BlockchainCommons/XID-Quickstart" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learning XIDs from the Command Line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_0_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter One: Introduction to XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_Getting_Started_SSI_XIDs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1: Getting Started with SSI &amp; XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_Core_Concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2: Understanding Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_Your_First_XID/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3: Creating Your First XID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_Making_a_XID_Verifiable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4: Making a XID Verifiable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_0_Claims/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Two: Making Claims (And Protecting Them)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_Creating_Self_Attestations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1: Creating Self Attestations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_Managing_Claims_Elision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2: Managing Sensitive Claims with Elision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_Managing_Claims_Encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3: Managing Sensitive Claims with Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_0_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Three: Attesting with Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_1_Creating_Edges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1: Creating Edges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_2_Supporting_Cross_Verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2: Supporting Cross Verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_3_Creating_Peer_Endorsements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3: Creating Peer Endorsements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_0_Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Four: Managing Your XIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_1_Creating_Binding_Agreements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1: Creating Binding Agreements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_2_Publishing_for_Privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2: Publishing Commitments for Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_3_Creating_New_Views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3: Creating New Views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_4_Creating_New_Editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4: Creating New Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_0_Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter Five: Managing Your Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_1_Generating_Operational_Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.1: Generating Operational Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_2_Updating_Keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.2: Updating Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.3: Backing Up Your Inception Key
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.3: Backing Up Your Inception Key
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-fragility-of-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Fragility of Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: The Fragility of Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-sskr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of SSKR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-creating-a-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Creating a Backup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Creating a Backup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-design-your-threshold-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Design Your Threshold Scheme
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-backup-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Backup Shares
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Create Backup Shares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prove-one-share-is-useless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prove One Share Is Useless
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-test-recovery-before-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Test Recovery Before Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-distributing-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Distributing Shares
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Distributing Shares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-save-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Save Shares
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-elide-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Elide Your Inception Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Elide Your Inception Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-much-security-is-too-much" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Much Security is Too Much?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-reconstructing-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Reconstructing Your XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Reconstructing Your XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-reconstruct-your-management-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Reconstruct Your Management XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-perform-management-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Perform Management Operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-re-split-take-inception-key-back-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Re-split &amp; Take Inception Key Back Offline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Re-split &amp; Take Inception Key Back Offline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-backing-up-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Backing Up Your Inception Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Backing Up Your Inception Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-why-not-just-encrypt-the-inception-key-and-store-copies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why not just encrypt the inception key and store copies?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-charlene-loses-her-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if Charlene loses her share?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-do-i-do-when-i-discover-a-share-has-been-lost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What do I do when I discover a share has been lost?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-does-resharding-invalidate-old-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Does resharding invalidate old shares?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-need-to-revoke-a-key-while-traveling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I need to revoke a key while traveling?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-use-3-of-5-instead-of-2-of-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I use 3-of-5 instead of 2-of-3?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_4_Backing_up_SSH_Key/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4: Backing Up Your SSH Key
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_5_Responding_to_Key_Compromise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.5: Responding to Key Compromise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives-of-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives of this Section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amiras-story-the-fragility-of-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amira's Story: The Fragility of Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amira&#39;s Story: The Fragility of Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-sskr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of SSKR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-verify-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0: Verify Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-creating-a-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: Creating a Backup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: Creating a Backup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-design-your-threshold-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Design Your Threshold Scheme
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-backup-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Backup Shares
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Create Backup Shares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prove-one-share-is-useless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prove One Share Is Useless
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-test-recovery-before-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Test Recovery Before Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-distributing-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Distributing Shares
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Distributing Shares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4-save-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Save Shares
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-elide-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Elide Your Inception Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Elide Your Inception Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-much-security-is-too-much" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Much Security is Too Much?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-reconstructing-your-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Reconstructing Your XID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Reconstructing Your XID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-6-reconstruct-your-management-xid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Reconstruct Your Management XID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-perform-management-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Perform Management Operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-re-split-take-inception-key-back-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Re-split &amp; Take Inception Key Back Offline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Re-split &amp; Take Inception Key Back Offline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-type-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Type Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-backing-up-your-inception-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Backing Up Your Inception Key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Backing Up Your Inception Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-i-key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix I: Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-ii-common-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix II: Common Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix II: Common Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-why-not-just-encrypt-the-inception-key-and-store-copies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why not just encrypt the inception key and store copies?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-charlene-loses-her-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if Charlene loses her share?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-do-i-do-when-i-discover-a-share-has-been-lost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What do I do when I discover a share has been lost?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-does-resharding-invalidate-old-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Does resharding invalidate old shares?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-i-need-to-revoke-a-key-while-traveling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if I need to revoke a key while traveling?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-use-3-of-5-instead-of-2-of-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I use 3-of-5 instead of 2-of-3?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="53-backing-up-your-inception-key">5.3: Backing Up Your Inception Key</h1>
+<p>You're a power XID user who's built an Operational View of your XID,
+to protect it from compromise. But that leaves your inception key
+somewhat vulnerable, because it's just available in one backup
+nowadays. What if the place where you're storing it burns down? Even
+if you've got that backup backed up, that might all be lost in a fire.
+In this case, your identity (or at least the ability to update it) is
+gone too. No one can help you recover it. This tutorial shows how to
+prevent that catastrophe using SSKR (Sharded Secret Key
+Reconstruction).</p>
+<blockquote>
+<p>🧠 <strong>Related Concepts.</strong> After completing this tutorial, explore
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/concepts/key-management.md">Key
+Management</a>
+to understand the full key hierarchy model.</p>
+</blockquote>
+<h2 id="objectives-of-this-section">Objectives of this Section</h2>
+<p>After working through this section, a developer will be able to:</p>
+<ul>
+<li>Create SSKR backup shares</li>
+<li>Distribute shares safely</li>
+</ul>
+<p>Supporting objectives include the ability to:</p>
+<ul>
+<li>Understand why inception keys need special protection</li>
+</ul>
+<h2 id="amiras-story-the-fragility-of-identity">Amira's Story: The Fragility of Identity</h2>
+<p>Amira is thrilled that she's now protecting her BRadvoc8 identity from
+compromise by using the Operational View of her XID when
+possible. But, it's made her feel more paranoid about the inception
+key, since it's now only available in a single backup.</p>
+<p>She thought: "I'll just make copies of my inception key and store them
+in different places." But that's not safe either. Creating copies
+creates copies of the risk: if any copy is stolen, her identity is
+compromised.</p>
+<p>Amira needs a more robust way to protect the backup of the private
+view of XID. That's where SSKR comes in.</p>
+<h3 id="the-power-of-sskr">The Power of SSKR</h3>
+<p>SSKR (Sharded Secret Key Reconstruction) splits a secret into multiple
+shares using Shamir's Secret Sharing.</p>
+<ul>
+<li>Any single share reveals nothing about the original.</li>
+<li>A threshold number of shares can reconstructs the original.</li>
+</ul>
+<p>Common schemes for SSKR include 2-of-3, 3-of-5, 2-of-2, which
+designate how many keys (a "threshold") are necessary to reconstruct a
+secret out of the total set.</p>
+<blockquote>
+<p>:book: <strong>What is a threshold scheme?</strong> A threshold scheme allows you
+to recover original data from some subset of shares of that data.  A
+"2-of-3" scheme means you create three shares and only need to recover
+two of them.  You can lose one share and still reconstruct your
+data. Meanwhile, an attacker who steals one share learns nothing.</p>
+</blockquote>
+<p>SSKR solves the two major problems with secrets. It defeats the
+single-point-of-compromise (SPOC) and the single-point-of-failure
+(SPOF). That is, it does as long as you create a rational threshold
+scheme: a 1-of-1 scheme clearly does nothing for SPOC, and a 2-of-2
+scheme just multiplies the threat of SPOF unless you redunantly back
+up your shares. But a scheme like 2-of-3 or 3-of-5 can allow you to
+reconstruct a key even if you lose some of your SSKR shares!</p>
+<h2 id="part-0-verify-dependencies">Part 0: Verify Dependencies</h2>
+<p>Before you get started, you should (as usual) check your
+<code>envelope-cli</code> version:</p>
+<pre><code>envelope --version
+
+│ bc-envelope-cli 0.34.1
+</code></pre>
+<p>Then, reload your XID. </p>
+<pre><code>XID=$(cat envelopes/BRadvoc8-xid-s10-private-5-02.envelope)
+XID_ID=$(envelope xid id $XID)
+PASSWORD=&quot;your-password-from-previous-tutorials&quot;
+</code></pre>
+<h2 id="part-i-creating-a-backup">Part I: Creating a Backup</h2>
+<p>SSKR is built into Gordian Envelope, making it easy to back up your
+keys and your full XIDs.</p>
+<h3 id="step-1-design-your-threshold-scheme">Step 1: Design Your Threshold Scheme</h3>
+<p>The most important part of using SSKR may be figuring out your
+threshold scheme. You need to decide:</p>
+<ol>
+<li>How many shares to create.</li>
+<li>How many shares will be necessary to reconstruct (the "threshold").</li>
+<li>Where and how the shares will be stored.</li>
+</ol>
+<p>These decisions are all interrelated: you'll often decide how many
+shares to create based on how many secure locations you have. But when
+planning out locations, you also need to think about context: how can
+you separate your shares geographically (so that they're not all
+threatened by the same physical disaster) and socially (so they're not
+easy to collect).</p>
+<p>Once you've determined locations to store shares, you can decide a
+threshold. It's often good to have a threshold of 60% or 70% of your
+total, so that you can afford to lose a share or maybe more.</p>
+<p>Amira decides that she can manage three different secure locations
+that are geographically and socially distinct. This will allow her to
+create a 2-of-3 SSKR share where she can lose one share and still
+reconstruct her XID.</p>
+<table>
+<thead>
+<tr>
+<th>Share</th>
+<th>Location</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Share 1</td>
+<td>Safety deposit box</td>
+<td>Secure, requires physical access</td>
+</tr>
+<tr>
+<td>Share 2</td>
+<td>Charlene (trusted friend)</td>
+<td>Geographic distribution, in-person recovery</td>
+</tr>
+<tr>
+<td>Share 3</td>
+<td>Encrypted cloud backup</td>
+<td>Accessible remotely if needed</td>
+</tr>
+</tbody>
+</table>
+<p>This distribution is robust because:</p>
+<ul>
+<li>Geographic distribution protects against local disasters.</li>
+<li>No single location compromise reveals the key.</li>
+<li>Charlene can help with in-person recovery.</li>
+<li>2-of-3 means losing one share is survivable.</li>
+</ul>
+<p><a href="https://github.com/BlockchainCommons/SmartCustody/blob/master/Docs/SSKR-Sharing.md">"Designing SSKR Sharing
+Scenarios"</a>
+offers much more extensive discussions on planning out a robust SSKR
+threshold scheme.</p>
+<blockquote>
+<p>📖 <strong>Are they shares or shards?</strong> The most proper usage when talking
+about SSKR is use "shard" as a verb and "share" as a noun. That is,
+you "shard" a secret (a seed, a key, or in this case a XID) and that
+produces "shares".</p>
+<p>📖 <strong>Is it reconstruct, recover, or restore?</strong> Reconstruct is the
+most precise verb to use when you're talking about gathering together
+SSKR shares and using them to bring the original secret back into
+existence. Recover is a more general verb for bringing back something
+that's lost and restore is usually used as a verb for resurrecting
+something from backup.</p>
+<p>📖 <strong>Is it SSKR or Shamir's Secret Sharing?</strong> Shamir's Secret
+Sharing is a general algorithm. SSKR is Blockchain Commons' specific
+implementation of that algorithm, which also allows for multi-level
+thresholds (e.g., the ability to reconstruct from a threshold of
+groups each of which have a threshold of users).</p>
+</blockquote>
+<h3 id="step-2-create-backup-shares">Step 2: Create Backup Shares</h3>
+<p>The command <code>envelope sskr split</code> allows you to shard any Gordian
+Envelope, including a XID into a number of shares. You just give it
+the <code>--group</code> flag, which allows you to define a threshold scheme.</p>
+<pre><code>SHARES=$(envelope sskr split --group &quot;2-of-3&quot; &quot;$XID&quot;)
+SHARE_ARRAY=( $SHARES )
+
+echo &quot;✅ Created 3 shares (any 2 can recover):&quot;
+echo &quot;  Share 1: ${SHARE_ARRAY[0]:0:50}...&quot;
+echo &quot;  Share 2: ${SHARE_ARRAY[1]:0:50}...&quot;
+echo &quot;  Share 3: ${SHARE_ARRAY[2]:0:50}...&quot;
+
+| ✅ Created 3 shares (any 2 can recover):
+|   Share 1: ur:envelope/lftansfwlrhkbwhyhpfscfleytrfmssgtdfwjn...
+|   Share 2: ur:envelope/lftansfwlrhkbwhyhpfscfleytrfmssgtdfwjn...
+|   Share 3: ur:envelope/lftansfwlrhkbwhyhpfscfleytrfmssgtdfwjn...
+</code></pre>
+<p>Each share is a complete envelope containing a fragment of the full
+XID.</p>
+<h4 id="prove-one-share-is-useless">Prove One Share Is Useless</h4>
+<p>The <code>sskr join</code> command is used to reconstruct a Gordian Envelope from
+shares. Trying it with just one share suggests that having a single
+share is useless.</p>
+<pre><code>envelope sskr join &quot;${SHARE_ARRAY[0]}&quot; 2&gt;&amp;1 || echo &quot;❌ Cannot recover with 1 share (as expected)&quot;
+
+| Error: invalid SSKR shares
+| ❌ Cannot recover with 1 share (as expected)
+</code></pre>
+<p>This is the fundamental security property of SSKR: an attacker who
+stole one share of Amira's SSKR from Charlene's house wouldn't learn
+anything about Amira's inception key.</p>
+<h3 id="step-3-test-recovery-before-distribution">Step 3: Test Recovery Before Distribution</h3>
+<p>Before you distribute your SSKR shares, you should always test them to
+make sure that they really do allow you to reconstruct your XID (or
+whatever other Gordian Envelope you sharded).</p>
+<p>Based on the threshold scheme we designed for Amira, <code>envelope</code> should
+be able to reconstruct the XID from any two out of three shares:</p>
+<pre><code>RECOVERED=$(envelope sskr join &quot;${SHARE_ARRAY[0]}&quot; &quot;${SHARE_ARRAY[1]}&quot;)
+</code></pre>
+<p>The mere fact that the recovery works without errors is a good
+sign. You could also use <code>envelope format</code> to look at it to see that
+everything is there as expected.</p>
+<p>One programmatic way to test your reconstruction is to compare the digest
+of your original and recovered XID:</p>
+<pre><code>ORIGINAL_DIGEST=$(envelope digest &quot;$XID&quot;)
+RECOVERED_DIGEST=$(envelope digest &quot;$RECOVERED&quot;)
+
+if [ &quot;$ORIGINAL_DIGEST&quot; = &quot;$RECOVERED_DIGEST&quot; ]; then
+    echo &quot;✅ Recovery test passed (shares 1+2)&quot;
+else
+    echo &quot;❌ Recovery failed - DO NOT proceed&quot;
+    exit 1
+fi
+</code></pre>
+<p>You should repeat this on all the combinations of two shares (1+2,2+3, and 1+3):</p>
+<pre><code>RECOVERED_23=$(envelope sskr join &quot;${SHARE_ARRAY[1]}&quot; &quot;${SHARE_ARRAY[2]}&quot;)
+RECOVERED_13=$(envelope sskr join &quot;${SHARE_ARRAY[0]}&quot; &quot;${SHARE_ARRAY[2]}&quot;)
+DIGEST_23=$(envelope digest $RECOVERED_23)
+DIGEST_13=$(envelope digest $RECOVERED_13)
+
+if [ &quot;$ORIGINAL_DIGEST&quot; = &quot;$RECOVERED_DIGEST&quot; -a &quot;$ORIGINAL_DIGEST&quot; = &quot;$DIGEST_23&quot; -a &quot;$ORIGINAL_DIGEST&quot; = &quot;$DIGEST_13&quot; ]; then
+    echo &quot;✅ All share combinations verified&quot;
+else
+    echo &quot;❌ Additional recoveries failed - DO NOT proceed&quot;
+    exit 1
+fi
+
+│ ✅ Recovery test passed (shares 1+2)
+│ ✅ All share combinations verified
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Test Before You Trust.</strong> Always test recovery before
+distributing shares or deleting the original. If something went wrong
+during splitting, you want to know now, not when your house burns down
+(and not when you try to reconstruct a fully offline inception key for
+usage).</p>
+</blockquote>
+<h2 id="part-ii-distributing-shares">Part II: Distributing Shares</h2>
+<p>Since you've already planned your threshold scheme and sharded your
+XID, distributing the shares is simple.</p>
+<h3 id="step-4-save-shares">Step 4: Save Shares</h3>
+<p>Obviously, command-line variables won't do the trick for distribution;
+you need to output your shares to files. Here, we've going to put them
+in our standard directory:</p>
+<pre><code>echo &quot;${SHARE_ARRAY[0]}&quot; &gt; &quot;envelopes/BRadvoc8-xid-share1-safety-deposit-5-03.envelope&quot;
+echo &quot;${SHARE_ARRAY[1]}&quot; &gt; &quot;envelopes/BRadvoc8-xid-share2-charlene-5-03.envelope&quot;
+echo &quot;${SHARE_ARRAY[2]}&quot; &gt; &quot;envelopes/BRadvoc8-xid-share3-cloud-5-03.envelope&quot;
+</code></pre>
+<p>In practice, you might then do something like:</p>
+<ul>
+<li>Print share1 as a QR, store in safety deposit box</li>
+<li>Give share2 to Charlene in person</li>
+<li>Encrypt share3, upload to cloud storage</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>Defense in Depth.</strong> Even though each share alone reveals
+nothing, encrypt share3 before uploading to cloud storage. If SSKR
+ever had a vulnerability, your encrypted share would still be
+protected.</p>
+</blockquote>
+<h3 id="step-5-elide-your-inception-key">Step 5: Elide Your Inception Key</h3>
+<p>This would be the point where you elide your inception key from an
+Operational View of your XID, as was first suggested in
+<a href="../05_1_Generating_Operational_Keys/">§5.1</a>.</p>
+<p>For the best security, you don't even keep a copy of the Private View
+of your XID yourself. Instead, you totally remove it, instead
+depending on the shares. (We call this "taking your inception key
+offline," because it no longer exists in its full form anywhere on the
+'net.)</p>
+<p>When you need to use your Management XID, you just reconstruct it from
+the cloud and your safety deposit box shares.</p>
+<h4 id="how-much-security-is-too-much">How Much Security is Too Much?</h4>
+<p><a href="https://www.smartcustody.com/">#SmartCustody</a> lists many threats to
+keys, one of which is "Process Fatigue": if a security process is too
+complex, the user will give up on it, and so they'll lose the
+security.</p>
+<p>Consider that when you're deciding what to do with your Management
+XID, containing your inception key. You <em>definitely</em> want to shard it
+and store it remotely, because that protects against loss. But maybe
+you decide that it's too much nuisance to reconstruct it every time
+you want to manage your XID. In that case you might keep copies of the
+shares locally, but offline (e.g., on a USB stick), or you might even
+keep the full XID locally but offline, both allowing easy access while
+still providing protection against compromise.</p>
+<p>You need to find the security scenario that fits you: maximizing
+protection against loss and against compromise, while still keeping
+things simple enough that you're willing to go through the process and
+not abandon it entirely.</p>
+<h2 id="part-iii-reconstructing-your-xid">Part III: Reconstructing Your XID</h2>
+<p>At some point in the future, Amira decides she needs to make updates
+to her XID. She does so by reconstructing her Management XID.</p>
+<h3 id="step-6-reconstruct-your-management-xid">Step 6: Reconstruct Your Management XID</h3>
+<p>Reconstructing your XID at this point is easy: you've already done it
+while testing! You just need to gather your shares (whichever two are
+easiest to access), then use <code>envelope sskr join</code>.</p>
+<pre><code>RECOVERED_13=$(envelope sskr join &quot;${SHARE_ARRAY[0]}&quot; &quot;${SHARE_ARRAY[2]}&quot;)
+</code></pre>
+<h3 id="step-7-perform-management-operation">Step 7: Perform Management Operation</h3>
+<p>At this point, you can conduct new management operations, such as
+adding a key for a new device, as we did in <a href="../05_2_Updating_Keys/">§5.2</a>.</p>
+<h3 id="step-8-re-split-take-inception-key-back-offline">Step 8: Re-split &amp; Take Inception Key Back Offline</h3>
+<p>Here's the important step: afterward you need to make sure that you go
+through all of the usual rigamarole for XID changes (advancing your
+provenance mark and making a public version), but you should also go
+through the security steps that you now use to keep your key safe:</p>
+<ol>
+<li>Reshard your XID.</li>
+<li>Redistribute the shares &amp; make sure all sites remove the old shares.</li>
+<li>Create a new operational XID by removing the inception key.</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>Shares Must Be From the Same Split.</strong> You can only reconstruct a
+sharded secret using shares that came out of the same split. That's
+why it's crucial to remove shares from previous splits when you
+re-shard. Otherwise, you might end up with a confusing situation when
+you try to combine shares created at different times. Worse, you might
+accidentally delete the wrong shares during cleanup and end up with an
+incompatible set that does not allow reconstruction.</p>
+</blockquote>
+<h4 id="key-type-comparison">Key Type Comparison</h4>
+<p>The crucial change you've made here is that you've changed where the
+inception key is in your bag of keys. It's not in your main XID key
+list any more.</p>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Purpose</th>
+<th>Verified Against</th>
+<th>Added In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👤 XID inception key</td>
+<td>Signs XID document updates</td>
+<td>SSKR Shares</td>
+<td>§1.3,§5.1,§5.3</td>
+</tr>
+<tr>
+<td>🗣️  Attestation key</td>
+<td>Signs attestations</td>
+<td>XID key list</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>🖋️  SSH signing key</td>
+<td>Signs Git commits</td>
+<td>GitHub account</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>📄️  Contract signing key</td>
+<td>Signs contracts</td>
+<td>XID key list</td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>💻 Laptop Key</td>
+<td>Operational Key</td>
+<td>XID key list</td>
+<td>§5.1</td>
+</tr>
+<tr>
+<td>⏏️ Portable Key</td>
+<td>Limited Operational Key</td>
+<td>XID key list</td>
+<td>§5.1</td>
+</tr>
+</tbody>
+</table>
+<p>This has created a hierarchy of keys:</p>
+<ul>
+<li>Inception key: Offline, split into 2-of-3 SSKR shares</li>
+<li>Operational keys: On devices, operation-only permissions</li>
+</ul>
+<h2 id="summary-backing-up-your-inception-key">Summary: Backing Up Your Inception Key</h2>
+<p><a href="../05_1_Generating_Operational_Keys/">§5.1</a> laid out the model of
+removing your inception key from your XID and using an operational key
+for day-to-day usage. But, you want to make sure your inception key is
+safe. One of the best ways to do so is to maintain the off-line copy
+of your inception key with SSKR, which allows you to shard it into
+shares.</p>
+<h3 id="additional-files">Additional Files</h3>
+<p><strong>Envelopes:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/envelopes">envelopes</a>
+directory contains the shares created in this exercise, if you want to
+sample putting them back together.</p>
+<p><strong>Scripts:</strong> The
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts">scripts</a>
+directory contains
+<a href="https://github.com/BlockchainCommons/XID-Quickstart/tree/main/scripts/05_3_Backing_up_Inception_Key-SCRIPT.sh">05_3_Backing_up_Inception_Key-SCRIPT.sh</a>,
+which runs through all the commands in this section. From the command
+line, <code>git clone
+https://github.com/BlockchainCommons/XID-Quickstart.git</code>, then <code>cd
+XID-Quickstart</code>, then <code>bash scripts/05_3_Backing_up_Inception_Key-SCRIPT.sh</code>
+to test it.</p>
+<h3 id="exercises">Exercises</h3>
+<p>These exercises test your understanding of SSKR security properties:</p>
+<ol>
+<li>Design a share distribution strategy for your own life. Consider:
+trusted people, geographic diversity, accessibility during
+emergencies, and what happens if relationships change.</li>
+<li>Create a 3-of-5 scheme. Verify that two shares fail to recover but any
+three succeed. How many combinations are there?</li>
+<li>Practice the complete cycle: split → distribute → reconstruct → add
+a new key → re-split → redistribute. Time yourself: this is your
+"identity recovery time."</li>
+</ol>
+<h2 id="whats-next">What's Next</h2>
+<p>The keys in the XID are just part of the story. How do we also safely
+back up the SSH key that Amira uses on GitHub? We cover that in <a href="../05_4_Backing_up_SSH_Key/">§5.4:
+Backing Up Your SSH Key</a>.</p>
+<p>But if that adjacent activity is not important to you, you can skip
+ahead to our discussion of <a href="../05_5_Responding_to_Key_Compromise/">§5.5: Responding to Key
+Compromise</a>.</p>
+<h2 id="appendix-i-key-terminology">Appendix I: Key Terminology</h2>
+<blockquote>
+<p><strong>Key Hierarchy</strong>: The structure of keys with different permission levels: inception keys control the identity, operational keys perform daily tasks.</p>
+<p><strong>Offline Inception Key</strong>: An inception key that exists only in distributed SSKR shares, never on an active computer.</p>
+<p><strong>Reconstruct:</strong> Rebuilding a secret from shares using SSKR.</p>
+<p><strong>Shard</strong>: Splitting up a secret using SSKR.</p>
+<p><strong>Share</strong>: A portion of a secret, split up by SSKR.</p>
+<p><strong>SSKR</strong>: Sharded Secret Key Reconstruction, which supports splitting a secret into shares where a threshold can reconstruct it. It's built on the Shamir's Secret Sharing algorithm, with additional ability to reconstruct from a threshold of groups.</p>
+<p><strong>Threshold Scheme</strong>: The number of shares required for reconstruction out of some total (e.g., 2-of-3 means any 2 of 3 shares can recover the secret).</p>
+<p>🧠 <strong>Learn More.</strong> The <a href="https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-011-sskr.md">SSKR specification</a> explains the cryptographic details of Shamir's Secret Sharing and how SSKR extends it.</p>
+</blockquote>
+<h2 id="appendix-ii-common-questions">Appendix II: Common Questions</h2>
+<h3 id="q-why-not-just-encrypt-the-inception-key-and-store-copies">Q: Why not just encrypt the inception key and store copies?</h3>
+<p><strong>A:</strong> Copies create copies of the risk. If you store encrypted copies
+in three places and any one is breached (and the attacker cracks the
+encryption), your identity is compromised. With SSKR, breaching one
+location reveals nothing. That's mathematically nothing, not "hard to
+decrypt" nothing.</p>
+<h3 id="q-what-if-charlene-loses-her-share">Q: What if Charlene loses her share?</h3>
+<p><strong>A:</strong> With 2-of-3, you can still recover using shares 1 and 3 (safety
+deposit + cloud). You should then create new shares and give Charlene
+a replacement.</p>
+<h3 id="q-what-do-i-do-when-i-discover-a-share-has-been-lost">Q: What do I do when I discover a share has been lost?</h3>
+<p><strong>A:</strong> You must <em>immediately</em> re-shard your key and redistribute the
+shares (while also ensuring old shares are deleted). With a share
+lost, your secret is now more vulnerable; the shares may even be
+Single Points of Failure at this point, multiplying your chances of
+losing your secret entirely.</p>
+<h3 id="q-does-resharding-invalidate-old-shares">Q: Does resharding invalidate old shares?</h3>
+<p><strong>A:</strong> It does not. Your old shares could still be used to
+reconstruct. When you create a new sharding, you should also
+permanently remove your old shares, both to avoid confusion, and to
+avoid their usage.</p>
+<h3 id="q-what-if-i-need-to-revoke-a-key-while-traveling">Q: What if I need to revoke a key while traveling?</h3>
+<p><strong>A:</strong> This is the tradeoff of offline inception keys: emergency
+management requires physical access to shares. If you travel
+frequently, consider keeping one share in a location you can access
+remotely (like an encrypted cloud backup), with some sort of 2FA that
+protects it, and another share that you physically take with you (like
+on a USB drive).</p>
+<h3 id="q-can-i-use-3-of-5-instead-of-2-of-3">Q: Can I use 3-of-5 instead of 2-of-3?</h3>
+<p><strong>A:</strong> Yes. 3-of-5 is more resilient (you can lose 2 shares) but
+requires coordinating more locations. Choose based on your threat
+model: how likely is loss vs. how likely is theft? More shares protect
+against loss; higher thresholds protect against theft. See <a href="https://github.com/BlockchainCommons/SmartCustody/blob/master/Docs/SSKR-Sharing.md">"Designing
+SSKR Share
+Scenarios"</a>
+for more on different threshold scenarios.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
