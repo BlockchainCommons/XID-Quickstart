@@ -33,7 +33,7 @@ multinational bank in Boston. With her expertise in distributed
 systems security, she earns a comfortable living, but she wants more
 purpose in her work. She is considering contributing to social-impact
 programs, but she can't do so under her real name. That's because
-Amira's position is somewhat vulnerable. She's a South American
+Amira's position is somewhat vulnerable. She's a Middle Eastern
 programmer working on an H-1B visa, and in modern America that could
 be revoked for any sort of activism. She also grew up in a politically
 tense region, and her work on social-impact projects could endanger

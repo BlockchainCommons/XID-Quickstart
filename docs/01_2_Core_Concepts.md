@@ -107,7 +107,7 @@ all-or-nothing disclosure that is much more common on the 'net today.
 [**Pseudonymous Trust
 Building**](https://github.com/BlockchainCommons/XID-Quickstart/blob/main/concepts/pseudonymous-trust-building.md). Revealing
 your identity can be dangerous. This has become very obvious in recent
-years when judges, politicians, and other people impacting the civil
+years when judges, politicians, and other people involved in the civil
 society of America have been targeted and even killed for what they
 said or did. One solution is to adopt a pseudonymous identity: a
 stable identity that is not associated with your real-world self.

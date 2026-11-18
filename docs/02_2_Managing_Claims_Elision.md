@@ -43,7 +43,7 @@ Watch how Amira's anonymity set shrinks:
 | + "Privacy focus" | Thousands |
 | + "Crypto audit experience" | Hundreds |
 | + "Galaxy Project contributor" | Maybe dozens |
-| + "Based in South America" | Single digits |
+| + "From the Middle East" | Single digits |
 
 That last combination might describe three people in the world. If an adversary knows those facts and sees BRadvoc8's public profile, correlation becomes trivial.
 
